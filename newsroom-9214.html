@@ -60,6 +60,8 @@
           </div>
           <label for="image_url">Image URL</label>
           <input id="image_url" placeholder="https://...">
+          <label for="video_url">Video URL (optional — YouTube link)</label>
+          <input id="video_url" placeholder="https://www.youtube.com/watch?v=...">
           <label for="excerpt">Excerpt (short summary shown on the homepage)</label>
           <textarea id="excerpt" style="min-height:70px" placeholder="One or two sentences"></textarea>
           <label for="content">Full story</label>
@@ -71,6 +73,17 @@
           <button class="primary" type="submit" id="save-btn">Publish story</button>
           <button type="button" class="primary" id="cancel-edit-btn" style="display:none;background:#eee;color:#111;margin-top:8px">Cancel edit</button>
           <p class="admin-status" id="save-status"></p>
+        </form>
+      </div>
+
+      <div class="admin-card">
+        <h2>Live Broadcast</h2>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">Paste your YouTube Live link here when you go live. Clear it when you're done to remove the player from the Live page.</p>
+        <form id="live-form">
+          <label for="live_url">Live stream URL</label>
+          <input id="live_url" placeholder="https://www.youtube.com/watch?v=...">
+          <button class="primary" type="submit" id="live-save-btn">Save live link</button>
+          <p class="admin-status" id="live-status"></p>
         </form>
       </div>
 
