@@ -1,5 +1,22 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
+function getLikedIds() {
+  try {
+    return JSON.parse(localStorage.getItem("dg_liked") || "[]");
+  } catch {
+    return [];
+  }
+}
+function markLiked(id) {
+  const liked = getLikedIds();
+  if (!liked.includes(id)) {
+    liked.push(id);
+    localStorage.setItem("dg_liked", JSON.stringify(liked));
+  }
+}
+
+let currentArticle = null;
+
 async function loadArticle() {
   const params = new URLSearchParams(window.location.search);
   const slug = params.get("slug");
@@ -21,6 +38,7 @@ async function loadArticle() {
     return;
   }
 
+  currentArticle = data;
   document.getElementById("page-title").textContent = `${data.title} | Davidgistmedia`;
 
   const paragraphs = (data.content || "")
@@ -29,6 +47,8 @@ async function loadArticle() {
     .map((p) => `<p>${escapeHtml(p)}</p>`)
     .join("");
 
+  const liked = getLikedIds().includes(data.id);
+
   root.innerHTML = `
     <a href="index.html" class="back-link">&larr; Back to home</a>
     <div class="cat">${escapeHtml(data.category)}</div>
@@ -36,7 +56,41 @@ async function loadArticle() {
     <div class="meta">${escapeHtml(data.author || "Davidgistmedia")} · ${formatDate(data.published_at)}</div>
     ${data.image_url ? `<img class="hero-img" src="${escapeHtml(data.image_url)}" alt="">` : ""}
     <div class="article-body">${paragraphs}</div>
+    <div class="engage-row">
+      <button class="engage-btn ${liked ? "liked" : ""}" id="like-btn" ${liked ? "disabled" : ""}>
+        <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9C.7 8 2 4 6 4c2 0 3.5 1.2 4 2.5C10.5 5.2 12 4 14 4c4 0 5.3 4 3.5 8-2.5 4.5-9.5 9-9.5 9z"/></svg>
+        <span id="like-count">${data.likes || 0}</span> Like
+      </button>
+      <button class="engage-btn" id="share-btn">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></svg>
+        Share
+      </button>
+    </div>
   `;
+
+  document.getElementById("like-btn").addEventListener("click", handleLike);
+  document.getElementById("share-btn").addEventListener("click", handleShare);
+}
+
+async function handleLike() {
+  if (!currentArticle || getLikedIds().includes(currentArticle.id)) return;
+  markLiked(currentArticle.id);
+  const btn = document.getElementById("like-btn");
+  btn.classList.add("liked");
+  btn.disabled = true;
+  currentArticle.likes = (currentArticle.likes || 0) + 1;
+  document.getElementById("like-count").textContent = currentArticle.likes;
+  await supabaseClient.rpc("increment_likes", { article_id: currentArticle.id }).catch(() => {});
+}
+
+function handleShare() {
+  if (!currentArticle) return;
+  const url = window.location.href;
+  if (navigator.share) {
+    navigator.share({ title: currentArticle.title, url }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => alert("Link copied to clipboard."));
+  }
 }
 
 loadArticle();
