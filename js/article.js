@@ -17,6 +17,21 @@ function markLiked(id) {
 
 let currentArticle = null;
 
+function toEmbedUrl(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes("youtu.be")) {
+      return `https://www.youtube.com/embed/${u.pathname.slice(1)}`;
+    }
+    if (u.hostname.includes("youtube.com")) {
+      if (u.searchParams.get("v")) return `https://www.youtube.com/embed/${u.searchParams.get("v")}`;
+    }
+  } catch {
+    return null;
+  }
+  return url;
+}
+
 async function loadArticle() {
   const params = new URLSearchParams(window.location.search);
   const slug = params.get("slug");
@@ -48,13 +63,19 @@ async function loadArticle() {
     .join("");
 
   const liked = getLikedIds().includes(data.id);
+  const videoEmbed = data.video_url ? toEmbedUrl(data.video_url) : null;
 
   root.innerHTML = `
     <a href="index.html" class="back-link">&larr; Back to home</a>
     <div class="cat">${escapeHtml(data.category)}</div>
     <h1>${escapeHtml(data.title)}</h1>
     <div class="meta">${escapeHtml(data.author || "Davidgistmedia")} · ${formatDate(data.published_at)}</div>
-    ${data.image_url ? `<img class="hero-img" src="${escapeHtml(data.image_url)}" alt="">` : ""}
+    ${videoEmbed
+      ? `<div style="position:relative;padding-top:56.25%;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-md);background:#000;margin-bottom:20px">
+           <iframe src="${videoEmbed}" title="Story video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen
+             style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
+         </div>`
+      : (data.image_url ? `<img class="hero-img" src="${escapeHtml(data.image_url)}" alt="">` : "")}
     <div class="article-body">${paragraphs}</div>
     <div class="engage-row">
       <button class="engage-btn ${liked ? "liked" : ""}" id="like-btn" ${liked ? "disabled" : ""}>
