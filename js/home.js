@@ -8,6 +8,21 @@ let allArticles = [];
 let activeCategory = "all";
 let searchQuery = "";
 
+function getLikedIds() {
+  try {
+    return JSON.parse(localStorage.getItem("dg_liked") || "[]");
+  } catch {
+    return [];
+  }
+}
+function markLiked(id) {
+  const liked = getLikedIds();
+  if (!liked.includes(id)) {
+    liked.push(id);
+    localStorage.setItem("dg_liked", JSON.stringify(liked));
+  }
+}
+
 async function loadArticles() {
   const { data, error } = await supabaseClient
     .from("articles")
@@ -48,6 +63,23 @@ function renderPage() {
   const filtered = getFiltered();
   renderHero(filtered);
   renderCategorySections(filtered);
+  wireEngageButtons();
+}
+
+function engageRowHtml(article) {
+  const liked = getLikedIds().includes(article.id);
+  return `
+    <div class="engage-row" onclick="event.preventDefault(); event.stopPropagation();">
+      <button class="engage-btn ${liked ? "liked" : ""}" data-like-id="${article.id}" ${liked ? "disabled" : ""}>
+        <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9C.7 8 2 4 6 4c2 0 3.5 1.2 4 2.5C10.5 5.2 12 4 14 4c4 0 5.3 4 3.5 8-2.5 4.5-9.5 9-9.5 9z"/></svg>
+        <span data-like-count="${article.id}">${article.likes || 0}</span>
+      </button>
+      <button class="engage-btn" data-share-id="${article.id}" data-share-title="${escapeHtml(article.title)}" data-share-slug="${escapeHtml(article.slug)}">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></svg>
+        <span>Share</span>
+      </button>
+    </div>
+  `;
 }
 
 function renderHero(list) {
@@ -68,6 +100,7 @@ function renderHero(list) {
           <h1>${escapeHtml(lead.title)}</h1>
           <p>${escapeHtml(lead.excerpt || "")}</p>
           <div class="lead-meta">${escapeHtml(lead.author || "Davidgistmedia")} · ${formatDate(lead.published_at)}</div>
+          ${engageRowHtml(lead)}
         </div>
       </a>
       <div class="secondary-list">
@@ -78,6 +111,7 @@ function renderHero(list) {
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
               <div class="meta">${formatDate(a.published_at)}</div>
+              ${engageRowHtml(a)}
             </div>
           </a>
         `).join("")}
@@ -106,12 +140,53 @@ function renderCategorySections(list) {
                   <div class="cat">${escapeHtml(a.category)}</div>
                   <h3>${escapeHtml(a.title)}</h3>
                   <div class="meta">${formatDate(a.published_at)}</div>
+                  ${engageRowHtml(a)}
                 </div>
               </a>
             `).join("")}</div>`}
       </section>
     `;
   }).join("");
+}
+
+async function handleLike(id, btn) {
+  if (getLikedIds().includes(id)) return;
+  markLiked(id);
+  btn.classList.add("liked");
+  btn.disabled = true;
+  const countEl = btn.querySelector(`[data-like-count="${id}"]`);
+  const current = allArticles.find((a) => a.id === id);
+  if (current) {
+    current.likes = (current.likes || 0) + 1;
+    if (countEl) countEl.textContent = current.likes;
+  }
+  await supabaseClient.rpc("increment_likes", { article_id: id }).catch(() => {});
+}
+
+function handleShare(id, title, slug) {
+  const url = `${window.location.origin}${window.location.pathname.replace("index.html", "")}article.html?slug=${encodeURIComponent(slug)}`;
+  if (navigator.share) {
+    navigator.share({ title, url }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => alert("Link copied to clipboard."));
+  }
+}
+
+function wireEngageButtons() {
+  document.querySelectorAll("[data-like-id]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleLike(btn.dataset.likeId, btn);
+    });
+  });
+  document.querySelectorAll("[data-share-id]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleShare(btn.dataset.shareId, btn.dataset.shareTitle, btn.dataset.shareSlug);
+    });
+  });
 }
 
 document.getElementById("tabs").addEventListener("click", (e) => {
