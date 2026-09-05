@@ -45,7 +45,44 @@ function showApp() {
   loginView.style.display = "none";
   appView.style.display = "";
   loadAdminList();
+  loadLiveUrl();
 }
+
+// ---- Live broadcast ----
+async function loadLiveUrl() {
+  const { data } = await supabaseClient
+    .from("settings")
+    .select("value")
+    .eq("key", "live_stream_url")
+    .maybeSingle();
+  document.getElementById("live_url").value = (data && data.value) || "";
+}
+
+document.getElementById("live-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById("live-save-btn");
+  const status = document.getElementById("live-status");
+  const value = document.getElementById("live_url").value.trim();
+
+  btn.disabled = true;
+  status.textContent = "Saving...";
+  status.className = "admin-status";
+
+  const { error } = await supabaseClient
+    .from("settings")
+    .update({ value })
+    .eq("key", "live_stream_url");
+
+  btn.disabled = false;
+
+  if (error) {
+    status.textContent = error.message;
+    status.className = "admin-status error";
+    return;
+  }
+  status.textContent = value ? "Live link saved." : "Live link cleared.";
+  status.className = "admin-status ok";
+});
 
 // ---- Publish / edit form ----
 const form = document.getElementById("article-form");
@@ -72,6 +109,7 @@ form.addEventListener("submit", async (e) => {
   const category = document.getElementById("category").value;
   const author = document.getElementById("author").value.trim() || "Davidgistmedia";
   const image_url = document.getElementById("image_url").value.trim() || null;
+  const video_url = document.getElementById("video_url").value.trim() || null;
   const excerpt = document.getElementById("excerpt").value.trim();
   const content = document.getElementById("content").value.trim();
   const featured = document.getElementById("featured").checked;
@@ -86,7 +124,7 @@ form.addEventListener("submit", async (e) => {
   saveStatus.textContent = "Saving...";
   saveStatus.className = "admin-status";
 
-  const payload = { title, category, author, image_url, excerpt, content, featured };
+  const payload = { title, category, author, image_url, video_url, excerpt, content, featured };
 
   let result;
   if (id) {
@@ -166,6 +204,7 @@ function editArticle(id, list) {
   document.getElementById("category").value = a.category;
   document.getElementById("author").value = a.author || "";
   document.getElementById("image_url").value = a.image_url || "";
+  document.getElementById("video_url").value = a.video_url || "";
   document.getElementById("excerpt").value = a.excerpt || "";
   document.getElementById("content").value = a.content || "";
   document.getElementById("featured").checked = !!a.featured;
