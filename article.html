@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d0d0d">
+  <title id="page-title">Davidgistmedia</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="wrap">
+      <a href="index.html" style="text-decoration:none">
+        <div class="brand-title">David<span class="gold">gistmedia</span></div>
+        <p class="tagline">Your Source for Entertainment &amp; Breaking News</p>
+      </a>
+    </div>
+    <nav class="tabs">
+      <a href="index.html">Home</a>
+      <a href="index.html#nigeria">Nigeria</a>
+      <a href="index.html#entertainment">Entertainment</a>
+      <a href="index.html#sports">Sports</a>
+      <a href="index.html#business">Business</a>
+    </nav>
+  </header>
+
+  <main class="wrap article-page" id="article-root">
+    <p>Loading story...</p>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="brand-title">David<span class="gold">gistmedia</span></div>
+      <div class="copyright">&copy; <span id="year"></span> Davidgistmedia. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/article.js"></script>
+</body>
+</html>
