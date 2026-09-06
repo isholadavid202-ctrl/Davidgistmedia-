@@ -87,10 +87,83 @@ async function loadArticle() {
         Share
       </button>
     </div>
+
+    <div class="comments-section">
+      <h3 id="comments-heading">Comments</h3>
+      <form id="comment-form" class="comment-form">
+        <input id="comment-name" placeholder="Your name (optional)" maxlength="60">
+        <textarea id="comment-text" placeholder="Write a comment..." required maxlength="1000"></textarea>
+        <button class="engage-btn" type="submit" id="comment-submit-btn">Post comment</button>
+        <p class="admin-status" id="comment-status"></p>
+      </form>
+      <div id="comments-list"></div>
+    </div>
   `;
 
   document.getElementById("like-btn").addEventListener("click", handleLike);
   document.getElementById("share-btn").addEventListener("click", handleShare);
+  document.getElementById("comment-form").addEventListener("submit", handleCommentSubmit);
+  loadComments();
+}
+
+async function loadComments() {
+  const list = document.getElementById("comments-list");
+  const { data, error } = await supabaseClient
+    .from("comments")
+    .select("*")
+    .eq("article_id", currentArticle.id)
+    .order("created_at", { ascending: false });
+
+  document.getElementById("comments-heading").textContent = `Comments${data && data.length ? ` (${data.length})` : ""}`;
+
+  if (error) {
+    list.innerHTML = `<p class="admin-status error">Couldn't load comments.</p>`;
+    return;
+  }
+  if (!data || data.length === 0) {
+    list.innerHTML = `<p style="color:var(--muted);font-size:0.9rem">No comments yet — be the first to say something.</p>`;
+    return;
+  }
+
+  list.innerHTML = data.map((c) => `
+    <div class="comment-item">
+      <div class="comment-head"><strong>${escapeHtml(c.name || "Anonymous")}</strong><span class="meta">${formatDate(c.created_at)}</span></div>
+      <p>${escapeHtml(c.content)}</p>
+    </div>
+  `).join("");
+}
+
+async function handleCommentSubmit(e) {
+  e.preventDefault();
+  const nameInput = document.getElementById("comment-name");
+  const textInput = document.getElementById("comment-text");
+  const btn = document.getElementById("comment-submit-btn");
+  const status = document.getElementById("comment-status");
+
+  const content = textInput.value.trim();
+  if (!content) return;
+
+  btn.disabled = true;
+  status.textContent = "Posting...";
+  status.className = "admin-status";
+
+  const { error } = await supabaseClient.from("comments").insert({
+    article_id: currentArticle.id,
+    name: nameInput.value.trim() || "Anonymous",
+    content,
+  });
+
+  btn.disabled = false;
+
+  if (error) {
+    status.textContent = "Couldn't post your comment. Try again.";
+    status.className = "admin-status error";
+    return;
+  }
+
+  status.textContent = "";
+  textInput.value = "";
+  loadComments();
 }
 
 async function handleLike() {
