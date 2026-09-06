@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#141414">
+  <title>Terms of Use | Davidgistmedia</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="wrap">
+      <a href="index.html" style="text-decoration:none;color:inherit">
+        <div class="brand-title">David<span class="gold">gistmedia</span></div>
+        <p class="tagline">Your Source for Entertainment &amp; Breaking News</p>
+      </a>
+    </div>
+    <nav class="tabs">
+      <a href="index.html">Home</a>
+      <a href="live.html">Live</a>
+    </nav>
+  </header>
+
+  <main class="wrap article-page">
+    <a href="index.html" class="back-link">&larr; Back to home</a>
+    <h1>Terms of Use</h1>
+    <div class="article-body">
+      <p><em>Last updated: <span id="today"></span></em></p>
+      <p>By using Davidgistmedia, you agree to the following terms.</p>
+
+      <p><strong>Use of content</strong></p>
+      <p>Articles, images, and other content on this site are provided for personal, non-commercial reading. You may share links to our articles. Reproducing full articles elsewhere without permission is not allowed.</p>
+
+      <p><strong>Comments</strong></p>
+      <p>You are responsible for what you post in the comments section. We reserve the right to remove any comment that is abusive, spam, illegal, or otherwise inappropriate, without notice.</p>
+
+      <p><strong>Accuracy</strong></p>
+      <p>We aim for accuracy in our reporting but do not guarantee that every detail is error-free at all times. See our <a href="editorial-policy.html" style="color:var(--red);font-weight:700">Editorial &amp; Corrections Policy</a> for how we handle mistakes.</p>
+
+      <p><strong>External links</strong></p>
+      <p>Our site may link to external websites (such as YouTube videos). We are not responsible for the content or practices of those external sites.</p>
+
+      <p><strong>Changes</strong></p>
+      <p>We may update these terms from time to time. Continued use of the site after changes means you accept the updated terms.</p>
+
+      <p><strong>Contact</strong></p>
+      <p>Questions about these terms can be sent to <a href="mailto:davidgistmediatv@gmail.com" style="color:var(--red);font-weight:700">davidgistmediatv@gmail.com</a>.</p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="brand-title">David<span class="gold">gistmedia</span></div>
+      <div class="socials" style="margin-top:12px">
+        <a class="social-btn" href="about.html">About</a>
+        <a class="social-btn" href="contact.html">Contact</a>
+        <a class="social-btn" href="privacy-policy.html">Privacy</a>
+        <a class="social-btn" href="terms.html">Terms</a>
+        <a class="social-btn" href="editorial-policy.html">Editorial Policy</a>
+      </div>
+      <div class="copyright">&copy; <span id="year"></span> Davidgistmedia. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("today").textContent = new Date().toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" });
+  </script>
+</body>
+</html>
