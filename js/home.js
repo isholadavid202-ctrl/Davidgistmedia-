@@ -3,7 +3,7 @@ document.getElementById("today").textContent = new Date().toLocaleDateString("en
   weekday: "long", day: "numeric", month: "long", year: "numeric",
 });
 
-const CATEGORIES = ["nigeria", "entertainment", "sports", "business"];
+const CATEGORIES = ["nigeria", "politics", "entertainment", "sports", "business", "technology", "world", "local"];
 let allArticles = [];
 let activeCategory = "all";
 let searchQuery = "";
