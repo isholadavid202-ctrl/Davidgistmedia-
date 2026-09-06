@@ -208,4 +208,33 @@ document.getElementById("search-input").addEventListener("input", (e) => {
   renderPage();
 });
 
+document.getElementById("newsletter-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = document.getElementById("newsletter-email");
+  const btn = document.getElementById("newsletter-btn");
+  const status = document.getElementById("newsletter-status");
+  const email = input.value.trim();
+  if (!email) return;
+
+  btn.disabled = true;
+  status.textContent = "Subscribing...";
+  status.style.color = "";
+
+  const { error } = await supabaseClient.from("subscribers").insert({ email });
+
+  btn.disabled = false;
+
+  if (error) {
+    if (error.code === "23505") {
+      status.textContent = "You're already subscribed.";
+    } else {
+      status.textContent = "Something went wrong. Try again.";
+      status.style.color = "var(--red)";
+    }
+    return;
+  }
+  status.textContent = "Thanks for subscribing!";
+  input.value = "";
+});
+
 loadArticles();
