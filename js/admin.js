@@ -1,104 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0d0d0d">
-  <title>Newsroom Login | Davidgistmedia</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+const loginView = document.getElementById("login-view");
+const appView = document.getElementById("app-view");
 
-  <header class="masthead">
-    <div class="wrap">
-      <a href="index.html" style="text-decoration:none">
-        <div class="brand-title">David<span class="gold">gistmedia</span></div>
-        <p class="tagline">Newsroom</p>
-      </a>
-    </div>
-  </header>
+async function checkSession() {
+  const { data } = await supabaseClient.auth.getSession();
+  if (data.session) {
+    showApp();
+  } else {
+    loginView.style.display = "";
+    appView.style.display = "none";
+  }
+}
 
-  <div class="admin-shell">
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const btn = document.getElementById("login-btn");
+  const status = document.getElementById("login-status");
 
-    <div id="login-view" class="admin-card">
-      <h2>Newsroom login</h2>
-      <form id="login-form">
-        <label for="email">Email</label>
-        <input id="email" type="email" required placeholder="you@example.com" autocomplete="username">
-        <label for="password">Password</label>
-        <input id="password" type="password" required placeholder="Your password" autocomplete="current-password">
-        <button class="primary" type="submit" id="login-btn">Log in</button>
-        <p class="admin-status" id="login-status"></p>
-      </form>
-      <p style="margin-top:16px;font-size:0.82rem;color:var(--muted)">
-        This login is for the site owner only. Accounts are created from the Supabase dashboard, not here — see the setup guide.
-      </p>
-    </div>
+  btn.disabled = true;
+  status.textContent = "Logging in...";
+  status.className = "admin-status";
 
-    <div id="app-view" style="display:none">
-      <a href="#" id="logout-link" class="logout-link">Log out</a>
-      <div class="admin-card">
-        <h2 id="form-title">New story</h2>
-        <form id="article-form">
-          <input type="hidden" id="article-id">
-          <label for="title">Title</label>
-          <input id="title" required placeholder="Story headline">
-          <div class="row2">
-            <div>
-              <label for="category">Category</label>
-              <select id="category">
-                <option value="nigeria">Nigeria</option>
-                <option value="politics">Politics</option>
-                <option value="entertainment">Entertainment</option>
-                <option value="sports">Sports</option>
-                <option value="business">Business</option>
-                <option value="technology">Technology</option>
-                <option value="world">World</option>
-                <option value="local">Local News</option>
-              </select>
-            </div>
-            <div>
-              <label for="author">Author</label>
-              <input id="author" placeholder="Davidgistmedia" value="Davidgistmedia">
-            </div>
-          </div>
-          <label for="image_url">Image URL</label>
-          <input id="image_url" placeholder="https://...">
-          <label for="video_url">Video URL (optional — YouTube link)</label>
-          <input id="video_url" placeholder="https://www.youtube.com/watch?v=...">
-          <label for="excerpt">Excerpt (short summary shown on the homepage)</label>
-          <textarea id="excerpt" style="min-height:70px" placeholder="One or two sentences"></textarea>
-          <label for="content">Full story</label>
-          <textarea id="content" required placeholder="Write the full story here. Leave a blank line between paragraphs."></textarea>
-          <div class="checkbox-row">
-            <input type="checkbox" id="featured">
-            <label for="featured" style="margin:0">Feature this story at the top of the homepage</label>
-          </div>
-          <button class="primary" type="submit" id="save-btn">Publish story</button>
-          <button type="button" class="primary" id="cancel-edit-btn" style="display:none;background:#eee;color:#111;margin-top:8px">Cancel edit</button>
-          <p class="admin-status" id="save-status"></p>
-        </form>
-      </div>
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  btn.disabled = false;
 
-      <div class="admin-card">
-        <h2>Live Broadcast</h2>
-        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">Paste your YouTube Live link here when you go live. Clear it when you're done to remove the player from the Live page.</p>
-        <form id="live-form">
-          <label for="live_url">Live stream URL</label>
-          <input id="live_url" placeholder="https://www.youtube.com/watch?v=...">
-          <button class="primary" type="submit" id="live-save-btn">Save live link</button>
-          <p class="admin-status" id="live-status"></p>
-        </form>
-      </div>
+  if (error) {
+    status.textContent = error.message;
+    status.className = "admin-status error";
+    return;
+  }
+  status.textContent = "";
+  showApp();
+});
 
-      <div class="admin-list" id="admin-list"></div>
-    </div>
+document.getElementById("logout-link").addEventListener("click", async (e) => {
+  e.preventDefault();
+  await supabaseClient.auth.signOut();
+  loginView.style.display = "";
+  appView.style.display = "none";
+});
 
-  </div>
+function showApp() {
+  loginView.style.display = "none";
+  appView.style.display = "";
+  loadAdminList();
+  loadLiveUrl();
+}
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/supabase-client.js"></script>
-  <script src="js/admin.js"></script>
-</body>
-</html>
+// ---- Live broadcast ----
+async function loadLiveUrl() {
+  const { data } = await supabaseClient
+    .from("settings")
+    .select("value")
+    .eq("key", "live_stream_url")
+    .maybeSingle();
+  document.getElementById("live_url").value = (data && data.value) || "";
+}
+
+document.getElementById("live-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById("live-save-btn");
+  const status = document.getElementById("live-status");
+  const value = document.getElementById("live_url").value.trim();
+
+  btn.disabled = true;
+  status.textContent = "Saving...";
+  status.className = "admin-status";
+
+  const { error } = await supabaseClient
+    .from("settings")
+    .update({ value })
+    .eq("key", "live_stream_url");
+
+  btn.disabled = false;
+
+  if (error) {
+    status.textContent = error.message;
+    status.className = "admin-status error";
+    return;
+  }
+  status.textContent = value ? "Live link saved." : "Live link cleared.";
+  status.className = "admin-status ok";
+});
+
+// ---- Publish / edit form ----
+const form = document.getElementById("article-form");
+const saveBtn = document.getElementById("save-btn");
+const saveStatus = document.getElementById("save-status");
+const cancelEditBtn = document.getElementById("cancel-edit-btn");
+const formTitle = document.getElementById("form-title");
+
+function resetForm() {
+  form.reset();
+  document.getElementById("article-id").value = "";
+  formTitle.textContent = "New story";
+  saveBtn.textContent = "Publish story";
+  cancelEditBtn.style.display = "none";
+  saveStatus.textContent = "";
+}
+
+cancelEditBtn.addEventListener("click", resetForm);
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const id = document.getElementById("article-id").value;
+  const title = document.getElementById("title").value.trim();
+  const category = document.getElementById("category").value;
