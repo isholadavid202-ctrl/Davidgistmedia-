@@ -77,6 +77,7 @@ async function loadArticle() {
          </div>`
       : (data.image_url ? `<img class="hero-img" src="${escapeHtml(data.image_url)}" alt="">` : "")}
     <div class="article-body">${paragraphs}</div>
+    <div id="related-section"></div>
     <div class="engage-row">
       <button class="engage-btn ${liked ? "liked" : ""}" id="like-btn" ${liked ? "disabled" : ""}>
         <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9C.7 8 2 4 6 4c2 0 3.5 1.2 4 2.5C10.5 5.2 12 4 14 4c4 0 5.3 4 3.5 8-2.5 4.5-9.5 9-9.5 9z"/></svg>
@@ -104,6 +105,43 @@ async function loadArticle() {
   document.getElementById("share-btn").addEventListener("click", handleShare);
   document.getElementById("comment-form").addEventListener("submit", handleCommentSubmit);
   loadComments();
+  loadRelated();
+}
+
+async function loadRelated() {
+  const container = document.getElementById("related-section");
+  const { data, error } = await supabaseClient
+    .from("articles")
+    .select("*")
+    .eq("category", currentArticle.category)
+    .neq("id", currentArticle.id)
+    .order("published_at", { ascending: false })
+    .limit(3);
+
+  if (error || !data || data.length === 0) {
+    container.innerHTML = "";
+    return;
+  }
+
+  container.innerHTML = `
+    <section class="cat-section">
+      <div class="cat-head">
+        <div class="left"><span class="bar"></span><h2>Related Stories</h2></div>
+      </div>
+      <div class="card-grid">
+        ${data.map((a) => `
+          <a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">
+            ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="">` : ""}
+            <div class="body">
+              <div class="cat">${escapeHtml(a.category)}</div>
+              <h3>${escapeHtml(a.title)}</h3>
+              <div class="meta">${formatDate(a.published_at)}</div>
+            </div>
+          </a>
+        `).join("")}
+      </div>
+    </section>
+  `;
 }
 
 async function loadComments() {
