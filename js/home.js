@@ -61,9 +61,42 @@ function getFiltered() {
 
 function renderPage() {
   const filtered = getFiltered();
+  renderTrending();
   renderHero(filtered);
   renderCategorySections(filtered);
   wireEngageButtons();
+}
+
+function renderTrending() {
+  const container = document.getElementById("trending-section");
+  if (!container) return;
+  const top = [...allArticles].sort((a, b) => (b.likes || 0) - (a.likes || 0)).slice(0, 5);
+  const hasEngagement = top.some((a) => (a.likes || 0) > 0);
+
+  if (top.length === 0 || !hasEngagement) {
+    container.innerHTML = "";
+    return;
+  }
+
+  container.innerHTML = `
+    <section class="cat-section">
+      <div class="cat-head">
+        <div class="left"><span class="bar"></span><h2>Trending</h2></div>
+      </div>
+      <div class="card-grid">
+        ${top.map((a) => `
+          <a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">
+            ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="">` : ""}
+            <div class="body">
+              <div class="cat">${escapeHtml(a.category)}</div>
+              <h3>${escapeHtml(a.title)}</h3>
+              <div class="meta">${a.likes || 0} likes · ${formatDate(a.published_at)}</div>
+            </div>
+          </a>
+        `).join("")}
+      </div>
+    </section>
+  `;
 }
 
 function engageRowHtml(article) {
