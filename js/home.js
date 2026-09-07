@@ -35,19 +35,7 @@ async function loadArticles() {
     return;
   }
   allArticles = data || [];
-  renderTicker();
   renderPage();
-}
-
-function renderTicker() {
-  const track = document.getElementById("ticker-track");
-  const headlines = allArticles.slice(0, 8).map((a) => a.title);
-  if (headlines.length === 0) {
-    track.innerHTML = "<span>No breaking headlines right now — check back soon.</span>";
-    return;
-  }
-  const doubled = [...headlines, ...headlines];
-  track.innerHTML = doubled.map((h) => `<span>${escapeHtml(h)}</span>`).join("");
 }
 
 function getFiltered() {
