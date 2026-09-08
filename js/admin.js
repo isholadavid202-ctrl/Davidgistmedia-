@@ -175,6 +175,7 @@ form.addEventListener("submit", async (e) => {
 
   let result;
   if (id) {
+    payload.updated_at = new Date().toISOString();
     result = await supabaseClient.from("articles").update(payload).eq("id", id);
   } else {
     payload.slug = await uniqueSlug(slugify(title));
