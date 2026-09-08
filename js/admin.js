@@ -46,6 +46,52 @@ function showApp() {
   appView.style.display = "";
   loadAdminList();
   loadLiveUrl();
+  loadCommentsAdmin();
+}
+
+// ---- Comment moderation ----
+async function loadCommentsAdmin() {
+  const list = document.getElementById("comments-admin-list");
+  const { data, error } = await supabaseClient
+    .from("comments")
+    .select("*, articles(title, slug)")
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  if (error) {
+    list.innerHTML = `<p class="admin-status error">${escapeHtml(error.message)}</p>`;
+    return;
+  }
+  if (!data || data.length === 0) {
+    list.innerHTML = `<p style="color:var(--muted);font-size:0.9rem">No comments yet.</p>`;
+    return;
+  }
+
+  list.innerHTML = data.map((c) => `
+    <div class="admin-list-item">
+      <div>
+        <h4>${escapeHtml(c.name || "Anonymous")} <span class="meta">on "${escapeHtml((c.articles && c.articles.title) || "a story")}"</span></h4>
+        <div class="meta" style="margin-top:4px">${escapeHtml(c.content)}</div>
+      </div>
+      <div class="actions">
+        <button data-comment-id="${c.id}" class="danger">Delete</button>
+      </div>
+    </div>
+  `).join("");
+
+  list.querySelectorAll("[data-comment-id]").forEach((btn) => {
+    btn.addEventListener("click", () => deleteComment(btn.dataset.commentId));
+  });
+}
+
+async function deleteComment(id) {
+  if (!confirm("Delete this comment? This can't be undone.")) return;
+  const { error } = await supabaseClient.from("comments").delete().eq("id", id);
+  if (error) {
+    alert(error.message);
+    return;
+  }
+  loadCommentsAdmin();
 }
 
 // ---- Live broadcast ----
