@@ -92,6 +92,7 @@ async function loadArticle() {
     <div class="comments-section">
       <h3 id="comments-heading">Comments</h3>
       <form id="comment-form" class="comment-form">
+        <input id="comment-website" name="website" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true">
         <input id="comment-name" placeholder="Your name (optional)" maxlength="60">
         <textarea id="comment-text" placeholder="Write a comment..." required maxlength="1000"></textarea>
         <button class="engage-btn" type="submit" id="comment-submit-btn">Post comment</button>
@@ -175,8 +176,16 @@ async function handleCommentSubmit(e) {
   e.preventDefault();
   const nameInput = document.getElementById("comment-name");
   const textInput = document.getElementById("comment-text");
+  const honeypot = document.getElementById("comment-website");
   const btn = document.getElementById("comment-submit-btn");
   const status = document.getElementById("comment-status");
+
+  if (honeypot && honeypot.value.trim()) {
+    // Likely a bot. Pretend it worked, but don't actually post it.
+    textInput.value = "";
+    status.textContent = "";
+    return;
+  }
 
   const content = textInput.value.trim();
   if (!content) return;
