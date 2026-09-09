@@ -69,7 +69,7 @@ async function loadArticle() {
     <a href="index.html" class="back-link">&larr; Back to home</a>
     <div class="cat">${escapeHtml(data.category)}</div>
     <h1>${escapeHtml(data.title)}</h1>
-    <div class="meta"><a href="author.html?name=${encodeURIComponent(data.author || "Davidgistmedia")}" style="color:inherit;font-weight:700">${escapeHtml(data.author || "Davidgistmedia")}</a> · ${formatDate(data.published_at)}</div>
+    <div class="meta"><a href="author.html?name=${encodeURIComponent(data.author || "Davidgistmedia")}" style="color:inherit;font-weight:700">${escapeHtml(data.author || "Davidgistmedia")}</a> · ${formatDate(data.published_at)}${data.updated_at ? ` · <em>Updated ${formatDate(data.updated_at)}</em>` : ""}</div>
     ${videoEmbed
       ? `<div style="position:relative;padding-top:56.25%;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-md);background:#000;margin-bottom:20px">
            <iframe src="${videoEmbed}" title="Story video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen
