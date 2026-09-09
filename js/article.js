@@ -80,7 +80,7 @@ async function loadArticle() {
     <div id="related-section"></div>
     <div class="engage-row">
       <button class="engage-btn ${liked ? "liked" : ""}" id="like-btn" ${liked ? "disabled" : ""}>
-        <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9C.7 8 2 4 6 4c2 0 3.5 1.2 4 2.5C10.5 5.2 12 4 14 4c4 0 5.3 4 3.5 8-2.5 4.5-9.5 9-9.5 9z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
         <span id="like-count">${data.likes || 0}</span> Like
       </button>
       <button class="engage-btn" id="share-btn">
