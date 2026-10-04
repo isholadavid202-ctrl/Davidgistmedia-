@@ -2,6 +2,19 @@
   const root = document.getElementById('article-root');
   if (!root) return;
 
+  const css = `
+  .share-bar{display:flex;justify-content:center;gap:16px;margin:24px 0}
+  .share-bar a{width:100px;height:64px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;text-decoration:none;cursor:pointer}
+  .share-bar .fb{background:#4267b2}
+  .share-bar .x{background:#000}
+  .share-bar .em{background:#777}
+  .share-bar .tg{background:#0088cc}
+  .share-bar .wa{background:#25d366}
+  @media(max-width:480px){.share-bar{gap:8px}.share-bar a{width:18%}}`;
+  const st = document.createElement('style');
+  st.textContent = css;
+  document.head.appendChild(st);
+
   const buttons = [
     { cls: 'fb', name: 'Facebook', icon: 'fa-brands fa-facebook-f',
       url: (u, t) => `https://www.facebook.com/sharer/sharer.php?u=${u}` },
