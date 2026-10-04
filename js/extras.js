@@ -72,10 +72,6 @@
       .replace(/&/g, "&amp;").replace(/</g, "&lt;")
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
-  function fmt(d) {
-    try { return new Date(d).toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" }); }
-    catch (e) { return ""; }
-  }
   function db() { return typeof supabaseClient !== "undefined" ? supabaseClient : null; }
 
   const BADGE = (() => {
@@ -250,29 +246,6 @@
     box.appendChild(photoEl);
     box.appendChild(text);
     body.insertAdjacentElement("afterend", box);
-
-    const { data: rel } = await client
-      .from("articles").select("title,slug,image_url,category,published_at")
-      .eq("category", a.category).neq("slug", slug)
-      .order("published_at", { ascending: false }).limit(3);
-    if (rel && rel.length) {
-      const sec = document.createElement("section");
-      sec.className = "cat-section";
-      sec.innerHTML =
-        `<div class="cat-head"><div class="left"><span class="bar"></span><h2>Related stories</h2></div></div>` +
-        `<div class="card-grid">` +
-        rel.map((r) => `
-          <a class="story-card" href="article.html?slug=${encodeURIComponent(r.slug)}">
-            ${r.image_url ? `<img src="${esc(r.image_url)}" alt="" loading="lazy">` : ""}
-            <div class="body">
-              <div class="cat">${esc(r.category)}</div>
-              <h3>${esc(r.title)}</h3>
-              <div class="meta">${fmt(r.published_at)}</div>
-            </div>
-          </a>`).join("") +
-        `</div>`;
-      root.appendChild(sec);
-    }
   }
 
   progress();
