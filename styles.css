@@ -36,8 +36,10 @@ button{font:inherit;cursor:pointer;border:0;background:none}
 .search-row button:hover{background:var(--red-dark)}
 
 /* Nav tabs */
-.tabs{display:flex;overflow-x:auto;background:var(--near-black);margin-top:20px;scrollbar-width:none;justify-content:center}
+.tabs{display:flex;overflow-x:auto;background:var(--near-black);margin-top:20px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
+.tabs > :first-child{margin-left:auto}
+.tabs > :last-child{margin-right:auto}
 .tabs a,.tabs button{flex:0 0 auto;color:#e4e4e2;font-weight:700;font-size:0.82rem;letter-spacing:0.3px;padding:14px 19px;text-transform:capitalize;white-space:nowrap;transition:background .15s var(--ease),color .15s var(--ease);border-bottom:2px solid transparent}
 .tabs a.active,.tabs button.active{background:rgba(200,16,46,.18);color:#fff;border-bottom-color:var(--red)}
 .tabs a:not(.active):hover,.tabs button:not(.active):hover{background:rgba(255,255,255,.06)}
