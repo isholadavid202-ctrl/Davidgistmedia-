@@ -2,6 +2,9 @@
   const root = document.getElementById('article-root');
   if (!root) return;
 
+  const BADGE_NAME  = 'Ishola David';
+  const BADGE_TITLE = 'Founder & CEO, Davidgistmedia';
+
   const css = `
   .share-bar{display:flex;justify-content:center;gap:16px;margin:24px 0}
   .share-bar a{width:100px;height:64px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;text-decoration:none;cursor:pointer}
@@ -10,7 +13,10 @@
   .share-bar .em{background:#777}
   .share-bar .tg{background:#0088cc}
   .share-bar .wa{background:#25d366}
-  @media(max-width:480px){.share-bar{gap:8px}.share-bar a{width:18%}}`;
+  @media(max-width:480px){.share-bar{gap:8px}.share-bar a{width:18%}}
+  .ceo-badge{position:relative;display:inline-block;width:18px;height:18px;margin-left:5px;vertical-align:-3px;cursor:help}
+  .ceo-badge .seal{position:absolute;left:0;top:0;font-size:18px;line-height:18px;color:#f97316}
+  .ceo-badge .tick{position:absolute;left:0;top:0;width:18px;text-align:center;font-size:9px;line-height:18px;color:#fff}`;
   const st = document.createElement('style');
   st.textContent = css;
   document.head.appendChild(st);
@@ -57,8 +63,27 @@
     return true;
   }
 
-  if (!insertBar()) {
-    const obs = new MutationObserver(() => { if (insertBar()) obs.disconnect(); });
-    obs.observe(root, { childList: true, subtree: true });
+  function addBadge() {
+    if (root.querySelector('.ceo-badge')) return true;
+    const area = root.querySelector('.meta') || root;
+    const walker = document.createTreeWalker(area, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      const i = node.nodeValue.indexOf(BADGE_NAME);
+      if (i === -1) continue;
+      node.splitText(i + BADGE_NAME.length);
+      const badge = document.createElement('span');
+      badge.className = 'ceo-badge';
+      badge.title = BADGE_TITLE;
+      badge.setAttribute('aria-label', BADGE_TITLE);
+      badge.innerHTML = '<i class="fa-solid fa-certificate seal"></i><i class="fa-solid fa-check tick"></i>';
+      node.parentNode.insertBefore(badge, node.nextSibling);
+      return true;
+    }
+    return false;
   }
+
+  function run() { insertBar(); addBadge(); }
+  run();
+  new MutationObserver(run).observe(root, { childList: true, subtree: true });
 })();
