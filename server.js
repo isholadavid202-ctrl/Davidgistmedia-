@@ -83,9 +83,13 @@ app.use((req, res, next) => {
 });
 
 app.get("/robots.txt", (req, res) => {
+  const o = originOf(req);
   res
     .type("text/plain")
-    .send(`User-agent: *\nAllow: /\nDisallow: /admin.html\n\nSitemap: ${originOf(req)}/sitemap.xml\n`);
+    .send(
+      `User-agent: *\nAllow: /\nDisallow: /admin.html\n\n` +
+        `Sitemap: ${o}/sitemap.xml\nSitemap: ${o}/news-sitemap.xml\n`
+    );
 });
 
 app.get("/sitemap.xml", async (req, res) => {
@@ -116,6 +120,45 @@ app.get("/sitemap.xml", async (req, res) => {
   } catch (e) {
     console.error("Sitemap failed:", e.message);
     res.status(500).type("text/plain").send("Sitemap unavailable");
+  }
+});
+
+app.get("/news-sitemap.xml", async (req, res) => {
+  const origin = originOf(req);
+  try {
+    const rows = await cached("newsmap", 5 * 60 * 1000, () => {
+      const since = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+      return sb(
+        `articles?select=title,slug,published_at` +
+          `&published_at=gte.${encodeURIComponent(since)}` +
+          `&order=published_at.desc&limit=1000`
+      );
+    });
+    const items = [];
+    (Array.isArray(rows) ? rows : []).forEach((a) => {
+      const pub = isoDate(a.published_at);
+      if (!a.slug || !a.title || !pub) return;
+      items.push(
+        `<url>` +
+          `<loc>${esc(origin + "/article.html?slug=" + encodeURIComponent(a.slug))}</loc>` +
+          `<news:news>` +
+          `<news:publication><news:name>Davidgistmedia</news:name><news:language>en</news:language></news:publication>` +
+          `<news:publication_date>${pub}</news:publication_date>` +
+          `<news:title>${esc(a.title)}</news:title>` +
+          `</news:news>` +
+          `</url>`
+      );
+    });
+    res
+      .type("application/xml")
+      .send(
+        `<?xml version="1.0" encoding="UTF-8"?>\n` +
+          `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">\n` +
+          `${items.join("\n")}\n</urlset>`
+      );
+  } catch (e) {
+    console.error("News sitemap failed:", e.message);
+    res.status(500).type("text/plain").send("News sitemap unavailable");
   }
 });
 
