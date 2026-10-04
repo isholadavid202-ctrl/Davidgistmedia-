@@ -3,6 +3,24 @@ document.getElementById("today").textContent = new Date().toLocaleDateString("en
   weekday: "long", day: "numeric", month: "long", year: "numeric",
 });
 
+const BADGE_NAME = "Ishola David";
+const BADGE_TITLE = "Founder & CEO, Davidgistmedia";
+const BADGE_SVG = (() => {
+  const pts = [];
+  for (let i = 0; i < 48; i++) {
+    const a = (i / 48) * Math.PI * 2;
+    const r = 9.2 + 1.1 * Math.cos(8 * a);
+    pts.push((12 + r * Math.cos(a)).toFixed(2) + "," + (12 + r * Math.sin(a)).toFixed(2));
+  }
+  return `<svg viewBox="0 0 24 24" width="16" height="16" role="img" aria-label="${BADGE_TITLE}" style="display:inline-block;vertical-align:-3px;margin-left:5px"><title>${BADGE_TITLE}</title><polygon points="${pts.join(" ")}" fill="#f97316"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+})();
+
+function authorHtml(name) {
+  const n = name || "Davidgistmedia";
+  const isCeo = n.trim().toLowerCase() === BADGE_NAME.toLowerCase();
+  return escapeHtml(n) + (isCeo ? BADGE_SVG : "");
+}
+
 const CATEGORIES = ["nigeria", "politics", "entertainment", "sports", "business", "technology", "world", "local"];
 let allArticles = [];
 let activeCategory = "all";
@@ -120,7 +138,7 @@ function renderHero(list) {
           <span class="lead-tag">${escapeHtml(lead.category)}</span>
           <h1>${escapeHtml(lead.title)}</h1>
           <p>${escapeHtml(lead.excerpt || "")}</p>
-          <div class="lead-meta">${escapeHtml(lead.author || "Davidgistmedia")} · ${formatDate(lead.published_at)}</div>
+          <div class="lead-meta">${authorHtml(lead.author)} · ${formatDate(lead.published_at)}</div>
           ${engageRowHtml(lead)}
         </div>
       </a>
