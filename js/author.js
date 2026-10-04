@@ -15,7 +15,7 @@ const BADGE_SVG = (() => {
 const PROFILES = {
   "ishola david": {
     title: "Founder & CEO, Davidgistmedia",
-    photo: "YOUR-PHOTO-FILE-NAME.jpg",
+    photo: "Snapchat-1872033241%20(1)_1748345725348.jpg",
     bio: "Ishola David is the Founder and CEO of Davidgistmedia, a Nigerian news and entertainment platform. He writes and publishes stories on entertainment, sports, business and breaking news, with a focus on keeping readers informed quickly and accurately."
   }
 };
