@@ -33,13 +33,14 @@
 
   .dg-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;z-index:10000}
   .dg-overlay.open{opacity:1;visibility:visible}
-  .dg-drawer{position:fixed;top:0;left:0;bottom:0;width:min(290px,82vw);background:#161617;color:#ececea;z-index:10001;transform:translateX(-100%);visibility:hidden;transition:transform .28s ease,visibility .28s ease;box-shadow:12px 0 32px rgba(0,0,0,.45);display:flex;flex-direction:column;padding:18px 16px}
+  .dg-drawer{position:fixed;top:0;left:0;bottom:0;width:min(290px,82vw);background:#161617;color:#ececea;z-index:10001;transform:translateX(-100%);visibility:hidden;transition:transform .28s ease,visibility .28s ease;box-shadow:12px 0 32px rgba(0,0,0,.45);display:flex;flex-direction:column;padding:18px 16px;overflow-y:auto}
   .dg-drawer.open{transform:none;visibility:visible}
-  .dg-dr-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #2f2f31}
+  .dg-dr-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding-bottom:14px;border-bottom:1px solid #2f2f31}
   .dg-dr-title{font-family:var(--serif);font-weight:700;font-size:1.05rem}
   .dg-dr-close{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1px solid #3a3a37;background:transparent;color:#d6d6d4;cursor:pointer;padding:0}
   .dg-dr-close svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
-  .dg-drawer a{display:block;padding:14px 12px;border-radius:6px;color:#d6d6d4;font-weight:700;font-size:.92rem}
+  .dg-dr-label{margin:18px 12px 6px;font-size:.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#8d8d8a}
+  .dg-drawer a{display:block;padding:13px 12px;border-radius:6px;color:#d6d6d4;font-weight:700;font-size:.92rem}
   .dg-drawer a:hover,.dg-drawer a:focus-visible{background:rgba(255,255,255,.09);color:#fff}
 
   html[data-theme="dark"]{--ink:#ececea;--paper:#1b1b1d;--page:#121213;--line:#2f2f31;--muted:#a3a3a0;--near-black:#0a0a0b;--red:#e8344c;--red-dark:#c8102e;color-scheme:dark}
@@ -69,11 +70,24 @@
   }
   function db() { return typeof supabaseClient !== "undefined" ? supabaseClient : null; }
 
-  /* ---------- Dark mode toggle + left-side login menu (all pages) ---------- */
+  /* ---------- Dark mode toggle + left-side menu (all pages) ---------- */
   const MOON = '<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
   const SUN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
   const BURGER = '<svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
   const CLOSE = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+  const SOCIAL_LINKS = [
+    ["TikTok", "https://www.tiktok.com/@davidgistmediang"],
+    ["Instagram", "https://www.instagram.com/davidgistmediang/"],
+    ["YouTube", "https://www.youtube.com/@davidgistmediang"]
+  ];
+  const PAGE_LINKS = [
+    ["About", "about.html"],
+    ["Contact", "contact.html"],
+    ["Privacy", "privacy-policy.html"],
+    ["Terms", "terms.html"],
+    ["Editorial Policy", "editorial-policy.html"]
+  ];
 
   function savedTheme() {
     try { return localStorage.getItem("dg_theme"); } catch (e) { return null; }
@@ -88,6 +102,20 @@
       btn.setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
       btn.title = t === "dark" ? "Light mode" : "Dark mode";
     }
+  }
+
+  function makeLink(text, href, external) {
+    const a = document.createElement("a");
+    a.href = href;
+    a.textContent = text;
+    if (external) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+    return a;
+  }
+  function addLabel(drawer, text) {
+    const d = document.createElement("div");
+    d.className = "dg-dr-label";
+    d.textContent = text;
+    drawer.appendChild(d);
   }
 
   function buildLoginMenu(group, links) {
@@ -116,6 +144,14 @@
     close.setAttribute("aria-label", "Close menu");
     head.appendChild(close);
     drawer.appendChild(head);
+
+    addLabel(drawer, "Follow us");
+    SOCIAL_LINKS.forEach((s) => drawer.appendChild(makeLink(s[0], s[1], true)));
+
+    addLabel(drawer, "Pages");
+    PAGE_LINKS.forEach((p) => drawer.appendChild(makeLink(p[0], p[1], false)));
+
+    addLabel(drawer, "Staff");
     links.forEach((l) => drawer.appendChild(l));
 
     function setOpen(open) {
