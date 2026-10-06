@@ -1,3 +1,23 @@
+// ---- Relabel "Newsroom" as "Admin login" ----
+(function () {
+  document.title = document.title
+    .replace(/newsroom login/i, "Admin login")
+    .replace(/newsroom/i, "Admin login");
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach((n) => {
+    const tag = n.parentNode && n.parentNode.nodeName;
+    if (tag === "SCRIPT" || tag === "STYLE") return;
+    const t = n.nodeValue;
+    if (/^\s*newsroom\s*$/i.test(t)) {
+      n.nodeValue = t.replace(/newsroom/i, "Admin login");
+    } else if (/newsroom login/i.test(t)) {
+      n.nodeValue = t.replace(/newsroom login/i, "Admin login");
+    }
+  });
+})();
+
 const loginView = document.getElementById("login-view");
 const appView = document.getElementById("app-view");
 
