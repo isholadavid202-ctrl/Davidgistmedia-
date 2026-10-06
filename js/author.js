@@ -1,15 +1,38 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
-const BADGE_NAME = "Ishola David";
-const BADGE_TITLE = "Founder & CEO, Davidgistmedia";
-const BADGE_SVG = (() => {
-  const pts = [];
-  for (let i = 0; i < 48; i++) {
-    const a = (i / 48) * Math.PI * 2;
-    const r = 9.2 + 1.1 * Math.cos(8 * a);
-    pts.push((12 + r * Math.cos(a)).toFixed(2) + "," + (12 + r * Math.sin(a)).toFixed(2));
+/* ---- Verification badges (data-driven) ---- */
+const DGB = (() => {
+  const map = {};
+  let loaded = null;
+  const key = (n) => String(n || "").trim().toLowerCase();
+  const esc = (s) => String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  function load() {
+    if (loaded) return loaded;
+    loaded = (async () => {
+      try {
+        const { data } = await supabaseClient.from("verified_authors").select("name,title,kind");
+        (data || []).forEach((r) => { map[key(r.name)] = r; });
+      } catch (e) {}
+    })();
+    return loaded;
   }
-  return `<svg viewBox="0 0 24 24" width="22" height="22" role="img" aria-label="${BADGE_TITLE}" style="display:inline-block;vertical-align:-3px;margin-left:6px"><title>${BADGE_TITLE}</title><polygon points="${pts.join(" ")}" fill="#f97316"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  function get(name) { return map[key(name)] || null; }
+  function svg(b, size) {
+    const color = b.kind === "owner" ? "#f97316" : "#1d9bf0";
+    const pts = [];
+    for (let i = 0; i < 48; i++) {
+      const a = (i / 48) * Math.PI * 2;
+      const r = 9.2 + 1.1 * Math.cos(8 * a);
+      pts.push((12 + r * Math.cos(a)).toFixed(2) + "," + (12 + r * Math.sin(a)).toFixed(2));
+    }
+    const t = esc(b.title);
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" role="img" aria-label="' + t +
+      '" style="display:inline-block;vertical-align:-3px;margin-left:6px"><title>' + t + '</title>' +
+      '<polygon points="' + pts.join(" ") + '" fill="' + color + '"/>' +
+      '<path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+  return { load, get, svg };
 })();
 
 const PROFILES = {
@@ -26,6 +49,7 @@ const profileCss = `
 .author-profile .ap-initials{display:flex;align-items:center;justify-content:center;background:#fff3e8;color:#c2570c;font-family:var(--serif);font-size:2.2rem;font-weight:700}
 .author-profile .ap-title{color:#c2570c;font-weight:800;font-size:0.82rem;letter-spacing:0.4px;text-transform:uppercase}
 .author-profile .ap-bio{max-width:560px;font-size:0.97rem;line-height:1.7;color:#3d3d3a}
+.ap-role{color:var(--muted);font-weight:700;font-size:0.82rem;letter-spacing:0.4px;text-transform:uppercase;margin:-6px 0 18px}
 @media(min-width:640px){.author-profile{flex-direction:row;text-align:left;align-items:center;padding:28px}}`;
 const profileStyle = document.createElement("style");
 profileStyle.textContent = profileCss;
@@ -69,10 +93,19 @@ async function loadAuthorStories() {
     return;
   }
 
-  const isCeo = name.trim().toLowerCase() === BADGE_NAME.toLowerCase();
-  heading.innerHTML = escapeHtml(name) + (isCeo ? BADGE_SVG : "");
+  await DGB.load();
+  const badge = DGB.get(name);
+  heading.innerHTML = escapeHtml(name) + (badge ? DGB.svg(badge, 22) : "");
   document.getElementById("page-title").textContent = `${name} | Davidgistmedia`;
-  renderProfile(name);
+
+  if (PROFILES[name.trim().toLowerCase()]) {
+    renderProfile(name);
+  } else if (badge) {
+    const role = document.createElement("div");
+    role.className = "ap-role";
+    role.textContent = badge.title;
+    heading.insertAdjacentElement("afterend", role);
+  }
 
   const { data, error } = await supabaseClient
     .from("articles")
