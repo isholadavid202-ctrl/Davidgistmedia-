@@ -27,7 +27,8 @@
   .dg-theme-float{position:absolute;top:8px;right:10px;z-index:6}
   .util-bar .dg-theme-btn{width:26px;height:26px;color:#d6d6d4;border-color:#3a3a37}
   .util-bar .dg-theme-btn svg{width:14px;height:14px}
-  .dg-util-right{display:flex;align-items:center;gap:14px}
+  .util-bar .wrap{gap:8px}
+  .dg-util-right{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
 
   html[data-theme="dark"]{--ink:#ececea;--paper:#1b1b1d;--page:#121213;--line:#2f2f31;--muted:#a3a3a0;--near-black:#0a0a0b;--red:#e8344c;--red-dark:#c8102e;color-scheme:dark}
   html[data-theme="dark"] .search-row input,
@@ -93,13 +94,13 @@
     });
 
     const bar = document.querySelector(".util-bar .wrap");
-    const link = bar && bar.querySelector("a");
-    if (bar && link) {
+    const links = bar ? Array.from(bar.querySelectorAll("a")) : [];
+    if (bar && links.length) {
       const group = document.createElement("div");
       group.className = "dg-util-right";
-      link.replaceWith(group);
+      links[0].parentNode.insertBefore(group, links[0]);
       group.appendChild(btn);
-      group.appendChild(link);
+      links.forEach((l) => group.appendChild(l));
     } else {
       const header = document.querySelector("header.masthead") || document.querySelector("header");
       if (header) {
