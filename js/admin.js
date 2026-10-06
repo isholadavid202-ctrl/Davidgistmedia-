@@ -92,9 +92,94 @@ document.getElementById("logout-link").addEventListener("click", async (e) => {
 function showApp() {
   loginView.style.display = "none";
   appView.style.display = "";
+  ensureBadgeCard();
+  loadBadgeManager();
   loadAdminList();
   loadLiveUrl();
   loadCommentsAdmin();
+}
+
+// ---- Staff verification badges ----
+function ensureBadgeCard() {
+  if (document.getElementById("badge-card")) return;
+  const card = document.createElement("details");
+  card.id = "badge-card";
+  card.className = "admin-card";
+  card.style.marginBottom = "18px";
+  card.innerHTML = `
+    <summary style="cursor:pointer;font-weight:800;font-family:var(--serif);font-size:1.15rem">Staff verification badges</summary>
+    <p style="margin:10px 0 4px;color:var(--muted);font-size:0.85rem">Give a staff member a blue badge next to their name on stories, the home page and their author page. You can add a title (for example Senior Reporter) and remove the badge at any time. Your own orange badge can't be changed here.</p>
+    <div id="badge-list" style="margin-top:12px"></div>
+  `;
+  appView.insertBefore(card, appView.firstChild);
+}
+
+function badgeIcon() {
+  const pts = [];
+  for (let i = 0; i < 48; i++) {
+    const a = (i / 48) * Math.PI * 2;
+    const r = 9.2 + 1.1 * Math.cos(8 * a);
+    pts.push((12 + r * Math.cos(a)).toFixed(2) + "," + (12 + r * Math.sin(a)).toFixed(2));
+  }
+  return `<svg viewBox="0 0 24 24" width="16" height="16" style="display:inline-block;vertical-align:-3px;margin-left:4px"><polygon points="${pts.join(" ")}" fill="#1d9bf0"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
+async function loadBadgeManager() {
+  const list = document.getElementById("badge-list");
+  if (!list) return;
+  const { data, error } = await supabaseClient
+    .from("staff_roles")
+    .select("user_id,display_name,role,verified,badge_title")
+    .order("display_name");
+
+  if (error) {
+    list.innerHTML = `<p class="admin-status error">${escapeHtml(error.message)}</p>`;
+    return;
+  }
+  const staff = (data || []).filter((s) => s.role === "staff");
+  if (staff.length === 0) {
+    list.innerHTML = `<p style="color:var(--muted);font-size:0.9rem">No staff accounts yet.</p>`;
+    return;
+  }
+
+  list.innerHTML = staff.map((s) => `
+    <div class="admin-list-item" style="flex-wrap:wrap">
+      <div style="min-width:0;flex:1 1 160px">
+        <h4>${escapeHtml(s.display_name)}${s.verified ? badgeIcon() : ""}</h4>
+        <div class="meta">${s.verified ? "Verified" : "Not verified"}</div>
+      </div>
+      <div class="actions" style="flex:1 1 100%;flex-wrap:wrap">
+        <input data-title="${s.user_id}" maxlength="60" placeholder="Title (optional), e.g. Senior Reporter"
+          value="${escapeHtml(s.badge_title || "")}"
+          style="flex:1 1 180px;min-width:0;padding:8px 10px;border:1px solid var(--line);border-radius:4px;font:inherit;font-size:0.85rem">
+        ${s.verified
+          ? `<button data-badge="${s.user_id}" data-make="1">Save title</button>
+             <button data-badge="${s.user_id}" data-make="0" class="danger">Remove badge</button>`
+          : `<button data-badge="${s.user_id}" data-make="1">Give badge</button>`}
+      </div>
+    </div>
+  `).join("");
+
+  list.querySelectorAll("[data-badge]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.badge;
+      const make = btn.dataset.make === "1";
+      const input = list.querySelector(`[data-title="${id}"]`);
+      if (!make && !confirm("Remove this badge?")) return;
+      btn.disabled = true;
+      const { error: err } = await supabaseClient.rpc("admin_set_badge", {
+        target: id,
+        make_verified: make,
+        new_title: input ? input.value.trim() : ""
+      });
+      if (err) {
+        alert(err.message);
+        btn.disabled = false;
+        return;
+      }
+      loadBadgeManager();
+    });
+  });
 }
 
 // ---- Comment moderation ----
