@@ -28,11 +28,12 @@
   .util-bar .dg-theme-btn{width:30px;height:30px;color:#d6d6d4;border-color:#3a3a37}
   .util-bar .dg-theme-btn svg{width:16px;height:16px}
   .util-bar .wrap{gap:8px}
+  .dg-util-left{display:flex;align-items:center;gap:12px;min-width:0}
   .dg-util-right{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-left:auto}
 
   .dg-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;z-index:10000}
   .dg-overlay.open{opacity:1;visibility:visible}
-  .dg-drawer{position:fixed;top:0;right:0;bottom:0;width:min(290px,82vw);background:#161617;color:#ececea;z-index:10001;transform:translateX(100%);visibility:hidden;transition:transform .28s ease,visibility .28s ease;box-shadow:-12px 0 32px rgba(0,0,0,.45);display:flex;flex-direction:column;padding:18px 16px}
+  .dg-drawer{position:fixed;top:0;left:0;bottom:0;width:min(290px,82vw);background:#161617;color:#ececea;z-index:10001;transform:translateX(-100%);visibility:hidden;transition:transform .28s ease,visibility .28s ease;box-shadow:12px 0 32px rgba(0,0,0,.45);display:flex;flex-direction:column;padding:18px 16px}
   .dg-drawer.open{transform:none;visibility:visible}
   .dg-dr-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #2f2f31}
   .dg-dr-title{font-family:var(--serif);font-weight:700;font-size:1.05rem}
@@ -68,7 +69,7 @@
   }
   function db() { return typeof supabaseClient !== "undefined" ? supabaseClient : null; }
 
-  /* ---------- Dark mode toggle + right-side login menu (all pages) ---------- */
+  /* ---------- Dark mode toggle + left-side login menu (all pages) ---------- */
   const MOON = '<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
   const SUN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
   const BURGER = '<svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
@@ -157,11 +158,17 @@
     const bar = document.querySelector(".util-bar .wrap");
     const links = bar ? Array.from(bar.querySelectorAll("a")) : [];
     if (bar && links.length) {
-      const group = document.createElement("div");
-      group.className = "dg-util-right";
-      links[0].parentNode.insertBefore(group, links[0]);
-      group.appendChild(btn);
-      buildLoginMenu(group, links);
+      const dateEl = bar.querySelector("#today");
+      const left = document.createElement("div");
+      left.className = "dg-util-left";
+      bar.insertBefore(left, bar.firstChild);
+      buildLoginMenu(left, links);
+      if (dateEl) left.appendChild(dateEl);
+
+      const right = document.createElement("div");
+      right.className = "dg-util-right";
+      right.appendChild(btn);
+      bar.appendChild(right);
     } else {
       const header = document.querySelector("header.masthead") || document.querySelector("header");
       if (header) {
