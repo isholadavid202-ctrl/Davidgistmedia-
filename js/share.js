@@ -2,8 +2,40 @@
   const root = document.getElementById('article-root');
   if (!root) return;
 
-  const BADGE_NAME  = 'Ishola David';
-  const BADGE_TITLE = 'Founder & CEO, Davidgistmedia';
+  /* ---- Verification badges (data-driven) ---- */
+  const DGB = (() => {
+    const map = {};
+    let loaded = null;
+    const key = (n) => String(n || '').trim().toLowerCase();
+    const esc = (s) => String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    function load() {
+      if (loaded) return loaded;
+      loaded = (async () => {
+        try {
+          const { data } = await supabaseClient.from('verified_authors').select('name,title,kind');
+          (data || []).forEach((r) => { map[key(r.name)] = r; });
+        } catch (e) {}
+      })();
+      return loaded;
+    }
+    function get(name) { return map[key(name)] || null; }
+    function svg(b, size) {
+      const color = b.kind === 'owner' ? '#f97316' : '#1d9bf0';
+      const pts = [];
+      for (let i = 0; i < 48; i++) {
+        const a = (i / 48) * Math.PI * 2;
+        const r = 9.2 + 1.1 * Math.cos(8 * a);
+        pts.push((12 + r * Math.cos(a)).toFixed(2) + ',' + (12 + r * Math.sin(a)).toFixed(2));
+      }
+      const t = esc(b.title);
+      return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" role="img" aria-label="' + t +
+        '" style="display:inline-block;vertical-align:-3px;margin-left:5px"><title>' + t + '</title>' +
+        '<polygon points="' + pts.join(' ') + '" fill="' + color + '"/>' +
+        '<path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    }
+    return { load, get, svg };
+  })();
 
   const css = `
   .share-bar{display:flex;justify-content:center;gap:16px;margin:24px 0}
@@ -13,10 +45,7 @@
   .share-bar .em{background:#777}
   .share-bar .tg{background:#0088cc}
   .share-bar .wa{background:#25d366}
-  @media(max-width:480px){.share-bar{gap:8px}.share-bar a{width:18%}}
-  .ceo-badge{position:relative;display:inline-block;width:18px;height:18px;margin-left:5px;vertical-align:-3px;cursor:help}
-  .ceo-badge .seal{position:absolute;left:0;top:0;font-size:18px;line-height:18px;color:#f97316}
-  .ceo-badge .tick{position:absolute;left:0;top:0;width:18px;text-align:center;font-size:9px;line-height:18px;color:#fff}`;
+  @media(max-width:480px){.share-bar{gap:8px}.share-bar a{width:18%}}`;
   const st = document.createElement('style');
   st.textContent = css;
   document.head.appendChild(st);
@@ -64,26 +93,20 @@
   }
 
   function addBadge() {
-    if (root.querySelector('.ceo-badge')) return true;
-    const area = root.querySelector('.meta') || root;
-    const walker = document.createTreeWalker(area, NodeFilter.SHOW_TEXT);
-    let node;
-    while ((node = walker.nextNode())) {
-      const i = node.nodeValue.indexOf(BADGE_NAME);
-      if (i === -1) continue;
-      node.splitText(i + BADGE_NAME.length);
-      const badge = document.createElement('span');
-      badge.className = 'ceo-badge';
-      badge.title = BADGE_TITLE;
-      badge.setAttribute('aria-label', BADGE_TITLE);
-      badge.innerHTML = '<i class="fa-solid fa-certificate seal"></i><i class="fa-solid fa-check tick"></i>';
-      node.parentNode.insertBefore(badge, node.nextSibling);
-      return true;
-    }
-    return false;
+    const meta = root.querySelector('.meta');
+    if (!meta || meta.querySelector('.dg-vbadge')) return;
+    const a = meta.querySelector('a[href*="author.html"]');
+    if (!a) return;
+    const b = DGB.get(a.textContent);
+    if (!b) return;
+    const span = document.createElement('span');
+    span.className = 'dg-vbadge';
+    span.innerHTML = DGB.svg(b, 16);
+    a.insertAdjacentElement('afterend', span);
   }
 
   function run() { insertBar(); addBadge(); }
   run();
   new MutationObserver(run).observe(root, { childList: true, subtree: true });
+  DGB.load().then(run);
 })();
