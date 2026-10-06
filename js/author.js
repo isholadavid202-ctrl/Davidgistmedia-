@@ -16,7 +16,7 @@ const PROFILES = {
   "ishola david": {
     title: "Founder & CEO, Davidgistmedia",
     photo: "Snapchat-1872033241%20(1)_1748345725348.jpg",
-    bio: "Ishola David is the Founder and CEO of Davidgistmedia, a Nigerian news and entertainment platform. He writes and publishes stories on entertainment, sports, business and breaking news, with a focus on keeping readers informed quickly and accurately."
+    bio: "Ishola David is the Founder and CEO of Davidgistmedia, a news and entertainment platform covering Nigeria and the world. He writes and publishes stories on entertainment, sports, business, politics and breaking news from home and abroad, with a focus on keeping readers informed quickly and accurately."
   }
 };
 
