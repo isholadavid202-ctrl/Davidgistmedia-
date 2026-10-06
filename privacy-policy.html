@@ -12,8 +12,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#141414">
-  <title>Privacy Policy | Davidgistmedia</title>
+  <title>About Us | Davidgistmedia</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="/manifest.json">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
+     crossorigin="anonymous"></script>
 </head>
 <body>
   <header class="masthead">
@@ -31,28 +35,13 @@
 
   <main class="wrap article-page">
     <a href="index.html" class="back-link">&larr; Back to home</a>
-    <h1>Privacy Policy</h1>
+    <h1>About Davidgistmedia</h1>
     <div class="article-body">
-      <p><em>Last updated: <span id="today"></span></em></p>
-      <p>This Privacy Policy explains what information Davidgistmedia ("we", "us") collects when you visit this website, and how it is used.</p>
-
-      <p><strong>Information we collect</strong></p>
-      <p>If you subscribe to our newsletter, we collect the email address you provide. If you post a comment, we collect the name (or "Anonymous") and comment text you submit. We do not require you to create an account to read articles or leave comments.</p>
-
-      <p><strong>How we use it</strong></p>
-      <p>Email addresses collected through the newsletter form are used only to send you updates about new stories. Comments are displayed publicly beneath the article they were posted on.</p>
-
-      <p><strong>Cookies and similar technology</strong></p>
-      <p>This site may use cookies or browser local storage for basic functionality, such as remembering which articles you've liked so you can't like the same story twice. We do not use tracking cookies to build advertising profiles. If we add analytics tools (such as Google Analytics) or advertising (such as Google AdSense) in the future, those services may set their own cookies, and this policy will be updated to reflect that.</p>
-
-      <p><strong>Third parties</strong></p>
-      <p>We use Supabase to store site data and Render to host the site. These providers may process data on our behalf as part of running the service. We do not sell your personal information to third parties.</p>
-
-      <p><strong>Your choices</strong></p>
-      <p>You can unsubscribe from the newsletter at any time by contacting us. You can request that we delete a comment you posted by emailing us with a link to it.</p>
-
-      <p><strong>Contact</strong></p>
-      <p>Questions about this policy can be sent to <a href="mailto:davidgistmediatv@gmail.com" style="color:var(--red);font-weight:700">davidgistmediatv@gmail.com</a>.</p>
+      <p>Welcome to David Gist Media, a digital news platform dedicated to delivering timely, engaging, and reliable stories from Nigeria and around the world.</p>
+      <p>Our coverage spans Entertainment, World News, Nigerian News, Politics, Business, Sports, Lifestyle, and trending stories, giving our readers a broad view of the events shaping society and popular culture.</p>
+      <p>From the latest celebrity developments, music and movie updates to major international events and breaking news, we strive to provide clear, relevant, and accessible reporting that keeps our audience informed.</p>
+      <p>At David Gist Media we believe news should be informative, responsible, and easy to understand. Our goal is to become a trusted destination for readers seeking the latest stories, emerging trends, and important developments both locally and globally.</p>
+      <p>Our commitment is simple: to keep you informed, connected, and up to date with the stories that matter.</p>
     </div>
   </main>
 
@@ -70,9 +59,13 @@
     </div>
   </footer>
 
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-    document.getElementById("today").textContent = new Date().toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" });
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/service-worker.js");
+      });
+    }
   </script>
 </body>
 </html>
