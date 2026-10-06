@@ -86,7 +86,7 @@
   ];
   const CONTACT_LINKS = [
     ["Email", "davidgistmediatv@gmail.com", "mailto:davidgistmediatv@gmail.com"],
-    ["Phone", "09074081148", "tel:+2349074081148"]
+    ["Phone", "+234 907 408 1148", "tel:+2349074081148"]
   ];
 
   function savedTheme() {
