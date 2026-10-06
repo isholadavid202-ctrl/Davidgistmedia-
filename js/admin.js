@@ -1,10 +1,31 @@
 const loginView = document.getElementById("login-view");
 const appView = document.getElementById("app-view");
 
+async function ensureAdmin() {
+  const { data: s } = await supabaseClient.auth.getSession();
+  if (!s.session) return false;
+  const { data } = await supabaseClient
+    .from("staff_roles")
+    .select("role")
+    .eq("user_id", s.session.user.id)
+    .maybeSingle();
+  if (data && data.role === "admin") return true;
+  await supabaseClient.auth.signOut();
+  return false;
+}
+
 async function checkSession() {
   const { data } = await supabaseClient.auth.getSession();
   if (data.session) {
-    showApp();
+    if (await ensureAdmin()) {
+      showApp();
+    } else {
+      loginView.style.display = "";
+      appView.style.display = "none";
+      const status = document.getElementById("login-status");
+      status.textContent = "This login isn't an admin account. Staff should use staff.html.";
+      status.className = "admin-status error";
+    }
   } else {
     loginView.style.display = "";
     appView.style.display = "none";
@@ -23,13 +44,20 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   status.className = "admin-status";
 
   const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  btn.disabled = false;
 
   if (error) {
+    btn.disabled = false;
     status.textContent = error.message;
     status.className = "admin-status error";
     return;
   }
+  if (!(await ensureAdmin())) {
+    btn.disabled = false;
+    status.textContent = "This login isn't an admin account. Staff should use staff.html.";
+    status.className = "admin-status error";
+    return;
+  }
+  btn.disabled = false;
   status.textContent = "";
   showApp();
 });
