@@ -25,10 +25,21 @@
   .dg-theme-btn:hover{border-color:var(--red);color:var(--red)}
   .dg-theme-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .dg-theme-float{position:absolute;top:8px;right:10px;z-index:6}
-  .util-bar .dg-theme-btn{width:26px;height:26px;color:#d6d6d4;border-color:#3a3a37}
-  .util-bar .dg-theme-btn svg{width:14px;height:14px}
+  .util-bar .dg-theme-btn{width:30px;height:30px;color:#d6d6d4;border-color:#3a3a37}
+  .util-bar .dg-theme-btn svg{width:16px;height:16px}
   .util-bar .wrap{gap:8px}
-  .dg-util-right{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+  .dg-util-right{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-left:auto}
+
+  .dg-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;z-index:10000}
+  .dg-overlay.open{opacity:1;visibility:visible}
+  .dg-drawer{position:fixed;top:0;right:0;bottom:0;width:min(290px,82vw);background:#161617;color:#ececea;z-index:10001;transform:translateX(100%);visibility:hidden;transition:transform .28s ease,visibility .28s ease;box-shadow:-12px 0 32px rgba(0,0,0,.45);display:flex;flex-direction:column;padding:18px 16px}
+  .dg-drawer.open{transform:none;visibility:visible}
+  .dg-dr-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #2f2f31}
+  .dg-dr-title{font-family:var(--serif);font-weight:700;font-size:1.05rem}
+  .dg-dr-close{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1px solid #3a3a37;background:transparent;color:#d6d6d4;cursor:pointer;padding:0}
+  .dg-dr-close svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+  .dg-drawer a{display:block;padding:14px 12px;border-radius:6px;color:#d6d6d4;font-weight:700;font-size:.92rem}
+  .dg-drawer a:hover,.dg-drawer a:focus-visible{background:rgba(255,255,255,.09);color:#fff}
 
   html[data-theme="dark"]{--ink:#ececea;--paper:#1b1b1d;--page:#121213;--line:#2f2f31;--muted:#a3a3a0;--near-black:#0a0a0b;--red:#e8344c;--red-dark:#c8102e;color-scheme:dark}
   html[data-theme="dark"] .search-row input,
@@ -57,9 +68,11 @@
   }
   function db() { return typeof supabaseClient !== "undefined" ? supabaseClient : null; }
 
-  /* ---------- Dark mode toggle (all pages) ---------- */
+  /* ---------- Dark mode toggle + right-side login menu (all pages) ---------- */
   const MOON = '<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
   const SUN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  const BURGER = '<svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+  const CLOSE = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 
   function savedTheme() {
     try { return localStorage.getItem("dg_theme"); } catch (e) { return null; }
@@ -75,6 +88,54 @@
       btn.title = t === "dark" ? "Light mode" : "Dark mode";
     }
   }
+
+  function buildLoginMenu(group, links) {
+    const burger = document.createElement("button");
+    burger.type = "button";
+    burger.className = "dg-theme-btn dg-burger";
+    burger.innerHTML = BURGER;
+    burger.setAttribute("aria-label", "Open menu");
+    burger.setAttribute("aria-expanded", "false");
+
+    const overlay = document.createElement("div");
+    overlay.className = "dg-overlay";
+
+    const drawer = document.createElement("aside");
+    drawer.className = "dg-drawer";
+    drawer.setAttribute("aria-label", "Menu");
+    drawer.setAttribute("aria-hidden", "true");
+
+    const head = document.createElement("div");
+    head.className = "dg-dr-head";
+    head.innerHTML = '<span class="dg-dr-title">Davidgistmedia</span>';
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "dg-dr-close";
+    close.innerHTML = CLOSE;
+    close.setAttribute("aria-label", "Close menu");
+    head.appendChild(close);
+    drawer.appendChild(head);
+    links.forEach((l) => drawer.appendChild(l));
+
+    function setOpen(open) {
+      overlay.classList.toggle("open", open);
+      drawer.classList.toggle("open", open);
+      drawer.setAttribute("aria-hidden", open ? "false" : "true");
+      burger.setAttribute("aria-expanded", open ? "true" : "false");
+      document.documentElement.style.overflow = open ? "hidden" : "";
+    }
+    burger.addEventListener("click", () => setOpen(true));
+    close.addEventListener("click", () => setOpen(false));
+    overlay.addEventListener("click", () => setOpen(false));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setOpen(false);
+    });
+
+    document.body.appendChild(overlay);
+    document.body.appendChild(drawer);
+    group.appendChild(burger);
+  }
+
   function initTheme() {
     let t = savedTheme();
     if (t !== "dark" && t !== "light") {
@@ -100,7 +161,7 @@
       group.className = "dg-util-right";
       links[0].parentNode.insertBefore(group, links[0]);
       group.appendChild(btn);
-      links.forEach((l) => group.appendChild(l));
+      buildLoginMenu(group, links);
     } else {
       const header = document.querySelector("header.masthead") || document.querySelector("header");
       if (header) {
