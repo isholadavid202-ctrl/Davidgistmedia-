@@ -7,6 +7,10 @@
   const cancelBtn = document.getElementById("cancel-btn");
   const saveStatus = document.getElementById("save-status");
   const formTitle = document.getElementById("form-title");
+  const nameInput = document.getElementById("display-name");
+  const nameBtn = document.getElementById("name-save-btn");
+  const nameStatus = document.getElementById("name-status");
+  const nameNote = document.getElementById("name-note");
   let me = null;
 
   function esc(s) {
@@ -32,6 +36,17 @@
     el.className = "admin-status" + (cls ? " " + cls : "");
   }
 
+  function updateNameUi() {
+    document.getElementById("welcome").textContent = me.nameSet
+      ? "Signed in as " + me.name
+      : "Welcome - please add your name";
+    nameNote.textContent = me.nameSet
+      ? "This name appears as the author on every story you publish. If you change it, your earlier stories are updated too."
+      : "Add your name below before you publish. It will appear as the author on every story you publish.";
+    saveBtn.disabled = !me.nameSet;
+    nameInput.value = me.nameSet ? me.name : nameInput.value;
+  }
+
   function showLogin(msg) {
     loginView.style.display = "";
     appView.style.display = "none";
@@ -40,19 +55,21 @@
 
   async function enter(user) {
     const { data } = await supabaseClient
-      .from("staff_roles").select("role,display_name")
+      .from("staff_roles").select("role,display_name,name_set")
       .eq("user_id", user.id).maybeSingle();
     if (!data || (data.role !== "staff" && data.role !== "admin")) {
       await supabaseClient.auth.signOut();
       showLogin("This account isn't set up as staff. Ask the admin to add you.");
       return;
     }
-    me = { id: user.id, role: data.role, name: data.display_name };
+    me = { id: user.id, role: data.role, name: data.display_name, nameSet: !!data.name_set };
     loginView.style.display = "none";
     appView.style.display = "";
-    document.getElementById("welcome").textContent = "Signed in as " + me.name;
     document.getElementById("admin-note").style.display = me.role === "admin" ? "" : "none";
+    nameInput.value = me.nameSet ? me.name : "";
     setStatus(loginStatus, "");
+    setStatus(nameStatus, "");
+    updateNameUi();
     loadMine();
   }
 
@@ -84,6 +101,30 @@
     showLogin();
   });
 
+  nameBtn.addEventListener("click", async () => {
+    if (!me) return;
+    const v = nameInput.value.replace(/\s+/g, " ").trim();
+    if (v.length < 2 || v.length > 60) {
+      setStatus(nameStatus, "Your name must be between 2 and 60 characters.", "error");
+      return;
+    }
+    if (/[<>"&]/.test(v)) {
+      setStatus(nameStatus, "Please use letters, spaces, hyphens or apostrophes only.", "error");
+      return;
+    }
+    nameBtn.disabled = true;
+    setStatus(nameStatus, "Saving...");
+    const { data, error } = await supabaseClient.rpc("set_my_display_name", { new_name: v });
+    nameBtn.disabled = false;
+    if (error) { setStatus(nameStatus, error.message, "error"); return; }
+    me.name = data || v;
+    me.nameSet = true;
+    nameInput.value = me.name;
+    updateNameUi();
+    setStatus(nameStatus, "Name saved.", "ok");
+    loadMine();
+  });
+
   function resetForm() {
     form.reset();
     document.getElementById("story-id").value = "";
@@ -106,6 +147,7 @@
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!me) return;
+    if (!me.nameSet) { setStatus(saveStatus, "Please save your name above before publishing.", "error"); return; }
     const id = document.getElementById("story-id").value;
     const title = document.getElementById("title").value.trim();
     const content = document.getElementById("content").value.trim();
@@ -136,7 +178,7 @@
       payload.slug = await uniqueSlug(slugOf(title));
       result = await supabaseClient.from("articles").insert(payload);
     }
-    saveBtn.disabled = false;
+    saveBtn.disabled = !me.nameSet;
 
     if (result.error) { setStatus(saveStatus, result.error.message, "error"); return; }
     setStatus(saveStatus, id ? "Story updated." : "Story published.", "ok");
