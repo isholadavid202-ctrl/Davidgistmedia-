@@ -1,11 +1,4 @@
 (function () {
-  const CEO = {
-    name: "Ishola David",
-    title: "Founder & CEO, Davidgistmedia",
-    photo: "Snapchat-1872033241%20(1)_1748345725348.jpg",
-    bio: "Ishola David is the Founder and CEO of Davidgistmedia, a Nigerian news and entertainment platform. He writes and publishes stories on entertainment, sports, business and breaking news."
-  };
-
   const CSS = `
   .dg-ticker{display:flex;align-items:stretch;background:var(--red);color:#fff;overflow:hidden;font-size:.82rem}
   .dg-tick-label{flex:0 0 auto;display:flex;align-items:center;gap:7px;background:var(--ink);color:var(--paper);font-weight:800;font-size:.7rem;letter-spacing:.8px;text-transform:uppercase;padding:0 14px}
@@ -26,15 +19,7 @@
 
   .dg-progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--red);z-index:9999;transition:width .1s linear}
   .dg-read{white-space:nowrap}
-
-  .dg-author-box{display:flex;gap:16px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:18px;margin:26px 0;box-shadow:var(--shadow-sm)}
-  .dg-ab-photo{width:72px;height:72px;border-radius:50%;object-fit:cover;flex:0 0 auto;border:3px solid #f97316}
-  .dg-ab-init{display:flex;align-items:center;justify-content:center;background:#fff3e8;color:#c2570c;font-family:var(--serif);font-size:1.5rem;font-weight:700}
-  .dg-ab-role{color:#c2570c;font-weight:800;font-size:.7rem;letter-spacing:.4px;text-transform:uppercase}
-  .dg-ab-name{font-family:var(--serif);font-weight:700;font-size:1.1rem}
-  .dg-ab-name:hover{color:var(--red)}
-  .dg-author-box p{font-size:.9rem;line-height:1.55;color:#3d3d3a;margin-top:4px}
-  @media(max-width:480px){.dg-author-box{flex-direction:column;text-align:center}}
+  .article-page .meta a:hover,.article-page .meta a:active{color:var(--red) !important}
 
   .dg-theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;padding:0;flex:0 0 auto}
   .dg-theme-btn:hover{border-color:var(--red);color:var(--red)}
@@ -57,12 +42,9 @@
   html[data-theme="dark"] .empty-state{background:#18181a;border-color:#3a3a3d}
   html[data-theme="dark"] .secondary-item > div[style]{background:#2a2a2d !important}
   html[data-theme="dark"] .about-block{border:1px solid var(--line)}
-  html[data-theme="dark"] .author-profile .ap-bio,
-  html[data-theme="dark"] .dg-author-box p{color:#cfcfcc}
-  html[data-theme="dark"] .author-profile .ap-initials,
-  html[data-theme="dark"] .dg-ab-init{background:#3a2412;color:#f5a45d}
-  html[data-theme="dark"] .author-profile .ap-title,
-  html[data-theme="dark"] .dg-ab-role{color:#f5a45d}`;
+  html[data-theme="dark"] .author-profile .ap-bio{color:#cfcfcc}
+  html[data-theme="dark"] .author-profile .ap-initials{background:#3a2412;color:#f5a45d}
+  html[data-theme="dark"] .author-profile .ap-title{color:#f5a45d}`;
   const st = document.createElement("style");
   st.textContent = CSS;
   document.head.appendChild(st);
@@ -73,16 +55,6 @@
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
   function db() { return typeof supabaseClient !== "undefined" ? supabaseClient : null; }
-
-  const BADGE = (() => {
-    const pts = [];
-    for (let i = 0; i < 48; i++) {
-      const a = (i / 48) * Math.PI * 2;
-      const r = 9.2 + 1.1 * Math.cos(8 * a);
-      pts.push((12 + r * Math.cos(a)).toFixed(2) + "," + (12 + r * Math.sin(a)).toFixed(2));
-    }
-    return `<svg viewBox="0 0 24 24" width="16" height="16" style="display:inline-block;vertical-align:-3px;margin-left:5px"><title>${CEO.title}</title><polygon points="${pts.join(" ")}" fill="#f97316"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  })();
 
   /* ---------- Dark mode toggle (all pages) ---------- */
   const MOON = '<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
@@ -176,7 +148,6 @@
   /* ---------- Article page extras ---------- */
   const root = document.getElementById("article-root");
   if (!root) return;
-  const slug = new URLSearchParams(location.search).get("slug");
 
   function progress() {
     if (document.getElementById("dg-progress")) return;
@@ -207,49 +178,7 @@
     meta.appendChild(span);
   }
 
-  let extrasDone = false;
-  async function addExtras() {
-    if (extrasDone) return;
-    const body = root.querySelector(".article-body");
-    if (!body) return;
-    extrasDone = true;
-    const client = db();
-    if (!client || !slug) return;
-
-    const { data: art } = await client
-      .from("articles").select("slug,category,author").eq("slug", slug).limit(1);
-    const a = art && art[0];
-    if (!a) return;
-
-    const name = a.author || "Davidgistmedia";
-    const isCeo = name.trim().toLowerCase() === CEO.name.toLowerCase();
-    const initials = name.split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
-
-    const box = document.createElement("div");
-    box.className = "dg-author-box";
-    const initEl = document.createElement("div");
-    initEl.className = "dg-ab-photo dg-ab-init";
-    initEl.textContent = initials;
-    let photoEl = initEl;
-    if (isCeo) {
-      photoEl = document.createElement("img");
-      photoEl.className = "dg-ab-photo";
-      photoEl.alt = name;
-      photoEl.src = CEO.photo;
-      photoEl.onerror = () => photoEl.replaceWith(initEl);
-    }
-    const text = document.createElement("div");
-    text.innerHTML =
-      `<div class="dg-ab-role">${isCeo ? esc(CEO.title) : "Written by"}</div>` +
-      `<a class="dg-ab-name" href="author.html?name=${encodeURIComponent(name)}">${esc(name)}</a>${isCeo ? BADGE : ""}` +
-      `<p>${isCeo ? esc(CEO.bio) : "See more stories from " + esc(name) + "."}</p>`;
-    box.appendChild(photoEl);
-    box.appendChild(text);
-    body.insertAdjacentElement("afterend", box);
-  }
-
   progress();
-  const run = () => { readingTime(); addExtras(); };
-  run();
-  new MutationObserver(run).observe(root, { childList: true, subtree: true });
+  readingTime();
+  new MutationObserver(readingTime).observe(root, { childList: true, subtree: true });
 })();
