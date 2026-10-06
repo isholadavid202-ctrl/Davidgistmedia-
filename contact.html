@@ -12,8 +12,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#141414">
-  <title>Contact Us | Davidgistmedia</title>
+  <title>About Us | Davidgistmedia</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="/manifest.json">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
+     crossorigin="anonymous"></script>
 </head>
 <body>
   <header class="masthead">
@@ -31,12 +35,13 @@
 
   <main class="wrap article-page">
     <a href="index.html" class="back-link">&larr; Back to home</a>
-    <h1>Contact Us</h1>
+    <h1>About Davidgistmedia</h1>
     <div class="article-body">
-      <p>Have a story tip, a correction to report, or a business inquiry? Reach out any time.</p>
-      <p><strong>Email:</strong> <a href="mailto:davidgistmediatv@gmail.com" style="color:var(--red);font-weight:700">davidgistmediatv@gmail.com</a></p>
-      <p><strong>Phone:</strong> <a href="tel:+2349074081148" style="color:var(--red);font-weight:700">+234 907 408 1148</a></p>
-      <p>Follow us on <a href="https://www.tiktok.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" style="color:var(--red);font-weight:700">TikTok</a>, <a href="https://www.instagram.com/davidgistmediang/" target="_blank" rel="noopener noreferrer" style="color:var(--red);font-weight:700">Instagram</a>, and <a href="https://www.youtube.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" style="color:var(--red);font-weight:700">YouTube</a>.</p>
+      <p>Welcome to David Gist Media, a digital news platform dedicated to delivering timely, engaging, and reliable stories from Nigeria and around the world.</p>
+      <p>Our coverage spans Entertainment, World News, Nigerian News, Politics, Business, Sports, Lifestyle, and trending stories, giving our readers a broad view of the events shaping society and popular culture.</p>
+      <p>From the latest celebrity developments, music and movie updates to major international events and breaking news, we strive to provide clear, relevant, and accessible reporting that keeps our audience informed.</p>
+      <p>At David Gist Media we believe news should be informative, responsible, and easy to understand. Our goal is to become a trusted destination for readers seeking the latest stories, emerging trends, and important developments both locally and globally.</p>
+      <p>Our commitment is simple: to keep you informed, connected, and up to date with the stories that matter.</p>
     </div>
   </main>
 
@@ -55,5 +60,12 @@
   </footer>
 
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/service-worker.js");
+      });
+    }
+  </script>
 </body>
 </html>
