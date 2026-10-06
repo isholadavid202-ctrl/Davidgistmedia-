@@ -42,6 +42,9 @@
   .dg-dr-label{margin:18px 12px 6px;font-size:.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#8d8d8a}
   .dg-drawer a{display:block;padding:13px 12px;border-radius:6px;color:#d6d6d4;font-weight:700;font-size:.92rem}
   .dg-drawer a:hover,.dg-drawer a:focus-visible{background:rgba(255,255,255,.09);color:#fff}
+  .dg-drawer a.dg-contact{padding:10px 12px}
+  .dg-drawer a.dg-contact small{display:block;font-size:.7rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#8d8d8a;margin-bottom:2px}
+  .dg-drawer a.dg-contact span{display:block;font-size:.88rem;word-break:break-word}
 
   html[data-theme="dark"]{--ink:#ececea;--paper:#1b1b1d;--page:#121213;--line:#2f2f31;--muted:#a3a3a0;--near-black:#0a0a0b;--red:#e8344c;--red-dark:#c8102e;color-scheme:dark}
   html[data-theme="dark"] .search-row input,
@@ -81,12 +84,9 @@
     ["Instagram", "https://www.instagram.com/davidgistmediang/"],
     ["YouTube", "https://www.youtube.com/@davidgistmediang"]
   ];
-  const PAGE_LINKS = [
-    ["About", "about.html"],
-    ["Contact", "contact.html"],
-    ["Privacy", "privacy-policy.html"],
-    ["Terms", "terms.html"],
-    ["Editorial Policy", "editorial-policy.html"]
+  const CONTACT_LINKS = [
+    ["Email", "davidgistmediatv@gmail.com", "mailto:davidgistmediatv@gmail.com"],
+    ["Phone", "09074081148", "tel:+2349074081148"]
   ];
 
   function savedTheme() {
@@ -109,6 +109,18 @@
     a.href = href;
     a.textContent = text;
     if (external) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+    return a;
+  }
+  function makeContact(label, value, href) {
+    const a = document.createElement("a");
+    a.href = href;
+    a.className = "dg-contact";
+    const small = document.createElement("small");
+    small.textContent = label;
+    const span = document.createElement("span");
+    span.textContent = value;
+    a.appendChild(small);
+    a.appendChild(span);
     return a;
   }
   function addLabel(drawer, text) {
@@ -148,8 +160,8 @@
     addLabel(drawer, "Follow us");
     SOCIAL_LINKS.forEach((s) => drawer.appendChild(makeLink(s[0], s[1], true)));
 
-    addLabel(drawer, "Pages");
-    PAGE_LINKS.forEach((p) => drawer.appendChild(makeLink(p[0], p[1], false)));
+    addLabel(drawer, "Contact us");
+    CONTACT_LINKS.forEach((c) => drawer.appendChild(makeContact(c[0], c[1], c[2])));
 
     addLabel(drawer, "Staff");
     links.forEach((l) => drawer.appendChild(l));
