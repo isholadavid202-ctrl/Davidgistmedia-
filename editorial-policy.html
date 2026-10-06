@@ -14,6 +14,10 @@
   <meta name="theme-color" content="#141414">
   <title>Editorial &amp; Corrections Policy | Davidgistmedia</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="/manifest.json">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
+     crossorigin="anonymous"></script>
 </head>
 <body>
   <header class="masthead">
@@ -62,5 +66,12 @@
   </footer>
 
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/service-worker.js");
+      });
+    }
+  </script>
 </body>
 </html>
