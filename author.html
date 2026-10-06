@@ -6,6 +6,10 @@
   <meta name="theme-color" content="#0d0d0d">
   <title id="page-title">Author | Davidgistmedia</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="/manifest.json">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
+     crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -50,5 +54,12 @@
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
   <script src="js/author.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/service-worker.js");
+      });
+    }
+  </script>
 </body>
 </html>
