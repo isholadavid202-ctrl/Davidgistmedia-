@@ -32,6 +32,76 @@ function toEmbedUrl(url) {
   return url;
 }
 
+/* ---- Search / Google News details for each story ---- */
+function setMeta(attr, key, value) {
+  if (!value) return;
+  let el = document.head.querySelector(`meta[${attr}="${key}"]`);
+  if (!el) {
+    el = document.createElement("meta");
+    el.setAttribute(attr, key);
+    document.head.appendChild(el);
+  }
+  el.setAttribute("content", value);
+}
+
+function addSeo(data) {
+  const site = "https://davidgistmedia.onrender.com";
+  const url = `${site}/article.html?slug=${encodeURIComponent(data.slug)}`;
+  const plain = (data.content || "").replace(/\s+/g, " ").trim();
+  const description = (data.excerpt && data.excerpt.trim()) || plain.slice(0, 160);
+  const authorName = data.author || "Davidgistmedia";
+
+  // Canonical link
+  let canon = document.head.querySelector('link[rel="canonical"]');
+  if (!canon) {
+    canon = document.createElement("link");
+    canon.setAttribute("rel", "canonical");
+    document.head.appendChild(canon);
+  }
+  canon.setAttribute("href", url);
+
+  // Description and sharing tags
+  setMeta("name", "description", description);
+  setMeta("property", "og:title", data.title);
+  setMeta("property", "og:description", description);
+  setMeta("property", "og:type", "article");
+  setMeta("property", "og:url", url);
+  setMeta("property", "og:image", data.image_url);
+  setMeta("name", "twitter:card", "summary_large_image");
+
+  // NewsArticle details for Google
+  const author = authorName === "Davidgistmedia"
+    ? { "@type": "Organization", name: "Davidgistmedia", url: site + "/" }
+    : { "@type": "Person", name: authorName, url: `${site}/author.html?name=${encodeURIComponent(authorName)}` };
+
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    headline: (data.title || "").slice(0, 110),
+    description: description,
+    datePublished: data.published_at,
+    dateModified: data.updated_at || data.published_at,
+    author: author,
+    publisher: {
+      "@type": "NewsMediaOrganization",
+      name: "Davidgistmedia",
+      url: site + "/",
+      logo: { "@type": "ImageObject", url: site + "/icon-512.png" }
+    }
+  };
+  if (data.image_url) ld.image = [data.image_url];
+  if (data.category) ld.articleSection = data.category;
+
+  const old = document.getElementById("article-ld");
+  if (old) old.remove();
+  const s = document.createElement("script");
+  s.type = "application/ld+json";
+  s.id = "article-ld";
+  s.textContent = JSON.stringify(ld).replace(/</g, "\\u003c");
+  document.head.appendChild(s);
+}
+
 async function loadArticle() {
   const params = new URLSearchParams(window.location.search);
   const slug = params.get("slug");
@@ -55,6 +125,7 @@ async function loadArticle() {
 
   currentArticle = data;
   document.getElementById("page-title").textContent = `${data.title} | Davidgistmedia`;
+  addSeo(data);
 
   const paragraphs = (data.content || "")
     .split(/\n+/)
