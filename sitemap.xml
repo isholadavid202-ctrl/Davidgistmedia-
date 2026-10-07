@@ -1,52 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <url>
-    <loc>https://davidgistmedia.onrender.com/</loc>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <url>
-    <loc>https://davidgistmedia.onrender.com/about.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://davidgistmedia.onrender.com/contact.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://davidgistmedia.onrender.com/editorial-policy.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://davidgistmedia.onrender.com/privacy-policy.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <url>
-    <loc>https://davidgistmedia.onrender.com/terms.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <url>
-    <loc>https://davidgistmedia.onrender.com/live.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://davidgistmedia.onrender.com/article.html</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-
+  <url><loc>https://davidgistmedia.onrender.com/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/live.html</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/about.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/contact.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/editorial-policy.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/privacy-policy.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/terms.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=jamb-takes-utme-abroad-plans-examination-centre-in-canada-from-2027</loc><lastmod>2026-10-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=tom-cruise-praises-digger-as-an-honour-as-box-office-debut-falls-short-with-150-</loc><lastmod>2026-10-05</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=veteran-nollywood-actress-omotola-jalade-ekeinde-opens-up-about-her-marriage-som</loc><lastmod>2026-10-04</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=carter-efe-defeats-speed-darlington-in-highly-anticipated-celebrity-boxing-clash</loc><lastmod>2026-10-02</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=tuchel-recalls-alexander-arnold-and-palmer-in-27-man-nations-league-squad</loc><lastmod>2026-09-18</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=lil-durk-found-not-guilty-in-los-angeles-murder-for-hire-case</loc><lastmod>2026-09-12</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=el-rufai-demands-10bn-compensation-apology-from-defence-minister-over-southern-k</loc><lastmod>2026-09-09</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=uk-government-condemns-anti-immigrant-protests-over-channel-migrant-arrivals</loc><lastmod>2026-09-08</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=google-backed-indian-space-startup-pixxel-raises-100-million-in-major-funding-ro</loc><lastmod>2026-09-07</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=makinde-warns-oyo-monarchs-against-partisan-politics-ahead-of-2027</loc><lastmod>2026-09-07</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=nigerias-energy-investment-could-double-within-five-years-iea</loc><lastmod>2026-09-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=postal-worker-accused-of-stealing-package-containing-46000-worth-of-sports-cards</loc><lastmod>2026-09-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=ariana-grande-bids-emotional-farewell-to-fans-as-eternal-sunshine-tour-concludes</loc><lastmod>2026-09-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://davidgistmedia.onrender.com/article.html?slug=i-feel-like-my-life-is-under-threat-sarah-martins-raises-alarm-over-alleged-hara</loc><lastmod>2026-09-06</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 </urlset>
