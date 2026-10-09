@@ -46,6 +46,7 @@ function authorHtml(name) {
 
 const CATEGORIES = ["nigeria", "politics", "entertainment", "sports", "business", "technology", "world", "local"];
 let allArticles = [];
+let commentCounts = {};
 let activeCategory = "all";
 let searchQuery = "";
 
@@ -64,6 +65,17 @@ function markLiked(id) {
   }
 }
 
+/* ---- Comment counts for the story cards ---- */
+async function loadCommentCounts() {
+  try {
+    const { data } = await supabaseClient.from("comments").select("article_id");
+    commentCounts = {};
+    (data || []).forEach((c) => {
+      commentCounts[c.article_id] = (commentCounts[c.article_id] || 0) + 1;
+    });
+  } catch (e) {}
+}
+
 async function loadArticles() {
   const { data, error } = await supabaseClient
     .from("articles")
@@ -76,7 +88,7 @@ async function loadArticles() {
     return;
   }
   allArticles = data || [];
-  await DGB.load();
+  await Promise.all([DGB.load(), loadCommentCounts()]);
   renderPage();
 }
 
@@ -120,7 +132,7 @@ function renderTrending() {
             <div class="body">
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
-              <div class="meta">${a.likes || 0} likes · ${formatDate(a.published_at)}</div>
+              <div class="meta">${a.likes || 0} likes · ${commentCounts[a.id] || 0} comments · ${formatDate(a.published_at)}</div>
             </div>
           </a>
         `).join("")}
@@ -136,6 +148,10 @@ function engageRowHtml(article) {
       <button class="engage-btn ${liked ? "liked" : ""}" data-like-id="${article.id}" ${liked ? "disabled" : ""}>
         <svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
         <span data-like-count="${article.id}">${article.likes || 0}</span>
+      </button>
+      <button class="engage-btn" data-comment-slug="${escapeHtml(article.slug)}" aria-label="Comments">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>${commentCounts[article.id] || 0}</span>
       </button>
       <button class="engage-btn" data-share-id="${article.id}" data-share-title="${escapeHtml(article.title)}" data-share-slug="${escapeHtml(article.slug)}">
         <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></svg>
@@ -241,6 +257,13 @@ function wireEngageButtons() {
       e.preventDefault();
       e.stopPropagation();
       handleLike(btn.dataset.likeId, btn);
+    });
+  });
+  document.querySelectorAll("[data-comment-slug]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      window.location.href = `article.html?slug=${encodeURIComponent(btn.dataset.commentSlug)}`;
     });
   });
   document.querySelectorAll("[data-share-id]").forEach((btn) => {
