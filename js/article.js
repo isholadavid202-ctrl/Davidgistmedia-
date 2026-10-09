@@ -2,7 +2,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
 function getLikedIds() {
   try {
-    return JSON.parse(localStorage.getItem("dg_liked") || "[]");
+    return JSON.parse(localStorage.getItem("dg_liked_v2") || "[]");
   } catch {
     return [];
   }
@@ -11,7 +11,7 @@ function markLiked(id) {
   const liked = getLikedIds();
   if (!liked.includes(id)) {
     liked.push(id);
-    localStorage.setItem("dg_liked", JSON.stringify(liked));
+    localStorage.setItem("dg_liked_v2", JSON.stringify(liked));
   }
 }
 
