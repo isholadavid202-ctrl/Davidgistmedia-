@@ -286,13 +286,33 @@ async function handleCommentSubmit(e) {
 
 async function handleLike() {
   if (!currentArticle || getLikedIds().includes(currentArticle.id)) return;
-  markLiked(currentArticle.id);
   const btn = document.getElementById("like-btn");
-  btn.classList.add("liked");
+  const countEl = document.getElementById("like-count");
+  const before = currentArticle.likes || 0;
+
+  // Show the like straight away, but only keep it if Supabase confirms it.
   btn.disabled = true;
-  currentArticle.likes = (currentArticle.likes || 0) + 1;
-  document.getElementById("like-count").textContent = currentArticle.likes;
-  await supabaseClient.rpc("increment_likes", { article_id: currentArticle.id }).catch(() => {});
+  btn.classList.add("liked");
+  countEl.textContent = before + 1;
+
+  let failed = false;
+  try {
+    const { error } = await supabaseClient.rpc("increment_likes", { article_id: currentArticle.id });
+    if (error) failed = true;
+  } catch (e) {
+    failed = true;
+  }
+
+  if (failed) {
+    btn.disabled = false;
+    btn.classList.remove("liked");
+    countEl.textContent = before;
+    alert("Couldn't save your like. Please try again.");
+    return;
+  }
+
+  currentArticle.likes = before + 1;
+  markLiked(currentArticle.id);
 }
 
 function handleShare() {
