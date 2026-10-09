@@ -52,7 +52,7 @@ let searchQuery = "";
 
 function getLikedIds() {
   try {
-    return JSON.parse(localStorage.getItem("dg_liked") || "[]");
+    return JSON.parse(localStorage.getItem("dg_liked_v2") || "[]");
   } catch {
     return [];
   }
@@ -61,7 +61,7 @@ function markLiked(id) {
   const liked = getLikedIds();
   if (!liked.includes(id)) {
     liked.push(id);
-    localStorage.setItem("dg_liked", JSON.stringify(liked));
+    localStorage.setItem("dg_liked_v2", JSON.stringify(liked));
   }
 }
 
@@ -230,16 +230,33 @@ function renderCategorySections(list) {
 
 async function handleLike(id, btn) {
   if (getLikedIds().includes(id)) return;
-  markLiked(id);
-  btn.classList.add("liked");
-  btn.disabled = true;
   const countEl = btn.querySelector(`[data-like-count="${id}"]`);
   const current = allArticles.find((a) => a.id === id);
-  if (current) {
-    current.likes = (current.likes || 0) + 1;
-    if (countEl) countEl.textContent = current.likes;
+  const before = current ? (current.likes || 0) : 0;
+
+  // Show the like straight away, but only keep it if Supabase confirms it.
+  btn.disabled = true;
+  btn.classList.add("liked");
+  if (countEl) countEl.textContent = before + 1;
+
+  let failed = false;
+  try {
+    const { error } = await supabaseClient.rpc("increment_likes", { article_id: id });
+    if (error) failed = true;
+  } catch (e) {
+    failed = true;
   }
-  await supabaseClient.rpc("increment_likes", { article_id: id }).catch(() => {});
+
+  if (failed) {
+    btn.disabled = false;
+    btn.classList.remove("liked");
+    if (countEl) countEl.textContent = before;
+    alert("Couldn't save your like. Please try again.");
+    return;
+  }
+
+  if (current) current.likes = before + 1;
+  markLiked(id);
 }
 
 function handleShare(id, title, slug) {
