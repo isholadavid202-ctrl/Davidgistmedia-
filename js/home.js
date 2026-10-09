@@ -49,6 +49,7 @@ let allArticles = [];
 let commentCounts = {};
 let activeCategory = "all";
 let searchQuery = "";
+const likeBusy = new Set();
 
 function getLikedIds() {
   try {
@@ -63,6 +64,10 @@ function markLiked(id) {
     liked.push(id);
     localStorage.setItem("dg_liked_v2", JSON.stringify(liked));
   }
+}
+function unmarkLiked(id) {
+  const liked = getLikedIds().filter((x) => x !== id);
+  localStorage.setItem("dg_liked_v2", JSON.stringify(liked));
 }
 
 /* ---- Comment counts for the story cards ---- */
@@ -145,7 +150,7 @@ function engageRowHtml(article) {
   const liked = getLikedIds().includes(article.id);
   return `
     <div class="engage-row" onclick="event.preventDefault(); event.stopPropagation();">
-      <button class="engage-btn ${liked ? "liked" : ""}" data-like-id="${article.id}" ${liked ? "disabled" : ""}>
+      <button class="engage-btn ${liked ? "liked" : ""}" data-like-id="${article.id}" aria-pressed="${liked}">
         <svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
         <span data-like-count="${article.id}">${article.likes || 0}</span>
       </button>
@@ -229,34 +234,41 @@ function renderCategorySections(list) {
 }
 
 async function handleLike(id, btn) {
-  if (getLikedIds().includes(id)) return;
+  if (likeBusy.has(id)) return;
+  likeBusy.add(id);
+
   const countEl = btn.querySelector(`[data-like-count="${id}"]`);
   const current = allArticles.find((a) => a.id === id);
+  const wasLiked = getLikedIds().includes(id);
   const before = current ? (current.likes || 0) : 0;
+  const after = wasLiked ? Math.max(before - 1, 0) : before + 1;
 
-  // Show the like straight away, but only keep it if Supabase confirms it.
-  btn.disabled = true;
-  btn.classList.add("liked");
-  if (countEl) countEl.textContent = before + 1;
+  // Show the change straight away, and undo it if Supabase says no.
+  btn.classList.toggle("liked", !wasLiked);
+  btn.setAttribute("aria-pressed", String(!wasLiked));
+  if (countEl) countEl.textContent = after;
 
   let failed = false;
   try {
-    const { error } = await supabaseClient.rpc("increment_likes", { article_id: id });
+    const { error } = await supabaseClient.rpc(
+      wasLiked ? "decrement_likes" : "increment_likes",
+      { article_id: id }
+    );
     if (error) failed = true;
   } catch (e) {
     failed = true;
   }
 
   if (failed) {
-    btn.disabled = false;
-    btn.classList.remove("liked");
+    btn.classList.toggle("liked", wasLiked);
+    btn.setAttribute("aria-pressed", String(wasLiked));
     if (countEl) countEl.textContent = before;
-    alert("Couldn't save your like. Please try again.");
-    return;
+    alert("Couldn't save that. Please try again.");
+  } else {
+    if (current) current.likes = after;
+    if (wasLiked) unmarkLiked(id); else markLiked(id);
   }
-
-  if (current) current.likes = before + 1;
-  markLiked(id);
+  likeBusy.delete(id);
 }
 
 function handleShare(id, title, slug) {
