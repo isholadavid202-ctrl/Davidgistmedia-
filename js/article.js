@@ -14,8 +14,13 @@ function markLiked(id) {
     localStorage.setItem("dg_liked_v2", JSON.stringify(liked));
   }
 }
+function unmarkLiked(id) {
+  const liked = getLikedIds().filter((x) => x !== id);
+  localStorage.setItem("dg_liked_v2", JSON.stringify(liked));
+}
 
 let currentArticle = null;
+let likeBusy = false;
 
 function toEmbedUrl(url) {
   try {
@@ -150,7 +155,7 @@ async function loadArticle() {
     <div class="article-body">${paragraphs}</div>
     <div id="related-section"></div>
     <div class="engage-row">
-      <button class="engage-btn ${liked ? "liked" : ""}" id="like-btn" ${liked ? "disabled" : ""}>
+      <button class="engage-btn ${liked ? "liked" : ""}" id="like-btn" aria-pressed="${liked}">
         <svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
         <span id="like-count">${data.likes || 0}</span> Like
       </button>
@@ -285,34 +290,42 @@ async function handleCommentSubmit(e) {
 }
 
 async function handleLike() {
-  if (!currentArticle || getLikedIds().includes(currentArticle.id)) return;
+  if (!currentArticle || likeBusy) return;
+  likeBusy = true;
+
+  const id = currentArticle.id;
   const btn = document.getElementById("like-btn");
   const countEl = document.getElementById("like-count");
+  const wasLiked = getLikedIds().includes(id);
   const before = currentArticle.likes || 0;
+  const after = wasLiked ? Math.max(before - 1, 0) : before + 1;
 
-  // Show the like straight away, but only keep it if Supabase confirms it.
-  btn.disabled = true;
-  btn.classList.add("liked");
-  countEl.textContent = before + 1;
+  // Show the change straight away, and undo it if Supabase says no.
+  btn.classList.toggle("liked", !wasLiked);
+  btn.setAttribute("aria-pressed", String(!wasLiked));
+  countEl.textContent = after;
 
   let failed = false;
   try {
-    const { error } = await supabaseClient.rpc("increment_likes", { article_id: currentArticle.id });
+    const { error } = await supabaseClient.rpc(
+      wasLiked ? "decrement_likes" : "increment_likes",
+      { article_id: id }
+    );
     if (error) failed = true;
   } catch (e) {
     failed = true;
   }
 
   if (failed) {
-    btn.disabled = false;
-    btn.classList.remove("liked");
+    btn.classList.toggle("liked", wasLiked);
+    btn.setAttribute("aria-pressed", String(wasLiked));
     countEl.textContent = before;
-    alert("Couldn't save your like. Please try again.");
-    return;
+    alert("Couldn't save that. Please try again.");
+  } else {
+    currentArticle.likes = after;
+    if (wasLiked) unmarkLiked(id); else markLiked(id);
   }
-
-  currentArticle.likes = before + 1;
-  markLiked(currentArticle.id);
+  likeBusy = false;
 }
 
 function handleShare() {
