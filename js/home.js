@@ -51,6 +51,24 @@ let activeCategory = "all";
 let searchQuery = "";
 const likeBusy = new Set();
 
+/* The homepage only needs these fields (not the full story text) */
+const LIST_COLUMNS = "id,slug,title,excerpt,image_url,category,author,published_at,likes,featured";
+const CACHE_KEY = "dg_home_cache_v1";
+
+function readCache() {
+  try {
+    const c = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
+    return c && Array.isArray(c.articles) ? c.articles : null;
+  } catch {
+    return null;
+  }
+}
+function writeCache(list) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), articles: list }));
+  } catch {}
+}
+
 function getLikedIds() {
   try {
     return JSON.parse(localStorage.getItem("dg_liked_v2") || "[]");
@@ -81,20 +99,49 @@ async function loadCommentCounts() {
   } catch (e) {}
 }
 
+/* Grey placeholder rows, shown only when the page arrives with no stories in it */
+function showPlaceholders() {
+  const bar = (w, mb) => `<div style="height:14px;background:var(--line);width:${w};margin-bottom:${mb}px"></div>`;
+  const row = `
+    <div style="display:grid;grid-template-columns:38% 1fr;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)">
+      <div style="aspect-ratio:16/9;background:var(--line)"></div>
+      <div style="padding-top:4px">${bar("100%", 10)}${bar("80%", 10)}${bar("55%", 0)}</div>
+    </div>`;
+  document.getElementById("hero-section").innerHTML = row.repeat(5);
+}
+
 async function loadArticles() {
+  // 1. If we have stories saved from the last visit, show them instantly
+  const cached = readCache();
+  if (cached && cached.length) {
+    allArticles = cached;
+    renderPage();
+  } else if (!document.getElementById("hero-section").children.length) {
+    // Nothing from the server either, so show grey placeholders
+    showPlaceholders();
+  }
+
+  // 2. Ask for fresh stories (headline fields only, newest 100)
   const { data, error } = await supabaseClient
     .from("articles")
-    .select("*")
-    .order("published_at", { ascending: false });
+    .select(LIST_COLUMNS)
+    .order("published_at", { ascending: false })
+    .limit(100);
 
   if (error) {
-    document.getElementById("hero-section").innerHTML =
-      `<div class="empty-state">Couldn't load stories right now (${escapeHtml(error.message)}). Check that config.js has your Supabase URL and key set.</div>`;
+    if (!cached || !cached.length) {
+      document.getElementById("hero-section").innerHTML =
+        `<div class="empty-state">Couldn't load stories right now (${escapeHtml(error.message)}). Check that config.js has your Supabase URL and key set.</div>`;
+    }
     return;
   }
-  allArticles = data || [];
-  // Show the stories straight away, then fill in comment counts and badges
-  renderPage();
+
+  // 3. Show the fresh stories, save them for next time, then fill in counts and badges
+  const fresh = data || [];
+  const changed = JSON.stringify(fresh) !== JSON.stringify(cached || []);
+  allArticles = fresh;
+  writeCache(fresh);
+  if (changed || !cached) renderPage();
   Promise.all([DGB.load(), loadCommentCounts()]).then(renderPage);
 }
 
@@ -134,7 +181,7 @@ function renderTrending() {
       <div class="card-grid">
         ${top.map((a) => `
           <a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">
-            ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="">` : ""}
+            ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : ""}
             <div class="body">
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
@@ -179,7 +226,7 @@ function renderHero(list) {
   section.innerHTML = `
     <div class="hero-grid">
       <a class="lead-story" href="article.html?slug=${encodeURIComponent(lead.slug)}">
-        ${lead.image_url ? `<img src="${escapeHtml(lead.image_url)}" alt="">` : ""}
+        ${lead.image_url ? `<img src="${escapeHtml(lead.image_url)}" alt="" fetchpriority="high" decoding="async">` : ""}
         <div class="overlay">
           <span class="lead-tag">${escapeHtml(lead.category)}</span>
           <h1>${escapeHtml(lead.title)}</h1>
@@ -191,7 +238,7 @@ function renderHero(list) {
       <div class="secondary-list">
         ${secondary.map((a) => `
           <a class="secondary-item" href="article.html?slug=${encodeURIComponent(a.slug)}">
-            ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="">` : `<div style="background:#eee;border-radius:4px"></div>`}
+            ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : `<div style="background:#eee;border-radius:4px"></div>`}
             <div>
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
@@ -220,7 +267,7 @@ function renderCategorySections(list) {
           ? `<div class="empty-state">No ${escapeHtml(cat)} stories yet.</div>`
           : `<div class="card-grid">${items.map((a) => `
               <a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">
-                ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="">` : ""}
+                ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : ""}
                 <div class="body">
                   <div class="cat">${escapeHtml(a.category)}</div>
                   <h3>${escapeHtml(a.title)}</h3>
