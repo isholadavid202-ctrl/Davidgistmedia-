@@ -352,4 +352,15 @@ document.getElementById("newsletter-form").addEventListener("submit", async (e) 
   input.value = "";
 });
 
+// Open the category from the link (for example index.html#nigeria)
+(function () {
+  const cat = window.location.hash.replace("#", "");
+  if (!cat) return;
+  const btn = document.querySelector('#tabs button[data-cat="' + cat + '"]');
+  if (!btn) return;
+  document.querySelectorAll("#tabs button").forEach((b) => b.classList.remove("active"));
+  btn.classList.add("active");
+  activeCategory = cat;
+})();
+
 loadArticles();
