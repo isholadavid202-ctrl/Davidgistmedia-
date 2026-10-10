@@ -1,4 +1,4 @@
-const CACHE = "dgm-v1";
+const CACHE = "dgm-v2";
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
