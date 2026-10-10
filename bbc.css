@@ -1,12 +1,13 @@
 /* bbc.css - BBC-style look for Davidgistmedia.
    Loads AFTER styles.css. To undo: delete the <link> to this file in the HTML pages. */
 
-body{background:#fff;color:#141414}
+body{background:var(--paper);color:var(--ink)}
 
-/* ===== Top strip: white, quiet ===== */
-.util-bar{background:#fff;color:var(--muted);border-bottom:1px solid var(--line)}
+/* ===== Top strip: quiet ===== */
+.util-bar{background:var(--paper);color:var(--muted);border-bottom:1px solid var(--line)}
 .util-bar a{color:var(--muted)}
 .util-bar a:hover{color:var(--ink)}
+.util-bar .dg-theme-btn{color:var(--ink);border-color:var(--line)}
 
 /* ===== Masthead: simple wordmark, flat search ===== */
 .masthead{box-shadow:none;padding-top:18px}
@@ -17,7 +18,7 @@ body{background:#fff;color:#141414}
 .search-row{border-radius:3px;border:1px solid var(--ink);box-shadow:none;max-width:560px}
 .search-row button{border-radius:0}
 
-/* ===== Section menu: bold, black underline on the current page, scrolls sideways ===== */
+/* ===== Section menu: bold, underline on the current page, scrolls sideways ===== */
 .tabs{margin-top:14px;border-top:0;border-bottom:1px solid var(--line)}
 .tabs > :first-child,.tabs > :last-child{margin-left:0;margin-right:0}
 .tabs a,.tabs button{font-size:.95rem;padding:14px 15px 11px}
@@ -28,7 +29,7 @@ body{background:#fff;color:#141414}
 .lead-story{border-bottom:2px solid var(--ink)}
 .lead-story h1{font-weight:400;line-height:1.2;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:5px;font-size:clamp(1.6rem,6vw,2.2rem)}
 .lead-story:hover h1{color:var(--ink)}
-.lead-story p{font-family:var(--serif);font-size:1.05rem;line-height:1.45;color:#2b2b2b}
+.lead-story p{font-family:var(--serif);font-size:1.05rem;line-height:1.45;color:var(--ink)}
 
 /* ===== Order inside each story: headline, summary, "time | category", then buttons ===== */
 .lead-story .overlay,
@@ -40,7 +41,7 @@ body{background:#fff;color:#141414}
 .lead-story p{order:2}
 .lead-meta,.secondary-item .meta,.story-card .meta{order:3;color:var(--muted);font-size:.9rem}
 .lead-tag,.secondary-item .cat,.story-card .cat{order:4;background:none;color:var(--muted);padding:0;margin:0;border-radius:0;text-transform:capitalize;font-weight:400;font-size:.9rem;letter-spacing:0}
-.lead-tag::before,.secondary-item .cat::before,.story-card .cat::before{content:"";display:inline-block;width:1px;height:17px;background:#6b6b6b;margin:0 12px;vertical-align:middle}
+.lead-tag::before,.secondary-item .cat::before,.story-card .cat::before{content:"";display:inline-block;width:1px;height:17px;background:var(--muted);margin:0 12px;vertical-align:middle}
 .lead-meta{margin-top:0}
 .lead-story .overlay{margin-top:0}
 .engage-row{order:5;flex:0 0 100%;margin-top:8px}
@@ -95,14 +96,14 @@ body{background:#fff;color:#141414}
 .article-page > div[style*="56.25%"]{border-radius:0!important;box-shadow:none!important}
 
 /* Story text: easy to read on a phone */
-.article-body{font-size:1.1rem;line-height:1.6;color:#141414}
+.article-body{font-size:1.1rem;line-height:1.6;color:var(--ink)}
 .article-body p{margin-bottom:1.1em}
 
 /* Like / share row */
 .article-page .engage-row{border-top:1px solid var(--line);margin:24px 0;padding-top:18px}
-.article-page .engage-btn{border:1px solid var(--line);border-radius:3px;background:#fff;color:#141414;box-shadow:none;padding:9px 16px;font-size:.9rem;font-weight:700}
-.article-page .engage-btn:hover{border-color:var(--ink);color:#141414;box-shadow:none}
-.article-page .engage-btn.liked{background:#fff;color:var(--red);border-color:var(--red)}
+.article-page .engage-btn{border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--ink);box-shadow:none;padding:9px 16px;font-size:.9rem;font-weight:700}
+.article-page .engage-btn:hover{border-color:var(--ink);color:var(--ink);box-shadow:none}
+.article-page .engage-btn.liked{background:var(--paper);color:var(--red);border-color:var(--red)}
 
 /* Comments: plain and flat */
 .comments-section{border-top:2px solid var(--ink)}
