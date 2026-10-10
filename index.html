@@ -20,6 +20,7 @@
   <link rel="canonical" href="https://davidgistmedia.onrender.com/">
   <title>Davidgistmedia | Home</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="bbc.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -41,6 +42,26 @@
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
+
+  <!-- BBC-style top bar (works together with bbc.css) -->
+  <style>
+    .masthead{padding-top:12px}
+    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
+    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
+    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
+    .topbar button,.topbar .acct a{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
+    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .search-row.is-closed{display:none}
+    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
+    .masthead .drawer.open{display:flex}
+    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
+    .drawer a:hover{color:var(--red)}
+    @media(min-width:820px){
+      .search-row.is-closed{display:flex}
+      #search-btn{display:none}
+    }
+  </style>
 </head>
 <body>
 
@@ -53,14 +74,40 @@
   </div>
 
   <header class="masthead">
+    <div class="wrap topbar">
+      <div class="icons">
+        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <button type="button" id="search-btn" aria-label="Search" aria-expanded="false">
+          <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+        </button>
+      </div>
+      <a class="brand-title" href="/">David<span class="gold">gistmedia</span></a>
+      <div class="acct">
+        <a href="staff.html" aria-label="Staff login">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.5 3.6-7 8-7s8 2.5 8 7z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="wrap drawer" id="drawer">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="editorial-policy.html">Editorial Policy</a>
+      <a href="privacy-policy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="live.html">Live</a>
+    </div>
+
     <div class="wrap">
-      <div class="brand-title">David<span class="gold">gistmedia</span></div>
       <p class="tagline">Your Source for Entertainment &amp; Breaking News</p>
-      <form class="search-row" id="search-form">
+      <form class="search-row is-closed" id="search-form">
         <input type="text" id="search-input" placeholder="Search news...">
         <button type="submit">Search</button>
       </form>
     </div>
+
     <nav class="tabs" id="tabs">
       <button class="active" data-cat="all">Home</button>
       <button data-cat="nigeria">Nigeria</button>
@@ -131,6 +178,25 @@
   <script src="js/supabase-client.js"></script>
   <script src="js/home.js"></script>
   <script src="js/extras.js"></script>
+  <script>
+    // Menu and search icons in the new top bar
+    (function () {
+      var menuBtn = document.getElementById("menu-btn");
+      var drawer = document.getElementById("drawer");
+      var searchBtn = document.getElementById("search-btn");
+      var form = document.getElementById("search-form");
+      var input = document.getElementById("search-input");
+      menuBtn.addEventListener("click", function () {
+        var open = drawer.classList.toggle("open");
+        menuBtn.setAttribute("aria-expanded", open);
+      });
+      searchBtn.addEventListener("click", function () {
+        var closed = form.classList.toggle("is-closed");
+        searchBtn.setAttribute("aria-expanded", !closed);
+        if (!closed) input.focus();
+      });
+    })();
+  </script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
