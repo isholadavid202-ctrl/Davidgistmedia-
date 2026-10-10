@@ -93,8 +93,9 @@ async function loadArticles() {
     return;
   }
   allArticles = data || [];
-  await Promise.all([DGB.load(), loadCommentCounts()]);
+  // Show the stories straight away, then fill in comment counts and badges
   renderPage();
+  Promise.all([DGB.load(), loadCommentCounts()]).then(renderPage);
 }
 
 function getFiltered() {
