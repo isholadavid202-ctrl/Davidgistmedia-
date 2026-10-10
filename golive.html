@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#141414">
+  <title>Go Live | Davidgistmedia</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="wrap">
+      <a href="index.html" style="text-decoration:none;color:inherit">
+        <div class="brand-title">David<span class="gold">gistmedia</span></div>
+      </a>
+    </div>
+    <nav class="tabs">
+      <a href="index.html">Home</a>
+      <a href="live.html">Live page</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
+
+  <main class="admin-shell">
+    <div class="admin-card">
+      <h2>Go live</h2>
+      <div style="position:relative">
+        <video id="preview" autoplay muted playsinline style="width:100%;background:#000;border-radius:4px;aspect-ratio:16/9;object-fit:cover"></video>
+        <span id="live-badge" style="display:none;position:absolute;top:10px;left:10px;background:var(--red);color:#fff;font-weight:800;font-size:0.75rem;padding:4px 10px;border-radius:3px">&#9679; LIVE</span>
+      </div>
+
+      <div class="row2">
+        <div>
+          <label for="cam">Camera</label>
+          <select id="cam">
+            <option value="user">Front camera</option>
+            <option value="environment">Back camera</option>
+          </select>
+        </div>
+        <div>
+          <label for="quality">Quality</label>
+          <select id="quality">
+            <option value="low">Low (saves data)</option>
+            <option value="mid" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="primary" id="cam-btn" type="button" style="background:#3d3d3a">Start camera</button>
+      <button class="primary" id="go-btn" type="button" disabled>Go live</button>
+      <button class="primary" id="stop-btn" type="button" style="background:#3d3d3a;display:none">Stop live</button>
+      <p class="admin-status" id="status"></p>
+    </div>
+
+    <div class="admin-card" style="margin-top:18px">
+      <h2>Setup (once)</h2>
+      <p style="font-size:0.88rem;color:var(--muted)">Paste the WebRTC (WHIP) address from your streaming account. It stays only on this phone. Never share it or put it in your website files.</p>
+      <label for="whip-url">WebRTC (WHIP) address</label>
+      <input id="whip-url" type="password" autocomplete="off" placeholder="https://...">
+      <button class="primary" id="save-url" type="button">Save on this phone</button>
+      <button class="primary" id="clear-url" type="button" style="background:#3d3d3a">Remove from this phone</button>
+      <p class="admin-status" id="whip-state"></p>
+    </div>
+  </main>
+
+  <script>
+  (function () {
+    var $ = function (id) { return document.getElementById(id); };
+    var KEY = "dg_whip_url";
+    var QUALITY = {
+      low:  { w: 640,  h: 360, fps: 24, kbps: 800 },
+      mid:  { w: 960,  h: 540, fps: 30, kbps: 1500 },
+      high: { w: 1280, h: 720, fps: 30, kbps: 2500 }
+    };
+    var stream = null, pc = null, resourceUrl = null, wakeLock = null, live = false;
+
+    function setStatus(text, cls) {
+      var s = $("status");
+      s.textContent = text;
+      s.className = "admin-status" + (cls ? " " + cls : "");
+    }
+    function getUrl() {
+      try { return localStorage.getItem(KEY) || ""; } catch (e) { return ""; }
+    }
+    function refreshSetup() {
+      $("whip-state").textContent = getUrl() ? "Address saved on this phone." : "No address saved yet.";
+    }
+
+    $("save-url").onclick = function () {
+      var v = $("whip-url").value.trim();
+      if (v.indexOf("https://") !== 0) {
+        $("whip-state").textContent = "Paste the full address. It must start with https://";
+        $("whip-state").className = "admin-status error";
+        return;
+      }
+      try { localStorage.setItem(KEY, v); } catch (e) {}
+      $("whip-url").value = "";
+      $("whip-state").className = "admin-status ok";
+      refreshSetup();
+    };
+    $("clear-url").onclick = function () {
+      try { localStorage.removeItem(KEY); } catch (e) {}
+      $("whip-state").className = "admin-status";
+      refreshSetup();
+    };
+
+    function stopTracks() {
+      if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; }
+      $("preview").srcObject = null;
+    }
+
+    async function startCamera() {
+      if (live) { setStatus("Stop the live stream before changing the camera.", "error"); return; }
+      stopTracks();
+      var q = QUALITY[$("quality").value];
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: $("cam").value, width: { ideal: q.w }, height: { ideal: q.h }, frameRate: { ideal: q.fps } },
+          audio: { echoCancellation: true, noiseSuppression: true }
+        });
+        $("preview").srcObject = stream;
+        $("go-btn").disabled = false;
+        setStatus("Camera ready. Tap Go live when you are ready.");
+      } catch (e) {
+        setStatus("Couldn't open the camera or microphone. Allow access in your browser, then try again.", "error");
+      }
+    }
+
+    function waitForIce(conn) {
+      return new Promise(function (resolve) {
+        if (conn.iceGatheringState === "complete") return resolve();
+        var done = function () { conn.removeEventListener("icegatheringstatechange", check); resolve(); };
+        var check = function () { if (conn.iceGatheringState === "complete") done(); };
+        conn.addEventListener("icegatheringstatechange", check);
+        setTimeout(done, 2500);
+      });
+    }
+
+    function showLive(on) {
+      live = on;
+      $("live-badge").style.display = on ? "block" : "none";
+      $("go-btn").style.display = on ? "none" : "block";
+      $("stop-btn").style.display = on ? "block" : "none";
+      $("cam-btn").disabled = on;
+    }
+
+    async function goLive() {
+      var url = getUrl();
+      if (!url) { setStatus("Save your WebRTC address first (see Setup below).", "error"); return; }
+      if (!stream) { await startCamera(); if (!stream) return; }
+      $("go-btn").disabled = true;
+      setStatus("Connecting...");
+      try {
+        pc = new RTCPeerConnection({
+          iceServers: [{ urls: "stun:stun.cloudflare.com:3478" }],
+          bundlePolicy: "max-bundle"
+        });
+        stream.getTracks().forEach(function (t) {
+          pc.addTransceiver(t, { direction: "sendonly", streams: [stream] });
+        });
+        var q = QUALITY[$("quality").value];
+        pc.getSenders().forEach(async function (s) {
+          if (s.track && s.track.kind === "video") {
+            try {
+              var p = s.getParameters();
+              if (!p.encodings || !p.encodings.length) p.encodings = [{}];
+              p.encodings[0].maxBitrate = q.kbps * 1000;
+              await s.setParameters(p);
+            } catch (e) {}
+          }
+        });
+        pc.onconnectionstatechange = function () {
+          if (!pc) return;
+          if (pc.connectionState === "connected") {
+            showLive(true);
+            setStatus("You are live. Viewers can watch on your Live page.", "ok");
+          } else if (pc.connectionState === "failed" || pc.connectionState === "disconnected") {
+            setStatus("The connection dropped. Check your internet, then stop and go live again.", "error");
+          }
+        };
+        var offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        await waitForIce(pc);
+        var res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/sdp" },
+          body: pc.localDescription.sdp
+        });
+        if (!res.ok) throw new Error("server said " + res.status);
+        resourceUrl = res.headers.get("Location");
+        var answer = await res.text();
+        await pc.setRemoteDescription({ type: "answer", sdp: answer });
+        try { if (navigator.wakeLock) wakeLock = await navigator.wakeLock.request("screen"); } catch (e) {}
+      } catch (e) {
+        if (pc) { try { pc.close(); } catch (x) {} pc = null; }
+        showLive(false);
+        $("go-btn").disabled = false;
+        setStatus("Couldn't start the live stream (" + e.message + "). Check your WebRTC address and your internet.", "error");
+      }
+    }
+
+    async function stopLive() {
+      try {
+        if (resourceUrl) await fetch(new URL(resourceUrl, getUrl()).toString(), { method: "DELETE" });
+      } catch (e) {}
+      resourceUrl = null;
+      if (pc) { try { pc.close(); } catch (e) {} pc = null; }
+      try { if (wakeLock) { await wakeLock.release(); wakeLock = null; } } catch (e) {}
+      showLive(false);
+      stopTracks();
+      $("go-btn").disabled = true;
+      setStatus("You are no longer live.");
+    }
+
+    $("cam-btn").onclick = startCamera;
+    $("go-btn").onclick = goLive;
+    $("stop-btn").onclick = stopLive;
+    window.addEventListener("beforeunload", function (e) {
+      if (live) { e.preventDefault(); e.returnValue = ""; }
+    });
+    refreshSetup();
+  })();
+  </script>
+</body>
+</html>
