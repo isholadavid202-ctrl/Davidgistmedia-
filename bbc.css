@@ -24,11 +24,11 @@ body{background:#fff;color:#141414}
 .tabs a.active,.tabs button.active{border-bottom-color:var(--ink)}
 .tabs a:not(.active):hover,.tabs button:not(.active):hover{color:var(--ink);border-bottom-color:var(--line)}
 
-/* ===== Lead story: big underlined serif headline ===== */
+/* ===== Lead story: big underlined serif headline, regular weight like the BBC ===== */
 .lead-story{border-bottom:2px solid var(--ink)}
-.lead-story h1{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:5px;font-size:clamp(1.7rem,6vw,2.3rem)}
+.lead-story h1{font-weight:400;line-height:1.2;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:5px;font-size:clamp(1.6rem,6vw,2.2rem)}
 .lead-story:hover h1{color:var(--ink)}
-.lead-story p{font-size:1.05rem;color:var(--ink)}
+.lead-story p{font-family:var(--serif);font-size:1.05rem;line-height:1.45;color:#2b2b2b}
 
 /* ===== Order inside each story: headline, summary, "time | category", then buttons ===== */
 .lead-story .overlay,
@@ -38,20 +38,20 @@ body{background:#fff;color:#141414}
 .secondary-item h3,.story-card h3{flex:0 0 100%}
 .lead-story h1,.secondary-item h3,.story-card h3{order:1}
 .lead-story p{order:2}
-.lead-meta,.secondary-item .meta,.story-card .meta{order:3;color:var(--muted);font-size:.82rem}
-.lead-tag,.secondary-item .cat,.story-card .cat{order:4;background:none;color:var(--muted);padding:0;margin:0;border-radius:0;text-transform:none;font-weight:400;font-size:.82rem;letter-spacing:0}
-.lead-tag::before,.secondary-item .cat::before,.story-card .cat::before{content:"|";margin:0 9px;color:var(--muted)}
+.lead-meta,.secondary-item .meta,.story-card .meta{order:3;color:var(--muted);font-size:.9rem}
+.lead-tag,.secondary-item .cat,.story-card .cat{order:4;background:none;color:var(--muted);padding:0;margin:0;border-radius:0;text-transform:capitalize;font-weight:400;font-size:.9rem;letter-spacing:0}
+.lead-tag::before,.secondary-item .cat::before,.story-card .cat::before{content:"";display:inline-block;width:1px;height:17px;background:#6b6b6b;margin:0 12px;vertical-align:middle}
 .lead-meta{margin-top:0}
 .lead-story .overlay{margin-top:0}
-.engage-row{order:5;flex:0 0 100%;margin-top:10px}
+.engage-row{order:5;flex:0 0 100%;margin-top:8px}
 
 /* ===== Like, comment and share buttons: small and quiet ===== */
 .engage-btn{border:0;background:none;box-shadow:none;padding:4px 14px 4px 0;font-weight:400;color:var(--muted);border-radius:0}
 .engage-btn:hover{box-shadow:none;color:var(--ink)}
 .engage-btn.liked{background:none;color:var(--red)}
 
-/* ===== Story lists: headline left, small photo right, thin dividers ===== */
-.secondary-item h3,.story-card h3{font-size:1.12rem;margin:0 0 8px}
+/* ===== Story headlines in lists: regular weight, BBC size ===== */
+.secondary-item h3,.story-card h3{font-family:var(--serif);font-size:1.06rem;line-height:1.28;font-weight:400;color:var(--ink);margin:0 0 10px}
 .secondary-item:hover h3,.story-card:hover h3{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
 
 /* ===== Category sections: heavy rule on top, plain heading ===== */
@@ -59,6 +59,18 @@ body{background:#fff;color:#141414}
 .cat-head .bar{display:none}
 .cat-head h2{font-size:1.5rem}
 .cat-head a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+/* ===== Phones: small photo on the LEFT, headline on the RIGHT (BBC layout) ===== */
+@media(max-width:819px){
+  .card-grid{grid-template-columns:1fr;gap:0}
+  .secondary-item,.story-card{display:grid;grid-template-columns:38% 1fr;gap:16px;align-items:start;padding:16px 0;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none}
+  .secondary-item > :first-child,.story-card > :first-child{grid-column:1;grid-row:1}
+  .secondary-item > :last-child,.story-card > :last-child{grid-column:2;grid-row:1}
+  .secondary-item img,.story-card img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:0;margin:0}
+  .secondary-item > div:first-child{aspect-ratio:16/9;border-radius:0!important}
+  .story-card:not(:has(img)){display:block}
+  .story-card .body{padding:0}
+}
 
 @media(min-width:820px){
   .lead-story{border-bottom:0}
@@ -72,7 +84,7 @@ body{background:#fff;color:#141414}
 .back-link{color:var(--muted);font-weight:400;font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
 .article-page > .cat{color:var(--muted);font-weight:700;font-size:.85rem;text-transform:none;letter-spacing:0}
 
-/* Headline: big, bold serif */
+/* Headline: big serif */
 .article-page > h1{font-size:clamp(1.9rem,6.5vw,2.6rem);line-height:1.15;font-weight:700;margin:8px 0 14px;letter-spacing:-.3px}
 
 /* Byline and date, between two thin lines */
