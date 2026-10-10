@@ -49,22 +49,62 @@ function isoDate(d) {
   return isNaN(t.getTime()) ? null : t.toISOString();
 }
 
+// Ask Supabase, but give up after 4 seconds so a slow answer can't freeze the page
 async function sb(query) {
   const { url, key } = readConfig();
-  const r = await fetch(`${url}/rest/v1/${query}`, {
-    headers: { apikey: key, Authorization: `Bearer ${key}` },
-  });
-  if (!r.ok) throw new Error("Supabase " + r.status);
-  return r.json();
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 4000);
+  try {
+    const r = await fetch(`${url}/rest/v1/${query}`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      signal: ctrl.signal,
+    });
+    if (!r.ok) throw new Error("Supabase " + r.status);
+    return await r.json();
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
+// Keeps recent answers. If the saved answer is old, it is still served at once
+// while a fresh one is fetched in the background.
 const cache = {};
+const pending = {};
 async function cached(name, ttlMs, loader) {
   const hit = cache[name];
   if (hit && Date.now() - hit.t < ttlMs) return hit.v;
-  const v = await loader();
-  cache[name] = { t: Date.now(), v };
-  return v;
+
+  const refresh = () => {
+    if (!pending[name]) {
+      pending[name] = loader()
+        .then((v) => {
+          if (Object.keys(cache).length > 300) {
+            for (const k in cache) delete cache[k];
+          }
+          cache[name] = { t: Date.now(), v };
+          return v;
+        })
+        .finally(() => {
+          delete pending[name];
+        });
+    }
+    return pending[name];
+  };
+
+  if (hit) {
+    refresh().catch(() => {});
+    return hit.v;
+  }
+  return refresh();
+}
+
+// Read each page file from disk only once
+const TEMPLATES = {};
+function template(name) {
+  if (!TEMPLATES[name]) {
+    TEMPLATES[name] = fs.readFileSync(path.join(ROOT, name), "utf8");
+  }
+  return TEMPLATES[name];
 }
 
 function originOf(req) {
@@ -73,6 +113,58 @@ function originOf(req) {
 
 function ldJson(obj) {
   return JSON.stringify(obj).replace(/</g, "\\u003c");
+}
+
+// The homepage stories that are put into the page before the browser's scripts run.
+// It uses the same layout as home.js, so the first screen already looks like your site.
+function homeBlock(rows) {
+  const href = (a) => `article.html?slug=${encodeURIComponent(a.slug)}`;
+  const lead = rows.find((a) => a.featured) || rows[0];
+  const others = rows.filter((a) => a.slug !== lead.slug);
+  const secondary = others.slice(0, 4);
+  const more = others.slice(4);
+
+  const leadHtml =
+    `<a class="lead-story" href="${href(lead)}">` +
+    (lead.image_url ? `<img src="${esc(lead.image_url)}" alt="" fetchpriority="high" decoding="async">` : "") +
+    `<div class="overlay">` +
+    `<span class="lead-tag">${esc(lead.category)}</span>` +
+    `<h1>${esc(lead.title)}</h1>` +
+    `<p>${esc(lead.excerpt || "")}</p>` +
+    `<div class="lead-meta">${esc(lead.author || "Davidgistmedia")} · ${esc(fmtDate(lead.published_at))}</div>` +
+    `</div></a>`;
+
+  const secondaryHtml = secondary
+    .map(
+      (a) =>
+        `<a class="secondary-item" href="${href(a)}">` +
+        (a.image_url
+          ? `<img src="${esc(a.image_url)}" alt="" loading="lazy" decoding="async">`
+          : `<div style="background:#eee;border-radius:4px"></div>`) +
+        `<div>` +
+        `<div class="cat">${esc(a.category)}</div>` +
+        `<h3>${esc(a.title)}</h3>` +
+        `<div class="meta">${esc(fmtDate(a.published_at))}</div>` +
+        `</div></a>`
+    )
+    .join("");
+
+  const moreHtml = more.length
+    ? `<nav class="ssr-more" aria-label="More stories"><ul>` +
+      more.map((a) => `<li><a href="${href(a)}">${esc(a.title)}</a></li>`).join("") +
+      `</ul></nav>`
+    : "";
+
+  const style =
+    `<style>.ssr-more{margin-top:8px}.ssr-more ul{list-style:none;margin:0;padding:0}` +
+    `.ssr-more li{padding:12px 0;border-bottom:1px solid var(--line)}` +
+    `.ssr-more a{font-family:var(--serif);font-size:1.06rem;line-height:1.28}</style>`;
+
+  return (
+    `<div class="hero-grid">${leadHtml}<div class="secondary-list">${secondaryHtml}</div></div>` +
+    moreHtml +
+    style
+  );
 }
 
 app.use((req, res, next) => {
@@ -163,22 +255,20 @@ app.get("/news-sitemap.xml", async (req, res) => {
 });
 
 app.get(["/", "/index.html"], async (req, res) => {
-  let html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  let html = template("index.html");
   try {
     const rows = await cached("home", 60 * 1000, () =>
-      sb("articles?select=title,slug,excerpt&order=published_at.desc&limit=20")
+      sb(
+        "articles?select=title,slug,excerpt,image_url,category,author,published_at,featured" +
+          "&order=published_at.desc&limit=20"
+      )
     );
     if (Array.isArray(rows) && rows.length) {
-      const list = rows
-        .map(
-          (a) =>
-            `<li style="margin:0 0 12px"><a href="article.html?slug=${encodeURIComponent(a.slug)}" style="font-weight:700">${esc(a.title)}</a>` +
-            (a.excerpt ? `<br><span style="color:var(--muted);font-size:.9rem">${esc(a.excerpt)}</span>` : "") +
-            `</li>`
-        )
-        .join("");
-      const block = `<h2 style="font-family:var(--serif);margin-bottom:12px">Latest stories</h2><ul style="list-style:none">${list}</ul>`;
-      html = html.replace(/(<section[^>]*id="hero-section"[^>]*>)\s*(<\/section>)/i, (m, open, close) => open + block + close);
+      const block = homeBlock(rows);
+      html = html.replace(
+        /(<section[^>]*id="hero-section"[^>]*>)\s*(<\/section>)/i,
+        (m, open, close) => open + block + close
+      );
     }
   } catch (e) {
     console.error("Home render failed:", e.message);
@@ -188,15 +278,17 @@ app.get(["/", "/index.html"], async (req, res) => {
 });
 
 app.get(["/article.html", "/article"], async (req, res) => {
-  let html = fs.readFileSync(path.join(ROOT, "article.html"), "utf8");
-  const slug = req.query.slug ? String(req.query.slug) : "";
+  let html = template("article.html");
+  const slug = req.query.slug ? String(req.query.slug).slice(0, 200) : "";
   let status = 200;
 
   if (slug) {
     try {
-      const rows = await sb(
-        `articles?slug=eq.${encodeURIComponent(slug)}` +
-          `&select=title,excerpt,image_url,author,category,content,published_at,updated_at&limit=1`
+      const rows = await cached("a:" + slug, 60 * 1000, () =>
+        sb(
+          `articles?slug=eq.${encodeURIComponent(slug)}` +
+            `&select=title,excerpt,image_url,author,category,content,published_at,updated_at&limit=1`
+        )
       );
       const a = Array.isArray(rows) ? rows[0] : null;
 
