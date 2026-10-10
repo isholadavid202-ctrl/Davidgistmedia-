@@ -1,14 +1,14 @@
 /* bbc.css - BBC-style look for Davidgistmedia.
-   Loads AFTER styles.css. To undo: delete the <link> to this file in index.html. */
+   Loads AFTER styles.css. To undo: delete the <link> to this file in the HTML pages. */
 
-body{background:#fff}
+body{background:#fff;color:#141414}
 
-/* Top strip: white, quiet */
+/* ===== Top strip: white, quiet ===== */
 .util-bar{background:#fff;color:var(--muted);border-bottom:1px solid var(--line)}
 .util-bar a{color:var(--muted)}
 .util-bar a:hover{color:var(--ink)}
 
-/* Masthead: simple wordmark, flat search */
+/* ===== Masthead: simple wordmark, flat search ===== */
 .masthead{box-shadow:none;padding-top:18px}
 .masthead .wrap{gap:10px}
 .brand-title{border-bottom:0;padding-bottom:0;font-size:clamp(1.9rem,6vw,2.6rem)}
@@ -17,20 +17,20 @@ body{background:#fff}
 .search-row{border-radius:3px;border:1px solid var(--ink);box-shadow:none;max-width:560px}
 .search-row button{border-radius:0}
 
-/* Section menu: bold, black underline on the current page, scrolls sideways */
+/* ===== Section menu: bold, black underline on the current page, scrolls sideways ===== */
 .tabs{margin-top:14px;border-top:0;border-bottom:1px solid var(--line)}
 .tabs > :first-child,.tabs > :last-child{margin-left:0;margin-right:0}
 .tabs a,.tabs button{font-size:.95rem;padding:14px 15px 11px}
 .tabs a.active,.tabs button.active{border-bottom-color:var(--ink)}
 .tabs a:not(.active):hover,.tabs button:not(.active):hover{color:var(--ink);border-bottom-color:var(--line)}
 
-/* Lead story: big underlined serif headline */
+/* ===== Lead story: big underlined serif headline ===== */
 .lead-story{border-bottom:2px solid var(--ink)}
 .lead-story h1{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:5px;font-size:clamp(1.7rem,6vw,2.3rem)}
 .lead-story:hover h1{color:var(--ink)}
 .lead-story p{font-size:1.05rem;color:var(--ink)}
 
-/* Order inside each story: headline, summary, "time | category", then buttons */
+/* ===== Order inside each story: headline, summary, "time | category", then buttons ===== */
 .lead-story .overlay,
 .secondary-item > :last-child,
 .story-card .body{display:flex;flex-wrap:wrap;align-items:center}
@@ -45,16 +45,16 @@ body{background:#fff}
 .lead-story .overlay{margin-top:0}
 .engage-row{order:5;flex:0 0 100%;margin-top:10px}
 
-/* Like, comment and share buttons: small and quiet */
+/* ===== Like, comment and share buttons: small and quiet ===== */
 .engage-btn{border:0;background:none;box-shadow:none;padding:4px 14px 4px 0;font-weight:400;color:var(--muted);border-radius:0}
 .engage-btn:hover{box-shadow:none;color:var(--ink)}
 .engage-btn.liked{background:none;color:var(--red)}
 
-/* Story lists: headline left, small photo right, thin dividers */
+/* ===== Story lists: headline left, small photo right, thin dividers ===== */
 .secondary-item h3,.story-card h3{font-size:1.12rem;margin:0 0 8px}
 .secondary-item:hover h3,.story-card:hover h3{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
 
-/* Category sections: heavy rule on top, plain heading */
+/* ===== Category sections: heavy rule on top, plain heading ===== */
 .cat-section{border-top:2px solid var(--ink);padding-top:16px}
 .cat-head .bar{display:none}
 .cat-head h2{font-size:1.5rem}
@@ -64,3 +64,40 @@ body{background:#fff}
   .lead-story{border-bottom:0}
   .tabs{display:flex;justify-content:flex-start}
 }
+
+/* ===== Article page (BBC style) ===== */
+.article-page{max-width:700px;padding:22px 0 40px}
+
+/* Back link and category: small and grey */
+.back-link{color:var(--muted);font-weight:400;font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
+.article-page .cat{color:var(--muted);font-weight:700;font-size:.85rem;text-transform:none;letter-spacing:0}
+
+/* Headline: big, bold serif */
+.article-page h1{font-size:clamp(1.9rem,6.5vw,2.6rem);line-height:1.15;font-weight:700;margin:8px 0 14px;letter-spacing:-.3px}
+
+/* Byline and date, between two thin lines */
+.article-page .meta{color:var(--muted);font-size:.88rem;margin:0 0 20px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+
+/* Main photo: full width, flat */
+.article-page img.hero-img{border-radius:0;box-shadow:none;max-height:none;width:100%;aspect-ratio:16/9;object-fit:cover;margin-bottom:22px}
+
+/* Story text: easy to read on a phone */
+.article-body{font-size:1.1rem;line-height:1.6;color:#141414}
+.article-body p{margin-bottom:1.1em}
+.article-body h2,.article-body h3{font-family:var(--serif);line-height:1.25;margin:1.4em 0 .5em}
+.article-body a{color:var(--red);text-decoration:underline;text-underline-offset:3px}
+.article-body img{width:100%;height:auto;margin:1em 0}
+.article-body blockquote{border-left:4px solid var(--ink);padding-left:16px;margin:1.2em 0;font-family:var(--serif);font-size:1.2rem}
+
+/* Like / comment / share row */
+.article-page .engage-row{border-top:1px solid var(--line);margin:24px 0;padding-top:18px}
+.article-page .engage-btn{border:1px solid var(--line);border-radius:3px;background:#fff;color:#141414;box-shadow:none;padding:9px 16px;font-size:.9rem;font-weight:700}
+.article-page .engage-btn:hover{border-color:var(--ink);color:#141414;box-shadow:none}
+.article-page .engage-btn.liked{background:#fff;color:var(--red);border-color:var(--red)}
+
+/* Comments: plain and flat */
+.comments-section{border-top:2px solid var(--ink)}
+.comments-section h3{font-size:1.4rem}
+.comment-form input,.comment-form textarea{border-radius:2px;border-color:#8a8a8a}
+.comment-form input:focus,.comment-form textarea:focus{border-color:var(--ink);box-shadow:none}
+.comment-item{border-bottom:1px solid var(--line)}
