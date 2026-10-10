@@ -30,7 +30,7 @@ body{background:#fff}
 .lead-story:hover h1{color:var(--ink)}
 .lead-story p{font-size:1.05rem;color:var(--ink)}
 
-/* "time | category" line: headline first, small grey meta line under it */
+/* Order inside each story: headline, summary, "time | category", then buttons */
 .lead-story .overlay,
 .secondary-item > :last-child,
 .story-card .body{display:flex;flex-wrap:wrap;align-items:center}
@@ -43,6 +43,12 @@ body{background:#fff}
 .lead-tag::before,.secondary-item .cat::before,.story-card .cat::before{content:"|";margin:0 9px;color:var(--muted)}
 .lead-meta{margin-top:0}
 .lead-story .overlay{margin-top:0}
+.engage-row{order:5;flex:0 0 100%;margin-top:10px}
+
+/* Like, comment and share buttons: small and quiet */
+.engage-btn{border:0;background:none;box-shadow:none;padding:4px 14px 4px 0;font-weight:400;color:var(--muted);border-radius:0}
+.engage-btn:hover{box-shadow:none;color:var(--ink)}
+.engage-btn.liked{background:none;color:var(--red)}
 
 /* Story lists: headline left, small photo right, thin dividers */
 .secondary-item h3,.story-card h3{font-size:1.12rem;margin:0 0 8px}
