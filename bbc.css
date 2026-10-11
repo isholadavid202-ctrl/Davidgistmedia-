@@ -117,11 +117,17 @@ body{background:var(--paper);color:var(--ink)}
 .article-body{font-size:1.1rem;line-height:1.6;color:var(--ink)}
 .article-body p{margin-bottom:1.1em}
 
-/* Like / share row */
+/* Like / share row under the story */
 .article-page .engage-row{border-top:1px solid var(--line);margin:24px 0;padding-top:18px}
 .article-page .engage-btn{border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--ink);box-shadow:none;padding:9px 16px;font-size:.9rem;font-weight:700}
 .article-page .engage-btn:hover{border-color:var(--ink);color:var(--ink);box-shadow:none}
 .article-page .engage-btn.liked{background:var(--paper);color:var(--red);border-color:var(--red)}
+
+/* Like, comment and share on Related Stories cards: same small quiet buttons as the homepage */
+.article-page .story-card .engage-row{border-top:0;margin:8px 0 0;padding-top:0}
+.article-page .story-card .engage-btn{border:0;background:none;box-shadow:none;border-radius:0;padding:4px 14px 4px 0;font-size:.9rem;font-weight:400;color:var(--muted)}
+.article-page .story-card .engage-btn:hover{border:0;color:var(--ink)}
+.article-page .story-card .engage-btn.liked{background:none;border:0;color:var(--red)}
 
 /* Comments: plain and flat */
 .comments-section{border-top:2px solid var(--ink)}
