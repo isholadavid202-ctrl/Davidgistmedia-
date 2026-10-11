@@ -161,10 +161,9 @@ async function loadArticle() {
   const liked = getLikedIds().includes(data.id);
   const videoEmbed = data.video_url ? toEmbedUrl(data.video_url) : null;
 
-  // Reading time (about 200 words a minute) and whether the story was really changed after publishing
+  // Reading time (about 200 words a minute)
   const words = String(data.content || "").trim().split(/\s+/).filter(Boolean).length;
   const readMins = Math.max(1, Math.ceil(words / 200));
-  const showUpdated = data.updated_at && Math.abs(new Date(data.updated_at) - new Date(data.published_at)) > 60000;
   const authorName = data.author || "Davidgistmedia";
 
   root.innerHTML = `
@@ -175,7 +174,6 @@ async function loadArticle() {
       <div class="byline-author"><a href="author.html?name=${encodeURIComponent(authorName)}" style="color:inherit;font-weight:700">${escapeHtml(authorName)}</a></div>
       <dl class="byline-grid">
         <dt>Published</dt><dd>${whenHtml(data.published_at)}</dd>
-        ${showUpdated ? `<dt>Updated</dt><dd>${whenHtml(data.updated_at)}</dd>` : ""}
         <dt>Read time</dt><dd>${readMins} min read</dd>
       </dl>
     </div>
