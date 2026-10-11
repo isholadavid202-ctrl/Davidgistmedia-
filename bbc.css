@@ -71,6 +71,11 @@ body{background:var(--paper);color:var(--ink)}
   .secondary-item > div:first-child{aspect-ratio:16/9;border-radius:0!important}
   .story-card:not(:has(img)){display:block}
   .story-card .body{padding:0}
+
+  /* Date and time on one line, category on the line below (no stray divider) */
+  .secondary-item .meta,.story-card .meta{flex:0 0 100%;font-size:.85rem;margin:0 0 4px}
+  .secondary-item .cat,.story-card .cat{flex:0 0 100%;font-size:.85rem}
+  .secondary-item .cat::before,.story-card .cat::before{display:none}
 }
 
 @media(min-width:820px){
@@ -88,8 +93,20 @@ body{background:var(--paper);color:var(--ink)}
 /* Headline: big serif */
 .article-page > h1{font-size:clamp(1.9rem,6.5vw,2.6rem);line-height:1.15;font-weight:700;margin:8px 0 14px;letter-spacing:-.3px}
 
-/* Byline and date, between two thin lines */
-.article-page > .meta{color:var(--muted);font-size:.88rem;margin:0 0 20px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+/* Byline: author, then published / updated / read time in a tidy panel */
+.article-page > .meta.byline{display:block;margin:0 0 22px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--ink);font-size:.95rem}
+.byline-author{font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:12px}
+.byline-author a{color:inherit;font-weight:700}
+.byline-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;align-items:baseline;margin:0}
+.byline-grid dt{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.byline-grid dd{margin:0;color:var(--ink)}
+.byline-grid time{white-space:nowrap}
+.by-sep{margin:0 8px;color:var(--muted)}
+.dg-read{display:none}
+
+/* Fix: old rule in styles.css put a line under every date inside a story page */
+.article-page .story-card .meta{margin:0;padding:0;border:0}
+.article-page .comment-head .meta{margin:0;padding:0;border:0}
 
 /* Main photo and video: full width, flat */
 .article-page img.hero-img{border-radius:0;box-shadow:none;max-height:none;width:100%;aspect-ratio:16/9;object-fit:cover;margin-bottom:22px}
