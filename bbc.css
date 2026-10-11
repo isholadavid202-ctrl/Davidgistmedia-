@@ -25,9 +25,9 @@ body{background:var(--paper);color:var(--ink)}
 .tabs a.active,.tabs button.active{border-bottom-color:var(--ink)}
 .tabs a:not(.active):hover,.tabs button:not(.active):hover{color:var(--ink);border-bottom-color:var(--line)}
 
-/* ===== Lead story: big underlined serif headline, regular weight like the BBC ===== */
+/* ===== Lead story: big serif headline, no underline, like the BBC ===== */
 .lead-story{border-bottom:2px solid var(--ink)}
-.lead-story h1{font-weight:400;line-height:1.2;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:5px;font-size:clamp(1.6rem,6vw,2.2rem)}
+.lead-story h1{font-weight:400;line-height:1.2;text-decoration:none;font-size:clamp(1.6rem,6vw,2.2rem)}
 .lead-story:hover h1{color:var(--ink)}
 .lead-story p{font-family:var(--serif);font-size:1.05rem;line-height:1.45;color:var(--ink)}
 
@@ -51,9 +51,9 @@ body{background:var(--paper);color:var(--ink)}
 .engage-btn:hover{box-shadow:none;color:var(--ink)}
 .engage-btn.liked{background:none;color:var(--red)}
 
-/* ===== Story headlines in lists: regular weight, BBC size ===== */
-.secondary-item h3,.story-card h3{font-family:var(--serif);font-size:1.06rem;line-height:1.28;font-weight:400;color:var(--ink);margin:0 0 10px}
-.secondary-item:hover h3,.story-card:hover h3{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+/* ===== Story headlines in lists: regular weight, BBC size, no underline ===== */
+.secondary-item h3,.story-card h3{font-family:var(--serif);font-size:1.06rem;line-height:1.28;font-weight:400;color:var(--ink);margin:0 0 10px;text-decoration:none}
+.secondary-item:hover h3,.story-card:hover h3{color:var(--ink);text-decoration:none}
 
 /* ===== Category sections: heavy rule on top, plain heading ===== */
 .cat-section{border-top:2px solid var(--ink);padding-top:16px}
