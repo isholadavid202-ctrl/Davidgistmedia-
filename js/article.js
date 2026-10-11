@@ -1,5 +1,25 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
+/* Date and time in Nigeria time. formatWhen gives text such as "10 Oct 2026, 8:15 PM";
+   whenHtml gives the same as a <time> tag split into day and clock for the byline. */
+function nigeriaParts(d) {
+  const t = new Date(d);
+  if (isNaN(t.getTime())) return null;
+  const day = t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
+  const clock = t.toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Africa/Lagos" })
+    .replace(/am|pm/i, (m) => m.toUpperCase());
+  return { t, day, clock };
+}
+function formatWhen(d) {
+  const p = nigeriaParts(d);
+  return p ? p.day + ", " + p.clock : "";
+}
+function whenHtml(d) {
+  const p = nigeriaParts(d);
+  if (!p) return "";
+  return `<time datetime="${p.t.toISOString()}">${p.day}<span class="by-sep">·</span>${p.clock}</time>`;
+}
+
 function getLikedIds() {
   try {
     return JSON.parse(localStorage.getItem("dg_liked_v2") || "[]");
@@ -141,11 +161,24 @@ async function loadArticle() {
   const liked = getLikedIds().includes(data.id);
   const videoEmbed = data.video_url ? toEmbedUrl(data.video_url) : null;
 
+  // Reading time (about 200 words a minute) and whether the story was really changed after publishing
+  const words = String(data.content || "").trim().split(/\s+/).filter(Boolean).length;
+  const readMins = Math.max(1, Math.ceil(words / 200));
+  const showUpdated = data.updated_at && Math.abs(new Date(data.updated_at) - new Date(data.published_at)) > 60000;
+  const authorName = data.author || "Davidgistmedia";
+
   root.innerHTML = `
     <a href="index.html" class="back-link">&larr; Back to home</a>
     <div class="cat">${escapeHtml(data.category)}</div>
     <h1>${escapeHtml(data.title)}</h1>
-    <div class="meta"><a href="author.html?name=${encodeURIComponent(data.author || "Davidgistmedia")}" style="color:inherit;font-weight:700">${escapeHtml(data.author || "Davidgistmedia")}</a> · ${formatDate(data.published_at)}${data.updated_at ? ` · <em>Updated ${formatDate(data.updated_at)}</em>` : ""}</div>
+    <div class="meta byline">
+      <div class="byline-author"><a href="author.html?name=${encodeURIComponent(authorName)}" style="color:inherit;font-weight:700">${escapeHtml(authorName)}</a></div>
+      <dl class="byline-grid">
+        <dt>Published</dt><dd>${whenHtml(data.published_at)}</dd>
+        ${showUpdated ? `<dt>Updated</dt><dd>${whenHtml(data.updated_at)}</dd>` : ""}
+        <dt>Read time</dt><dd>${readMins} min read</dd>
+      </dl>
+    </div>
     ${videoEmbed
       ? `<div style="position:relative;padding-top:56.25%;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-md);background:#000;margin-bottom:20px">
            <iframe src="${videoEmbed}" title="Story video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen
@@ -189,7 +222,7 @@ async function loadRelated() {
   const container = document.getElementById("related-section");
   const { data, error } = await supabaseClient
     .from("articles")
-    .select("*")
+    .select("id,slug,title,image_url,category,published_at")
     .eq("category", currentArticle.category)
     .neq("id", currentArticle.id)
     .order("published_at", { ascending: false })
@@ -208,11 +241,11 @@ async function loadRelated() {
       <div class="card-grid">
         ${data.map((a) => `
           <a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">
-            ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="">` : ""}
+            ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : ""}
             <div class="body">
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
-              <div class="meta">${formatDate(a.published_at)}</div>
+              <div class="meta">${formatWhen(a.published_at)}</div>
             </div>
           </a>
         `).join("")}
@@ -242,7 +275,7 @@ async function loadComments() {
 
   list.innerHTML = data.map((c) => `
     <div class="comment-item">
-      <div class="comment-head"><strong>${escapeHtml(c.name || "Anonymous")}</strong><span class="meta">${formatDate(c.created_at)}</span></div>
+      <div class="comment-head"><strong>${escapeHtml(c.name || "Anonymous")}</strong><span class="meta">${formatWhen(c.created_at)}</span></div>
       <p>${escapeHtml(c.content)}</p>
     </div>
   `).join("");
