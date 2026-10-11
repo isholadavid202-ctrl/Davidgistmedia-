@@ -1,7 +1,7 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
 /* Date and time in Nigeria time. formatWhen gives text such as "10 Oct 2026, 8:15 PM";
-   whenHtml gives the same as a <time> tag split into day and clock for the byline. */
+   whenHtml gives the same inside a <time> tag with a small clock icon, for the byline. */
 function nigeriaParts(d) {
   const t = new Date(d);
   if (isNaN(t.getTime())) return null;
@@ -17,7 +17,8 @@ function formatWhen(d) {
 function whenHtml(d) {
   const p = nigeriaParts(d);
   if (!p) return "";
-  return `<time datetime="${p.t.toISOString()}">${p.day}<span class="by-sep">·</span>${p.clock}</time>`;
+  const icon = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+  return `<time datetime="${p.t.toISOString()}">${icon}${p.day}, ${p.clock}</time>`;
 }
 
 function getLikedIds() {
@@ -171,11 +172,12 @@ async function loadArticle() {
     <div class="cat">${escapeHtml(data.category)}</div>
     <h1>${escapeHtml(data.title)}</h1>
     <div class="meta byline">
-      <div class="byline-author"><a href="author.html?name=${encodeURIComponent(authorName)}" style="color:inherit;font-weight:700">${escapeHtml(authorName)}</a></div>
-      <dl class="byline-grid">
-        <dt>Published</dt><dd>${whenHtml(data.published_at)}</dd>
-        <dt>Read time</dt><dd>${readMins} min read</dd>
-      </dl>
+      <div class="byline-author">By <a href="author.html?name=${encodeURIComponent(authorName)}" style="color:inherit;font-weight:700">${escapeHtml(authorName)}</a></div>
+      <div class="byline-info">
+        ${whenHtml(data.published_at)}
+        <span class="by-bar" aria-hidden="true"></span>
+        <span>${readMins} min read</span>
+      </div>
     </div>
     ${videoEmbed
       ? `<div style="position:relative;padding-top:56.25%;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-md);background:#000;margin-bottom:20px">
