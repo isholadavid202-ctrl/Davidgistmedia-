@@ -3,6 +3,20 @@ document.getElementById("today").textContent = new Date().toLocaleDateString("en
   weekday: "long", day: "numeric", month: "long", year: "numeric",
 });
 
+/* Date and time of upload, shown in Nigeria time (for example: 10 Oct 2026, 8:15 PM) */
+function formatWhen(d) {
+  try {
+    const t = new Date(d);
+    if (isNaN(t.getTime())) return "";
+    const day = t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
+    const time = t.toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Africa/Lagos" })
+      .replace(/am|pm/i, (m) => m.toUpperCase());
+    return day + ", " + time;
+  } catch (e) {
+    return "";
+  }
+}
+
 /* ---- Verification badges (data-driven) ---- */
 const DGB = (() => {
   const map = {};
@@ -185,7 +199,7 @@ function renderTrending() {
             <div class="body">
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
-              <div class="meta">${a.likes || 0} likes · ${commentCounts[a.id] || 0} comments · ${formatDate(a.published_at)}</div>
+              <div class="meta">${a.likes || 0} likes · ${commentCounts[a.id] || 0} comments · ${formatWhen(a.published_at)}</div>
             </div>
           </a>
         `).join("")}
@@ -231,7 +245,7 @@ function renderHero(list) {
           <span class="lead-tag">${escapeHtml(lead.category)}</span>
           <h1>${escapeHtml(lead.title)}</h1>
           <p>${escapeHtml(lead.excerpt || "")}</p>
-          <div class="lead-meta">${authorHtml(lead.author)} · ${formatDate(lead.published_at)}</div>
+          <div class="lead-meta">${authorHtml(lead.author)} · ${formatWhen(lead.published_at)}</div>
           ${engageRowHtml(lead)}
         </div>
       </a>
@@ -242,7 +256,7 @@ function renderHero(list) {
             <div>
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
-              <div class="meta">${formatDate(a.published_at)}</div>
+              <div class="meta">${formatWhen(a.published_at)}</div>
               ${engageRowHtml(a)}
             </div>
           </a>
@@ -271,7 +285,7 @@ function renderCategorySections(list) {
                 <div class="body">
                   <div class="cat">${escapeHtml(a.category)}</div>
                   <h3>${escapeHtml(a.title)}</h3>
-                  <div class="meta">${formatDate(a.published_at)}</div>
+                  <div class="meta">${formatWhen(a.published_at)}</div>
                   ${engageRowHtml(a)}
                 </div>
               </a>
