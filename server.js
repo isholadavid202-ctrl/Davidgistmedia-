@@ -36,9 +36,15 @@ function esc(s) {
     .replace(/>/g, "&gt;");
 }
 
+// Date and time of upload in Nigeria time, for example: 10 Oct 2026, 8:15 PM
 function fmtDate(d) {
   try {
-    return new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    const t = new Date(d);
+    if (isNaN(t.getTime())) return "";
+    const day = t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
+    const time = t.toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Africa/Lagos" })
+      .replace(/am|pm/i, (m) => m.toUpperCase());
+    return day + ", " + time;
   } catch (e) {
     return "";
   }
@@ -66,11 +72,11 @@ async function sb(query) {
   }
 }
 
-// Keeps recent answers. If the saved answer is old, it is still served at once
-// while a fresh one is fetched in the background.
+// Keeps recent answers. With allowStale on, an old saved answer is served at once
+// while a fresh one is fetched in the background. With it off, an old answer is never served.
 const cache = {};
 const pending = {};
-async function cached(name, ttlMs, loader) {
+async function cached(name, ttlMs, loader, allowStale = true) {
   const hit = cache[name];
   if (hit && Date.now() - hit.t < ttlMs) return hit.v;
 
@@ -91,7 +97,7 @@ async function cached(name, ttlMs, loader) {
     return pending[name];
   };
 
-  if (hit) {
+  if (hit && allowStale) {
     refresh().catch(() => {});
     return hit.v;
   }
@@ -288,7 +294,8 @@ app.get(["/article.html", "/article"], async (req, res) => {
         sb(
           `articles?slug=eq.${encodeURIComponent(slug)}` +
             `&select=title,excerpt,image_url,author,category,content,published_at,updated_at&limit=1`
-        )
+        ),
+        false
       );
       const a = Array.isArray(rows) ? rows[0] : null;
 
