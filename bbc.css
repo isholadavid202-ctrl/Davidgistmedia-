@@ -86,22 +86,23 @@ body{background:var(--paper);color:var(--ink)}
 /* ===== Article page (BBC style) ===== */
 .article-page{max-width:700px;padding:22px 0 40px}
 
-/* Back link and category: small and grey */
+/* Back link: small and grey */
 .back-link{color:var(--muted);font-weight:400;font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
-.article-page > .cat{color:var(--muted);font-weight:700;font-size:.85rem;text-transform:none;letter-spacing:0}
 
-/* Headline: big serif */
-.article-page > h1{font-size:clamp(1.9rem,6.5vw,2.6rem);line-height:1.15;font-weight:700;margin:8px 0 14px;letter-spacing:-.3px}
+/* Category label above the headline: small red capitals */
+.article-page > .cat{color:var(--red);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;margin-top:8px}
 
-/* Byline: author, then published / updated / read time in a tidy panel */
-.article-page > .meta.byline{display:block;margin:0 0 22px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--ink);font-size:.95rem}
-.byline-author{font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:12px}
+/* Headline: serif, bold, comfortable size */
+.article-page > h1{font-size:clamp(1.7rem,5.8vw,2.3rem);line-height:1.2;font-weight:700;margin:8px 0 16px;letter-spacing:-.2px}
+
+/* Byline: "By author" on one line, date, time and reading time on the next */
+.article-page > .meta.byline{display:block;margin:0 0 20px;padding:0 0 16px;border:0;border-bottom:1px solid var(--line);color:var(--muted)}
+.byline-author{font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:6px}
 .byline-author a{color:inherit;font-weight:700}
-.byline-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;align-items:baseline;margin:0}
-.byline-grid dt{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.byline-grid dd{margin:0;color:var(--ink)}
-.byline-grid time{white-space:nowrap}
-.by-sep{margin:0 8px;color:var(--muted)}
+.byline-info{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-size:.88rem;color:var(--muted)}
+.byline-info time{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.byline-info svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.byline-info .by-bar{width:1px;height:14px;background:var(--muted);opacity:.6}
 .dg-read{display:none}
 
 /* Fix: old rule in styles.css put a line under every date inside a story page */
