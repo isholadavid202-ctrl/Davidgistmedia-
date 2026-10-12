@@ -199,7 +199,8 @@ function renderTrending() {
             <div class="body">
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
-              <div class="meta">${a.likes || 0} likes · ${commentCounts[a.id] || 0} comments · ${formatWhen(a.published_at)}</div>
+              <div class="meta">${formatWhen(a.published_at)}</div>
+              ${engageRowHtml(a)}
             </div>
           </a>
         `).join("")}
