@@ -44,15 +44,15 @@ body{background:var(--paper);color:var(--ink)}
 .lead-tag::before,.secondary-item .cat::before,.story-card .cat::before{content:"";display:inline-block;width:1px;height:17px;background:var(--muted);margin:0 12px;vertical-align:middle}
 .lead-meta{margin-top:0}
 .lead-story .overlay{margin-top:0}
-.engage-row{order:5;flex:0 0 100%;margin-top:12px}
+.engage-row{order:5;flex:0 0 100%;margin-top:8px}
 
 /* ===== Like, comment and share buttons: small and quiet ===== */
-.engage-btn{border:0;background:none;box-shadow:none;padding:6px 18px 6px 0;font-weight:400;color:var(--muted);border-radius:0}
+.engage-btn{border:0;background:none;box-shadow:none;padding:4px 14px 4px 0;font-weight:400;color:var(--muted);border-radius:0}
 .engage-btn:hover{box-shadow:none;color:var(--ink)}
 .engage-btn.liked{background:none;color:var(--red)}
 
 /* ===== Story headlines in lists: regular weight, BBC size, no underline ===== */
-.secondary-item h3,.story-card h3{font-family:var(--serif);font-size:1.06rem;line-height:1.35;font-weight:400;color:var(--ink);margin:0 0 12px;text-decoration:none}
+.secondary-item h3,.story-card h3{font-family:var(--serif);font-size:1.06rem;line-height:1.28;font-weight:400;color:var(--ink);margin:0 0 10px;text-decoration:none}
 .secondary-item:hover h3,.story-card:hover h3{color:var(--ink);text-decoration:none}
 
 /* ===== Category sections: heavy rule on top, plain heading ===== */
@@ -64,17 +64,17 @@ body{background:var(--paper);color:var(--ink)}
 /* ===== Phones: small photo on the LEFT, headline on the RIGHT (BBC layout) ===== */
 @media(max-width:819px){
   .card-grid{grid-template-columns:1fr;gap:0}
-  .secondary-item,.story-card{display:grid;grid-template-columns:36% 1fr;gap:20px;align-items:start;padding:24px 0;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none}
+  .secondary-item,.story-card{display:grid;grid-template-columns:38% 1fr;gap:16px;align-items:start;padding:16px 0;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none}
   .secondary-item > :first-child,.story-card > :first-child{grid-column:1;grid-row:1}
   .secondary-item > :last-child,.story-card > :last-child{grid-column:2;grid-row:1}
-  .secondary-item img,.story-card img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:0;margin:0}
-  .secondary-item > div:first-child{aspect-ratio:4/3;border-radius:0!important}
+  .secondary-item img,.story-card img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:0;margin:0}
+  .secondary-item > div:first-child{aspect-ratio:16/9;border-radius:0!important}
   .story-card:not(:has(img)){display:block}
   .story-card .body{padding:0}
 
   /* Date and time on one line, category on the line below (no stray divider) */
-  .secondary-item .meta,.story-card .meta{flex:0 0 100%;font-size:.85rem;line-height:1.5;margin:0 0 6px}
-  .secondary-item .cat,.story-card .cat{flex:0 0 100%;font-size:.85rem;line-height:1.5;margin:0 0 4px}
+  .secondary-item .meta,.story-card .meta{flex:0 0 100%;font-size:.85rem;margin:0 0 4px}
+  .secondary-item .cat,.story-card .cat{flex:0 0 100%;font-size:.85rem}
   .secondary-item .cat::before,.story-card .cat::before{display:none}
 }
 
@@ -124,8 +124,8 @@ body{background:var(--paper);color:var(--ink)}
 .article-page .engage-btn.liked{background:var(--paper);color:var(--red);border-color:var(--red)}
 
 /* Like, comment and share on Related Stories cards: same small quiet buttons as the homepage */
-.article-page .story-card .engage-row{border-top:0;margin:12px 0 0;padding-top:0}
-.article-page .story-card .engage-btn{border:0;background:none;box-shadow:none;border-radius:0;padding:6px 18px 6px 0;font-size:.9rem;font-weight:400;color:var(--muted)}
+.article-page .story-card .engage-row{border-top:0;margin:8px 0 0;padding-top:0}
+.article-page .story-card .engage-btn{border:0;background:none;box-shadow:none;border-radius:0;padding:4px 14px 4px 0;font-size:.9rem;font-weight:400;color:var(--muted)}
 .article-page .story-card .engage-btn:hover{border:0;color:var(--ink)}
 .article-page .story-card .engage-btn.liked{background:none;border:0;color:var(--red)}
 
