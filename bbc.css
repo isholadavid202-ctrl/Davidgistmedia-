@@ -35,19 +35,51 @@ body{background:var(--paper);color:var(--ink)}
 .lead-story .overlay,
 .secondary-item > :last-child,
 .story-card .body{display:flex;flex-wrap:wrap;align-items:center}
+
 .lead-story h1,.lead-story p,
 .secondary-item h3,.story-card h3{flex:0 0 100%}
+
 .lead-story h1,.secondary-item h3,.story-card h3{order:1}
 .lead-story p{order:2}
 .lead-meta,.secondary-item .meta,.story-card .meta{order:3;color:var(--muted);font-size:.9rem}
-.lead-tag,.secondary-item .cat,.story-card .cat{order:4;background:none;color:var(--muted);padding:0;margin:0;border-radius:0;text-transform:capitalize;font-weight:400;font-size:.9rem;letter-spacing:0}
-.lead-tag::before,.secondary-item .cat::before,.story-card .cat::before{content:"";display:inline-block;width:1px;height:17px;background:var(--muted);margin:0 12px;vertical-align:middle}
+.lead-tag,.secondary-item .cat,.story-card .cat{
+  order:4;
+  background:none;
+  color:var(--muted);
+  padding:0;
+  margin:0;
+  border-radius:0;
+  text-transform:capitalize;
+  font-weight:400;
+  font-size:.9rem;
+  letter-spacing:0
+}
+
+.lead-tag::before,.secondary-item .cat::before,.story-card .cat::before{
+  content:"";
+  display:inline-block;
+  width:1px;
+  height:17px;
+  background:var(--muted);
+  margin:0 12px;
+  vertical-align:middle
+}
+
 .lead-meta{margin-top:0}
 .lead-story .overlay{margin-top:0}
 .engage-row{order:5;flex:0 0 100%;margin-top:12px}
 
 /* ===== Like, comment and share buttons: small and quiet ===== */
-.engage-btn{border:0;background:none;box-shadow:none;padding:6px 18px 6px 0;font-weight:400;color:var(--muted);border-radius:0}
+.engage-btn{
+  border:0;
+  background:none;
+  box-shadow:none;
+  padding:6px 18px 6px 0;
+  font-weight:400;
+  color:var(--muted);
+  border-radius:0
+}
+
 .engage-btn:hover{box-shadow:none;color:var(--ink)}
 .engage-btn.liked{background:none;color:var(--red)}
 
@@ -62,97 +94,330 @@ body{background:var(--paper);color:var(--ink)}
   text-decoration:none;
   letter-spacing:0;
   -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
+  text-rendering:optimizeLegibility
 }
-.secondary-item:hover h3,.story-card:hover h3{color:var(--ink);text-decoration:none}
+
+.secondary-item:hover h3,.story-card:hover h3{
+  color:var(--ink);
+  text-decoration:none
+}
 
 /* ===== Category sections: heavy rule on top, plain heading ===== */
 .cat-section{border-top:2px solid var(--ink);padding-top:16px}
 .cat-head .bar{display:none}
 .cat-head h2{font-size:1.5rem}
-.cat-head a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.cat-head a{
+  color:var(--ink);
+  text-decoration:underline;
+  text-underline-offset:3px
+}
 
 /* ===== Phones: photo on the LEFT, headline on the RIGHT (BBC layout) ===== */
 @media(max-width:819px){
-  .card-grid{grid-template-columns:1fr;gap:0}
-  .secondary-item,.story-card{display:grid;grid-template-columns:40% 1fr;gap:0 16px;align-items:start;padding:20px 0;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none}
-  .secondary-item > :first-child,.story-card > :first-child{grid-column:1;grid-row:1}
-  .secondary-item > :last-child,.story-card > :last-child{grid-column:2;grid-row:1}
-  .secondary-item img,.story-card img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:0;margin:0}
-  .secondary-item > div:first-child{aspect-ratio:16/9;border-radius:0!important}
-  .story-card:not(:has(img)){display:block}
-  .story-card .body{padding:0}
-  .secondary-item > :last-child,.story-card > :last-child,.story-card .body{padding-right:0;min-width:0}
 
-  /* The gap on the right of the headline, like the BBC: the headline stops before the screen edge.
+  .card-grid{
+    grid-template-columns:1fr;
+    gap:0
+  }
+
+  .secondary-item,.story-card{
+    display:grid;
+    grid-template-columns:40% 1fr;
+    gap:0 16px;
+    align-items:start;
+    padding:20px 0;
+    background:none;
+    border:0;
+    border-bottom:1px solid var(--line);
+    border-radius:0;
+    box-shadow:none
+  }
+
+  .secondary-item > :first-child,.story-card > :first-child{
+    grid-column:1;
+    grid-row:1
+  }
+
+  .secondary-item > :last-child,.story-card > :last-child{
+    grid-column:2;
+    grid-row:1
+  }
+
+  .secondary-item img,.story-card img{
+    width:100%;
+    height:auto;
+    aspect-ratio:16/9;
+    object-fit:cover;
+    border-radius:0;
+    margin:0
+  }
+
+  .secondary-item > div:first-child{
+    aspect-ratio:16/9;
+    border-radius:0!important
+  }
+
+  .story-card:not(:has(img)){
+    display:block
+  }
+
+  .story-card .body{
+    padding:0
+  }
+
+  .secondary-item > :last-child,
+  .story-card > :last-child,
+  .story-card .body{
+    padding-right:0;
+    min-width:0
+  }
+
+  /* The gap on the right of the headline, like the BBC:
+     the headline stops before the screen edge.
      Only the headline gets the gap, so "time | category" can still use the full width. */
-  .secondary-item h3,.story-card h3{margin-top:-2px;overflow-wrap:break-word;padding-right:32px}
 
-  /* Short time and category on ONE line with a divider, like the BBC: "7 hrs ago | World" */
-  .secondary-item .meta,.story-card .meta{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
-  .secondary-item .cat,.story-card .cat{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
-  .secondary-item .cat::before,.story-card .cat::before{display:inline-block;margin:0 8px}
+  .secondary-item h3,.story-card h3{
+    margin-top:-2px;
+    overflow-wrap:break-word;
+    padding-right:32px
+  }
+
+  /* Short time and category on ONE line with a divider, like the BBC:
+     "7 hrs ago | World" */
+
+  .secondary-item .meta,.story-card .meta{
+    flex:0 0 auto;
+    font-size:.85rem;
+    line-height:1.5;
+    margin:0;
+    white-space:nowrap
+  }
+
+  .secondary-item .cat,.story-card .cat{
+    flex:0 0 auto;
+    font-size:.85rem;
+    line-height:1.5;
+    margin:0;
+    white-space:nowrap
+  }
+
+  .secondary-item .cat::before,.story-card .cat::before{
+    display:inline-block;
+    margin:0 8px
+  }
 }
 
 @media(min-width:820px){
-  .lead-story{border-bottom:0}
-  .tabs{display:flex;justify-content:flex-start}
+
+  .lead-story{
+    border-bottom:0
+  }
+
+  .tabs{
+    display:flex;
+    justify-content:flex-start
+  }
 }
 
 /* ===== Article page (BBC style) ===== */
-.article-page{max-width:700px;padding:22px 0 40px}
+
+.article-page{
+  max-width:700px;
+  padding:22px 0 40px
+}
 
 /* Back link: small and grey */
-.back-link{color:var(--muted);font-weight:400;font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
+.back-link{
+  color:var(--muted);
+  font-weight:400;
+  font-size:.88rem;
+  text-decoration:underline;
+  text-underline-offset:3px
+}
 
 /* Category label above the headline: small red capitals */
-.article-page > .cat{color:var(--red);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;margin-top:8px}
+.article-page > .cat{
+  color:var(--red);
+  font-weight:800;
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.09em;
+  margin-top:8px
+}
 
 /* Headline: serif, bold, comfortable size */
-.article-page > h1{font-size:clamp(1.7rem,5.8vw,2.3rem);line-height:1.2;font-weight:700;margin:8px 0 16px;letter-spacing:-.2px}
+.article-page > h1{
+  font-size:clamp(1.7rem,5.8vw,2.3rem);
+  line-height:1.2;
+  font-weight:700;
+  margin:8px 0 16px;
+  letter-spacing:-.2px
+}
 
 /* Byline: "By author" on one line, date, time and reading time on the next */
-.article-page > .meta.byline{display:block;margin:0 0 20px;padding:0 0 16px;border:0;border-bottom:1px solid var(--line);color:var(--muted)}
-.byline-author{font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:6px}
-.byline-author a{color:inherit;font-weight:700}
-.byline-info{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-size:.88rem;color:var(--muted)}
-.byline-info time{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
-.byline-info svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.byline-info .by-bar{width:1px;height:14px;background:var(--muted);opacity:.6}
+.article-page > .meta.byline{
+  display:block;
+  margin:0 0 20px;
+  padding:0 0 16px;
+  border:0;
+  border-bottom:1px solid var(--line);
+  color:var(--muted)
+}
+
+.byline-author{
+  font-size:1rem;
+  font-weight:700;
+  color:var(--ink);
+  margin-bottom:6px
+}
+
+.byline-author a{
+  color:inherit;
+  font-weight:700
+}
+
+.byline-info{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:4px 10px;
+  font-size:.88rem;
+  color:var(--muted)
+}
+
+.byline-info time{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap
+}
+
+.byline-info svg{
+  width:15px;
+  height:15px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  flex:none
+}
+
+.byline-info .by-bar{
+  width:1px;
+  height:14px;
+  background:var(--muted);
+  opacity:.6
+}
+
 .dg-read{display:none}
 
 /* Fix: old rule in styles.css put a line under every date inside a story page */
-.article-page .story-card .meta{margin:0;padding:0;border:0}
-.article-page .comment-head .meta{margin:0;padding:0;border:0}
+.article-page .story-card .meta{
+  margin:0;
+  padding:0;
+  border:0
+}
+
+.article-page .comment-head .meta{
+  margin:0;
+  padding:0;
+  border:0
+}
 
 /* Main photo and video: full width, flat */
-.article-page img.hero-img{border-radius:0;box-shadow:none;max-height:none;width:100%;aspect-ratio:16/9;object-fit:cover;margin-bottom:22px}
-.article-page > div[style*="56.25%"]{border-radius:0!important;box-shadow:none!important}
+.article-page img.hero-img{
+  border-radius:0;
+  box-shadow:none;
+  max-height:none;
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  margin-bottom:22px
+}
+
+.article-page > div[style*="56.25%"]{
+  border-radius:0!important;
+  box-shadow:none!important
+}
 
 /* Story text: easy to read on a phone */
-.article-body{font-size:1.1rem;line-height:1.6;color:var(--ink)}
-.article-body p{margin-bottom:1.1em}
+.article-body{
+  font-size:1.1rem;
+  line-height:1.6;
+  color:var(--ink)
+}
+
+.article-body p{
+  margin-bottom:1.1em
+}
 
 /* Like / share row under the story */
-.article-page .engage-row{border-top:1px solid var(--line);margin:24px 0;padding-top:18px}
-.article-page .engage-btn{border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--ink);box-shadow:none;padding:9px 16px;font-size:.9rem;font-weight:700}
-.article-page .engage-btn:hover{border-color:var(--ink);color:var(--ink);box-shadow:none}
-.article-page .engage-btn.liked{background:var(--paper);color:var(--red);border-color:var(--red)}
+.article-page .engage-row{
+  border-top:1px solid var(--line);
+  margin:24px 0;
+  padding-top:18px
+}
+
+.article-page .engage-btn{
+  border:1px solid var(--line);
+  border-radius:3px;
+  background:var(--paper);
+  color:var(--ink);
+  box-shadow:none;
+  padding:9px 16px;
+  font-size:.9rem;
+  font-weight:700
+}
+
+.article-page .engage-btn:hover{
+  border-color:var(--ink);
+  color:var(--ink);
+  box-shadow:none
+}
+
+.article-page .engage-btn.liked{
+  background:var(--paper);
+  color:var(--red);
+  border-color:var(--red)
+}
 
 /* Comments: plain and flat */
-.comments-section{border-top:2px solid var(--ink)}
-.comments-section h3{font-size:1.4rem}
-.comment-form input,.comment-form textarea{border-radius:2px;border-color:#8a8a8a}
-.comment-form input:focus,.comment-form textarea:focus{border-color:var(--ink);box-shadow:none}
-.comment-item{border-bottom:1px solid var(--line)}
+.comments-section{
+  border-top:2px solid var(--ink)
+}
+
+.comments-section h3{
+  font-size:1.4rem
+}
+
+.comment-form input,.comment-form textarea{
+  border-radius:2px;
+  border-color:#8a8a8a
+}
+
+.comment-form input:focus,.comment-form textarea:focus{
+  border-color:var(--ink);
+  box-shadow:none
+}
+
+.comment-item{
+  border-bottom:1px solid var(--line)
+}
 
 /* Related stories at the bottom of a story */
-.article-page .cat-section{margin-top:10px}
+.article-page .cat-section{
+  margin-top:10px
+}
 
 /* ===== Related Stories on phones: same compact BBC cards as the homepage ===== */
 @media(max-width:819px){
+
   .article-page .story-card > :last-child,
-  .article-page .story-card .body{padding-right:0;min-width:0}
+  .article-page .story-card .body{
+    padding-right:0;
+    min-width:0
+  }
 
   /* Headline: same size, weight and right gap as the homepage */
   .article-page .story-card h3{
@@ -161,74 +426,182 @@ body{background:var(--paper);color:var(--ink)}
     line-height:1.22!important;
     font-weight:600!important;
     margin:-2px 0 10px!important;
-    padding-right:32px!important;
+    padding-right:32px!important
   }
 
   /* Time and category on one line, same as the homepage */
   .article-page .story-card .meta,
-  .article-page .story-card .cat{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
-  .article-page .story-card .cat::before{display:inline-block;margin:0 8px}
+  .article-page .story-card .cat{
+    flex:0 0 auto;
+    font-size:.85rem;
+    line-height:1.5;
+    margin:0;
+    white-space:nowrap
+  }
+
+  .article-page .story-card .cat::before{
+    display:inline-block;
+    margin:0 8px
+  }
 }
 
-/* ===== Homepage cards: no like, comment or share row (readers use them on the story page) ===== */
+/* ===== Homepage cards: no like, comment or share row
+   (readers use them on the story page) ===== */
+
 #hero-section .engage-row,
 #trending-section .engage-row,
-#category-sections .engage-row{display:none !important}
-
-/* ===== OLD footer (kept so pages you have not updated yet still look fine) ===== */
-footer.bbc-footer{
-  background:#fff;
-  color:#000;
-  padding:0 0 28px;
-  text-align:left;
-  border-top:1px solid #e6e6e6;
+#category-sections .engage-row{
+  display:none !important
 }
-.bbc-footer .wrap{padding-top:22px}
 
-.bbc-footer .bf-follow{
-  margin:0 0 14px;
-  font-family:inherit;
-  font-size:1.15rem;
+
+/* =========================================================
+   DAVIDGISTMEDIA BLACK FOOTER
+   This is the footer shown at the bottom of the Home page
+   and article pages.
+   ========================================================= */
+
+.dgf{
+  background:#1b1b1b !important;
+  color:#ffffff !important;
+  width:100%;
+  border-top:1px solid #333333;
+  padding:40px 22px 50px;
+  margin-top:40px;
+}
+
+.dgf-inner{
+  max-width:1100px;
+  margin:0 auto;
+}
+
+.dgf-title{
+  margin:0 0 28px;
+  color:#ffffff !important;
+  font-size:28px;
   font-weight:700;
-  color:#000;
+  line-height:1.25;
 }
 
-.bbc-footer .bf-social{display:flex;gap:26px;margin-bottom:22px}
-.bbc-footer .bf-social a{color:#000;font-size:1.35rem;line-height:1;text-decoration:none}
-.bbc-footer .bf-social a:hover{color:#000;opacity:.7}
-
-.bbc-footer .bf-links{display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:22px}
-.bbc-footer .bf-links a{color:#000;font-size:.92rem;text-decoration:none}
-.bbc-footer .bf-links a:hover{text-decoration:underline}
-
-.bbc-footer .bf-copy{color:#000;font-size:.85rem;line-height:1.5;margin:0}
-
-/* ===== Footer logo: show the whole name on the white background ===== */
-footer.bbc-footer .brand-title,
-footer.bbc-footer .brand-title span,
-footer.bbc-footer .brand-title .gold,
-footer.bbc-footer [class*="logo"],
-footer.bbc-footer [class*="logo"] span,
-footer.bbc-footer [class*="brand"],
-footer.bbc-footer [class*="brand"] span {
-  color: var(--red) !important;
-  text-shadow: none !important;
-  -webkit-text-fill-color: var(--red) !important;
-  background: none !important;
+.dgf-social{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:28px;
+  margin:0 0 35px;
 }
 
-/* ===== NEW BBC-style footer (class "dgf") - compact ===== */
-.dgf{background:#fff;color:#141414;border-top:1px solid #e6e6e6;padding:22px 16px 28px;margin-top:28px}
-.dgf-inner{max-width:1100px;margin:0 auto}
-.dgf-title{font-size:1.1rem;font-weight:700;line-height:1.25;margin:0 0 14px;color:#141414}
-.dgf-social{display:flex;flex-wrap:wrap;gap:8px 20px;margin:0 0 20px}
-.dgf-social a{width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;color:#141414;font-size:1.15rem;text-decoration:none}
-.dgf-social a:hover{color:#c8102e}
-.dgf-links{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 20px}
-.dgf-links a{color:#141414;font-size:.9rem;line-height:1.4;text-decoration:none}
-.dgf-links a:hover{color:#c8102e;text-decoration:underline;text-underline-offset:3px}
-.dgf-copy{margin:0;max-width:60ch;font-size:.85rem;line-height:1.5;color:#141414}
-.dgf-copy a{color:#141414;font-weight:700;text-decoration:none}
-.dgf-copy a:hover{color:#c8102e;text-decoration:underline}
-.dgf a:focus-visible{outline:2px solid #c8102e;outline-offset:3px}
-@media(min-width:768px){.dgf{padding:28px 32px 34px}.dgf-links{gap:10px 24px}}
+.dgf-social a{
+  width:auto;
+  height:auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:#ffffff !important;
+  font-size:32px;
+  text-decoration:none;
+}
+
+.dgf-social a:hover{
+  color:#c8102e !important;
+}
+
+.dgf-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:18px 32px;
+  margin:0 0 30px;
+  padding-bottom:30px;
+  border-bottom:1px solid #333333;
+}
+
+.dgf-links a{
+  color:#ffffff !important;
+  font-size:17px;
+  line-height:1.5;
+  text-decoration:none;
+}
+
+.dgf-links a:hover{
+  color:#c8102e !important;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+
+.dgf-copy{
+  margin:0;
+  max-width:700px;
+  font-size:15px;
+  line-height:1.7;
+  color:#aaaaaa !important;
+}
+
+.dgf-copy a{
+  color:#ffffff !important;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.dgf-copy a:hover{
+  color:#c8102e !important;
+  text-decoration:underline;
+}
+
+.dgf a:focus-visible{
+  outline:2px solid #c8102e;
+  outline-offset:3px;
+}
+
+
+/* ===== Footer mobile layout ===== */
+
+@media(max-width:767px){
+
+  .dgf{
+    padding:40px 22px 50px;
+  }
+
+  .dgf-title{
+    font-size:28px;
+    margin-bottom:28px;
+  }
+
+  .dgf-social{
+    gap:28px;
+    margin-bottom:35px;
+  }
+
+  .dgf-social a{
+    font-size:32px;
+  }
+
+  .dgf-links{
+    gap:18px 32px;
+    margin-bottom:30px;
+    padding-bottom:30px;
+  }
+
+  .dgf-links a{
+    font-size:17px;
+  }
+
+  .dgf-copy{
+    font-size:15px;
+  }
+
+}
+
+
+/* ===== Footer desktop layout ===== */
+
+@media(min-width:768px){
+
+  .dgf{
+    padding:28px 32px 34px;
+  }
+
+  .dgf-links{
+    gap:10px 24px;
+  }
+
+}
