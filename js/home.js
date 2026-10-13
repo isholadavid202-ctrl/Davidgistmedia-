@@ -221,7 +221,6 @@ function renderTrending() {
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
               <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
-              ${engageRowHtml(a)}
             </div>
           </a>
         `).join("")}
@@ -230,6 +229,8 @@ function renderTrending() {
   `;
 }
 
+/* The like, comment and share row. It is not shown on the homepage cards any more
+   (readers see it after they open a story). Kept here in case you want it back. */
 function engageRowHtml(article) {
   const liked = getLikedIds().includes(article.id);
   return `
@@ -268,7 +269,6 @@ function renderHero(list) {
           <h1>${escapeHtml(lead.title)}</h1>
           <p>${escapeHtml(lead.excerpt || "")}</p>
           <div class="lead-meta">${authorHtml(lead.author)} · ${formatWhen(lead.published_at)}</div>
-          ${engageRowHtml(lead)}
         </div>
       </a>
       <div class="secondary-list">
@@ -279,7 +279,6 @@ function renderHero(list) {
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
               <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
-              ${engageRowHtml(a)}
             </div>
           </a>
         `).join("")}
@@ -308,7 +307,6 @@ function renderCategorySections(list) {
                   <div class="cat">${escapeHtml(a.category)}</div>
                   <h3>${escapeHtml(a.title)}</h3>
                   <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
-                  ${engageRowHtml(a)}
                 </div>
               </a>
             `).join("")}</div>`}
