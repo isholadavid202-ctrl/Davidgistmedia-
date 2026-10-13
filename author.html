@@ -17,7 +17,6 @@
     gtag("config", "G-6QHB1S6KFV");
   </script>
 
-
   <meta charset="UTF-8">
 
   <meta
@@ -52,20 +51,17 @@
 
   <title>Ishola David | Davidgistmedia</title>
 
-
   <!-- Main site CSS -->
   <link rel="stylesheet" href="styles.css">
 
   <!-- BBC / Site-wide CSS -->
   <link rel="stylesheet" href="bbc.css">
 
-
   <!-- Font Awesome -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
   >
-
 
   <!-- Favicon -->
   <link
@@ -90,7 +86,6 @@
     href="/manifest.json"
   >
 
-
   <!-- Google AdSense -->
   <script
     async
@@ -98,21 +93,43 @@
     crossorigin="anonymous">
   </script>
 
-
-  <!-- Author page specific styling -->
+  <!-- Author page specific styling & drawer fix -->
   <style>
-
     .author-top-space {
       min-height: 10px;
     }
 
+    /* Fix menu drawer overlapping by keeping it hidden until toggled open */
+    .masthead .drawer {
+      display: none;
+      flex-direction: column;
+      background: var(--paper, #fff);
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--line, #e6e6e6);
+    }
+
+    .masthead .drawer.open {
+      display: flex;
+    }
+
+    /* Author image sizing & round formatting */
+    .author-image-wrap {
+      width: 120px;
+      height: 120px;
+      margin: 15px 0;
+    }
+
+    .author-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
   </style>
 
 </head>
 
-
 <body>
-
 
   <!-- =====================================================
        HEADER
@@ -139,7 +156,6 @@
 
       </div>
 
-
       <a
         class="brand-title"
         href="index.html"
@@ -150,11 +166,9 @@
 
       </a>
 
-
       <div class="acct"></div>
 
     </div>
-
 
     <!-- MENU DRAWER -->
 
@@ -196,7 +210,6 @@
       </a>
 
     </div>
-
 
     <!-- NAVIGATION -->
 
@@ -245,7 +258,6 @@
 
   </header>
 
-
   <!-- =====================================================
        MAIN AUTHOR CONTENT
        ===================================================== -->
@@ -255,7 +267,6 @@
     id="author-root"
   >
 
-
     <!-- Back to home -->
 
     <a
@@ -264,7 +275,6 @@
     >
       ← Back to home
     </a>
-
 
     <!-- Author name -->
 
@@ -282,7 +292,6 @@
 
     </h1>
 
-
     <!-- Author card -->
 
     <section
@@ -292,12 +301,6 @@
 
       <div class="author-image-wrap">
 
-        <!--
-          IMPORTANT:
-          Change "author.jpg" below if your actual
-          profile-photo filename is different.
-        -->
-
         <img
           src="author.jpg"
           alt="Ishola David"
@@ -306,11 +309,9 @@
 
       </div>
 
-
       <h2 class="author-role">
         FOUNDER &amp; CEO, DAVIDGISTMEDIA
       </h2>
-
 
       <p class="author-description">
 
@@ -327,9 +328,7 @@
 
     </section>
 
-
   </main>
-
 
   <!-- =====================================================
        PROFESSIONAL SITE FOOTER
@@ -341,7 +340,6 @@
   >
 
     <div class="news-footer-inner">
-
 
       <!-- BRAND -->
 
@@ -360,7 +358,6 @@
 
       </div>
 
-
       <!-- SOCIAL MEDIA -->
 
       <div class="footer-social-section">
@@ -369,9 +366,7 @@
           Follow Davidgistmedia
         </h2>
 
-
         <div class="footer-socials">
-
 
           <a
             href="https://x.com/YOUR_HANDLE"
@@ -382,7 +377,6 @@
             <i class="fa-brands fa-x-twitter"></i>
           </a>
 
-
           <a
             href="https://www.facebook.com/YOUR_PAGE"
             target="_blank"
@@ -391,7 +385,6 @@
           >
             <i class="fa-brands fa-facebook-f"></i>
           </a>
-
 
           <a
             href="https://www.instagram.com/davidgistmediang/"
@@ -402,7 +395,6 @@
             <i class="fa-brands fa-instagram"></i>
           </a>
 
-
           <a
             href="https://www.tiktok.com/@davidgistmediang"
             target="_blank"
@@ -411,7 +403,6 @@
           >
             <i class="fa-brands fa-tiktok"></i>
           </a>
-
 
           <a
             href="https://www.linkedin.com/company/YOUR_PAGE"
@@ -422,7 +413,6 @@
             <i class="fa-brands fa-linkedin-in"></i>
           </a>
 
-
           <a
             href="https://www.youtube.com/@davidgistmediang"
             target="_blank"
@@ -432,16 +422,13 @@
             <i class="fa-brands fa-youtube"></i>
           </a>
 
-
         </div>
 
       </div>
 
-
       <!-- FOOTER LINKS -->
 
       <div class="footer-navigation">
-
 
         <div class="footer-column">
 
@@ -467,7 +454,6 @@
 
         </div>
 
-
         <div class="footer-column">
 
           <h3>
@@ -491,7 +477,6 @@
           </a>
 
         </div>
-
 
         <div class="footer-column">
 
@@ -517,9 +502,7 @@
 
         </div>
 
-
       </div>
-
 
       <!-- COPYRIGHT -->
 
@@ -531,7 +514,6 @@
           Davidgistmedia.
           All rights reserved.
         </p>
-
 
         <p>
 
@@ -546,16 +528,13 @@
 
       </div>
 
-
     </div>
 
   </footer>
 
-
   <!-- =====================================================
        JAVASCRIPT
        ===================================================== -->
-
 
   <script>
 
@@ -569,11 +548,9 @@
       var drawer =
         document.getElementById("drawer");
 
-
       if (!menuBtn || !drawer) {
         return;
       }
-
 
       menuBtn.addEventListener(
         "click",
@@ -582,12 +559,10 @@
           var open =
             drawer.classList.toggle("open");
 
-
           menuBtn.setAttribute(
             "aria-expanded",
             open
           );
-
 
           menuBtn.setAttribute(
             "aria-label",
@@ -601,14 +576,12 @@
 
     })();
 
-
     /* Copyright year */
 
     (function () {
 
       var year =
         document.getElementById("year");
-
 
       if (year) {
 
@@ -620,7 +593,6 @@
     })();
 
   </script>
-
 
   <!-- Service worker -->
 
@@ -642,7 +614,6 @@
     }
 
   </script>
-
 
 </body>
 
