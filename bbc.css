@@ -51,8 +51,8 @@ body{background:var(--paper);color:var(--ink)}
 .engage-btn:hover{box-shadow:none;color:var(--ink)}
 .engage-btn.liked{background:none;color:var(--red)}
 
-/* ===== Story headlines in lists: BBC style ===== */
-.secondary-item h3,.story-card h3{font-family:var(--serif);font-size:1.12rem;line-height:1.2;font-weight:500;color:var(--ink);margin:0 0 14px;text-decoration:none}
+/* ===== Story headlines in lists: BBC style (smaller, lighter) ===== */
+.secondary-item h3,.story-card h3{font-family:var(--serif);font-size:1rem;line-height:1.25;font-weight:500;color:var(--ink);margin:0 0 12px;text-decoration:none}
 .secondary-item:hover h3,.story-card:hover h3{color:var(--ink);text-decoration:none}
 
 /* ===== Category sections: heavy rule on top, plain heading ===== */
@@ -74,7 +74,7 @@ body{background:var(--paper);color:var(--ink)}
 
   /* The gap on the right of the headline, like the BBC: text stops before the screen edge */
   .secondary-item > :last-child,.story-card > :last-child,.story-card .body{padding-right:26px;min-width:0}
-  .secondary-item h3,.story-card h3{margin-top:-3px;overflow-wrap:break-word}
+  .secondary-item h3,.story-card h3{margin-top:-2px;overflow-wrap:break-word}
 
   /* Short time and category on ONE line with a divider, like the BBC: "7 hrs ago | World" */
   .secondary-item .meta,.story-card .meta{flex:0 0 auto;font-size:.875rem;line-height:1.5;margin:0}
