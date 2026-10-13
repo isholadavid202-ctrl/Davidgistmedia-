@@ -21,6 +21,14 @@ function timeAgoShort(d) {
   }
 }
 
+/* Full date for the hover text (uses your formatDate if the site has one) */
+function fullDate(d) {
+  try {
+    if (typeof formatDate === "function") return formatDate(d);
+  } catch (e) {}
+  return "";
+}
+
 /* ---- Verification badges (data-driven) ---- */
 const DGB = (() => {
   const map = {};
@@ -151,7 +159,7 @@ async function loadAuthorStories() {
           <div class="body">
             <div class="cat">${escapeHtml(a.category)}</div>
             <h3>${escapeHtml(a.title)}</h3>
-            <div class="meta" title="${formatDate(a.published_at)}">${timeAgoShort(a.published_at)}</div>
+            <div class="meta" title="${fullDate(a.published_at)}">${timeAgoShort(a.published_at)}</div>
           </div>
         </a>
       `).join("")}
