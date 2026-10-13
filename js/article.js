@@ -239,106 +239,12 @@ async function loadArticle() {
   loadRelated();
 }
 
-/* ---- Related Stories: each card has like, comment and share, like the homepage ---- */
-const ICON_LIKE = '<svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>';
-const ICON_COMMENT = '<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
-const ICON_SHARE = '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></svg>';
-
-const relatedData = {};
-const relatedBusy = new Set();
-
-function relatedEngageHtml(a, commentCount) {
-  const liked = getLikedIds().map(String).includes(String(a.id));
-  return `
-    <div class="engage-row" onclick="event.preventDefault(); event.stopPropagation();">
-      <button class="engage-btn ${liked ? "liked" : ""}" data-r-like="${escapeHtml(String(a.id))}" aria-pressed="${liked}">
-        ${ICON_LIKE}<span data-like-count>${a.likes || 0}</span>
-      </button>
-      <button class="engage-btn" data-r-comment="${escapeHtml(a.slug)}" aria-label="Comments">
-        ${ICON_COMMENT}<span>${commentCount || 0}</span>
-      </button>
-      <button class="engage-btn" data-r-share="${escapeHtml(a.slug)}" data-r-title="${escapeHtml(a.title)}">
-        ${ICON_SHARE}<span>Share</span>
-      </button>
-    </div>`;
-}
-
-async function handleRelatedLike(idStr, btn) {
-  const row = relatedData[idStr];
-  if (!row || relatedBusy.has(idStr)) return;
-  relatedBusy.add(idStr);
-
-  const countEl = btn.querySelector("[data-like-count]");
-  const wasLiked = getLikedIds().map(String).includes(idStr);
-  const before = row.likes || 0;
-  const after = wasLiked ? Math.max(before - 1, 0) : before + 1;
-
-  // Show the change straight away, and undo it if Supabase says no.
-  btn.classList.toggle("liked", !wasLiked);
-  btn.setAttribute("aria-pressed", String(!wasLiked));
-  if (countEl) countEl.textContent = after;
-
-  let failed = false;
-  try {
-    const { error } = await supabaseClient.rpc(
-      wasLiked ? "decrement_likes" : "increment_likes",
-      { article_id: row.id }
-    );
-    if (error) failed = true;
-  } catch (e) {
-    failed = true;
-  }
-
-  if (failed) {
-    btn.classList.toggle("liked", wasLiked);
-    btn.setAttribute("aria-pressed", String(wasLiked));
-    if (countEl) countEl.textContent = before;
-    alert("Couldn't save that. Please try again.");
-  } else {
-    row.likes = after;
-    if (wasLiked) unmarkLiked(row.id); else markLiked(row.id);
-  }
-  relatedBusy.delete(idStr);
-}
-
-function handleRelatedShare(title, slug) {
-  const url = location.origin + "/article.html?slug=" + encodeURIComponent(slug);
-  if (navigator.share) {
-    navigator.share({ title, url }).catch(() => {});
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(() => alert("Link copied to clipboard."));
-  }
-}
-
-function wireRelated(container) {
-  container.querySelectorAll("[data-r-like]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      handleRelatedLike(btn.dataset.rLike, btn);
-    });
-  });
-  container.querySelectorAll("[data-r-comment]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      window.location.href = "article.html?slug=" + encodeURIComponent(btn.dataset.rComment);
-    });
-  });
-  container.querySelectorAll("[data-r-share]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      handleRelatedShare(btn.dataset.rTitle, btn.dataset.rShare);
-    });
-  });
-}
-
+/* ---- Related Stories: same look as the homepage cards (photo, headline, time | category) ---- */
 async function loadRelated() {
   const container = document.getElementById("related-section");
   const { data, error } = await supabaseClient
     .from("articles")
-    .select("id,slug,title,image_url,category,published_at,likes")
+    .select("id,slug,title,image_url,category,published_at")
     .eq("category", currentArticle.category)
     .neq("id", currentArticle.id)
     .order("published_at", { ascending: false })
@@ -348,20 +254,6 @@ async function loadRelated() {
     container.innerHTML = "";
     return;
   }
-
-  // Comment counts for these few stories
-  const counts = {};
-  try {
-    const res = await supabaseClient
-      .from("comments")
-      .select("article_id")
-      .in("article_id", data.map((a) => a.id));
-    (res.data || []).forEach((c) => {
-      counts[c.article_id] = (counts[c.article_id] || 0) + 1;
-    });
-  } catch (e) {}
-
-  data.forEach((a) => { relatedData[String(a.id)] = a; });
 
   container.innerHTML = `
     <section class="cat-section">
@@ -376,14 +268,12 @@ async function loadRelated() {
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
               <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
-              ${relatedEngageHtml(a, counts[a.id])}
             </div>
           </a>
         `).join("")}
       </div>
     </section>
   `;
-  wireRelated(container);
 }
 
 async function loadComments() {
