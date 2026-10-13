@@ -17,6 +17,27 @@ function formatWhen(d) {
   }
 }
 
+/* Short time like the BBC: "39 mins ago", "7 hrs ago", "2 days ago".
+   Stories older than a week show the date (for example: 10 Oct 2026). */
+function timeAgo(d) {
+  try {
+    const t = new Date(d);
+    if (isNaN(t.getTime())) return "";
+    const ms = Date.now() - t.getTime();
+    if (ms < 0) return "Just now";
+    const mins = Math.floor(ms / 60000);
+    if (mins < 1) return "Just now";
+    if (mins < 60) return mins + (mins === 1 ? " min" : " mins") + " ago";
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + (hrs === 1 ? " hr" : " hrs") + " ago";
+    const days = Math.floor(hrs / 24);
+    if (days < 7) return days + (days === 1 ? " day" : " days") + " ago";
+    return t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
+  } catch (e) {
+    return "";
+  }
+}
+
 /* ---- Verification badges (data-driven) ---- */
 const DGB = (() => {
   const map = {};
@@ -199,7 +220,7 @@ function renderTrending() {
             <div class="body">
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
-              <div class="meta">${formatWhen(a.published_at)}</div>
+              <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
               ${engageRowHtml(a)}
             </div>
           </a>
@@ -257,7 +278,7 @@ function renderHero(list) {
             <div>
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
-              <div class="meta">${formatWhen(a.published_at)}</div>
+              <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
               ${engageRowHtml(a)}
             </div>
           </a>
@@ -286,7 +307,7 @@ function renderCategorySections(list) {
                 <div class="body">
                   <div class="cat">${escapeHtml(a.category)}</div>
                   <h3>${escapeHtml(a.title)}</h3>
-                  <div class="meta">${formatWhen(a.published_at)}</div>
+                  <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
                   ${engageRowHtml(a)}
                 </div>
               </a>
