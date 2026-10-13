@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <!-- Google tag (gtag.js) -->
@@ -11,17 +11,24 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ishola David — Founder and CEO of Davidgistmedia.">
   <meta name="theme-color" content="#0d0d0d">
-  <title id="page-title">Davidgistmedia</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="bbc.css">
+  <meta property="og:title" content="Ishola David | Davidgistmedia">
+  <meta property="og:description" content="Meet Ishola David, Founder and CEO of Davidgistmedia.">
+  <meta property="og:type" content="profile">
+  <title>Ishola David | Davidgistmedia</title>
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="bbc.css?v=9">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
 
-  <!-- BBC-style top bar (works together with bbc.css) -->
+  <!-- Top bar (same as homepage) -->
   <style>
     .masthead{padding-top:12px}
     .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
@@ -35,8 +42,27 @@
     .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
     .drawer a:hover{color:var(--red)}
   </style>
+
+  <!-- Author card -->
+  <style>
+    .author-page{max-width:760px;padding:22px 0 40px}
+    .author-back{display:inline-block;color:var(--muted);font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
+    .author-title{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:clamp(1.8rem,6vw,2.4rem);line-height:1.2;margin:14px 0 18px}
+    .author-verified{color:#e67e22;font-size:1.4rem}
+    .author-card{border:1px solid var(--line);border-radius:8px;padding:26px 22px;background:var(--paper);text-align:center}
+    .author-photo{width:140px;height:140px;margin:0 auto 18px;border:3px solid #e67e22;border-radius:50%;padding:3px;display:grid;place-items:center;overflow:hidden}
+    .author-photo img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+    .author-photo.no-photo::after{content:"ID";font-family:var(--serif);font-weight:700;font-size:2.4rem;color:var(--muted)}
+    .author-role{font-size:.95rem;font-weight:800;letter-spacing:.05em;color:#c25a00;margin:0 0 14px;text-transform:uppercase}
+    .author-bio{font-size:1.05rem;line-height:1.75;color:var(--ink);max-width:60ch;margin:0 auto}
+    .author-stories{margin-top:28px}
+  </style>
 </head>
 <body>
+
+  <div class="util-bar">
+    <div class="wrap"><span id="today"></span></div>
+  </div>
 
   <header class="masthead">
     <div class="wrap topbar">
@@ -60,41 +86,82 @@
       <a href="admin.html">Admin login</a>
     </div>
 
-    <nav class="tabs">
+    <nav class="tabs" aria-label="Main navigation">
       <a href="index.html">Home</a>
-      <a href="index.html#nigeria">Nigeria</a>
-      <a href="index.html#entertainment">Entertainment</a>
-      <a href="index.html#sports">Sports</a>
-      <a href="index.html#business">Business</a>
+      <a href="live.html">Live</a>
     </nav>
   </header>
 
-  <main class="wrap article-page" id="article-root">
-    <p>Loading story...</p>
+  <main class="wrap author-page" id="author-root">
+    <a href="index.html" class="author-back">← Back to home</a>
+
+    <h1 class="author-title">
+      Ishola David
+      <span class="author-verified" title="Verified" aria-label="Verified"><i class="fa-solid fa-circle-check"></i></span>
+    </h1>
+
+    <section class="author-card" aria-label="Author information">
+      <div class="author-photo" id="author-photo">
+        <img src="author.jpg" alt="Ishola David"
+             onerror="this.style.display='none';document.getElementById('author-photo').classList.add('no-photo')">
+      </div>
+
+      <h2 class="author-role">Founder &amp; CEO, Davidgistmedia</h2>
+
+      <p class="author-bio">
+        Ishola David is the Founder and CEO of Davidgistmedia, a news and entertainment
+        platform covering Nigeria and the world. He writes and publishes stories on
+        entertainment, sports, business, politics and breaking news from home and abroad,
+        with a focus on keeping readers informed quickly and accurately.
+      </p>
+    </section>
+
+    <!-- Stories by this author (filled in by the script at the bottom) -->
+    <section class="author-stories" id="author-stories" aria-label="Stories by Ishola David"></section>
   </main>
 
-  <footer>
-    <div class="wrap">
-      <div class="brand-title">David<span class="gold">gistmedia</span></div>
-      <div class="socials" style="margin-top:12px">
-        <a class="social-btn" href="about.html">About</a>
-        <a class="social-btn" href="contact.html">Contact</a>
-        <a class="social-btn" href="privacy-policy.html">Privacy</a>
-        <a class="social-btn" href="terms.html">Terms</a>
-        <a class="social-btn" href="editorial-policy.html">Editorial Policy</a>
+  <footer class="dgf" aria-label="Davidgistmedia site footer">
+    <div class="dgf-inner">
+      <h2 class="dgf-title">Follow Davidgistmedia on:</h2>
+
+      <div class="dgf-social">
+        <a href="https://x.com/YOUR_HANDLE" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.facebook.com/YOUR_PAGE" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/davidgistmediang/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="https://www.linkedin.com/company/YOUR_PAGE" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
       </div>
-      <div class="copyright">&copy; <span id="year"></span> Davidgistmedia. All rights reserved.</div>
+
+      <nav class="dgf-links" aria-label="Footer">
+        <a href="terms.html">Terms of Use</a>
+        <a href="about.html">About Davidgistmedia</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="cookies.html">Cookies</a>
+        <a href="accessibility.html">Accessibility Help</a>
+        <a href="contact.html">Contact Davidgistmedia</a>
+        <a href="advertise.html">Advertise with us</a>
+        <a href="help.html">Help &amp; FAQs</a>
+        <a href="editorial-policy.html">Editorial Policy</a>
+        <a href="corrections.html">Corrections</a>
+        <a href="live.html">Live</a>
+      </nav>
+
+      <p class="dgf-copy">
+        Copyright <span id="year">2026</span> Davidgistmedia. All rights reserved.
+        Davidgistmedia is not responsible for the content of external sites.
+        <a href="editorial-policy.html">Read about our approach to external linking.</a>
+      </p>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
-  <script src="js/article.js"></script>
-  <script src="js/share.js"></script>
   <script src="js/extras.js"></script>
+
+  <!-- Menu, year and today's date -->
   <script>
-    // Menu icon in the new top bar
     (function () {
       var menuBtn = document.getElementById("menu-btn");
       var drawer = document.getElementById("drawer");
@@ -102,8 +169,92 @@
         var open = drawer.classList.toggle("open");
         menuBtn.setAttribute("aria-expanded", open);
       });
+      var year = document.getElementById("year");
+      if (year) year.textContent = new Date().getFullYear();
+      var today = document.getElementById("today");
+      if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
+        weekday: "long", day: "numeric", month: "long", year: "numeric"
+      });
     })();
   </script>
+
+  <!-- Stories by this author -->
+  <script>
+    (function () {
+      var AUTHOR_NAME = "Ishola David";
+      var box = document.getElementById("author-stories");
+
+      function esc(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+
+      function timeAgo(d) {
+        var t = new Date(d);
+        if (isNaN(t.getTime())) return "";
+        var ms = Date.now() - t.getTime();
+        if (ms < 0) return "Just now";
+        var mins = Math.floor(ms / 60000);
+        if (mins < 1) return "Just now";
+        if (mins < 60) return mins + (mins === 1 ? " min" : " mins") + " ago";
+        var hrs = Math.floor(mins / 60);
+        if (hrs < 24) return hrs + (hrs === 1 ? " hr" : " hrs") + " ago";
+        var days = Math.floor(hrs / 24);
+        if (days < 7) return days + (days === 1 ? " day" : " days") + " ago";
+        return t.toLocaleDateString("en-GB", {
+          day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos"
+        });
+      }
+
+      function card(a) {
+        return '' +
+          '<a class="story-card" href="article.html?slug=' + encodeURIComponent(a.slug) + '">' +
+            (a.image_url ? '<img src="' + esc(a.image_url) + '" alt="" loading="lazy" decoding="async">' : '') +
+            '<div class="body">' +
+              '<div class="cat">' + esc(a.category) + '</div>' +
+              '<h3>' + esc(a.title) + '</h3>' +
+              '<div class="meta">' + timeAgo(a.published_at) + '</div>' +
+            '</div>' +
+          '</a>';
+      }
+
+      function show(inner) {
+        box.innerHTML =
+          '<div class="cat-section">' +
+            '<div class="cat-head"><div class="left"><span class="bar"></span>' +
+            '<h2>Stories by ' + esc(AUTHOR_NAME) + '</h2></div></div>' +
+            inner +
+          '</div>';
+      }
+
+      async function load() {
+        show('<div class="empty-state">Loading stories…</div>');
+        try {
+          var res = await supabaseClient
+            .from("articles")
+            .select("id,slug,title,excerpt,image_url,category,author,published_at")
+            .ilike("author", AUTHOR_NAME)
+            .order("published_at", { ascending: false })
+            .limit(30);
+
+          if (res.error) throw res.error;
+
+          var list = res.data || [];
+          if (!list.length) {
+            show('<div class="empty-state">No stories by ' + esc(AUTHOR_NAME) + ' yet.</div>');
+            return;
+          }
+          show('<div class="card-grid">' + list.map(card).join("") + '</div>');
+        } catch (e) {
+          show('<div class="empty-state">Couldn\'t load stories right now. Please try again later.</div>');
+        }
+      }
+
+      load();
+    })();
+  </script>
+
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
