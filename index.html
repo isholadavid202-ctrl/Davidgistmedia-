@@ -130,6 +130,15 @@
       <h2>About Davidgistmedia</h2>
       <p>Built for modern Nigerian news — timely, clearly presented stories across entertainment, politics, business and sports, growing story by story.</p>
     </section>
+
+    <!-- Hidden on purpose: keeps the newsletter form IDs so home.js doesn't error -->
+    <section class="about-block" style="display:none">
+      <form id="newsletter-form" class="newsletter-form">
+        <input type="email" id="newsletter-email" placeholder="you@example.com" required>
+        <button type="submit" id="newsletter-btn">Subscribe</button>
+      </form>
+      <p class="admin-status" id="newsletter-status"></p>
+    </section>
   </main>
 
   <footer class="bbc-footer">
