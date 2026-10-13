@@ -51,8 +51,19 @@ body{background:var(--paper);color:var(--ink)}
 .engage-btn:hover{box-shadow:none;color:var(--ink)}
 .engage-btn.liked{background:none;color:var(--red)}
 
-/* ===== Story headlines in lists: BBC style (smaller, lighter) ===== */
-.secondary-item h3,.story-card h3{font-family:var(--serif);font-size:1rem;line-height:1.25;font-weight:500;color:var(--ink);margin:0 0 12px;text-decoration:none}
+/* ===== Story headlines in lists: BBC style (dark, sturdy, easy to read) ===== */
+.secondary-item h3,.story-card h3{
+  font-family:var(--serif);
+  font-size:1.08rem;
+  line-height:1.22;
+  font-weight:600;
+  color:var(--ink);
+  margin:0 0 12px;
+  text-decoration:none;
+  letter-spacing:0;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
 .secondary-item:hover h3,.story-card:hover h3{color:var(--ink);text-decoration:none}
 
 /* ===== Category sections: heavy rule on top, plain heading ===== */
@@ -73,7 +84,7 @@ body{background:var(--paper);color:var(--ink)}
   .story-card .body{padding:0}
 
   /* The gap on the right of the headline, like the BBC: text stops before the screen edge */
-  .secondary-item > :last-child,.story-card > :last-child,.story-card .body{padding-right:26px;min-width:0}
+  .secondary-item > :last-child,.story-card > :last-child,.story-card .body{padding-right:22px;min-width:0}
   .secondary-item h3,.story-card h3{margin-top:-2px;overflow-wrap:break-word}
 
   /* Short time and category on ONE line with a divider, like the BBC: "7 hrs ago | World" */
