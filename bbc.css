@@ -75,10 +75,10 @@ body{background:var(--paper);color:var(--ink)}
   /* Headline sits at the top, level with the photo */
   .secondary-item h3,.story-card h3{margin-top:-3px}
 
-  /* Date and time on one line, category on the line below (no stray divider) */
-  .secondary-item .meta,.story-card .meta{flex:0 0 100%;font-size:.875rem;line-height:1.5;margin:0 0 2px}
-  .secondary-item .cat,.story-card .cat{flex:0 0 100%;font-size:.875rem;line-height:1.5;margin:0}
-  .secondary-item .cat::before,.story-card .cat::before{display:none}
+  /* Short time and category on ONE line with a divider, like the BBC: "7 hrs ago | World" */
+  .secondary-item .meta,.story-card .meta{flex:0 0 auto;font-size:.875rem;line-height:1.5;margin:0}
+  .secondary-item .cat,.story-card .cat{flex:0 0 auto;font-size:.875rem;line-height:1.5;margin:0}
+  .secondary-item .cat::before,.story-card .cat::before{display:inline-block;margin:0 10px}
 }
 
 @media(min-width:820px){
