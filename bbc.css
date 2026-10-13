@@ -202,3 +202,17 @@ footer.bbc-footer{
 .bbc-footer .bf-links a:hover{text-decoration:underline}
 
 .bbc-footer .bf-copy{color:#000;font-size:.85rem;line-height:1.5;margin:0}
+
+/* ===== Footer logo: show the whole name on the white background ===== */
+footer.bbc-footer .brand-title,
+footer.bbc-footer .brand-title span,
+footer.bbc-footer .brand-title .gold,
+footer.bbc-footer [class*="logo"],
+footer.bbc-footer [class*="logo"] span,
+footer.bbc-footer [class*="brand"],
+footer.bbc-footer [class*="brand"] span {
+  color: var(--red) !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: var(--red) !important;
+  background: none !important;
+}
