@@ -20,7 +20,8 @@
   <link rel="canonical" href="https://davidgistmedia.onrender.com/">
   <title>Davidgistmedia | Home</title>
   <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=3">
+  <link rel="stylesheet" href="bbc.css?v=4">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -149,23 +150,27 @@
     </section>
   </main>
 
-  <footer>
+  <footer class="bbc-footer">
     <div class="wrap">
       <div class="brand-title">David<span class="gold">gistmedia</span></div>
-      <p>Your source for trusted digital news and media across Nigeria.</p>
-      <div class="socials">
-        <a class="social-btn" href="https://www.tiktok.com/@davidgistmediang" target="_blank" rel="noopener noreferrer">TikTok</a>
-        <a class="social-btn" href="https://www.instagram.com/davidgistmediang/" target="_blank" rel="noopener noreferrer">Instagram</a>
-        <a class="social-btn" href="https://www.youtube.com/@davidgistmediang" target="_blank" rel="noopener noreferrer">YouTube</a>
+      <p class="bf-tagline">Your source for trusted digital news and media across Nigeria.</p>
+
+      <h3 class="bf-follow">Follow Davidgistmedia on:</h3>
+      <div class="bf-social">
+        <a href="https://www.tiktok.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="https://www.instagram.com/davidgistmediang/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.youtube.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
       </div>
-      <div class="socials" style="margin-top:8px">
-        <a class="social-btn" href="about.html">About</a>
-        <a class="social-btn" href="contact.html">Contact</a>
-        <a class="social-btn" href="privacy-policy.html">Privacy</a>
-        <a class="social-btn" href="terms.html">Terms</a>
-        <a class="social-btn" href="editorial-policy.html">Editorial Policy</a>
-      </div>
-      <div class="copyright">&copy; <span id="year"></span> Davidgistmedia. All rights reserved.</div>
+
+      <nav class="bf-links" aria-label="Footer">
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy-policy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="editorial-policy.html">Editorial Policy</a>
+      </nav>
+
+      <p class="bf-copy">Copyright <span id="year"></span> Davidgistmedia. All rights reserved.</p>
     </div>
   </footer>
 
