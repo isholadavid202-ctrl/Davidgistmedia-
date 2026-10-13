@@ -42,6 +42,46 @@ function timeAgo(d) {
   }
 }
 
+/* ---- Verification badges (data-driven, from the verified_authors table) ---- */
+const DGB = (() => {
+  const map = {};
+  let loaded = null;
+  const key = (n) => String(n || "").trim().toLowerCase();
+  const esc = (s) => String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  function load() {
+    if (loaded) return loaded;
+    loaded = (async () => {
+      try {
+        const { data } = await supabaseClient.from("verified_authors").select("name,title,kind");
+        (data || []).forEach((r) => { map[key(r.name)] = r; });
+      } catch (e) {}
+    })();
+    return loaded;
+  }
+  function get(name) { return map[key(name)] || null; }
+  function svg(b, size) {
+    const color = b.kind === "owner" ? "#f97316" : "#1d9bf0";
+    const pts = [];
+    for (let i = 0; i < 48; i++) {
+      const a = (i / 48) * Math.PI * 2;
+      const r = 9.2 + 1.1 * Math.cos(8 * a);
+      pts.push((12 + r * Math.cos(a)).toFixed(2) + "," + (12 + r * Math.sin(a)).toFixed(2));
+    }
+    const t = esc(b.title);
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" role="img" aria-label="' + t +
+      '" style="display:inline-block;vertical-align:-3px;margin-left:5px"><title>' + t + '</title>' +
+      '<polygon points="' + pts.join(" ") + '" fill="' + color + '"/>' +
+      '<path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+  return { load, get, svg };
+})();
+
+function badgeFor(name) {
+  const b = DGB.get(name);
+  return b ? DGB.svg(b, 18) : "";
+}
+
 function getLikedIds() {
   try {
     return JSON.parse(localStorage.getItem("dg_liked_v2") || "[]");
@@ -159,11 +199,11 @@ async function loadArticle() {
     return;
   }
 
-  const { data, error } = await supabaseClient
-    .from("articles")
-    .select("*")
-    .eq("slug", slug)
-    .single();
+  // Fetch the story and the verified-author list at the same time
+  const [{ data, error }] = await Promise.all([
+    supabaseClient.from("articles").select("*").eq("slug", slug).single(),
+    DGB.load()
+  ]);
 
   if (error || !data) {
     root.innerHTML = `<a href="index.html" class="back-link">&larr; Back to home</a><p>That story couldn't be found. It may have been removed.</p>`;
@@ -188,14 +228,25 @@ async function loadArticle() {
   const readMins = Math.max(1, Math.ceil(words / 200));
   const authorName = data.author || "Davidgistmedia";
 
+  // "Updated" date: only shown if the story was edited at least an hour after it was published
+  let updatedHtml = "";
+  if (data.updated_at && data.published_at) {
+    const pub = nigeriaParts(data.published_at);
+    const upd = nigeriaParts(data.updated_at);
+    if (pub && upd && upd.t - pub.t > 3600000 && upd.day !== pub.day) {
+      updatedHtml = `<span class="by-bar" aria-hidden="true"></span><span><em>Updated ${upd.day}</em></span>`;
+    }
+  }
+
   root.innerHTML = `
     <a href="index.html" class="back-link">&larr; Back to home</a>
     <div class="cat">${escapeHtml(data.category)}</div>
     <h1>${escapeHtml(data.title)}</h1>
     <div class="meta byline">
-      <div class="byline-author">By <a href="author.html?name=${encodeURIComponent(authorName)}" style="color:inherit;font-weight:700">${escapeHtml(authorName)}</a></div>
+      <div class="byline-author">By <a href="author.html?name=${encodeURIComponent(authorName)}" style="color:inherit;font-weight:700">${escapeHtml(authorName)}</a>${badgeFor(authorName)}</div>
       <div class="byline-info">
         ${whenHtml(data.published_at)}
+        ${updatedHtml}
         <span class="by-bar" aria-hidden="true"></span>
         <span>${readMins} min read</span>
       </div>
