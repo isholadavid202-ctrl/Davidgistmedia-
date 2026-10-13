@@ -1,728 +1,234 @@
-/* =========================================================
-   DAVIDGISTMEDIA - BBC STYLE / SITE-WIDE CSS
-   ========================================================= */
+/* bbc.css - BBC-style look for Davidgistmedia.
+   Loads AFTER styles.css. To undo: delete the <link> to this file in the HTML pages. */
 
-/* =========================================================
-   ROOT VARIABLES
-   ========================================================= */
+body{background:var(--paper);color:var(--ink)}
 
-:root {
-  --dg-red: #cf092d;
-  --dg-red-dark: #a80725;
-  --dg-black: #191919;
-  --dg-dark: #111111;
-  --dg-white: #ffffff;
-  --dg-light: #f5f5f5;
-  --dg-gray: #777777;
-  --dg-line: #dddddd;
-  --dg-footer-line: #353535;
-  --dg-gold: #cf092d;
+/* ===== Top strip: quiet ===== */
+.util-bar{background:var(--paper);color:var(--muted);border-bottom:1px solid var(--line)}
+.util-bar a{color:var(--muted)}
+.util-bar a:hover{color:var(--ink)}
+.util-bar .dg-theme-btn{color:var(--ink);border-color:var(--line)}
+
+/* ===== Masthead: simple wordmark, flat search ===== */
+.masthead{box-shadow:none;padding-top:18px}
+.masthead .wrap{gap:10px}
+.brand-title{border-bottom:0;padding-bottom:0;font-size:clamp(1.9rem,6vw,2.6rem)}
+.brand-title::first-letter{font-size:1em}
+.tagline{font-size:.72rem}
+.search-row{border-radius:3px;border:1px solid var(--ink);box-shadow:none;max-width:560px}
+.search-row button{border-radius:0}
+
+/* ===== Section menu: bold, underline on the current page, scrolls sideways ===== */
+.tabs{margin-top:14px;border-top:0;border-bottom:1px solid var(--line)}
+.tabs > :first-child,.tabs > :last-child{margin-left:0;margin-right:0}
+.tabs a,.tabs button{font-size:.95rem;padding:14px 15px 11px}
+.tabs a.active,.tabs button.active{border-bottom-color:var(--ink)}
+.tabs a:not(.active):hover,.tabs button:not(.active):hover{color:var(--ink);border-bottom-color:var(--line)}
+
+/* ===== Lead story: big serif headline, no underline, like the BBC ===== */
+.lead-story{border-bottom:2px solid var(--ink)}
+.lead-story h1{font-weight:400;line-height:1.2;text-decoration:none;font-size:clamp(1.6rem,6vw,2.2rem)}
+.lead-story:hover h1{color:var(--ink)}
+.lead-story p{font-family:var(--serif);font-size:1.05rem;line-height:1.45;color:var(--ink)}
+
+/* ===== Order inside each story: headline, summary, "time | category", then buttons ===== */
+.lead-story .overlay,
+.secondary-item > :last-child,
+.story-card .body{display:flex;flex-wrap:wrap;align-items:center}
+.lead-story h1,.lead-story p,
+.secondary-item h3,.story-card h3{flex:0 0 100%}
+.lead-story h1,.secondary-item h3,.story-card h3{order:1}
+.lead-story p{order:2}
+.lead-meta,.secondary-item .meta,.story-card .meta{order:3;color:var(--muted);font-size:.9rem}
+.lead-tag,.secondary-item .cat,.story-card .cat{order:4;background:none;color:var(--muted);padding:0;margin:0;border-radius:0;text-transform:capitalize;font-weight:400;font-size:.9rem;letter-spacing:0}
+.lead-tag::before,.secondary-item .cat::before,.story-card .cat::before{content:"";display:inline-block;width:1px;height:17px;background:var(--muted);margin:0 12px;vertical-align:middle}
+.lead-meta{margin-top:0}
+.lead-story .overlay{margin-top:0}
+.engage-row{order:5;flex:0 0 100%;margin-top:12px}
+
+/* ===== Like, comment and share buttons: small and quiet ===== */
+.engage-btn{border:0;background:none;box-shadow:none;padding:6px 18px 6px 0;font-weight:400;color:var(--muted);border-radius:0}
+.engage-btn:hover{box-shadow:none;color:var(--ink)}
+.engage-btn.liked{background:none;color:var(--red)}
+
+/* ===== Story headlines in lists: BBC style (dark, sturdy, easy to read) ===== */
+.secondary-item h3,.story-card h3{
+  font-family:var(--serif);
+  font-size:1.08rem;
+  line-height:1.22;
+  font-weight:600;
+  color:var(--ink);
+  margin:0 0 12px;
+  text-decoration:none;
+  letter-spacing:0;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.secondary-item:hover h3,.story-card:hover h3{color:var(--ink);text-decoration:none}
+
+/* ===== Category sections: heavy rule on top, plain heading ===== */
+.cat-section{border-top:2px solid var(--ink);padding-top:16px}
+.cat-head .bar{display:none}
+.cat-head h2{font-size:1.5rem}
+.cat-head a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+/* ===== Phones: photo on the LEFT, headline on the RIGHT (BBC layout) ===== */
+@media(max-width:819px){
+  .card-grid{grid-template-columns:1fr;gap:0}
+  .secondary-item,.story-card{display:grid;grid-template-columns:40% 1fr;gap:0 16px;align-items:start;padding:20px 0;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none}
+  .secondary-item > :first-child,.story-card > :first-child{grid-column:1;grid-row:1}
+  .secondary-item > :last-child,.story-card > :last-child{grid-column:2;grid-row:1}
+  .secondary-item img,.story-card img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:0;margin:0}
+  .secondary-item > div:first-child{aspect-ratio:16/9;border-radius:0!important}
+  .story-card:not(:has(img)){display:block}
+  .story-card .body{padding:0}
+  .secondary-item > :last-child,.story-card > :last-child,.story-card .body{padding-right:0;min-width:0}
+
+  /* The gap on the right of the headline, like the BBC: the headline stops before the screen edge.
+     Only the headline gets the gap, so "time | category" can still use the full width. */
+  .secondary-item h3,.story-card h3{margin-top:-2px;overflow-wrap:break-word;padding-right:32px}
+
+  /* Short time and category on ONE line with a divider, like the BBC: "7 hrs ago | World" */
+  .secondary-item .meta,.story-card .meta{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
+  .secondary-item .cat,.story-card .cat{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
+  .secondary-item .cat::before,.story-card .cat::before{display:inline-block;margin:0 8px}
 }
 
-
-/* =========================================================
-   GLOBAL SAFETY
-   ========================================================= */
-
-* {
-  box-sizing: border-box;
+@media(min-width:820px){
+  .lead-story{border-bottom:0}
+  .tabs{display:flex;justify-content:flex-start}
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background: #ffffff;
-  color: #191919;
-}
-
-img {
-  max-width: 100%;
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-
-/* =========================================================
-   MAIN SITE WRAPPER
-   ========================================================= */
-
-.wrap {
-  width: min(1180px, calc(100% - 44px));
-  margin-left: auto;
-  margin-right: auto;
-}
-
-
-/* =========================================================
-   MASTHEAD
-   ========================================================= */
-
-.masthead {
-  background: #ffffff;
-  padding-top: 12px;
-  border-bottom: 1px solid var(--dg-line);
-}
-
-.masthead .topbar {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--dg-line);
-}
-
-.topbar .brand-title {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.35rem, 5.6vw, 2rem);
-  font-weight: 700;
-  white-space: nowrap;
-  text-decoration: none;
-  color: #191919;
-}
-
-.brand-title .gold {
-  color: var(--dg-red);
-}
-
-.topbar .icons {
-  display: flex;
-  gap: 4px;
-  flex: 0 0 80px;
-}
-
-.topbar .acct {
-  flex: 0 0 80px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.topbar button {
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  color: #191919;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-}
-
-.topbar svg {
-  width: 25px;
-  height: 25px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-
-/* =========================================================
-   DRAWER
-   ========================================================= */
-
-.masthead .drawer {
-  display: none;
-  flex-direction: column;
-  align-items: stretch;
-  text-align: left;
-  gap: 0;
-  padding: 4px 0 8px;
-}
-
-.masthead .drawer.open {
-  display: flex;
-}
-
-.drawer a {
-  padding: 13px 0;
-  border-bottom: 1px solid var(--dg-line);
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: #191919;
-  text-decoration: none;
-}
-
-.drawer a:hover {
-  color: var(--dg-red);
-}
-
-
-/* =========================================================
-   TAGLINE
-   ========================================================= */
-
-.tagline {
-  margin: 12px 0;
-  color: #555555;
-  font-size: 0.95rem;
-}
-
-
-/* =========================================================
-   SEARCH
-   ========================================================= */
-
-.search-row {
-  display: flex;
-  gap: 8px;
-  padding-bottom: 14px;
-}
-
-.search-row.is-closed {
-  display: none;
-}
-
-.search-row input {
-  flex: 1;
-  min-width: 0;
-  height: 42px;
-  border: 1px solid #cccccc;
-  padding: 0 12px;
-  outline: none;
-}
-
-.search-row input:focus {
-  border-color: var(--dg-red);
-}
-
-.search-row button {
-  height: 42px;
-  padding: 0 18px;
-  border: 0;
-  background: var(--dg-red);
-  color: #ffffff;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.search-row button:hover {
-  background: var(--dg-red-dark);
-}
-
-
-/* =========================================================
-   CATEGORY NAVIGATION
-   ========================================================= */
-
-.tabs {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0;
-  overflow-x: auto;
-  white-space: nowrap;
-  border-top: 1px solid var(--dg-line);
-  background: #ffffff;
-  scrollbar-width: none;
-}
-
-.tabs::-webkit-scrollbar {
-  display: none;
-}
-
-.tabs button,
-.tabs a {
-  flex: 0 0 auto;
-  border: 0;
-  background: transparent;
-  color: #191919;
-  padding: 16px 18px;
-  font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.tabs button:hover,
-.tabs a:hover,
-.tabs .active {
-  color: var(--dg-red);
-}
-
-
-/* =========================================================
-   AUTHOR PAGE
-   ========================================================= */
-
-.author-page {
-  padding-top: 35px;
-  padding-bottom: 20px;
-}
-
-.author-back {
-  display: inline-block;
-  color: #666666;
-  font-size: 1.1rem;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  margin-bottom: 28px;
-}
-
-.author-back:hover {
-  color: var(--dg-red);
-}
-
-.author-page-title {
-  margin: 0 0 35px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.1rem, 6vw, 3.4rem);
-  line-height: 1.1;
-  color: #191919;
-}
-
-.author-verified {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  margin-left: 6px;
-  color: #ffffff;
-  background: #ff6b1a;
-  border-radius: 50%;
-  font-size: 0.95rem;
-  vertical-align: middle;
-}
-
-
-/* =========================================================
-   AUTHOR CARD
-   ========================================================= */
-
-.author-card {
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto 55px;
-  padding: 50px 45px;
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 15px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  text-align: center;
-}
-
-.author-image-wrap {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 30px;
-}
-
-.author-image {
-  width: 225px;
-  height: 225px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 6px solid #ff6b1a;
-  display: block;
-}
-
-.author-role {
-  margin: 0 0 25px;
-  color: #c75a0b;
-  font-size: clamp(1rem, 3vw, 1.35rem);
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
-
-.author-description {
-  max-width: 760px;
-  margin: 0 auto;
-  color: #444444;
-  font-size: clamp(1.05rem, 3vw, 1.35rem);
-  line-height: 1.9;
-}
-
-
-/* =========================================================
-   AUTHOR ARTICLES
-   ========================================================= */
-
-.author-stories {
-  margin-top: 40px;
-}
-
-.author-stories-title {
-  border-top: 3px solid #191919;
-  padding-top: 18px;
-  margin-bottom: 25px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.8rem;
-}
-
-
-/* =========================================================
-   PROFESSIONAL NEWS FOOTER
-   ========================================================= */
-
-.news-footer {
-  background: #191919;
-  color: #ffffff;
-  margin-top: 70px;
-  border-top: 4px solid var(--dg-red);
-}
-
-.news-footer-inner {
-  width: min(1180px, calc(100% - 44px));
-  margin: 0 auto;
-  padding: 55px 0 25px;
-}
-
-
-/* =========================================================
-   FOOTER BRAND
-   ========================================================= */
-
-.news-footer-brand {
-  margin-bottom: 38px;
-}
-
-.footer-logo {
-  display: inline-block;
-  color: #ffffff;
-  text-decoration: none;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 2.4rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -1px;
-  border-bottom: 1px solid #444444;
-  padding-bottom: 9px;
-}
-
-.footer-logo span {
-  color: var(--dg-red);
-}
-
-.footer-tagline {
-  color: #aaaaaa;
-  font-size: 0.95rem;
-  margin: 15px 0 0;
-}
-
-
-/* =========================================================
-   FOOTER SOCIAL
-   ========================================================= */
-
-.footer-social-section {
-  border-top: 1px solid var(--dg-footer-line);
-  border-bottom: 1px solid var(--dg-footer-line);
-  padding: 30px 0;
-  margin-bottom: 38px;
-}
-
-.footer-social-section h2 {
-  margin: 0 0 22px;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.footer-socials {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-
-.footer-socials a {
-  width: 45px;
-  height: 45px;
-  display: grid;
-  place-items: center;
-  color: #ffffff;
-  border: 1px solid #444444;
-  border-radius: 50%;
-  text-decoration: none;
-  font-size: 1.2rem;
-  transition: all 0.2s ease;
-}
-
-.footer-socials a:hover {
-  background: var(--dg-red);
-  border-color: var(--dg-red);
-  transform: translateY(-2px);
-}
-
-
-/* =========================================================
-   FOOTER NAVIGATION
-   ========================================================= */
-
-.footer-navigation {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 45px;
-  padding-bottom: 40px;
-}
-
-.footer-column {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.footer-column h3 {
-  margin: 0 0 8px;
-  color: #ffffff;
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.footer-column a {
-  color: #bdbdbd;
-  text-decoration: none;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  transition: color 0.2s ease;
-}
-
-.footer-column a:hover {
-  color: #ffffff;
-  text-decoration: underline;
-  text-decoration-color: var(--dg-red);
-}
-
-
-/* =========================================================
-   FOOTER COPYRIGHT
-   ========================================================= */
-
-.footer-bottom {
-  border-top: 1px solid var(--dg-footer-line);
-  padding-top: 24px;
-  color: #999999;
-  font-size: 0.88rem;
-  line-height: 1.7;
-}
-
-.footer-bottom p {
-  margin: 0 0 8px;
-}
-
-.footer-bottom a {
-  color: #ffffff;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.footer-bottom a:hover {
-  color: var(--dg-red);
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 700px) {
-
-  .wrap {
-    width: calc(100% - 44px);
+/* ===== Article page (BBC style) ===== */
+.article-page{max-width:700px;padding:22px 0 40px}
+
+/* Back link: small and grey */
+.back-link{color:var(--muted);font-weight:400;font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
+
+/* Category label above the headline: small red capitals */
+.article-page > .cat{color:var(--red);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;margin-top:8px}
+
+/* Headline: serif, bold, comfortable size */
+.article-page > h1{font-size:clamp(1.7rem,5.8vw,2.3rem);line-height:1.2;font-weight:700;margin:8px 0 16px;letter-spacing:-.2px}
+
+/* Byline: "By author" on one line, date, time and reading time on the next */
+.article-page > .meta.byline{display:block;margin:0 0 20px;padding:0 0 16px;border:0;border-bottom:1px solid var(--line);color:var(--muted)}
+.byline-author{font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:6px}
+.byline-author a{color:inherit;font-weight:700}
+.byline-info{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-size:.88rem;color:var(--muted)}
+.byline-info time{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.byline-info svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.byline-info .by-bar{width:1px;height:14px;background:var(--muted);opacity:.6}
+.dg-read{display:none}
+
+/* Fix: old rule in styles.css put a line under every date inside a story page */
+.article-page .story-card .meta{margin:0;padding:0;border:0}
+.article-page .comment-head .meta{margin:0;padding:0;border:0}
+
+/* Main photo and video: full width, flat */
+.article-page img.hero-img{border-radius:0;box-shadow:none;max-height:none;width:100%;aspect-ratio:16/9;object-fit:cover;margin-bottom:22px}
+.article-page > div[style*="56.25%"]{border-radius:0!important;box-shadow:none!important}
+
+/* Story text: easy to read on a phone */
+.article-body{font-size:1.1rem;line-height:1.6;color:var(--ink)}
+.article-body p{margin-bottom:1.1em}
+
+/* Like / share row under the story */
+.article-page .engage-row{border-top:1px solid var(--line);margin:24px 0;padding-top:18px}
+.article-page .engage-btn{border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--ink);box-shadow:none;padding:9px 16px;font-size:.9rem;font-weight:700}
+.article-page .engage-btn:hover{border-color:var(--ink);color:var(--ink);box-shadow:none}
+.article-page .engage-btn.liked{background:var(--paper);color:var(--red);border-color:var(--red)}
+
+/* Comments: plain and flat */
+.comments-section{border-top:2px solid var(--ink)}
+.comments-section h3{font-size:1.4rem}
+.comment-form input,.comment-form textarea{border-radius:2px;border-color:#8a8a8a}
+.comment-form input:focus,.comment-form textarea:focus{border-color:var(--ink);box-shadow:none}
+.comment-item{border-bottom:1px solid var(--line)}
+
+/* Related stories at the bottom of a story */
+.article-page .cat-section{margin-top:10px}
+
+/* ===== Related Stories on phones: same compact BBC cards as the homepage ===== */
+@media(max-width:819px){
+  .article-page .story-card > :last-child,
+  .article-page .story-card .body{padding-right:0;min-width:0}
+
+  /* Headline: same size, weight and right gap as the homepage */
+  .article-page .story-card h3{
+    font-family:var(--serif)!important;
+    font-size:1.08rem!important;
+    line-height:1.22!important;
+    font-weight:600!important;
+    margin:-2px 0 10px!important;
+    padding-right:32px!important;
   }
 
-  .masthead .topbar {
-    padding-bottom: 12px;
-  }
-
-  .topbar .brand-title {
-    font-size: 1.65rem;
-  }
-
-  .tabs button,
-  .tabs a {
-    padding: 15px 16px;
-  }
-
-  .author-page {
-    padding-top: 28px;
-  }
-
-  .author-page-title {
-    margin-bottom: 28px;
-  }
-
-  .author-card {
-    padding: 40px 25px;
-    border-radius: 14px;
-  }
-
-  .author-image {
-    width: 205px;
-    height: 205px;
-  }
-
-  .author-role {
-    line-height: 1.4;
-  }
-
-  .author-description {
-    line-height: 1.8;
-  }
-
-  .news-footer {
-    margin-top: 50px;
-  }
-
-  .news-footer-inner {
-    width: calc(100% - 44px);
-    padding: 42px 0 22px;
-  }
-
-  .footer-logo {
-    font-size: 2rem;
-  }
-
-  .footer-tagline {
-    font-size: 0.9rem;
-    line-height: 1.5;
-  }
-
-  .footer-social-section {
-    padding: 25px 0;
-    margin-bottom: 30px;
-  }
-
-  .footer-social-section h2 {
-    font-size: 1.15rem;
-  }
-
-  .footer-socials {
-    gap: 12px;
-  }
-
-  .footer-socials a {
-    width: 42px;
-    height: 42px;
-  }
-
-  .footer-navigation {
-    grid-template-columns: 1fr 1fr;
-    gap: 35px 25px;
-    padding-bottom: 30px;
-  }
-
-  .footer-column h3 {
-    font-size: 0.9rem;
-  }
-
-  .footer-column a {
-    font-size: 0.88rem;
-  }
-
-  .footer-bottom {
-    font-size: 0.82rem;
-  }
+  /* Time and category on one line, same as the homepage */
+  .article-page .story-card .meta,
+  .article-page .story-card .cat{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
+  .article-page .story-card .cat::before{display:inline-block;margin:0 8px}
 }
 
+/* ===== Homepage cards: no like, comment or share row (readers use them on the story page) ===== */
+#hero-section .engage-row,
+#trending-section .engage-row,
+#category-sections .engage-row{display:none !important}
 
-/* =========================================================
-   VERY SMALL PHONES
-   ========================================================= */
+/* ===== OLD footer (kept so pages you have not updated yet still look fine) ===== */
+footer.bbc-footer{
+  background:#fff;
+  color:#000;
+  padding:0 0 28px;
+  text-align:left;
+  border-top:1px solid #e6e6e6;
+}
+.bbc-footer .wrap{padding-top:22px}
 
-@media (max-width: 400px) {
-
-  .topbar .brand-title {
-    font-size: 1.4rem;
-  }
-
-  .topbar .icons {
-    flex: 0 0 50px;
-  }
-
-  .topbar .acct {
-    flex: 0 0 50px;
-  }
-
-  .author-card {
-    padding: 32px 18px;
-  }
-
-  .author-image {
-    width: 180px;
-    height: 180px;
-  }
-
-  .footer-navigation {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-
-  .footer-socials {
-    gap: 9px;
-  }
-
-  .footer-socials a {
-    width: 40px;
-    height: 40px;
-  }
+.bbc-footer .bf-follow{
+  margin:0 0 14px;
+  font-family:inherit;
+  font-size:1.15rem;
+  font-weight:700;
+  color:#000;
 }
 
+.bbc-footer .bf-social{display:flex;gap:26px;margin-bottom:22px}
+.bbc-footer .bf-social a{color:#000;font-size:1.35rem;line-height:1;text-decoration:none}
+.bbc-footer .bf-social a:hover{color:#000;opacity:.7}
 
-/* =========================================================
-   DESKTOP
-   ========================================================= */
+.bbc-footer .bf-links{display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:22px}
+.bbc-footer .bf-links a{color:#000;font-size:.92rem;text-decoration:none}
+.bbc-footer .bf-links a:hover{text-decoration:underline}
 
-@media (min-width: 820px) {
+.bbc-footer .bf-copy{color:#000;font-size:.85rem;line-height:1.5;margin:0}
 
-  .search-row.is-closed {
-    display: flex;
-  }
-
-  #search-btn {
-    display: none;
-  }
-
-  .author-card {
-    padding: 55px 60px;
-  }
-
-  .footer-socials {
-    gap: 22px;
-  }
+/* ===== Footer logo: show the whole name on the white background ===== */
+footer.bbc-footer .brand-title,
+footer.bbc-footer .brand-title span,
+footer.bbc-footer .brand-title .gold,
+footer.bbc-footer [class*="logo"],
+footer.bbc-footer [class*="logo"] span,
+footer.bbc-footer [class*="brand"],
+footer.bbc-footer [class*="brand"] span {
+  color: var(--red) !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: var(--red) !important;
+  background: none !important;
 }
 
-
-/* =========================================================
-   ACCESSIBILITY
-   ========================================================= */
-
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible {
-  outline: 3px solid #ff6b1a;
-  outline-offset: 3px;
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    transition: none !important;
-    animation: none !important;
-  }
-}
+/* ===== NEW BBC-style footer (class "dgf") - compact ===== */
+.dgf{background:#fff;color:#141414;border-top:1px solid #e6e6e6;padding:22px 16px 28px;margin-top:28px}
+.dgf-inner{max-width:1100px;margin:0 auto}
+.dgf-title{font-size:1.1rem;font-weight:700;line-height:1.25;margin:0 0 14px;color:#141414}
+.dgf-social{display:flex;flex-wrap:wrap;gap:8px 20px;margin:0 0 20px}
+.dgf-social a{width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;color:#141414;font-size:1.15rem;text-decoration:none}
+.dgf-social a:hover{color:#c8102e}
+.dgf-links{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 20px}
+.dgf-links a{color:#141414;font-size:.9rem;line-height:1.4;text-decoration:none}
+.dgf-links a:hover{color:#c8102e;text-decoration:underline;text-underline-offset:3px}
+.dgf-copy{margin:0;max-width:60ch;font-size:.85rem;line-height:1.5;color:#141414}
+.dgf-copy a{color:#141414;font-weight:700;text-decoration:none}
+.dgf-copy a:hover{color:#c8102e;text-decoration:underline}
+.dgf a:focus-visible{outline:2px solid #c8102e;outline-offset:3px}
+@media(min-width:768px){.dgf{padding:28px 32px 34px}.dgf-links{gap:10px 24px}}
