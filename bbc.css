@@ -84,13 +84,13 @@ body{background:var(--paper);color:var(--ink)}
   .story-card .body{padding:0}
 
   /* The gap on the right of the headline, like the BBC: text stops before the screen edge */
-  .secondary-item > :last-child,.story-card > :last-child,.story-card .body{padding-right:22px;min-width:0}
+  .secondary-item > :last-child,.story-card > :last-child,.story-card .body{padding-right:10px;min-width:0}
   .secondary-item h3,.story-card h3{margin-top:-2px;overflow-wrap:break-word}
 
   /* Short time and category on ONE line with a divider, like the BBC: "7 hrs ago | World" */
-  .secondary-item .meta,.story-card .meta{flex:0 0 auto;font-size:.875rem;line-height:1.5;margin:0}
-  .secondary-item .cat,.story-card .cat{flex:0 0 auto;font-size:.875rem;line-height:1.5;margin:0}
-  .secondary-item .cat::before,.story-card .cat::before{display:inline-block;margin:0 10px}
+  .secondary-item .meta,.story-card .meta{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
+  .secondary-item .cat,.story-card .cat{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
+  .secondary-item .cat::before,.story-card .cat::before{display:inline-block;margin:0 8px}
 }
 
 @media(min-width:820px){
@@ -138,12 +138,6 @@ body{background:var(--paper);color:var(--ink)}
 .article-page .engage-btn:hover{border-color:var(--ink);color:var(--ink);box-shadow:none}
 .article-page .engage-btn.liked{background:var(--paper);color:var(--red);border-color:var(--red)}
 
-/* Like, comment and share on Related Stories cards: same small quiet buttons as the homepage */
-.article-page .story-card .engage-row{border-top:0;margin:10px 0 0;padding-top:0;display:flex;flex-wrap:nowrap}
-.article-page .story-card .engage-btn{border:0;background:none;box-shadow:none;border-radius:0;padding:4px 12px 4px 0;font-size:.85rem;font-weight:400;color:var(--muted);white-space:nowrap}
-.article-page .story-card .engage-btn:hover{border:0;color:var(--ink)}
-.article-page .story-card .engage-btn.liked{background:none;border:0;color:var(--red)}
-
 /* Comments: plain and flat */
 .comments-section{border-top:2px solid var(--ink)}
 .comments-section h3{font-size:1.4rem}
@@ -157,7 +151,7 @@ body{background:var(--paper);color:var(--ink)}
 /* ===== Related Stories on phones: same compact BBC cards as the homepage ===== */
 @media(max-width:819px){
   .article-page .story-card > :last-child,
-  .article-page .story-card .body{padding-right:16px;min-width:0}
+  .article-page .story-card .body{padding-right:10px;min-width:0}
 
   /* Headline: same size and weight as the homepage */
   .article-page .story-card h3{
@@ -167,4 +161,9 @@ body{background:var(--paper);color:var(--ink)}
     font-weight:600!important;
     margin:-2px 0 10px!important;
   }
+
+  /* Time and category on one line, same as the homepage */
+  .article-page .story-card .meta,
+  .article-page .story-card .cat{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
+  .article-page .story-card .cat::before{display:inline-block;margin:0 8px}
 }
