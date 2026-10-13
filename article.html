@@ -9,47 +9,251 @@
     gtag("js", new Date());
     gtag("config", "G-6QHB1S6KFV");
   </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0d0d0d">
+
   <title id="page-title">Davidgistmedia</title>
+
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="bbc.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="manifest" href="/manifest.json">
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
-     crossorigin="anonymous"></script>
 
-  <!-- BBC-style top bar (works together with bbc.css) -->
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Google AdSense -->
+  <script async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
+    crossorigin="anonymous"></script>
+
+
+  <!-- BBC-style top bar -->
   <style>
-    .masthead{padding-top:12px}
-    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
-    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
-    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
-    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
-    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
-    .masthead .drawer.open{display:flex}
-    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
-    .drawer a:hover{color:var(--red)}
+    .masthead{
+      padding-top:12px
+    }
+
+    .masthead .topbar{
+      flex-direction:row;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      padding-bottom:12px;
+      border-bottom:1px solid var(--line)
+    }
+
+    .topbar .brand-title{
+      font-size:clamp(1.35rem,5.6vw,2rem);
+      white-space:nowrap
+    }
+
+    .topbar .icons{
+      display:flex;
+      gap:4px;
+      flex:0 0 80px
+    }
+
+    .topbar .acct{
+      flex:0 0 80px;
+      display:flex;
+      justify-content:flex-end
+    }
+
+    .topbar button{
+      width:36px;
+      height:36px;
+      display:grid;
+      place-items:center;
+      color:var(--ink)
+    }
+
+    .topbar svg{
+      width:25px;
+      height:25px;
+      stroke:currentColor;
+      fill:none;
+      stroke-width:2.2;
+      stroke-linecap:round;
+      stroke-linejoin:round
+    }
+
+    .masthead .drawer{
+      display:none;
+      flex-direction:column;
+      align-items:stretch;
+      text-align:left;
+      gap:0;
+      padding:4px 0 8px
+    }
+
+    .masthead .drawer.open{
+      display:flex
+    }
+
+    .drawer a{
+      padding:13px 0;
+      border-bottom:1px solid var(--line);
+      font-weight:700;
+      font-size:.95rem
+    }
+
+    .drawer a:hover{
+      color:var(--red)
+    }
+
+
+    /* Davidgistmedia footer */
+
+    .dgf{
+      background:#1b1b1b;
+      color:#fff;
+      margin-top:40px;
+    }
+
+    .dgf-inner{
+      max-width:1100px;
+      margin:0 auto;
+      padding:40px 22px;
+    }
+
+    .dgf-title{
+      margin:0 0 25px;
+      font-size:28px;
+      font-weight:700;
+    }
+
+    .dgf-social{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      margin-bottom:32px;
+      flex-wrap:wrap;
+    }
+
+    .dgf-social a{
+      color:#fff;
+      text-decoration:none;
+      font-size:32px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .dgf-social a:hover{
+      color:#d90429;
+    }
+
+    .dgf-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:18px 32px;
+      padding-bottom:30px;
+      border-bottom:1px solid #333;
+    }
+
+    .dgf-links a{
+      color:#fff;
+      text-decoration:none;
+      font-size:17px;
+    }
+
+    .dgf-links a:hover{
+      text-decoration:underline;
+    }
+
+    .dgf-copy{
+      margin:28px 0 0;
+      color:#aaa;
+      font-size:15px;
+      line-height:1.7;
+    }
+
+    .dgf-copy a{
+      color:#fff;
+      font-weight:700;
+      text-decoration:none;
+    }
+
+    .dgf-copy a:hover{
+      text-decoration:underline;
+    }
+
+    @media(max-width:600px){
+
+      .dgf-inner{
+        padding:32px 22px;
+      }
+
+      .dgf-title{
+        font-size:24px;
+      }
+
+      .dgf-social{
+        gap:24px;
+      }
+
+      .dgf-social a{
+        font-size:28px;
+      }
+
+      .dgf-links{
+        gap:18px 26px;
+      }
+
+      .dgf-links a{
+        font-size:16px;
+      }
+
+      .dgf-copy{
+        font-size:14px;
+      }
+    }
+
   </style>
 </head>
+
+
 <body>
 
+  <!-- Header -->
   <header class="masthead">
+
     <div class="wrap topbar">
+
       <div class="icons">
-        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+
+        <button
+          type="button"
+          id="menu-btn"
+          aria-label="Menu"
+          aria-expanded="false">
+
+          <svg viewBox="0 0 24 24">
+            <path d="M3 6h18M3 12h18M3 18h18"/>
+          </svg>
+
         </button>
+
       </div>
-      <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
+
+
+      <a class="brand-title" href="index.html">
+        David<span class="gold">gistmedia</span>
+      </a>
+
+
       <div class="acct"></div>
+
     </div>
 
+
+    <!-- Mobile menu -->
     <div class="wrap drawer" id="drawer">
+
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="editorial-policy.html">Editorial Policy</a>
@@ -58,58 +262,272 @@
       <a href="live.html">Live</a>
       <a href="staff.html">Staff login</a>
       <a href="admin.html">Admin login</a>
+
     </div>
 
+
+    <!-- Navigation -->
     <nav class="tabs">
-      <a href="index.html">Home</a>
-      <a href="index.html#nigeria">Nigeria</a>
-      <a href="index.html#entertainment">Entertainment</a>
-      <a href="index.html#sports">Sports</a>
-      <a href="index.html#business">Business</a>
+
+      <a href="index.html">
+        Home
+      </a>
+
+      <a href="index.html#nigeria">
+        Nigeria
+      </a>
+
+      <a href="index.html#entertainment">
+        Entertainment
+      </a>
+
+      <a href="index.html#sports">
+        Sports
+      </a>
+
+      <a href="index.html#business">
+        Business
+      </a>
+
     </nav>
+
   </header>
 
-  <main class="wrap article-page" id="article-root">
-    <p>Loading story...</p>
+
+  <!-- Article -->
+  <main
+    class="wrap article-page"
+    id="article-root">
+
+    <p>
+      Loading story...
+    </p>
+
   </main>
 
-  <footer>
-    <div class="wrap">
-      <div class="brand-title">David<span class="gold">gistmedia</span></div>
-      <div class="socials" style="margin-top:12px">
-        <a class="social-btn" href="about.html">About</a>
-        <a class="social-btn" href="contact.html">Contact</a>
-        <a class="social-btn" href="privacy-policy.html">Privacy</a>
-        <a class="social-btn" href="terms.html">Terms</a>
-        <a class="social-btn" href="editorial-policy.html">Editorial Policy</a>
+
+  <!-- NEW DAVIDGISTMEDIA FOOTER -->
+  <footer
+    class="dgf"
+    aria-label="Davidgistmedia site footer">
+
+    <div class="dgf-inner">
+
+      <!-- Social heading -->
+      <h2 class="dgf-title">
+        Follow Davidgistmedia on:
+      </h2>
+
+
+      <!-- Social media -->
+      <div class="dgf-social">
+
+        <a
+          href="https://x.com/YOUR_HANDLE"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="X">
+
+          <i class="fa-brands fa-x-twitter"></i>
+
+        </a>
+
+
+        <a
+          href="https://www.facebook.com/YOUR_PAGE"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Facebook">
+
+          <i class="fa-brands fa-facebook-f"></i>
+
+        </a>
+
+
+        <a
+          href="https://www.instagram.com/davidgistmediang/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram">
+
+          <i class="fa-brands fa-instagram"></i>
+
+        </a>
+
+
+        <a
+          href="https://www.tiktok.com/@davidgistmediang"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="TikTok">
+
+          <i class="fa-brands fa-tiktok"></i>
+
+        </a>
+
+
+        <a
+          href="https://www.linkedin.com/company/YOUR_PAGE"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn">
+
+          <i class="fa-brands fa-linkedin-in"></i>
+
+        </a>
+
+
+        <a
+          href="https://www.youtube.com/@davidgistmediang"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="YouTube">
+
+          <i class="fa-brands fa-youtube"></i>
+
+        </a>
+
       </div>
-      <div class="copyright">&copy; <span id="year"></span> Davidgistmedia. All rights reserved.</div>
+
+
+      <!-- Footer links -->
+      <nav
+        class="dgf-links"
+        aria-label="Footer">
+
+        <a href="terms.html">
+          Terms of Use
+        </a>
+
+        <a href="about.html">
+          About Davidgistmedia
+        </a>
+
+        <a href="privacy-policy.html">
+          Privacy Policy
+        </a>
+
+        <a href="cookies.html">
+          Cookies
+        </a>
+
+        <a href="accessibility.html">
+          Accessibility Help
+        </a>
+
+        <a href="contact.html">
+          Contact Davidgistmedia
+        </a>
+
+        <a href="advertise.html">
+          Advertise with us
+        </a>
+
+        <a href="help.html">
+          Help &amp; FAQs
+        </a>
+
+        <a href="editorial-policy.html">
+          Editorial Policy
+        </a>
+
+        <a href="corrections.html">
+          Corrections
+        </a>
+
+        <a href="live.html">
+          Live
+        </a>
+
+      </nav>
+
+
+      <!-- Copyright -->
+      <p class="dgf-copy">
+
+        Copyright
+        <span id="year">2026</span>
+        Davidgistmedia. All rights reserved.
+
+        Davidgistmedia is not responsible for the content of external sites.
+
+        <a href="editorial-policy.html">
+          Read about our approach to external linking.
+        </a>
+
+      </p>
+
     </div>
+
   </footer>
 
+
+  <!-- Scripts -->
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
   <script src="js/config.js"></script>
+
   <script src="js/supabase-client.js"></script>
+
   <script src="js/article.js"></script>
+
   <script src="js/share.js"></script>
+
   <script src="js/extras.js"></script>
+
+
+  <!-- Menu -->
   <script>
-    // Menu icon in the new top bar
+
     (function () {
-      var menuBtn = document.getElementById("menu-btn");
-      var drawer = document.getElementById("drawer");
-      menuBtn.addEventListener("click", function () {
-        var open = drawer.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", open);
-      });
+
+      var menuBtn =
+        document.getElementById("menu-btn");
+
+      var drawer =
+        document.getElementById("drawer");
+
+
+      menuBtn.addEventListener(
+        "click",
+        function () {
+
+          var open =
+            drawer.classList.toggle("open");
+
+          menuBtn.setAttribute(
+            "aria-expanded",
+            open
+          );
+
+        }
+      );
+
     })();
+
   </script>
+
+
+  <!-- Service worker -->
   <script>
+
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("/service-worker.js");
-      });
+
+      window.addEventListener(
+        "load",
+        function () {
+
+          navigator.serviceWorker.register(
+            "/service-worker.js"
+          );
+
+        }
+      );
+
     }
+
   </script>
+
 </body>
 </html>
