@@ -162,18 +162,12 @@
   <!-- Menu, year, today's date, badge and photo -->
   <script>
     (function () {
-      /* ============================================================
-         CHANGE THIS to your real photo file name (copy it exactly
-         from GitHub, including capitals and the ending).
-         Example: "Snapchat-1872033XXXX.jpg" or "images/author.jpg"
-         ============================================================ */
-      var PHOTO = "author.jpg";
+      /* Your photo file. The space in the name is written as %20. */
+      var PHOTO = "Snapchat-1872033241%20(1)_1748345725348.jpg";
 
-      /* If PHOTO fails, these common names are tried one by one */
-      var FALLBACKS = ["author.jpeg", "author.png", "author.webp",
-                       "ishola.jpg", "ishola.jpeg", "ishola.png",
-                       "ishola-david.jpg", "ishola-david.png",
-                       "profile.jpg", "profile.png"];
+      /* If PHOTO fails, these names are tried one by one */
+      var FALLBACKS = ["author.jpg", "author.jpeg", "author.png", "author.webp",
+                       "ishola.jpg", "ishola.png", "profile.jpg", "profile.png"];
 
       var img = document.getElementById("author-img");
       var wrap = document.getElementById("author-photo");
