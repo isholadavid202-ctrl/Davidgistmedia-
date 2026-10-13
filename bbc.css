@@ -82,10 +82,11 @@ body{background:var(--paper);color:var(--ink)}
   .secondary-item > div:first-child{aspect-ratio:16/9;border-radius:0!important}
   .story-card:not(:has(img)){display:block}
   .story-card .body{padding:0}
+  .secondary-item > :last-child,.story-card > :last-child,.story-card .body{padding-right:0;min-width:0}
 
-  /* The gap on the right of the headline, like the BBC: text stops before the screen edge */
-  .secondary-item > :last-child,.story-card > :last-child,.story-card .body{padding-right:10px;min-width:0}
-  .secondary-item h3,.story-card h3{margin-top:-2px;overflow-wrap:break-word}
+  /* The gap on the right of the headline, like the BBC: the headline stops before the screen edge.
+     Only the headline gets the gap, so "time | category" can still use the full width. */
+  .secondary-item h3,.story-card h3{margin-top:-2px;overflow-wrap:break-word;padding-right:32px}
 
   /* Short time and category on ONE line with a divider, like the BBC: "7 hrs ago | World" */
   .secondary-item .meta,.story-card .meta{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
@@ -151,15 +152,16 @@ body{background:var(--paper);color:var(--ink)}
 /* ===== Related Stories on phones: same compact BBC cards as the homepage ===== */
 @media(max-width:819px){
   .article-page .story-card > :last-child,
-  .article-page .story-card .body{padding-right:10px;min-width:0}
+  .article-page .story-card .body{padding-right:0;min-width:0}
 
-  /* Headline: same size and weight as the homepage */
+  /* Headline: same size, weight and right gap as the homepage */
   .article-page .story-card h3{
     font-family:var(--serif)!important;
     font-size:1.08rem!important;
     line-height:1.22!important;
     font-weight:600!important;
     margin:-2px 0 10px!important;
+    padding-right:32px!important;
   }
 
   /* Time and category on one line, same as the homepage */
@@ -167,3 +169,8 @@ body{background:var(--paper);color:var(--ink)}
   .article-page .story-card .cat{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
   .article-page .story-card .cat::before{display:inline-block;margin:0 8px}
 }
+
+/* ===== Homepage cards: no like, comment or share row (readers use them on the story page) ===== */
+#hero-section .engage-row,
+#trending-section .engage-row,
+#category-sections .engage-row{display:none !important}
