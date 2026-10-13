@@ -84,7 +84,6 @@ let allArticles = [];
 let commentCounts = {};
 let activeCategory = "all";
 let searchQuery = "";
-const likeBusy = new Set();
 
 /* The homepage only needs these fields (not the full story text) */
 const LIST_COLUMNS = "id,slug,title,excerpt,image_url,category,author,published_at,likes,featured";
@@ -104,26 +103,7 @@ function writeCache(list) {
   } catch {}
 }
 
-function getLikedIds() {
-  try {
-    return JSON.parse(localStorage.getItem("dg_liked_v2") || "[]");
-  } catch {
-    return [];
-  }
-}
-function markLiked(id) {
-  const liked = getLikedIds();
-  if (!liked.includes(id)) {
-    liked.push(id);
-    localStorage.setItem("dg_liked_v2", JSON.stringify(liked));
-  }
-}
-function unmarkLiked(id) {
-  const liked = getLikedIds().filter((x) => x !== id);
-  localStorage.setItem("dg_liked_v2", JSON.stringify(liked));
-}
-
-/* ---- Comment counts for the story cards ---- */
+/* ---- Comment counts ---- */
 async function loadCommentCounts() {
   try {
     const { data } = await supabaseClient.from("comments").select("article_id");
@@ -194,7 +174,6 @@ function renderPage() {
   renderTrending();
   renderHero(filtered);
   renderCategorySections(filtered);
-  wireEngageButtons();
 }
 
 function renderTrending() {
@@ -226,28 +205,6 @@ function renderTrending() {
         `).join("")}
       </div>
     </section>
-  `;
-}
-
-/* The like, comment and share row. It is not shown on the homepage cards any more
-   (readers see it after they open a story). Kept here in case you want it back. */
-function engageRowHtml(article) {
-  const liked = getLikedIds().includes(article.id);
-  return `
-    <div class="engage-row" onclick="event.preventDefault(); event.stopPropagation();">
-      <button class="engage-btn ${liked ? "liked" : ""}" data-like-id="${article.id}" aria-pressed="${liked}">
-        <svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-        <span data-like-count="${article.id}">${article.likes || 0}</span>
-      </button>
-      <button class="engage-btn" data-comment-slug="${escapeHtml(article.slug)}" aria-label="Comments">
-        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <span>${commentCounts[article.id] || 0}</span>
-      </button>
-      <button class="engage-btn" data-share-id="${article.id}" data-share-title="${escapeHtml(article.title)}" data-share-slug="${escapeHtml(article.slug)}">
-        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></svg>
-        <span>Share</span>
-      </button>
-    </div>
   `;
 }
 
@@ -313,77 +270,6 @@ function renderCategorySections(list) {
       </section>
     `;
   }).join("");
-}
-
-async function handleLike(id, btn) {
-  if (likeBusy.has(id)) return;
-  likeBusy.add(id);
-
-  const countEl = btn.querySelector(`[data-like-count="${id}"]`);
-  const current = allArticles.find((a) => a.id === id);
-  const wasLiked = getLikedIds().includes(id);
-  const before = current ? (current.likes || 0) : 0;
-  const after = wasLiked ? Math.max(before - 1, 0) : before + 1;
-
-  // Show the change straight away, and undo it if Supabase says no.
-  btn.classList.toggle("liked", !wasLiked);
-  btn.setAttribute("aria-pressed", String(!wasLiked));
-  if (countEl) countEl.textContent = after;
-
-  let failed = false;
-  try {
-    const { error } = await supabaseClient.rpc(
-      wasLiked ? "decrement_likes" : "increment_likes",
-      { article_id: id }
-    );
-    if (error) failed = true;
-  } catch (e) {
-    failed = true;
-  }
-
-  if (failed) {
-    btn.classList.toggle("liked", wasLiked);
-    btn.setAttribute("aria-pressed", String(wasLiked));
-    if (countEl) countEl.textContent = before;
-    alert("Couldn't save that. Please try again.");
-  } else {
-    if (current) current.likes = after;
-    if (wasLiked) unmarkLiked(id); else markLiked(id);
-  }
-  likeBusy.delete(id);
-}
-
-function handleShare(id, title, slug) {
-  const url = `${window.location.origin}${window.location.pathname.replace("index.html", "")}article.html?slug=${encodeURIComponent(slug)}`;
-  if (navigator.share) {
-    navigator.share({ title, url }).catch(() => {});
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(() => alert("Link copied to clipboard."));
-  }
-}
-
-function wireEngageButtons() {
-  document.querySelectorAll("[data-like-id]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      handleLike(btn.dataset.likeId, btn);
-    });
-  });
-  document.querySelectorAll("[data-comment-slug]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      window.location.href = `article.html?slug=${encodeURIComponent(btn.dataset.commentSlug)}`;
-    });
-  });
-  document.querySelectorAll("[data-share-id]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      handleShare(btn.dataset.shareId, btn.dataset.shareTitle, btn.dataset.shareSlug);
-    });
-  });
 }
 
 document.getElementById("tabs").addEventListener("click", (e) => {
