@@ -139,8 +139,8 @@ body{background:var(--paper);color:var(--ink)}
 .article-page .engage-btn.liked{background:var(--paper);color:var(--red);border-color:var(--red)}
 
 /* Like, comment and share on Related Stories cards: same small quiet buttons as the homepage */
-.article-page .story-card .engage-row{border-top:0;margin:12px 0 0;padding-top:0}
-.article-page .story-card .engage-btn{border:0;background:none;box-shadow:none;border-radius:0;padding:6px 18px 6px 0;font-size:.9rem;font-weight:400;color:var(--muted)}
+.article-page .story-card .engage-row{border-top:0;margin:10px 0 0;padding-top:0;display:flex;flex-wrap:nowrap}
+.article-page .story-card .engage-btn{border:0;background:none;box-shadow:none;border-radius:0;padding:4px 12px 4px 0;font-size:.85rem;font-weight:400;color:var(--muted);white-space:nowrap}
 .article-page .story-card .engage-btn:hover{border:0;color:var(--ink)}
 .article-page .story-card .engage-btn.liked{background:none;border:0;color:var(--red)}
 
@@ -153,3 +153,18 @@ body{background:var(--paper);color:var(--ink)}
 
 /* Related stories at the bottom of a story */
 .article-page .cat-section{margin-top:10px}
+
+/* ===== Related Stories on phones: same compact BBC cards as the homepage ===== */
+@media(max-width:819px){
+  .article-page .story-card > :last-child,
+  .article-page .story-card .body{padding-right:16px;min-width:0}
+
+  /* Headline: same size and weight as the homepage */
+  .article-page .story-card h3{
+    font-family:var(--serif)!important;
+    font-size:1.08rem!important;
+    line-height:1.22!important;
+    font-weight:600!important;
+    margin:-2px 0 10px!important;
+  }
+}
