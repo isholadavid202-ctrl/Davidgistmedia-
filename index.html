@@ -20,7 +20,7 @@
   <link rel="canonical" href="https://davidgistmedia.onrender.com/">
   <title>Davidgistmedia | Home</title>
   <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=6">
+  <link rel="stylesheet" href="bbc.css?v=7">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -62,6 +62,24 @@
       .search-row.is-closed{display:flex}
       #search-btn{display:none}
     }
+  </style>
+
+  <!-- BBC-style footer -->
+  <style>
+    .dgf{background:#fff;color:#141414;border-top:1px solid #e6e6e6;padding:32px 16px 40px;margin-top:32px}
+    .dgf-inner{max-width:1100px;margin:0 auto}
+    .dgf-title{font-size:1.75rem;font-weight:700;line-height:1.2;margin:0 0 24px;color:#141414}
+    .dgf-social{display:flex;flex-wrap:wrap;gap:12px 28px;margin:0 0 32px}
+    .dgf-social a{width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;color:#c8102e;font-size:1.65rem;text-decoration:none}
+    .dgf-social a:hover{color:#8a0a20}
+    .dgf-links{display:flex;flex-wrap:wrap;gap:14px 32px;margin:0 0 32px}
+    .dgf-links a{color:#141414;font-size:1.125rem;line-height:1.4;text-decoration:none}
+    .dgf-links a:hover{color:#c8102e;text-decoration:underline;text-underline-offset:4px}
+    .dgf-copy{margin:0;max-width:60ch;font-size:1rem;line-height:1.6;color:#545454}
+    .dgf-copy a{color:#141414;font-weight:700;text-decoration:none}
+    .dgf-copy a:hover{color:#c8102e;text-decoration:underline}
+    .dgf a:focus-visible{outline:3px solid #c8102e;outline-offset:3px}
+    @media(min-width:768px){.dgf{padding:40px 32px 48px}.dgf-links{gap:14px 36px}}
   </style>
 </head>
 <body>
@@ -137,24 +155,38 @@
     </section>
   </main>
 
-  <footer class="bbc-footer">
-    <div class="wrap">
-      <h3 class="bf-follow">Follow Davidgistmedia on:</h3>
-      <div class="bf-social">
-        <a href="https://www.tiktok.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+  <footer class="dgf" aria-label="Davidgistmedia site footer">
+    <div class="dgf-inner">
+      <h2 class="dgf-title">Follow Davidgistmedia on:</h2>
+
+      <div class="dgf-social">
+        <a href="https://x.com/YOUR_HANDLE" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.facebook.com/YOUR_PAGE" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
         <a href="https://www.instagram.com/davidgistmediang/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="https://www.linkedin.com/company/YOUR_PAGE" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
         <a href="https://www.youtube.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
       </div>
 
-      <nav class="bf-links" aria-label="Footer">
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-        <a href="privacy-policy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
+      <nav class="dgf-links" aria-label="Footer">
+        <a href="terms.html">Terms of Use</a>
+        <a href="about.html">About Davidgistmedia</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="cookies.html">Cookies</a>
+        <a href="accessibility.html">Accessibility Help</a>
+        <a href="contact.html">Contact Davidgistmedia</a>
+        <a href="advertise.html">Advertise with us</a>
+        <a href="help.html">Help &amp; FAQs</a>
         <a href="editorial-policy.html">Editorial Policy</a>
+        <a href="corrections.html">Corrections</a>
+        <a href="live.html">Live</a>
       </nav>
 
-      <p class="bf-copy">Copyright <span id="year"></span> Davidgistmedia. All rights reserved.</p>
+      <p class="dgf-copy">
+        Copyright <span id="year">2026</span> Davidgistmedia. All rights reserved.
+        Davidgistmedia is not responsible for the content of external sites.
+        <a href="editorial-policy.html">Read about our approach to external linking.</a>
+      </p>
     </div>
   </footer>
 
