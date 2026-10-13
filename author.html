@@ -1,171 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6QHB1S6KFV"></script>
-
   <script>
     window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-
+    function gtag(){dataLayer.push(arguments);}
     gtag("js", new Date());
     gtag("config", "G-6QHB1S6KFV");
   </script>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="description"
-    content="Ishola David — Founder and CEO of Davidgistmedia."
-  >
-
-  <meta
-    name="theme-color"
-    content="#191919"
-  >
-
-  <meta
-    property="og:title"
-    content="Ishola David | Davidgistmedia"
-  >
-
-  <meta
-    property="og:description"
-    content="Meet Ishola David, Founder and CEO of Davidgistmedia."
-  >
-
-  <meta
-    property="og:type"
-    content="profile"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ishola David — Founder and CEO of Davidgistmedia.">
+  <meta name="theme-color" content="#0d0d0d">
+  <meta property="og:title" content="Ishola David | Davidgistmedia">
+  <meta property="og:description" content="Meet Ishola David, Founder and CEO of Davidgistmedia.">
+  <meta property="og:type" content="profile">
   <title>Ishola David | Davidgistmedia</title>
-
-  <!-- Main site CSS -->
-  <link rel="stylesheet" href="styles.css">
-
-  <!-- BBC / Site-wide CSS -->
-  <link rel="stylesheet" href="bbc.css">
-
-  <!-- Font Awesome -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-  >
-
-  <!-- Favicon -->
-  <link
-    rel="icon"
-    href="favicon.svg"
-    type="image/svg+xml"
-  >
-
-  <link
-    rel="icon"
-    href="favicon.png"
-    type="image/png"
-  >
-
-  <link
-    rel="apple-touch-icon"
-    href="apple-touch-icon.png"
-  >
-
-  <link
-    rel="manifest"
-    href="/manifest.json"
-  >
-
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="bbc.css?v=9">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
   <!-- Google AdSense -->
-  <script
-    async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
-    crossorigin="anonymous">
-  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
+     crossorigin="anonymous"></script>
 
-  <!-- Author page specific styling & drawer fix -->
+  <!-- Top bar (same as homepage) -->
   <style>
-    .author-top-space {
-      min-height: 10px;
-    }
-
-    /* Force the menu drawer to stay hidden until toggled */
-    .masthead .drawer {
-      display: none !important;
-      flex-direction: column;
-      background: var(--paper, #fff);
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--line, #e6e6e6);
-    }
-
-    .masthead .drawer.open {
-      display: flex !important;
-    }
-
-    /* Author image sizing & round formatting with orange ring */
-    .author-image-wrap {
-      width: 140px;
-      height: 140px;
-      margin: 15px auto;
-      border: 3px solid #c8102e;
-      border-radius: 50%;
-      padding: 3px;
-    }
-
-    .author-image {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    .author-card {
-      border: 1px solid var(--line, #e6e6e6);
-      border-radius: 8px;
-      padding: 24px;
-      margin-top: 20px;
-      background: var(--paper, #fff);
-    }
+    .masthead{padding-top:12px}
+    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
+    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
+    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
+    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
+    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
+    .masthead .drawer.open{display:flex}
+    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
+    .drawer a:hover{color:var(--red)}
   </style>
 
-</head>
+  <!-- Breaking bar + author card -->
+  <style>
+    .breaking-bar{background:var(--red);color:#fff;display:flex;align-items:center;overflow:hidden;font-weight:700;font-size:.92rem}
+    .breaking-bar .label{flex:0 0 auto;background:#181818;color:#fff;padding:12px 14px;text-transform:uppercase;letter-spacing:.06em;font-size:.8rem;display:flex;align-items:center;gap:8px}
+    .breaking-bar .label::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--red)}
+    .breaking-bar .scroll{flex:1;overflow:hidden;white-space:nowrap}
+    .breaking-bar .scroll span{display:inline-block;padding-left:100%;animation:dg-ticker 22s linear infinite}
+    @keyframes dg-ticker{to{transform:translateX(-100%)}}
+    @media(prefers-reduced-motion:reduce){.breaking-bar .scroll span{animation:none;padding-left:12px}}
 
+    .author-page{max-width:760px;padding:22px 0 40px}
+    .author-back{display:inline-block;color:var(--muted);font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
+    .author-title{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:clamp(1.8rem,6vw,2.4rem);line-height:1.2;margin:14px 0 18px}
+    .author-verified{color:#e67e22;font-size:1.4rem}
+    .author-card{border:1px solid var(--line);border-radius:8px;padding:26px 22px;background:var(--paper);text-align:center}
+    .author-photo{width:140px;height:140px;margin:0 auto 18px;border:3px solid #e67e22;border-radius:50%;padding:3px;display:grid;place-items:center;overflow:hidden}
+    .author-photo img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+    .author-photo.no-photo::after{content:"ID";font-family:var(--serif);font-weight:700;font-size:2.4rem;color:var(--muted)}
+    .author-role{font-size:.95rem;font-weight:800;letter-spacing:.05em;color:#c25a00;margin:0 0 14px;text-transform:uppercase}
+    .author-bio{font-size:1.05rem;line-height:1.75;color:var(--ink);max-width:60ch;margin:0 auto}
+  </style>
+</head>
 <body>
 
-  <!-- =====================================================
-       HEADER
-       ===================================================== -->
+  <div class="util-bar">
+    <div class="wrap"><span id="today"></span></div>
+  </div>
 
   <header class="masthead">
-
-    <!-- Top Utility Bar (Hamburger & Theme Toggle) -->
-    <div class="util-bar">
-      <div class="wrap" style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 8px 16px;">
-        <button type="button" id="menu-btn" aria-label="Open menu" aria-expanded="false" style="background:none; border:0; font-size:1.4rem; cursor:pointer; color:var(--ink);">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-
-        <a class="brand-title" href="index.html" aria-label="Davidgistmedia home" style="text-decoration: none;">
-          David<span class="gold" style="color: #c8102e;">gistmedia</span>
-        </a>
-
-        <button type="button" class="dg-theme-btn" aria-label="Toggle dark mode" style="background:none; border:1px solid var(--line, #ccc); border-radius:50%; width:36px; height:36px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
-          <i class="fa-regular fa-moon"></i>
+    <div class="wrap topbar">
+      <div class="icons">
+        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         </button>
       </div>
+      <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
+      <div class="acct"></div>
     </div>
 
-    <!-- MENU DRAWER -->
     <div class="wrap drawer" id="drawer">
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
@@ -177,380 +93,99 @@
       <a href="admin.html">Admin login</a>
     </div>
 
-    <!-- NAVIGATION TABS -->
-    <nav class="tabs" aria-label="Main navigation" style="display: flex; gap: 20px; padding: 0 16px;">
-      <a href="index.html" style="padding: 10px 0; text-decoration: none; font-weight: 700;">Home</a>
-      <a href="live.html" style="padding: 10px 0; text-decoration: none; color: inherit;">Live</a>
+    <nav class="tabs" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="live.html">Live</a>
     </nav>
-
-    <!-- BREAKING NEWS TICKER -->
-    <div class="breaking-banner" style="background:var(--red, #c8102e); color:#fff; padding:8px 16px; display:flex; align-items:center; gap:12px; font-size:0.9rem; font-weight:700;">
-      <span style="background:#000; padding:2px 6px; font-size:0.75rem; text-transform:uppercase;">Breaking</span>
-      <marquee scrollamount="5">Trump Claims He Deserved Nobel Peace Prize</marquee>
-    </div>
-
   </header>
 
-  <!-- =====================================================
-       MAIN AUTHOR CONTENT
-       ===================================================== -->
+  <div class="breaking-bar">
+    <span class="label">Breaking</span>
+    <div class="scroll"><span>Trump Claims He Deserved Nobel Peace Prize</span></div>
+  </div>
 
-  <main
-    class="wrap author-page"
-    id="author-root"
-    style="max-width: 800px; margin: 20px auto; padding: 0 16px;"
-  >
+  <main class="wrap author-page" id="author-root">
+    <a href="index.html" class="author-back">← Back to home</a>
 
-    <!-- Back to home -->
-
-    <a
-      href="index.html"
-      class="author-back"
-      style="color: var(--muted, #666); text-decoration: underline;"
-    >
-      ← Back to home
-    </a>
-
-    <!-- Author name -->
-
-    <h1 class="author-page-title" style="display: flex; align-items: center; gap: 10px; font-size: 2.2rem; margin-top: 15px;">
-
+    <h1 class="author-title">
       Ishola David
-
-      <span
-        class="author-verified"
-        title="Verified"
-        aria-label="Verified"
-        style="color: #e67e22; font-size: 1.5rem;"
-      >
-        <i class="fa-solid fa-circle-check"></i>
-      </span>
-
+      <span class="author-verified" title="Verified" aria-label="Verified"><i class="fa-solid fa-circle-check"></i></span>
     </h1>
 
-    <!-- Author card -->
-
-    <section
-      class="author-card"
-      aria-label="Author information"
-    >
-
-      <div class="author-image-wrap">
-
-        <img
-          src="author.jpg"
-          alt="Ishola David"
-          class="author-image"
-        >
-
+    <section class="author-card" aria-label="Author information">
+      <div class="author-photo" id="author-photo">
+        <img src="author.jpg" alt="Ishola David"
+             onerror="this.style.display='none';document.getElementById('author-photo').classList.add('no-photo')">
       </div>
 
-      <h2 class="author-role" style="text-align: center; font-size: 1.1rem; color: #e67e22; margin: 15px 0; font-weight: 800; letter-spacing: 0.05em;">
-        FOUNDER &amp; CEO, DAVIDGISTMEDIA
-      </h2>
+      <h2 class="author-role">Founder &amp; CEO, Davidgistmedia</h2>
 
-      <p class="author-description" style="text-align: center; line-height: 1.6; color: var(--ink, #111);">
-
-        Ishola David is the Founder and CEO of
-        Davidgistmedia, a news and entertainment
-        platform covering Nigeria and the world.
-        He writes and publishes stories on
-        entertainment, sports, business, politics
-        and breaking news from home and abroad,
-        with a focus on keeping readers informed
-        quickly and accurately.
-
+      <p class="author-bio">
+        Ishola David is the Founder and CEO of Davidgistmedia, a news and entertainment
+        platform covering Nigeria and the world. He writes and publishes stories on
+        entertainment, sports, business, politics and breaking news from home and abroad,
+        with a focus on keeping readers informed quickly and accurately.
       </p>
-
     </section>
-
   </main>
 
-  <!-- =====================================================
-       PROFESSIONAL SITE FOOTER
-       ===================================================== -->
+  <footer class="dgf" aria-label="Davidgistmedia site footer">
+    <div class="dgf-inner">
+      <h2 class="dgf-title">Follow Davidgistmedia on:</h2>
 
-  <footer
-    class="news-footer"
-    aria-label="Davidgistmedia site footer"
-  >
-
-    <div class="news-footer-inner">
-
-      <!-- BRAND -->
-
-      <div class="news-footer-brand">
-
-        <a
-          href="index.html"
-          class="footer-logo"
-        >
-          David<span>gistmedia</span>
-        </a>
-
-        <p class="footer-tagline">
-          Your Source for Entertainment &amp; Breaking News
-        </p>
-
+      <div class="dgf-social">
+        <a href="https://x.com/YOUR_HANDLE" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.facebook.com/YOUR_PAGE" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/davidgistmediang/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="https://www.linkedin.com/company/YOUR_PAGE" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
       </div>
 
-      <!-- SOCIAL MEDIA -->
+      <nav class="dgf-links" aria-label="Footer">
+        <a href="terms.html">Terms of Use</a>
+        <a href="about.html">About Davidgistmedia</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="cookies.html">Cookies</a>
+        <a href="accessibility.html">Accessibility Help</a>
+        <a href="contact.html">Contact Davidgistmedia</a>
+        <a href="advertise.html">Advertise with us</a>
+        <a href="help.html">Help &amp; FAQs</a>
+        <a href="editorial-policy.html">Editorial Policy</a>
+        <a href="corrections.html">Corrections</a>
+        <a href="live.html">Live</a>
+      </nav>
 
-      <div class="footer-social-section">
-
-        <h2>
-          Follow Davidgistmedia
-        </h2>
-
-        <div class="footer-socials">
-
-          <a
-            href="https://x.com/YOUR_HANDLE"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="X"
-          >
-            <i class="fa-brands fa-x-twitter"></i>
-          </a>
-
-          <a
-            href="https://www.facebook.com/YOUR_PAGE"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Facebook"
-          >
-            <i class="fa-brands fa-facebook-f"></i>
-          </a>
-
-          <a
-            href="https://www.instagram.com/davidgistmediang/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram"
-          >
-            <i class="fa-brands fa-instagram"></i>
-          </a>
-
-          <a
-            href="https://www.tiktok.com/@davidgistmediang"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="TikTok"
-          >
-            <i class="fa-brands fa-tiktok"></i>
-          </a>
-
-          <a
-            href="https://www.linkedin.com/company/YOUR_PAGE"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-          >
-            <i class="fa-brands fa-linkedin-in"></i>
-          </a>
-
-          <a
-            href="https://www.youtube.com/@davidgistmediang"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="YouTube"
-          >
-            <i class="fa-brands fa-youtube"></i>
-          </a>
-
-        </div>
-
-      </div>
-
-      <!-- FOOTER LINKS -->
-
-      <div class="footer-navigation">
-
-        <div class="footer-column">
-
-          <h3>
-            Explore
-          </h3>
-
-          <a href="index.html">
-            Home
-          </a>
-
-          <a href="live.html">
-            Live
-          </a>
-
-          <a href="about.html">
-            About Davidgistmedia
-          </a>
-
-          <a href="contact.html">
-            Contact
-          </a>
-
-        </div>
-
-        <div class="footer-column">
-
-          <h3>
-            Information
-          </h3>
-
-          <a href="editorial-policy.html">
-            Editorial Policy
-          </a>
-
-          <a href="privacy-policy.html">
-            Privacy Policy
-          </a>
-
-          <a href="terms.html">
-            Terms of Use
-          </a>
-
-          <a href="cookies.html">
-            Cookies
-          </a>
-
-        </div>
-
-        <div class="footer-column">
-
-          <h3>
-            Help
-          </h3>
-
-          <a href="help.html">
-            Help &amp; FAQs
-          </a>
-
-          <a href="accessibility.html">
-            Accessibility Help
-          </a>
-
-          <a href="corrections.html">
-            Corrections
-          </a>
-
-          <a href="advertise.html">
-            Advertise with us
-          </a>
-
-        </div>
-
-      </div>
-
-      <!-- COPYRIGHT -->
-
-      <div class="footer-bottom">
-
-        <p>
-          Copyright
-          <span id="year">2026</span>
-          Davidgistmedia.
-          All rights reserved.
-        </p>
-
-        <p>
-
-          Davidgistmedia is not responsible for
-          the content of external sites.
-
-          <a href="editorial-policy.html">
-            Read about our approach to external linking.
-          </a>
-
-        </p>
-
-      </div>
-
+      <p class="dgf-copy">
+        Copyright <span id="year">2026</span> Davidgistmedia. All rights reserved.
+        Davidgistmedia is not responsible for the content of external sites.
+        <a href="editorial-policy.html">Read about our approach to external linking.</a>
+      </p>
     </div>
-
   </footer>
 
-  <!-- =====================================================
-       JAVASCRIPT
-       ===================================================== -->
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/extras.js"></script>
   <script>
-
-    /* Menu */
-
     (function () {
-
-      var menuBtn =
-        document.getElementById("menu-btn");
-
-      var drawer =
-        document.getElementById("drawer");
-
-      if (!menuBtn || !drawer) {
-        return;
-      }
-
-      menuBtn.addEventListener(
-        "click",
-        function () {
-
-          var open =
-            drawer.classList.toggle("open");
-
-          menuBtn.setAttribute(
-            "aria-expanded",
-            open
-          );
-
-          menuBtn.setAttribute(
-            "aria-label",
-            open
-              ? "Close menu"
-              : "Open menu"
-          );
-
-        }
-      );
-
+      var menuBtn = document.getElementById("menu-btn");
+      var drawer = document.getElementById("drawer");
+      menuBtn.addEventListener("click", function () {
+        var open = drawer.classList.toggle("open");
+        menuBtn.setAttribute("aria-expanded", open);
+      });
+      var year = document.getElementById("year");
+      if (year) year.textContent = new Date().getFullYear();
     })();
-
-    /* Copyright year */
-
-    (function () {
-
-      var year =
-        document.getElementById("year");
-
-      if (year) {
-
-        year.textContent =
-          new Date().getFullYear();
-
-      }
-
-    })();
-
   </script>
-
-  <!-- Service worker -->
-
   <script>
-
     if ("serviceWorker" in navigator) {
-
-      window.addEventListener(
-        "load",
-        function () {
-
-          navigator.serviceWorker.register(
-            "/service-worker.js"
-          );
-
-        }
-      );
-
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/service-worker.js");
+      });
     }
-
   </script>
-
 </body>
-
 </html>
