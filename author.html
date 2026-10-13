@@ -4,43 +4,136 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0d0d0d">
-  <title id="page-title">Author | Davidgistmedia</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="bbc.css">
-  <link rel="manifest" href="/manifest.json">
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
-     crossorigin="anonymous"></script>
 
-  <!-- BBC-style top bar (works together with bbc.css) -->
+  <title id="page-title">Author | Davidgistmedia</title>
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="bbc.css?v=10">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Google AdSense -->
+  <script async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
+          crossorigin="anonymous"></script>
+
+  <!-- BBC-style top bar -->
   <style>
-    .masthead{padding-top:12px}
-    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
-    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
-    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
-    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
-    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
-    .masthead .drawer.open{display:flex}
-    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
-    .drawer a:hover{color:var(--red)}
+    .masthead {
+      padding-top: 12px;
+    }
+
+    .masthead .topbar {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar .brand-title {
+      font-size: clamp(1.35rem, 5.6vw, 2rem);
+      white-space: nowrap;
+    }
+
+    .topbar .icons {
+      display: flex;
+      gap: 4px;
+      flex: 0 0 80px;
+    }
+
+    .topbar .acct {
+      flex: 0 0 80px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .topbar button {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+    }
+
+    .topbar svg {
+      width: 25px;
+      height: 25px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .masthead .drawer {
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      text-align: left;
+      gap: 0;
+      padding: 4px 0 8px;
+    }
+
+    .masthead .drawer.open {
+      display: flex;
+    }
+
+    .drawer a {
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+      font-weight: 700;
+      font-size: .95rem;
+    }
+
+    .drawer a:hover {
+      color: var(--red);
+    }
   </style>
 </head>
+
 <body>
 
+  <!-- =========================
+       HEADER
+  ========================== -->
+
   <header class="masthead">
+
     <div class="wrap topbar">
+
       <div class="icons">
-        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        <button
+          type="button"
+          id="menu-btn"
+          aria-label="Menu"
+          aria-expanded="false">
+
+          <svg viewBox="0 0 24 24">
+            <path d="M3 6h18M3 12h18M3 18h18"></path>
+          </svg>
+
         </button>
       </div>
-      <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
+
+      <a class="brand-title" href="index.html">
+        David<span class="gold">gistmedia</span>
+      </a>
+
       <div class="acct"></div>
+
     </div>
 
+
+    <!-- Mobile menu -->
+
     <div class="wrap drawer" id="drawer">
+
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="editorial-policy.html">Editorial Policy</a>
@@ -49,213 +142,849 @@
       <a href="live.html">Live</a>
       <a href="staff.html">Staff login</a>
       <a href="admin.html">Admin login</a>
+
     </div>
+
+
+    <!-- Navigation -->
 
     <nav class="tabs">
+
       <a href="index.html">Home</a>
+
       <a href="live.html">Live</a>
+
     </nav>
+
   </header>
 
+
+  <!-- =========================
+       AUTHOR CONTENT
+  ========================== -->
+
   <main class="wrap" style="padding:28px 0">
-    <a href="index.html" class="back-link">&larr; Back to home</a>
+
+    <a href="index.html" class="back-link">
+      &larr; Back to home
+    </a>
+
     <div class="cat-head" style="margin-bottom:18px">
-      <div class="left"><span class="bar"></span><h2 id="author-heading">Author</h2></div>
+
+      <div class="left">
+
+        <span class="bar"></span>
+
+        <h2 id="author-heading">
+          Author
+        </h2>
+
+      </div>
+
     </div>
+
+
     <div id="author-root">
-      <p style="color:var(--muted)">Loading...</p>
+
+      <p style="color:var(--muted)">
+        Loading...
+      </p>
+
     </div>
+
   </main>
 
-  <footer>
-    <div class="wrap">
-      <div class="brand-title">David<span class="gold">gistmedia</span></div>
-      <div class="socials" style="margin-top:12px">
-        <a class="social-btn" href="about.html">About</a>
-        <a class="social-btn" href="contact.html">Contact</a>
-        <a class="social-btn" href="privacy-policy.html">Privacy</a>
-        <a class="social-btn" href="terms.html">Terms</a>
-        <a class="social-btn" href="editorial-policy.html">Editorial Policy</a>
+
+  <!-- =========================
+       FULL DAVIDGISTMEDIA FOOTER
+  ========================== -->
+
+  <footer class="dgf" aria-label="Davidgistmedia site footer">
+
+    <div class="dgf-inner">
+
+      <h2 class="dgf-title">
+        Follow Davidgistmedia on:
+      </h2>
+
+
+      <!-- SOCIAL MEDIA -->
+
+      <div class="dgf-social">
+
+        <a
+          href="https://x.com/YOUR_HANDLE"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="X">
+
+          <i class="fa-brands fa-x-twitter"></i>
+
+        </a>
+
+
+        <a
+          href="https://www.facebook.com/YOUR_PAGE"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Facebook">
+
+          <i class="fa-brands fa-facebook-f"></i>
+
+        </a>
+
+
+        <a
+          href="https://www.instagram.com/davidgistmediang/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram">
+
+          <i class="fa-brands fa-instagram"></i>
+
+        </a>
+
+
+        <a
+          href="https://www.tiktok.com/@davidgistmediang"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="TikTok">
+
+          <i class="fa-brands fa-tiktok"></i>
+
+        </a>
+
+
+        <a
+          href="https://www.linkedin.com/company/YOUR_PAGE"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn">
+
+          <i class="fa-brands fa-linkedin-in"></i>
+
+        </a>
+
+
+        <a
+          href="https://www.youtube.com/@davidgistmediang"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="YouTube">
+
+          <i class="fa-brands fa-youtube"></i>
+
+        </a>
+
       </div>
-      <div class="copyright">&copy; <span id="year"></span> Davidgistmedia. All rights reserved.</div>
+
+
+      <!-- FOOTER LINKS -->
+
+      <nav class="dgf-links" aria-label="Footer">
+
+        <a href="terms.html">
+          Terms of Use
+        </a>
+
+        <a href="about.html">
+          About Davidgistmedia
+        </a>
+
+        <a href="privacy-policy.html">
+          Privacy Policy
+        </a>
+
+        <a href="cookies.html">
+          Cookies
+        </a>
+
+        <a href="accessibility.html">
+          Accessibility Help
+        </a>
+
+        <a href="contact.html">
+          Contact Davidgistmedia
+        </a>
+
+        <a href="advertise.html">
+          Advertise with us
+        </a>
+
+        <a href="help.html">
+          Help &amp; FAQs
+        </a>
+
+        <a href="editorial-policy.html">
+          Editorial Policy
+        </a>
+
+        <a href="corrections.html">
+          Corrections
+        </a>
+
+        <a href="live.html">
+          Live
+        </a>
+
+      </nav>
+
+
+      <!-- COPYRIGHT -->
+
+      <p class="dgf-copy">
+
+        Copyright
+        <span id="year">2026</span>
+        Davidgistmedia. All rights reserved.
+
+        Davidgistmedia is not responsible for the content of
+        external sites.
+
+        <a href="editorial-policy.html">
+          Read about our approach to external linking.
+        </a>
+
+      </p>
+
     </div>
+
   </footer>
 
+
+  <!-- =========================
+       SCRIPTS
+  ========================== -->
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
   <script src="js/config.js"></script>
+
   <script src="js/supabase-client.js"></script>
+
   <script src="js/author.js"></script>
+
   <script src="js/extras.js"></script>
+
+
+  <!-- =========================
+       LIKE / COMMENT / SHARE
+  ========================== -->
+
   <script>
-    // Adds like, comment and share buttons under each story on this page
+
     (function () {
-      const root = document.getElementById("author-root");
-      if (!root || typeof supabaseClient === "undefined") return;
 
-      const ICON_LIKE = '<svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>';
-      const ICON_COMMENT = '<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
-      const ICON_SHARE = '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></svg>';
+      const root =
+        document.getElementById("author-root");
 
-      const esc = (s) => String(s == null ? "" : s)
-        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      if (!root ||
+          typeof supabaseClient === "undefined") {
+        return;
+      }
+
+
+      const ICON_LIKE =
+        '<svg viewBox="0 0 24 24">' +
+        '<path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>' +
+        '</svg>';
+
+
+      const ICON_COMMENT =
+        '<svg viewBox="0 0 24 24">' +
+        '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>' +
+        '</svg>';
+
+
+      const ICON_SHARE =
+        '<svg viewBox="0 0 24 24">' +
+        '<circle cx="18" cy="5" r="3"/>' +
+        '<circle cx="6" cy="12" r="3"/>' +
+        '<circle cx="18" cy="19" r="3"/>' +
+        '<path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/>' +
+        '</svg>';
+
+
+      const esc = (s) =>
+        String(s == null ? "" : s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+
 
       const bySlug = {};
       const byId = {};
       const comments = {};
       const likeBusy = new Set();
 
+
       function getLiked() {
-        try { return JSON.parse(localStorage.getItem("dg_liked_v2") || "[]").map(String); }
-        catch (e) { return []; }
+
+        try {
+
+          return JSON.parse(
+            localStorage.getItem("dg_liked_v2") || "[]"
+          ).map(String);
+
+        } catch (e) {
+
+          return [];
+
+        }
+
       }
+
+
       function saveLiked(list) {
-        try { localStorage.setItem("dg_liked_v2", JSON.stringify(list)); } catch (e) {}
+
+        try {
+
+          localStorage.setItem(
+            "dg_liked_v2",
+            JSON.stringify(list)
+          );
+
+        } catch (e) {}
+
       }
+
+
       function slugOf(a) {
-        try { return new URL(a.getAttribute("href"), location.href).searchParams.get("slug"); }
-        catch (e) { return null; }
+
+        try {
+
+          return new URL(
+            a.getAttribute("href"),
+            location.href
+          ).searchParams.get("slug");
+
+        } catch (e) {
+
+          return null;
+
+        }
+
       }
+
 
       function rowHtml(art) {
-        const liked = getLiked().includes(String(art.id));
+
+        const liked =
+          getLiked().includes(String(art.id));
+
+
         return `
-          <div class="engage-row" onclick="event.preventDefault(); event.stopPropagation();">
-            <button class="engage-btn ${liked ? "liked" : ""}" data-like-id="${esc(art.id)}" aria-pressed="${liked}">
-              ${ICON_LIKE}<span data-like-count="${esc(art.id)}">${art.likes || 0}</span>
+
+          <div
+            class="engage-row"
+            onclick="event.preventDefault(); event.stopPropagation();">
+
+            <button
+              class="engage-btn ${liked ? "liked" : ""}"
+              data-like-id="${esc(art.id)}"
+              aria-pressed="${liked}">
+
+              ${ICON_LIKE}
+
+              <span data-like-count="${esc(art.id)}">
+                ${art.likes || 0}
+              </span>
+
             </button>
-            <button class="engage-btn" data-comment-slug="${esc(art.slug)}" aria-label="Comments">
-              ${ICON_COMMENT}<span>${comments[art.id] || 0}</span>
+
+
+            <button
+              class="engage-btn"
+              data-comment-slug="${esc(art.slug)}"
+              aria-label="Comments">
+
+              ${ICON_COMMENT}
+
+              <span>
+                ${comments[art.id] || 0}
+              </span>
+
             </button>
-            <button class="engage-btn" data-share-slug="${esc(art.slug)}" data-share-title="${esc(art.title)}">
-              ${ICON_SHARE}<span>Share</span>
+
+
+            <button
+              class="engage-btn"
+              data-share-slug="${esc(art.slug)}"
+              data-share-title="${esc(art.title)}">
+
+              ${ICON_SHARE}
+
+              <span>
+                Share
+              </span>
+
             </button>
-          </div>`;
+
+          </div>
+
+        `;
+
       }
+
 
       async function handleLike(idStr, btn) {
+
         const art = byId[idStr];
-        if (!art || likeBusy.has(idStr)) return;
-        likeBusy.add(idStr);
 
-        const countEl = btn.querySelector("[data-like-count]");
-        const list = getLiked();
-        const wasLiked = list.includes(idStr);
-        const before = art.likes || 0;
-        const after = wasLiked ? Math.max(before - 1, 0) : before + 1;
-
-        btn.classList.toggle("liked", !wasLiked);
-        btn.setAttribute("aria-pressed", String(!wasLiked));
-        if (countEl) countEl.textContent = after;
-
-        let failed = false;
-        try {
-          const { error } = await supabaseClient.rpc(
-            wasLiked ? "decrement_likes" : "increment_likes",
-            { article_id: art.id }
-          );
-          if (error) failed = true;
-        } catch (e) {
-          failed = true;
-        }
-
-        if (failed) {
-          btn.classList.toggle("liked", wasLiked);
-          btn.setAttribute("aria-pressed", String(wasLiked));
-          if (countEl) countEl.textContent = before;
-          alert("Couldn't save that. Please try again.");
-        } else {
-          art.likes = after;
-          saveLiked(wasLiked ? list.filter((x) => x !== idStr) : list.concat(idStr));
-        }
-        likeBusy.delete(idStr);
-      }
-
-      function handleShare(title, slug) {
-        const url = location.origin + "/article.html?slug=" + encodeURIComponent(slug);
-        if (navigator.share) {
-          navigator.share({ title, url }).catch(() => {});
-        } else if (navigator.clipboard) {
-          navigator.clipboard.writeText(url).then(() => alert("Link copied to clipboard."));
-        }
-      }
-
-      function wire() {
-        root.querySelectorAll("[data-like-id]:not([data-wired])").forEach((btn) => {
-          btn.dataset.wired = "1";
-          btn.addEventListener("click", (e) => {
-            e.preventDefault(); e.stopPropagation();
-            handleLike(btn.dataset.likeId, btn);
-          });
-        });
-        root.querySelectorAll("[data-comment-slug]:not([data-wired])").forEach((btn) => {
-          btn.dataset.wired = "1";
-          btn.addEventListener("click", (e) => {
-            e.preventDefault(); e.stopPropagation();
-            location.href = "article.html?slug=" + encodeURIComponent(btn.dataset.commentSlug);
-          });
-        });
-        root.querySelectorAll("[data-share-slug]:not([data-wired])").forEach((btn) => {
-          btn.dataset.wired = "1";
-          btn.addEventListener("click", (e) => {
-            e.preventDefault(); e.stopPropagation();
-            handleShare(btn.dataset.shareTitle, btn.dataset.shareSlug);
-          });
-        });
-      }
-
-      async function enhance() {
-        const links = Array.from(root.querySelectorAll('a[href*="article.html?slug="]'))
-          .filter((a) => !a.dataset.engaged);
-        if (!links.length) return;
-        links.forEach((a) => { a.dataset.engaged = "1"; });
-
-        const slugs = Array.from(new Set(links.map(slugOf).filter(Boolean)));
-        if (!slugs.length) return;
-
-        try {
-          const { data } = await supabaseClient
-            .from("articles").select("id,slug,title,likes").in("slug", slugs);
-          (data || []).forEach((r) => { bySlug[r.slug] = r; byId[String(r.id)] = r; });
-          const ids = (data || []).map((r) => r.id);
-          if (ids.length) {
-            const res = await supabaseClient.from("comments").select("article_id").in("article_id", ids);
-            (res.data || []).forEach((c) => { comments[c.article_id] = (comments[c.article_id] || 0) + 1; });
-          }
-        } catch (e) {
+        if (!art || likeBusy.has(idStr)) {
           return;
         }
 
-        links.forEach((a) => {
-          const art = bySlug[slugOf(a)];
-          if (!art) return;
-          const holder = a.querySelector(".body") || a.querySelector(":scope > div:last-child") || a;
-          if (holder.querySelector(".engage-row")) return;
-          holder.insertAdjacentHTML("beforeend", rowHtml(art));
-        });
-        wire();
+        likeBusy.add(idStr);
+
+
+        const countEl =
+          btn.querySelector("[data-like-count]");
+
+
+        const list = getLiked();
+
+        const wasLiked =
+          list.includes(idStr);
+
+
+        const before =
+          art.likes || 0;
+
+
+        const after =
+          wasLiked
+            ? Math.max(before - 1, 0)
+            : before + 1;
+
+
+        btn.classList.toggle(
+          "liked",
+          !wasLiked
+        );
+
+
+        btn.setAttribute(
+          "aria-pressed",
+          String(!wasLiked)
+        );
+
+
+        if (countEl) {
+          countEl.textContent = after;
+        }
+
+
+        let failed = false;
+
+
+        try {
+
+          const { error } =
+            await supabaseClient.rpc(
+
+              wasLiked
+                ? "decrement_likes"
+                : "increment_likes",
+
+              {
+                article_id: art.id
+              }
+
+            );
+
+
+          if (error) {
+            failed = true;
+          }
+
+        } catch (e) {
+
+          failed = true;
+
+        }
+
+
+        if (failed) {
+
+          btn.classList.toggle(
+            "liked",
+            wasLiked
+          );
+
+
+          btn.setAttribute(
+            "aria-pressed",
+            String(wasLiked)
+          );
+
+
+          if (countEl) {
+            countEl.textContent = before;
+          }
+
+
+          alert(
+            "Couldn't save that. Please try again."
+          );
+
+        } else {
+
+          art.likes = after;
+
+
+          saveLiked(
+            wasLiked
+              ? list.filter((x) => x !== idStr)
+              : list.concat(idStr)
+          );
+
+        }
+
+
+        likeBusy.delete(idStr);
+
       }
 
-      new MutationObserver(enhance).observe(root, { childList: true, subtree: true });
+
+      function handleShare(title, slug) {
+
+        const url =
+          location.origin +
+          "/article.html?slug=" +
+          encodeURIComponent(slug);
+
+
+        if (navigator.share) {
+
+          navigator
+            .share({
+              title,
+              url
+            })
+            .catch(() => {});
+
+        } else if (navigator.clipboard) {
+
+          navigator.clipboard
+            .writeText(url)
+            .then(() =>
+              alert("Link copied to clipboard.")
+            );
+
+        }
+
+      }
+
+
+      function wire() {
+
+        root
+          .querySelectorAll(
+            "[data-like-id]:not([data-wired])"
+          )
+          .forEach((btn) => {
+
+            btn.dataset.wired = "1";
+
+
+            btn.addEventListener(
+              "click",
+              (e) => {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                handleLike(
+                  btn.dataset.likeId,
+                  btn
+                );
+
+              }
+            );
+
+          });
+
+
+        root
+          .querySelectorAll(
+            "[data-comment-slug]:not([data-wired])"
+          )
+          .forEach((btn) => {
+
+            btn.dataset.wired = "1";
+
+
+            btn.addEventListener(
+              "click",
+              (e) => {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+
+                location.href =
+                  "article.html?slug=" +
+                  encodeURIComponent(
+                    btn.dataset.commentSlug
+                  );
+
+              }
+            );
+
+          });
+
+
+        root
+          .querySelectorAll(
+            "[data-share-slug]:not([data-wired])"
+          )
+          .forEach((btn) => {
+
+            btn.dataset.wired = "1";
+
+
+            btn.addEventListener(
+              "click",
+              (e) => {
+
+                e.preventDefault();
+                e.stopPropagation();
+
+
+                handleShare(
+                  btn.dataset.shareTitle,
+                  btn.dataset.shareSlug
+                );
+
+              }
+            );
+
+          });
+
+      }
+
+
+      async function enhance() {
+
+        const links =
+          Array.from(
+            root.querySelectorAll(
+              'a[href*="article.html?slug="]'
+            )
+          )
+          .filter(
+            (a) => !a.dataset.engaged
+          );
+
+
+        if (!links.length) {
+          return;
+        }
+
+
+        links.forEach(
+          (a) => {
+            a.dataset.engaged = "1";
+          }
+        );
+
+
+        const slugs =
+          Array.from(
+            new Set(
+              links
+                .map(slugOf)
+                .filter(Boolean)
+            )
+          );
+
+
+        if (!slugs.length) {
+          return;
+        }
+
+
+        try {
+
+          const { data } =
+            await supabaseClient
+              .from("articles")
+              .select(
+                "id,slug,title,likes"
+              )
+              .in(
+                "slug",
+                slugs
+              );
+
+
+          (data || []).forEach(
+            (r) => {
+
+              bySlug[r.slug] = r;
+
+              byId[String(r.id)] = r;
+
+            }
+          );
+
+
+          const ids =
+            (data || []).map(
+              (r) => r.id
+            );
+
+
+          if (ids.length) {
+
+            const res =
+              await supabaseClient
+                .from("comments")
+                .select("article_id")
+                .in(
+                  "article_id",
+                  ids
+                );
+
+
+            (res.data || []).forEach(
+              (c) => {
+
+                comments[c.article_id] =
+                  (comments[c.article_id] || 0) + 1;
+
+              }
+            );
+
+          }
+
+        } catch (e) {
+
+          return;
+
+        }
+
+
+        links.forEach(
+          (a) => {
+
+            const art =
+              bySlug[slugOf(a)];
+
+
+            if (!art) {
+              return;
+            }
+
+
+            const holder =
+              a.querySelector(".body") ||
+              a.querySelector(":scope > div:last-child") ||
+              a;
+
+
+            if (
+              holder.querySelector(
+                ".engage-row"
+              )
+            ) {
+              return;
+            }
+
+
+            holder.insertAdjacentHTML(
+              "beforeend",
+              rowHtml(art)
+            );
+
+          }
+        );
+
+
+        wire();
+
+      }
+
+
+      new MutationObserver(
+        enhance
+      ).observe(
+        root,
+        {
+          childList: true,
+          subtree: true
+        }
+      );
+
+
       enhance();
+
     })();
+
   </script>
+
+
+  <!-- =========================
+       MENU
+  ========================== -->
+
   <script>
-    // Menu icon in the new top bar
+
     (function () {
-      var menuBtn = document.getElementById("menu-btn");
-      var drawer = document.getElementById("drawer");
-      menuBtn.addEventListener("click", function () {
-        var open = drawer.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", open);
-      });
+
+      var menuBtn =
+        document.getElementById("menu-btn");
+
+      var drawer =
+        document.getElementById("drawer");
+
+
+      menuBtn.addEventListener(
+        "click",
+        function () {
+
+          var open =
+            drawer.classList.toggle("open");
+
+
+          menuBtn.setAttribute(
+            "aria-expanded",
+            open
+          );
+
+        }
+      );
+
     })();
+
   </script>
+
+
+  <!-- =========================
+       SERVICE WORKER
+  ========================== -->
+
   <script>
+
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("/service-worker.js");
-      });
+
+      window.addEventListener(
+        "load",
+        function () {
+
+          navigator.serviceWorker.register(
+            "/service-worker.js"
+          );
+
+        }
+      );
+
     }
+
   </script>
+
 </body>
 </html>
