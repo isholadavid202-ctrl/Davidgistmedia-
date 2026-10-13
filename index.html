@@ -26,22 +26,24 @@
   <title>Davidgistmedia | Home</title>
 
   <!-- Main CSS -->
-  <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=9">
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- BBC-style CSS -->
+  <link rel="stylesheet" href="bbc.css?v=10">
 
   <!-- Font Awesome -->
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Icons -->
+  <!-- Favicon -->
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-  <!-- Manifest -->
+  <!-- Web App Manifest -->
   <link rel="manifest" href="/manifest.json">
 
-  <!-- Website structured data -->
+  <!-- Organization structured data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -59,13 +61,17 @@
 
   <!-- Google AdSense -->
   <script async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
-    crossorigin="anonymous"></script>
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
+          crossorigin="anonymous"></script>
 
-  <!-- BBC-style top bar -->
+
+  <!-- =========================================================
+       BBC-STYLE TOP BAR
+       ========================================================= -->
   <style>
+
     .masthead{
-      padding-top:12px
+      padding-top:12px;
     }
 
     .masthead .topbar{
@@ -74,24 +80,24 @@
       align-items:center;
       gap:8px;
       padding-bottom:12px;
-      border-bottom:1px solid var(--line)
+      border-bottom:1px solid var(--line);
     }
 
     .topbar .brand-title{
       font-size:clamp(1.35rem,5.6vw,2rem);
-      white-space:nowrap
+      white-space:nowrap;
     }
 
     .topbar .icons{
       display:flex;
       gap:4px;
-      flex:0 0 80px
+      flex:0 0 80px;
     }
 
     .topbar .acct{
       flex:0 0 80px;
       display:flex;
-      justify-content:flex-end
+      justify-content:flex-end;
     }
 
     .topbar button{
@@ -99,7 +105,7 @@
       height:36px;
       display:grid;
       place-items:center;
-      color:var(--ink)
+      color:var(--ink);
     }
 
     .topbar svg{
@@ -109,11 +115,11 @@
       fill:none;
       stroke-width:2.2;
       stroke-linecap:round;
-      stroke-linejoin:round
+      stroke-linejoin:round;
     }
 
     .search-row.is-closed{
-      display:none
+      display:none;
     }
 
     .masthead .drawer{
@@ -122,52 +128,65 @@
       align-items:stretch;
       text-align:left;
       gap:0;
-      padding:4px 0 8px
+      padding:4px 0 8px;
     }
 
     .masthead .drawer.open{
-      display:flex
+      display:flex;
     }
 
     .drawer a{
       padding:13px 0;
       border-bottom:1px solid var(--line);
       font-weight:700;
-      font-size:.95rem
+      font-size:.95rem;
     }
 
     .drawer a:hover{
-      color:var(--red)
+      color:var(--red);
     }
 
     @media(min-width:820px){
+
       .search-row.is-closed{
-        display:flex
+        display:flex;
       }
 
       #search-btn{
-        display:none
+        display:none;
       }
+
     }
+
   </style>
+
 </head>
 
 <body>
 
-  <!-- Utility bar -->
+
+  <!-- =========================================================
+       TOP DATE BAR
+       ========================================================= -->
+
   <div class="util-bar">
     <div class="wrap">
       <span id="today"></span>
     </div>
   </div>
 
-  <!-- Header -->
+
+  <!-- =========================================================
+       HEADER
+       ========================================================= -->
+
   <header class="masthead">
 
     <div class="wrap topbar">
 
       <div class="icons">
 
+        <!-- Menu button -->
         <button
           type="button"
           id="menu-btn"
@@ -175,11 +194,13 @@
           aria-expanded="false">
 
           <svg viewBox="0 0 24 24">
-            <path d="M3 6h18M3 12h18M3 18h18"/>
+            <path d="M3 6h18M3 12h18M3 18h18"></path>
           </svg>
 
         </button>
 
+
+        <!-- Search button -->
         <button
           type="button"
           id="search-btn"
@@ -187,44 +208,65 @@
           aria-expanded="false">
 
           <svg viewBox="0 0 24 24">
-            <circle cx="10.5" cy="10.5" r="6.5"/>
-            <path d="M15.5 15.5 21 21"/>
+            <circle cx="10.5" cy="10.5" r="6.5"></circle>
+            <path d="M15.5 15.5 21 21"></path>
           </svg>
 
         </button>
 
       </div>
 
+
+      <!-- Website logo -->
       <a class="brand-title" href="/">
         David<span class="gold">gistmedia</span>
       </a>
+
 
       <div class="acct"></div>
 
     </div>
 
-    <!-- Mobile menu -->
+
+    <!-- =======================================================
+         MOBILE MENU
+         ======================================================= -->
+
     <div class="wrap drawer" id="drawer">
 
       <a href="about.html">About</a>
+
       <a href="contact.html">Contact</a>
+
       <a href="editorial-policy.html">Editorial Policy</a>
+
       <a href="privacy-policy.html">Privacy</a>
+
       <a href="terms.html">Terms</a>
+
       <a href="live.html">Live</a>
+
       <a href="staff.html">Staff login</a>
+
       <a href="admin.html">Admin login</a>
 
     </div>
 
-    <!-- Tagline and search -->
+
+    <!-- =======================================================
+         TAGLINE + SEARCH
+         ======================================================= -->
+
     <div class="wrap">
 
       <p class="tagline">
         Your Source for Entertainment &amp; Breaking News
       </p>
 
-      <form class="search-row is-closed" id="search-form">
+
+      <form
+        class="search-row is-closed"
+        id="search-form">
 
         <input
           type="text"
@@ -239,10 +281,16 @@
 
     </div>
 
-    <!-- Navigation -->
+
+    <!-- =======================================================
+         CATEGORY NAVIGATION
+         ======================================================= -->
+
     <nav class="tabs" id="tabs">
 
-      <button class="active" data-cat="all">
+      <button
+        class="active"
+        data-cat="all">
         Home
       </button>
 
@@ -287,19 +335,32 @@
   </header>
 
 
-  <!-- Main content -->
+  <!-- =========================================================
+       MAIN CONTENT
+       ========================================================= -->
+
   <main class="wrap">
 
+
+    <!-- Hero stories -->
     <section
       class="hero-section"
       id="hero-section">
     </section>
 
+
+    <!-- Trending -->
     <div id="trending-section"></div>
 
+
+    <!-- Category sections -->
     <div id="category-sections"></div>
 
-    <!-- Newsletter -->
+
+    <!-- =======================================================
+         NEWSLETTER
+         ======================================================= -->
+
     <section class="about-block">
 
       <h2>
@@ -309,6 +370,7 @@
       <p style="margin-bottom:14px">
         Get new stories delivered to your inbox — no spam, unsubscribe anytime.
       </p>
+
 
       <form
         id="newsletter-form"
@@ -328,6 +390,7 @@
 
       </form>
 
+
       <p
         class="admin-status"
         id="newsletter-status"
@@ -339,19 +402,27 @@
   </main>
 
 
-  <!-- Davidgistmedia Footer -->
+  <!-- =========================================================
+       DAVIDGISTMEDIA BLACK FOOTER
+       ========================================================= -->
+
   <footer
     class="dgf"
     aria-label="Davidgistmedia site footer">
 
     <div class="dgf-inner">
 
-      <!-- Social media heading -->
+
+      <!-- Footer title -->
       <h2 class="dgf-title">
         Follow Davidgistmedia on:
       </h2>
 
-      <!-- Social media icons -->
+
+      <!-- =====================================================
+           SOCIAL MEDIA
+           ===================================================== -->
+
       <div class="dgf-social">
 
         <a
@@ -364,6 +435,7 @@
 
         </a>
 
+
         <a
           href="https://www.facebook.com/YOUR_PAGE"
           target="_blank"
@@ -373,6 +445,7 @@
           <i class="fa-brands fa-facebook-f"></i>
 
         </a>
+
 
         <a
           href="https://www.instagram.com/davidgistmediang/"
@@ -384,6 +457,7 @@
 
         </a>
 
+
         <a
           href="https://www.tiktok.com/@davidgistmediang"
           target="_blank"
@@ -394,6 +468,7 @@
 
         </a>
 
+
         <a
           href="https://www.linkedin.com/company/YOUR_PAGE"
           target="_blank"
@@ -403,6 +478,7 @@
           <i class="fa-brands fa-linkedin-in"></i>
 
         </a>
+
 
         <a
           href="https://www.youtube.com/@davidgistmediang"
@@ -417,7 +493,10 @@
       </div>
 
 
-      <!-- Footer links -->
+      <!-- =====================================================
+           FOOTER LINKS
+           ===================================================== -->
+
       <nav
         class="dgf-links"
         aria-label="Footer">
@@ -469,7 +548,10 @@
       </nav>
 
 
-      <!-- Copyright and disclaimer -->
+      <!-- =====================================================
+           COPYRIGHT
+           ===================================================== -->
+
       <p class="dgf-copy">
 
         Copyright
@@ -489,77 +571,124 @@
   </footer>
 
 
+  <!-- =========================================================
+       JAVASCRIPT
+       ========================================================= -->
+
   <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
-  <script src="js/config.js"></script>
-
-  <script src="js/supabase-client.js"></script>
-
-  <script src="js/home.js?v=3"></script>
-
-  <script src="js/extras.js"></script>
-
-
-  <!-- Menu and search -->
-  <script>
-    (function () {
-
-      var menuBtn = document.getElementById("menu-btn");
-      var drawer = document.getElementById("drawer");
-
-      var searchBtn = document.getElementById("search-btn");
-      var form = document.getElementById("search-form");
-      var input = document.getElementById("search-input");
-
-
-      menuBtn.addEventListener("click", function () {
-
-        var open = drawer.classList.toggle("open");
-
-        menuBtn.setAttribute(
-          "aria-expanded",
-          open
-        );
-
-      });
-
-
-      searchBtn.addEventListener("click", function () {
-
-        var closed = form.classList.toggle("is-closed");
-
-        searchBtn.setAttribute(
-          "aria-expanded",
-          !closed
-        );
-
-        if (!closed) {
-          input.focus();
-        }
-
-      });
-
-    })();
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
   </script>
 
 
-  <!-- Service worker -->
+  <!-- Site configuration -->
+  <script src="js/config.js"></script>
+
+
+  <!-- Supabase client -->
+  <script src="js/supabase-client.js"></script>
+
+
+  <!-- Homepage functionality -->
+  <script src="js/home.js?v=3"></script>
+
+
+  <!-- Extra functionality -->
+  <script src="js/extras.js"></script>
+
+
+  <!-- =========================================================
+       MENU + SEARCH
+       ========================================================= -->
+
+  <script>
+
+    (function () {
+
+      var menuBtn =
+        document.getElementById("menu-btn");
+
+      var drawer =
+        document.getElementById("drawer");
+
+      var searchBtn =
+        document.getElementById("search-btn");
+
+      var form =
+        document.getElementById("search-form");
+
+      var input =
+        document.getElementById("search-input");
+
+
+      /* Menu */
+
+      menuBtn.addEventListener(
+        "click",
+        function () {
+
+          var open =
+            drawer.classList.toggle("open");
+
+          menuBtn.setAttribute(
+            "aria-expanded",
+            open
+          );
+
+        }
+      );
+
+
+      /* Search */
+
+      searchBtn.addEventListener(
+        "click",
+        function () {
+
+          var closed =
+            form.classList.toggle("is-closed");
+
+          searchBtn.setAttribute(
+            "aria-expanded",
+            !closed
+          );
+
+
+          if (!closed) {
+            input.focus();
+          }
+
+        }
+      );
+
+    })();
+
+  </script>
+
+
+  <!-- =========================================================
+       SERVICE WORKER
+       ========================================================= -->
+
   <script>
 
     if ("serviceWorker" in navigator) {
 
-      window.addEventListener("load", function () {
+      window.addEventListener(
+        "load",
+        function () {
 
-        navigator.serviceWorker.register(
-          "/service-worker.js"
-        );
+          navigator.serviceWorker.register(
+            "/service-worker.js"
+          );
 
-      });
+        }
+      );
 
     }
 
   </script>
+
 
 </body>
 </html>
