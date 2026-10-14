@@ -1,4 +1,4 @@
-const CACHE = "dgm-v2";
+const CACHE = "dgm-v3";
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
@@ -22,7 +22,8 @@ self.addEventListener("fetch", (e) => {
   if (url.origin !== location.origin) return;
 
   e.respondWith(
-    fetch(req)
+    // "no-cache" makes the phone check the server for the newest file every time
+    fetch(req, { cache: "no-cache" })
       .then((res) => {
         if (res.ok) {
           const copy = res.clone();
