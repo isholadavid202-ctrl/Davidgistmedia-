@@ -15,7 +15,7 @@
   <meta name="theme-color" content="#0d0d0d">
   <title id="page-title">Davidgistmedia</title>
   <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=13">
+  <link rel="stylesheet" href="bbc.css?v=14">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -85,11 +85,11 @@
   <div id="site-footer"></div>
   <script src="js/footer.js"></script>
 
+  <!-- Scripts: ORDER MATTERS. Supabase library, then your client, then article.js (only once). -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-    <script src="js/article.js?v=2"></script>
   <script src="js/supabase-client.js"></script>
-  <script src="js/article.js"></script>
-  <script src="js/extras.js"></script>
+  <script src="js/article.js?v=4"></script>
+  <script src="js/extras.js?v=2"></script>
 
   <!-- Menu and today's date -->
   <script>
@@ -110,7 +110,9 @@
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
-        navigator.serviceWorker.register("/service-worker.js");
+        navigator.serviceWorker.register("/service-worker.js", { updateViaCache: "none" })
+          .then(function (reg) { reg.update(); })
+          .catch(function () {});
       });
     }
   </script>
