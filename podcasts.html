@@ -44,8 +44,10 @@
     .pod-cover{width:104px;height:104px;object-fit:cover;background:var(--line);display:block}
     .pod-cover.ph{display:grid;place-items:center;color:var(--muted);font-size:1.8rem}
     .pod-item h2{font-family:var(--serif);font-size:1.1rem;line-height:1.25;font-weight:600;margin:0 0 6px}
+    .pod-item h2 a:hover{color:var(--red)}
     .pod-meta{color:var(--muted);font-size:.85rem;margin:0 0 8px}
-    .pod-desc{font-size:.95rem;line-height:1.5;margin:0;white-space:pre-line}
+    .pod-stats{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--muted);font-size:.85rem;margin:0}
+    .pod-stats i{margin-right:5px}
     .pod-item audio{grid-column:1 / -1;width:100%;margin-top:14px}
   </style>
 </head>
@@ -85,7 +87,7 @@
 
   <main class="wrap pod-page">
     <h1>Podcasts</h1>
-    <p class="pod-sub">Conversations and stories from Davidgistmedia. Press play to listen.</p>
+    <p class="pod-sub">Conversations and stories from Davidgistmedia. Press play, or tap a title to like, comment and share.</p>
     <div class="pod-list" id="pod-list">
       <div class="empty-state">Loading episodes…</div>
     </div>
@@ -128,18 +130,37 @@
         if (isNaN(t.getTime())) return "";
         return t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
       }
-      function item(p) {
+
+      /* Count one listen per device per episode */
+      function countPlay(id, el) {
+        var k = "dg_pod_played", arr = [];
+        try { arr = JSON.parse(localStorage.getItem(k) || "[]"); } catch (e) {}
+        if (arr.indexOf(id) > -1) return;
+        arr.push(id);
+        try { localStorage.setItem(k, JSON.stringify(arr)); } catch (e) {}
+        supabaseClient.rpc("increment_podcast_plays", { p_id: id }).then(function (r) {
+          if (!r.error && el) el.textContent = (parseInt(el.textContent, 10) || 0) + 1;
+        });
+      }
+
+      function item(p, comments) {
+        var link = 'podcast.html?id=' + encodeURIComponent(p.id);
         return '<article class="pod-item">' +
+          '<a href="' + link + '">' +
           (p.cover_url
             ? '<img class="pod-cover" src="' + esc(p.cover_url) + '" alt="" loading="lazy" decoding="async">'
-            : '<div class="pod-cover ph"><i class="fa-solid fa-microphone"></i></div>') +
-          '<div class="pod-body"><h2>' + esc(p.title) + '</h2>' +
+            : '<div class="pod-cover ph"><i class="fa-solid fa-microphone"></i></div>') + '</a>' +
+          '<div class="pod-body"><h2><a href="' + link + '">' + esc(p.title) + '</a></h2>' +
             '<div class="pod-meta">' + day(p.published_at) +
               (p.duration ? ' | ' + esc(p.duration) : '') +
               (p.host ? ' | ' + esc(p.host) : '') + '</div>' +
-            (p.description ? '<p class="pod-desc">' + esc(p.description) + '</p>' : '') +
+            '<p class="pod-stats">' +
+              '<span title="Listens"><i class="fa-solid fa-headphones"></i><b data-plays="' + esc(p.id) + '">' + (p.plays || 0) + '</b></span>' +
+              '<span title="Likes"><i class="fa-regular fa-heart"></i>' + (p.likes || 0) + '</span>' +
+              '<span title="Comments"><i class="fa-regular fa-comment"></i>' + (comments || 0) + '</span>' +
+            '</p>' +
           '</div>' +
-          '<audio controls preload="none" src="' + esc(p.audio_url) + '"></audio>' +
+          '<audio controls preload="none" data-id="' + esc(p.id) + '" src="' + esc(p.audio_url) + '"></audio>' +
         '</article>';
       }
 
@@ -152,13 +173,20 @@
           box.innerHTML = '<div class="empty-state">No episodes yet. Check back soon.</div>';
           return;
         }
-        box.innerHTML = list.map(item).join("");
 
-        // Only one episode plays at a time
+        var counts = {};
+        try {
+          var c = await supabaseClient.from("podcast_comments").select("podcast_id");
+          (c.data || []).forEach(function (r) { counts[r.podcast_id] = (counts[r.podcast_id] || 0) + 1; });
+        } catch (e) {}
+
+        box.innerHTML = list.map(function (p) { return item(p, counts[p.id]); }).join("");
+
         var players = box.querySelectorAll("audio");
         players.forEach(function (p) {
           p.addEventListener("play", function () {
             players.forEach(function (o) { if (o !== p) o.pause(); });
+            countPlay(p.dataset.id, box.querySelector('[data-plays="' + p.dataset.id + '"]'));
           });
         });
       } catch (e) {
