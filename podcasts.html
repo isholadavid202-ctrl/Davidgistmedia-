@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6QHB1S6KFV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-6QHB1S6KFV");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Listen to Davidgistmedia podcasts: entertainment, Nigeria, sports and business conversations.">
+  <meta name="theme-color" content="#0d0d0d">
+  <title>Podcasts | Davidgistmedia</title>
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="bbc.css?v=10">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
+     crossorigin="anonymous"></script>
+
+  <style>
+    .masthead{padding-top:12px}
+    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
+    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
+    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
+    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
+    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
+    .masthead .drawer.open{display:flex}
+    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
+    .drawer a:hover{color:var(--red)}
+
+    .pod-page{max-width:760px;padding:22px 0 40px}
+    .pod-page h1{font-family:var(--serif);font-size:clamp(1.8rem,6vw,2.4rem);line-height:1.2;margin:0 0 6px}
+    .pod-sub{color:var(--muted);margin:0 0 20px}
+    .pod-list{border-top:2px solid var(--ink)}
+    .pod-item{display:grid;grid-template-columns:104px 1fr;gap:0 16px;padding:20px 0;border-bottom:1px solid var(--line)}
+    .pod-cover{width:104px;height:104px;object-fit:cover;background:var(--line);display:block}
+    .pod-cover.ph{display:grid;place-items:center;color:var(--muted);font-size:1.8rem}
+    .pod-item h2{font-family:var(--serif);font-size:1.1rem;line-height:1.25;font-weight:600;margin:0 0 6px}
+    .pod-meta{color:var(--muted);font-size:.85rem;margin:0 0 8px}
+    .pod-desc{font-size:.95rem;line-height:1.5;margin:0;white-space:pre-line}
+    .pod-item audio{grid-column:1 / -1;width:100%;margin-top:14px}
+  </style>
+</head>
+<body>
+
+  <div class="util-bar"><div class="wrap"><span id="today"></span></div></div>
+
+  <header class="masthead">
+    <div class="wrap topbar">
+      <div class="icons">
+        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+      <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
+      <div class="acct"></div>
+    </div>
+
+    <div class="wrap drawer" id="drawer">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="editorial-policy.html">Editorial Policy</a>
+      <a href="privacy-policy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="podcasts.html">Podcasts</a>
+      <a href="live.html">Live</a>
+      <a href="staff.html">Staff login</a>
+      <a href="admin.html">Admin login</a>
+    </div>
+
+    <nav class="tabs" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="podcasts.html" class="active">Podcasts</a>
+      <a href="live.html">Live</a>
+    </nav>
+  </header>
+
+  <main class="wrap pod-page">
+    <h1>Podcasts</h1>
+    <p class="pod-sub">Conversations and stories from Davidgistmedia. Press play to listen.</p>
+    <div class="pod-list" id="pod-list">
+      <div class="empty-state">Loading episodes…</div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="js/footer.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/extras.js"></script>
+
+  <script>
+    (function () {
+      var menuBtn = document.getElementById("menu-btn");
+      var drawer = document.getElementById("drawer");
+      menuBtn.addEventListener("click", function () {
+        var open = drawer.classList.toggle("open");
+        menuBtn.setAttribute("aria-expanded", open);
+      });
+      var today = document.getElementById("today");
+      if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
+        weekday: "long", day: "numeric", month: "long", year: "numeric"
+      });
+    })();
+  </script>
+
+  <script>
+    (async function () {
+      var box = document.getElementById("pod-list");
+
+      function esc(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      function day(d) {
+        var t = new Date(d);
+        if (isNaN(t.getTime())) return "";
+        return t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
+      }
+      function item(p) {
+        return '<article class="pod-item">' +
+          (p.cover_url
+            ? '<img class="pod-cover" src="' + esc(p.cover_url) + '" alt="" loading="lazy" decoding="async">'
+            : '<div class="pod-cover ph"><i class="fa-solid fa-microphone"></i></div>') +
+          '<div class="pod-body"><h2>' + esc(p.title) + '</h2>' +
+            '<div class="pod-meta">' + day(p.published_at) +
+              (p.duration ? ' | ' + esc(p.duration) : '') +
+              (p.host ? ' | ' + esc(p.host) : '') + '</div>' +
+            (p.description ? '<p class="pod-desc">' + esc(p.description) + '</p>' : '') +
+          '</div>' +
+          '<audio controls preload="none" src="' + esc(p.audio_url) + '"></audio>' +
+        '</article>';
+      }
+
+      try {
+        var res = await supabaseClient.from("podcasts").select("*")
+          .order("published_at", { ascending: false }).limit(50);
+        if (res.error) throw res.error;
+        var list = res.data || [];
+        if (!list.length) {
+          box.innerHTML = '<div class="empty-state">No episodes yet. Check back soon.</div>';
+          return;
+        }
+        box.innerHTML = list.map(item).join("");
+
+        // Only one episode plays at a time
+        var players = box.querySelectorAll("audio");
+        players.forEach(function (p) {
+          p.addEventListener("play", function () {
+            players.forEach(function (o) { if (o !== p) o.pause(); });
+          });
+        });
+      } catch (e) {
+        box.innerHTML = '<div class="empty-state">Couldn\'t load podcasts right now. Please try again later.</div>';
+      }
+    })();
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/service-worker.js");
+      });
+    }
+  </script>
+</body>
+</html>
