@@ -28,11 +28,12 @@
       <p class="admin-status" id="login-status"></p>
     </div>
 
-    <!-- Publish + list -->
+    <!-- Publish / edit + list -->
     <div id="panel" style="display:none">
-      <div class="admin-card">
+      <div class="admin-card" id="form-card">
         <a href="#" class="logout-link" id="logout">Sign out</a>
-        <h2>Add a podcast episode</h2>
+        <h2 id="form-title">Add a podcast episode</h2>
+        <p class="admin-status" id="edit-note" style="display:none">You are editing an episode. Leave the audio and cover boxes empty to keep the current ones.</p>
 
         <label for="title">Title</label>
         <input id="title" maxlength="140" placeholder="Episode title">
@@ -56,6 +57,7 @@
         <input id="duration" placeholder="e.g. 32 min">
 
         <button class="primary" id="save-btn" type="button">Publish episode</button>
+        <button class="primary" id="cancel-btn" type="button" style="display:none;background:#555">Cancel editing</button>
         <p class="admin-status" id="status"></p>
       </div>
 
@@ -74,6 +76,7 @@
     (function () {
       var $ = function (id) { return document.getElementById(id); };
       var loginCard = $("login-card"), panel = $("panel");
+      var editingId = null, rows = {};
 
       function esc(s) {
         return String(s == null ? "" : s)
@@ -119,7 +122,7 @@
         var a = new Audio();
         a.preload = "metadata";
         a.onloadedmetadata = function () {
-          if (isFinite(a.duration) && !$("duration").value) {
+          if (isFinite(a.duration)) {
             $("duration").value = Math.max(1, Math.round(a.duration / 60)) + " min";
           }
           URL.revokeObjectURL(a.src);
@@ -135,68 +138,115 @@
         return supabaseClient.storage.from("podcasts").getPublicUrl(name).data.publicUrl;
       }
 
+      function resetForm() {
+        editingId = null;
+        ["title", "desc", "audio-file", "audio-link", "cover-file", "duration"].forEach(function (id) { $(id).value = ""; });
+        $("host").value = "Ishola David";
+        $("form-title").textContent = "Add a podcast episode";
+        $("save-btn").textContent = "Publish episode";
+        $("cancel-btn").style.display = "none";
+        $("edit-note").style.display = "none";
+      }
+      $("cancel-btn").addEventListener("click", function () { resetForm(); setStatus($("status"), ""); });
+
       $("save-btn").addEventListener("click", async function () {
         var btn = this, st = $("status");
         var title = $("title").value.trim();
         var audioFile = $("audio-file").files[0];
         var audioLink = $("audio-link").value.trim();
         var coverFile = $("cover-file").files[0];
+        var old = editingId ? rows[editingId] : null;
 
         if (!title) { setStatus(st, "Please type a title.", "error"); return; }
-        if (!audioFile && !audioLink) { setStatus(st, "Choose an audio file or paste an audio link.", "error"); return; }
+        if (!old && !audioFile && !audioLink) { setStatus(st, "Choose an audio file or paste an audio link.", "error"); return; }
 
         btn.disabled = true;
         try {
-          var audioUrl = audioLink;
+          var audioUrl = old ? old.audio_url : audioLink;
           if (audioFile) {
             setStatus(st, "Uploading audio... please keep this page open.");
             audioUrl = await upload(audioFile, "audio");
+          } else if (audioLink) {
+            audioUrl = audioLink;
           }
-          var coverUrl = null;
+          var coverUrl = old ? old.cover_url : null;
           if (coverFile) {
             setStatus(st, "Uploading cover picture...");
             coverUrl = await upload(coverFile, "covers");
           }
-          setStatus(st, "Publishing...");
-          var ins = await supabaseClient.from("podcasts").insert({
+
+          var fields = {
             title: title,
             description: $("desc").value.trim() || null,
             host: $("host").value.trim() || null,
             audio_url: audioUrl,
             cover_url: coverUrl,
             duration: $("duration").value.trim() || null
-          });
-          if (ins.error) throw ins.error;
+          };
 
-          setStatus(st, "Published! It is now on the podcasts page.", "ok");
-          ["title", "desc", "audio-file", "audio-link", "cover-file", "duration"].forEach(function (id) { $(id).value = ""; });
+          setStatus(st, editingId ? "Saving changes..." : "Publishing...");
+          var r = editingId
+            ? await supabaseClient.from("podcasts").update(fields).eq("id", editingId)
+            : await supabaseClient.from("podcasts").insert(fields);
+          if (r.error) throw r.error;
+
+          setStatus(st, editingId ? "Saved! Your changes are live." : "Published! It is now on the podcasts page.", "ok");
+          resetForm();
           loadEpisodes();
         } catch (e) {
-          setStatus(st, "Couldn't publish: " + (e.message || "unknown error"), "error");
+          setStatus(st, "Couldn't save: " + (e.message || "unknown error"), "error");
         }
         btn.disabled = false;
       });
 
       async function loadEpisodes() {
         var box = $("eps");
-        var r = await supabaseClient.from("podcasts").select("id,title,published_at")
-          .order("published_at", { ascending: false }).limit(50);
+        var r = await supabaseClient.from("podcasts").select("*")
+          .order("published_at", { ascending: false }).limit(100);
         if (r.error) { box.innerHTML = '<p class="admin-status error">Couldn\'t load episodes.</p>'; return; }
         if (!r.data.length) { box.innerHTML = '<p class="admin-status">No episodes yet.</p>'; return; }
+        rows = {};
         box.innerHTML = r.data.map(function (p) {
+          rows[p.id] = p;
           return '<div class="admin-list-item"><div><h4>' + esc(p.title) + '</h4>' +
-            '<div class="meta">' + new Date(p.published_at).toLocaleDateString("en-GB") + '</div></div>' +
-            '<div class="actions"><button class="danger" data-id="' + esc(p.id) + '">Delete</button></div></div>';
+            '<div class="meta">' + new Date(p.published_at).toLocaleDateString("en-GB") +
+            ' | ' + (p.plays || 0) + ' listens | ' + (p.likes || 0) + ' likes</div></div>' +
+            '<div class="actions"><button data-edit="' + esc(p.id) + '">Edit</button>' +
+            '<button class="danger" data-del="' + esc(p.id) + '">Delete</button></div></div>';
         }).join("");
       }
 
       $("eps").addEventListener("click", async function (e) {
-        var b = e.target.closest("button[data-id]");
-        if (!b) return;
-        if (!confirm("Delete this episode from the site?")) return;
-        var r = await supabaseClient.from("podcasts").delete().eq("id", b.dataset.id);
-        if (r.error) { alert("Couldn't delete: " + r.error.message); return; }
-        loadEpisodes();
+        var ed = e.target.closest("button[data-edit]");
+        var del = e.target.closest("button[data-del]");
+
+        if (ed) {
+          var p = rows[ed.dataset.edit];
+          if (!p) return;
+          editingId = p.id;
+          $("title").value = p.title || "";
+          $("desc").value = p.description || "";
+          $("host").value = p.host || "";
+          $("duration").value = p.duration || "";
+          $("audio-file").value = "";
+          $("audio-link").value = "";
+          $("cover-file").value = "";
+          $("form-title").textContent = "Edit episode";
+          $("save-btn").textContent = "Save changes";
+          $("cancel-btn").style.display = "block";
+          $("edit-note").style.display = "block";
+          setStatus($("status"), "");
+          $("form-card").scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+
+        if (del) {
+          if (!confirm("Delete this episode from the site? Its likes and comments will go too.")) return;
+          var r = await supabaseClient.from("podcasts").delete().eq("id", del.dataset.del);
+          if (r.error) { alert("Couldn't delete: " + r.error.message); return; }
+          if (editingId === del.dataset.del) resetForm();
+          loadEpisodes();
+        }
       });
 
       init();
