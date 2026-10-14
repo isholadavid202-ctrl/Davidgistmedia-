@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6QHB1S6KFV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-6QHB1S6KFV");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Listen to this Davidgistmedia podcast episode.">
+  <meta name="theme-color" content="#0d0d0d">
+  <title id="page-title">Podcast | Davidgistmedia</title>
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="bbc.css?v=10">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
+     crossorigin="anonymous"></script>
+
+  <style>
+    .masthead{padding-top:12px}
+    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
+    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
+    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
+    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
+    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
+    .masthead .drawer.open{display:flex}
+    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
+    .drawer a:hover{color:var(--red)}
+
+    .ep-cover{width:100%;max-width:420px;aspect-ratio:1/1;object-fit:cover;display:block;margin:0 0 18px;background:var(--line)}
+    .ep-cover.ph{display:grid;place-items:center;color:var(--muted);font-size:3rem}
+    .ep-stats{display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--muted);font-size:.9rem;margin:0 0 14px}
+    .ep-stats i{margin-right:6px}
+    .ep-player{width:100%;margin:0 0 6px}
+    .ep-desc{white-space:pre-line}
+  </style>
+</head>
+<body>
+
+  <div class="util-bar"><div class="wrap"><span id="today"></span></div></div>
+
+  <header class="masthead">
+    <div class="wrap topbar">
+      <div class="icons">
+        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+      <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
+      <div class="acct"></div>
+    </div>
+
+    <div class="wrap drawer" id="drawer">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="editorial-policy.html">Editorial Policy</a>
+      <a href="privacy-policy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="podcasts.html">Podcasts</a>
+      <a href="live.html">Live</a>
+      <a href="staff.html">Staff login</a>
+      <a href="admin.html">Admin login</a>
+    </div>
+
+    <nav class="tabs" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="podcasts.html" class="active">Podcasts</a>
+      <a href="live.html">Live</a>
+    </nav>
+  </header>
+
+  <main class="wrap article-page" id="ep-root">
+    <div class="empty-state">Loading episode…</div>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="js/footer.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/extras.js"></script>
+
+  <script>
+    (function () {
+      var menuBtn = document.getElementById("menu-btn");
+      var drawer = document.getElementById("drawer");
+      menuBtn.addEventListener("click", function () {
+        var open = drawer.classList.toggle("open");
+        menuBtn.setAttribute("aria-expanded", open);
+      });
+      var today = document.getElementById("today");
+      if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
+        weekday: "long", day: "numeric", month: "long", year: "numeric"
+      });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var root = document.getElementById("ep-root");
+      var id = new URLSearchParams(location.search).get("id");
+      var ep = null, likeBusy = false;
+
+      function esc(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      function day(d) {
+        var t = new Date(d);
+        if (isNaN(t.getTime())) return "";
+        return t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
+      }
+      function when(d) {
+        var t = new Date(d);
+        if (isNaN(t.getTime())) return "";
+        var clock = t.toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Africa/Lagos" })
+          .replace(/am|pm/i, function (m) { return m.toUpperCase(); });
+        return day(d) + ", " + clock;
+      }
+      function list(key) { try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch (e) { return []; } }
+      function save(key, arr) { try { localStorage.setItem(key, JSON.stringify(arr)); } catch (e) {} }
+      function fail(msg) {
+        root.innerHTML = '<a class="back-link" href="podcasts.html">← All podcasts</a><div class="empty-state">' + msg + '</div>';
+      }
+
+      async function load() {
+        if (!id) { fail("No episode selected."); return; }
+        try {
+          var res = await supabaseClient.from("podcasts").select("*").eq("id", id).maybeSingle();
+          if (res.error) throw res.error;
+          ep = res.data;
+          if (!ep) { fail("Sorry, we couldn't find that episode."); return; }
+        } catch (e) { fail("Couldn't load this episode right now."); return; }
+
+        document.getElementById("page-title").textContent = ep.title + " | Davidgistmedia Podcasts";
+        var liked = list("dg_pod_liked").indexOf(ep.id) > -1;
+
+        root.innerHTML =
+          '<a class="back-link" href="podcasts.html">← All podcasts</a>' +
+          '<div class="cat">Podcast</div>' +
+          '<h1>' + esc(ep.title) + '</h1>' +
+          '<div class="meta byline"><div class="byline-author">' + esc(ep.host || "Davidgistmedia") + '</div>' +
+            '<div class="byline-info"><span>' + day(ep.published_at) + '</span>' +
+            (ep.duration ? '<span class="by-bar"></span><span>' + esc(ep.duration) + '</span>' : '') + '</div></div>' +
+          (ep.cover_url
+            ? '<img class="ep-cover" src="' + esc(ep.cover_url) + '" alt="">'
+            : '<div class="ep-cover ph"><i class="fa-solid fa-microphone"></i></div>') +
+          '<p class="ep-stats"><span title="Listens"><i class="fa-solid fa-headphones"></i><b id="ep-plays">' + (ep.plays || 0) + '</b> listens</span></p>' +
+          '<audio class="ep-player" id="ep-audio" controls preload="metadata" src="' + esc(ep.audio_url) + '"></audio>' +
+          '<div class="engage-row">' +
+            '<button class="engage-btn ' + (liked ? "liked" : "") + '" id="like-btn" aria-pressed="' + liked + '">' +
+              '<svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>' +
+              '<span id="like-count">' + (ep.likes || 0) + '</span> Like</button>' +
+            '<button class="engage-btn" id="share-btn">' +
+              '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></svg>Share</button>' +
+          '</div>' +
+          (ep.description ? '<div class="article-body ep-desc">' + esc(ep.description) + '</div>' : '') +
+          '<div class="comments-section">' +
+            '<h3 id="comments-heading">Comments</h3>' +
+            '<form id="comment-form" class="comment-form">' +
+              '<input id="comment-website" name="website" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true">' +
+              '<input id="comment-name" placeholder="Your name (optional)" maxlength="60">' +
+              '<textarea id="comment-text" placeholder="Write a comment..." required maxlength="1000"></textarea>' +
+              '<button class="engage-btn" type="submit" id="comment-submit-btn">Post comment</button>' +
+              '<p class="admin-status" id="comment-status"></p>' +
+            '</form>' +
+            '<div id="comments-list"></div>' +
+          '</div>';
+
+        /* Count one listen per device */
+        document.getElementById("ep-audio").addEventListener("play", function () {
+          var played = list("dg_pod_played");
+          if (played.indexOf(ep.id) > -1) return;
+          played.push(ep.id); save("dg_pod_played", played);
+          supabaseClient.rpc("increment_podcast_plays", { p_id: ep.id }).then(function (r) {
+            if (!r.error) {
+              var el = document.getElementById("ep-plays");
+              el.textContent = (parseInt(el.textContent, 10) || 0) + 1;
+            }
+          });
+        });
+
+        document.getElementById("like-btn").addEventListener("click", handleLike);
+        document.getElementById("share-btn").addEventListener("click", handleShare);
+        document.getElementById("comment-form").addEventListener("submit", handleComment);
+        loadComments();
+      }
+
+      async function handleLike() {
+        if (!ep || likeBusy) return;
+        likeBusy = true;
+        var btn = document.getElementById("like-btn");
+        var countEl = document.getElementById("like-count");
+        var likedList = list("dg_pod_liked");
+        var was = likedList.indexOf(ep.id) > -1;
+        var before = ep.likes || 0;
+        var after = was ? Math.max(before - 1, 0) : before + 1;
+
+        btn.classList.toggle("liked", !was);
+        btn.setAttribute("aria-pressed", String(!was));
+        countEl.textContent = after;
+
+        var failed = false;
+        try {
+          var r = await supabaseClient.rpc(was ? "decrement_podcast_likes" : "increment_podcast_likes", { p_id: ep.id });
+          if (r.error) failed = true;
+        } catch (e) { failed = true; }
+
+        if (failed) {
+          btn.classList.toggle("liked", was);
+          btn.setAttribute("aria-pressed", String(was));
+          countEl.textContent = before;
+          alert("Couldn't save that. Please try again.");
+        } else {
+          ep.likes = after;
+          if (was) likedList = likedList.filter(function (x) { return x !== ep.id; });
+          else likedList.push(ep.id);
+          save("dg_pod_liked", likedList);
+        }
+        likeBusy = false;
+      }
+
+      function handleShare() {
+        var url = location.href;
+        if (navigator.share) {
+          navigator.share({ title: ep.title, url: url }).catch(function () {});
+        } else if (navigator.clipboard) {
+          navigator.clipboard.writeText(url).then(function () { alert("Link copied to clipboard."); });
+        }
+      }
+
+      async function loadComments() {
+        var box = document.getElementById("comments-list");
+        var r = await supabaseClient.from("podcast_comments").select("*")
+          .eq("podcast_id", ep.id).order("created_at", { ascending: false });
+        document.getElementById("comments-heading").textContent =
+          "Comments" + (r.data && r.data.length ? " (" + r.data.length + ")" : "");
+        if (r.error) { box.innerHTML = '<p class="admin-status error">Couldn\'t load comments.</p>'; return; }
+        if (!r.data || !r.data.length) {
+          box.innerHTML = '<p style="color:var(--muted);font-size:0.9rem">No comments yet. Be the first to say something.</p>';
+          return;
+        }
+        box.innerHTML = r.data.map(function (c) {
+          return '<div class="comment-item"><div class="comment-head"><strong>' + esc(c.name || "Anonymous") +
+            '</strong><span class="meta">' + when(c.created_at) + '</span></div><p>' + esc(c.content) + '</p></div>';
+        }).join("");
+      }
+
+      async function handleComment(e) {
+        e.preventDefault();
+        var nameEl = document.getElementById("comment-name");
+        var textEl = document.getElementById("comment-text");
+        var hp = document.getElementById("comment-website");
+        var btn = document.getElementById("comment-submit-btn");
+        var st = document.getElementById("comment-status");
+
+        if (hp && hp.value.trim()) { textEl.value = ""; st.textContent = ""; return; }
+        var content = textEl.value.trim();
+        if (!content) return;
+
+        btn.disabled = true;
+        st.textContent = "Posting...";
+        st.className = "admin-status";
+        var r = await supabaseClient.from("podcast_comments").insert({
+          podcast_id: ep.id,
+          name: nameEl.value.trim() || "Anonymous",
+          content: content
+        });
+        btn.disabled = false;
+        if (r.error) {
+          st.textContent = "Couldn't post your comment. Try again.";
+          st.className = "admin-status error";
+          return;
+        }
+        st.textContent = "";
+        textEl.value = "";
+        loadComments();
+      }
+
+      load();
+    })();
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/service-worker.js");
+      });
+    }
+  </script>
+</body>
+</html>
