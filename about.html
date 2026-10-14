@@ -11,12 +11,12 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Ishola David — Founder and CEO of Davidgistmedia.">
+  <meta name="description" content="About Davidgistmedia: a news and entertainment platform covering Nigeria and the world.">
   <meta name="theme-color" content="#0d0d0d">
-  <meta property="og:title" content="Ishola David | Davidgistmedia">
-  <meta property="og:description" content="Meet Ishola David, Founder and CEO of Davidgistmedia.">
-  <meta property="og:type" content="profile">
-  <title>Ishola David | Davidgistmedia</title>
+  <meta property="og:title" content="About Davidgistmedia">
+  <meta property="og:description" content="A news and entertainment platform covering Nigeria and the world.">
+  <meta property="og:type" content="website">
+  <title>About Davidgistmedia</title>
   <link rel="stylesheet" href="styles.css?v=3">
   <link rel="stylesheet" href="bbc.css?v=13">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -43,19 +43,17 @@
     .drawer a:hover{color:var(--red)}
   </style>
 
-  <!-- Author card -->
+  <!-- About page -->
   <style>
-    .author-page{max-width:760px;padding:22px 0 40px}
-    .author-back{display:inline-block;color:var(--muted);font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
-    .author-title{display:flex;align-items:center;gap:6px;font-family:var(--serif);font-size:clamp(1.8rem,6vw,2.4rem);line-height:1.2;margin:14px 0 18px}
-    .author-title svg{width:30px;height:30px;flex:none}
-    .author-card{border:1px solid var(--line);border-radius:8px;padding:26px 22px;background:var(--paper);text-align:center}
-    .author-photo{width:150px;height:150px;margin:0 auto 18px;border:3px solid #f97316;border-radius:50%;padding:3px;display:grid;place-items:center;overflow:hidden}
-    .author-photo img{width:100%;height:100%;border-radius:50%;object-fit:cover}
-    .author-photo.no-photo::after{content:"ID";font-family:var(--serif);font-weight:700;font-size:2.4rem;color:var(--muted)}
-    .author-role{font-size:.95rem;font-weight:800;letter-spacing:.05em;color:#c25a00;margin:0 0 14px;text-transform:uppercase}
-    .author-bio{font-size:1.05rem;line-height:1.75;color:var(--ink);max-width:60ch;margin:0 auto}
-    .author-stories{margin-top:28px}
+    .about-page{max-width:700px;padding:22px 0 40px}
+    .about-page h1{font-family:var(--serif);font-size:clamp(1.8rem,6vw,2.4rem);line-height:1.2;font-weight:700;margin:8px 0 18px}
+    .about-page h2{font-family:var(--font);font-size:1rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin:32px 0 10px;padding-top:14px;border-top:2px solid var(--ink)}
+    .about-page p{font-size:1.08rem;line-height:1.7;margin:0 0 1em}
+    .about-page a.inline{color:var(--red);text-decoration:underline;text-underline-offset:3px}
+    .about-list{list-style:none;margin:0 0 1em;padding:0}
+    .about-list li{padding:11px 0;border-bottom:1px solid var(--line);font-size:1.02rem}
+    .about-list li:first-child{border-top:1px solid var(--line)}
+    .about-list strong{display:block;font-weight:700}
   </style>
 </head>
 <body>
@@ -94,31 +92,51 @@
     </nav>
   </header>
 
-  <main class="wrap author-page" id="author-root">
-    <a href="index.html" class="author-back">← Back to home</a>
+  <main class="wrap about-page">
+    <a class="back-link" href="index.html">← Back to home</a>
 
-    <h1 class="author-title">
-      Ishola David
-      <span id="author-badge" title="Verified" aria-label="Verified"></span>
-    </h1>
+    <h1>About Davidgistmedia</h1>
 
-    <section class="author-card" aria-label="Author information">
-      <div class="author-photo" id="author-photo">
-        <img id="author-img" alt="Ishola David">
-      </div>
+    <p>
+      Davidgistmedia is a news and entertainment platform covering Nigeria and the world.
+      We publish stories on entertainment, sports, business, politics, technology and
+      breaking news from home and abroad, with a focus on keeping readers informed
+      quickly and accurately.
+    </p>
 
-      <h2 class="author-role">Founder &amp; CEO, Davidgistmedia</h2>
+    <h2>What we cover</h2>
+    <ul class="about-list">
+      <li><strong>Nigeria and local news</strong>Stories that matter to readers at home.</li>
+      <li><strong>Entertainment</strong>Music, film, celebrities and culture.</li>
+      <li><strong>Sports, business and technology</strong>Results, markets, and the ideas shaping the future.</li>
+      <li><strong>World and politics</strong>Major events and decisions, explained clearly.</li>
+      <li><strong>Podcasts and live coverage</strong>Conversations and live updates, on the site and on our social channels.</li>
+    </ul>
 
-      <p class="author-bio">
-        Ishola David is the Founder and CEO of Davidgistmedia, a news and entertainment
-        platform covering Nigeria and the world. He writes and publishes stories on
-        entertainment, sports, business, politics and breaking news from home and abroad,
-        with a focus on keeping readers informed quickly and accurately.
-      </p>
-    </section>
+    <h2>Who runs it</h2>
+    <p>
+      Davidgistmedia was founded by
+      <a class="inline" href="author.html">Ishola David</a>, who is the Founder and CEO
+      and writes and publishes stories on the site.
+    </p>
 
-    <!-- Stories by this author (filled in by the script at the bottom) -->
-    <section class="author-stories" id="author-stories" aria-label="Stories by Ishola David"></section>
+    <h2>Our standards</h2>
+    <p>
+      We aim to be accurate and fair. Our
+      <a class="inline" href="editorial-policy.html">Editorial Policy</a> explains how we
+      choose, check and publish stories. If we get something wrong, we correct it openly.
+      See our <a class="inline" href="corrections.html">Corrections</a> page to report
+      an error.
+    </p>
+
+    <h2>Get in touch</h2>
+    <p>
+      Story tips, questions or feedback? Visit our
+      <a class="inline" href="contact.html">contact page</a>, or email
+      <a class="inline" href="mailto:davidgistmediatv@gmail.com">davidgistmediatv@gmail.com</a>.
+      You can also advertise with us through our
+      <a class="inline" href="advertise.html">advertising page</a>.
+    </p>
   </main>
 
   <!-- Footer (built by js/footer.js) -->
@@ -130,134 +148,18 @@
   <script src="js/supabase-client.js"></script>
   <script src="js/extras.js"></script>
 
-  <!-- Menu, today's date, badge and photo -->
   <script>
     (function () {
-      /* Your photo file. The space in the name is written as %20. */
-      var PHOTO = "Snapchat-1872033241%20(1)_1748345725348.jpg";
-
-      /* If PHOTO fails, these names are tried one by one */
-      var FALLBACKS = ["author.jpg", "author.jpeg", "author.png", "author.webp",
-                       "ishola.jpg", "ishola.png", "profile.jpg", "profile.png"];
-
-      var img = document.getElementById("author-img");
-      var wrap = document.getElementById("author-photo");
-      var tries = [PHOTO].concat(FALLBACKS);
-      var i = 0;
-      function next() {
-        if (i >= tries.length) {
-          img.style.display = "none";
-          wrap.classList.add("no-photo");
-          return;
-        }
-        img.src = tries[i++];
-      }
-      img.onerror = next;
-      next();
-
-      /* Scalloped orange verified badge */
-      var pts = [];
-      for (var k = 0; k < 48; k++) {
-        var a = (k / 48) * Math.PI * 2;
-        var r = 9.2 + 1.1 * Math.cos(8 * a);
-        pts.push((12 + r * Math.cos(a)).toFixed(2) + "," + (12 + r * Math.sin(a)).toFixed(2));
-      }
-      document.getElementById("author-badge").innerHTML =
-        '<svg viewBox="0 0 24 24" role="img" aria-label="Verified"><title>Verified</title>' +
-        '<polygon points="' + pts.join(" ") + '" fill="#f97316"/>' +
-        '<path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" ' +
-        'stroke-linecap="round" stroke-linejoin="round"/></svg>';
-
-      /* Menu */
       var menuBtn = document.getElementById("menu-btn");
       var drawer = document.getElementById("drawer");
       menuBtn.addEventListener("click", function () {
         var open = drawer.classList.toggle("open");
         menuBtn.setAttribute("aria-expanded", open);
       });
-
-      /* Today's date */
       var today = document.getElementById("today");
       if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
         weekday: "long", day: "numeric", month: "long", year: "numeric"
       });
-    })();
-  </script>
-
-  <!-- Stories by this author -->
-  <script>
-    (function () {
-      var AUTHOR_NAME = "Ishola David";
-      var box = document.getElementById("author-stories");
-
-      function esc(s) {
-        return String(s == null ? "" : s)
-          .replace(/&/g, "&amp;").replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-      }
-
-      function timeAgo(d) {
-        var t = new Date(d);
-        if (isNaN(t.getTime())) return "";
-        var ms = Date.now() - t.getTime();
-        if (ms < 0) return "Just now";
-        var mins = Math.floor(ms / 60000);
-        if (mins < 1) return "Just now";
-        if (mins < 60) return mins + (mins === 1 ? " min" : " mins") + " ago";
-        var hrs = Math.floor(mins / 60);
-        if (hrs < 24) return hrs + (hrs === 1 ? " hr" : " hrs") + " ago";
-        var days = Math.floor(hrs / 24);
-        if (days < 7) return days + (days === 1 ? " day" : " days") + " ago";
-        return t.toLocaleDateString("en-GB", {
-          day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos"
-        });
-      }
-
-      function card(a) {
-        return '' +
-          '<a class="story-card" href="article.html?slug=' + encodeURIComponent(a.slug) + '">' +
-            (a.image_url ? '<img src="' + esc(a.image_url) + '" alt="" loading="lazy" decoding="async">' : '') +
-            '<div class="body">' +
-              '<div class="cat">' + esc(a.category) + '</div>' +
-              '<h3>' + esc(a.title) + '</h3>' +
-              '<div class="meta">' + timeAgo(a.published_at) + '</div>' +
-            '</div>' +
-          '</a>';
-      }
-
-      function show(inner) {
-        box.innerHTML =
-          '<div class="cat-section">' +
-            '<div class="cat-head"><div class="left"><span class="bar"></span>' +
-            '<h2>Stories by ' + esc(AUTHOR_NAME) + '</h2></div></div>' +
-            inner +
-          '</div>';
-      }
-
-      async function load() {
-        show('<div class="empty-state">Loading stories…</div>');
-        try {
-          var res = await supabaseClient
-            .from("articles")
-            .select("id,slug,title,excerpt,image_url,category,author,published_at")
-            .ilike("author", AUTHOR_NAME)
-            .order("published_at", { ascending: false })
-            .limit(30);
-
-          if (res.error) throw res.error;
-
-          var list = res.data || [];
-          if (!list.length) {
-            show('<div class="empty-state">No stories by ' + esc(AUTHOR_NAME) + ' yet.</div>');
-            return;
-          }
-          show('<div class="card-grid">' + list.map(card).join("") + '</div>');
-        } catch (e) {
-          show('<div class="empty-state">Couldn\'t load stories right now. Please try again later.</div>');
-        }
-      }
-
-      load();
     })();
   </script>
 
