@@ -21,6 +21,15 @@
         <a href="index.html#world">World</a>
         <a href="index.html#local">Local News</a>
       </div>
+      <div class="dgf-news">
+        <h3>Never Miss a Story</h3>
+        <p>Get new stories delivered to your inbox. No spam, unsubscribe anytime.</p>
+        <form id="dgf-news-form">
+          <input type="email" id="dgf-news-email" placeholder="you@example.com" required aria-label="Your email address">
+          <button type="submit" id="dgf-news-btn">Subscribe</button>
+        </form>
+        <p class="dgf-news-status" id="dgf-news-status" role="status"></p>
+      </div>
     </details>
 
     <hr class="dgf-rule">
@@ -59,4 +68,42 @@
 
   var slot = document.getElementById("site-footer");
   if (slot) slot.outerHTML = html;
+
+  /* Newsletter signup (inside "More sections") */
+  var form = document.getElementById("dgf-news-form");
+  if (!form) return;
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var input = document.getElementById("dgf-news-email");
+    var btn = document.getElementById("dgf-news-btn");
+    var status = document.getElementById("dgf-news-status");
+    var email = input.value.trim();
+    if (!email) return;
+
+    if (typeof supabaseClient === "undefined") {
+      status.textContent = "Signing up isn't available on this page. Please try from the home page.";
+      status.style.color = "#c8102e";
+      return;
+    }
+
+    btn.disabled = true;
+    status.textContent = "Subscribing...";
+    status.style.color = "";
+
+    var res = await supabaseClient.from("subscribers").insert({ email: email });
+    btn.disabled = false;
+
+    if (res.error) {
+      if (res.error.code === "23505") {
+        status.textContent = "You're already subscribed.";
+      } else {
+        status.textContent = "Something went wrong. Try again.";
+        status.style.color = "#c8102e";
+      }
+      return;
+    }
+    status.textContent = "Thanks for subscribing!";
+    input.value = "";
+  });
 })();
