@@ -1,5 +1,15 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
+/* Share-button styles live here so this file is all you need to change */
+(function () {
+  var st = document.createElement("style");
+  st.textContent =
+    ".share-row{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 22px}" +
+    ".share-row a{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;color:var(--ink);font-size:1.05rem;text-decoration:none;background:var(--paper)}" +
+    ".share-row a:hover{border-color:var(--ink);color:var(--red)}";
+  document.head.appendChild(st);
+})();
+
 /* Date and time in Nigeria time. formatWhen gives text such as "10 Oct 2026, 8:15 PM";
    whenHtml gives the same inside a <time> tag with a small clock icon, for the byline. */
 function nigeriaParts(d) {
@@ -119,6 +129,20 @@ function toEmbedUrl(url) {
   return url;
 }
 
+/* ---- Share row: Facebook, X, email, Telegram, WhatsApp ---- */
+function shareRowHtml(data) {
+  const url = encodeURIComponent(window.location.href);
+  const title = encodeURIComponent(data.title || "");
+  return `
+    <div class="share-row" aria-label="Share this story">
+      <a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="https://x.com/intent/post?text=${title}&url=${url}&via=Davidgistmedian" target="_blank" rel="noopener noreferrer" aria-label="Share on X"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="mailto:?subject=${title}&body=${title}%0A${url}" aria-label="Share by email"><i class="fa-solid fa-envelope"></i></a>
+      <a href="https://t.me/share/url?url=${url}&text=${title}" target="_blank" rel="noopener noreferrer" aria-label="Share on Telegram"><i class="fa-brands fa-telegram"></i></a>
+      <a href="https://wa.me/?text=${title}%20${url}" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+    </div>`;
+}
+
 /* ---- Search / Google News details for each story ---- */
 function setMeta(attr, key, value) {
   if (!value) return;
@@ -155,6 +179,7 @@ function addSeo(data) {
   setMeta("property", "og:url", url);
   setMeta("property", "og:image", data.image_url);
   setMeta("name", "twitter:card", "summary_large_image");
+  setMeta("name", "twitter:site", "@Davidgistmedian");
 
   // NewsArticle details for Google
   const author = authorName === "Davidgistmedia"
@@ -257,6 +282,7 @@ async function loadArticle() {
              style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
          </div>`
       : (data.image_url ? `<img class="hero-img" src="${escapeHtml(data.image_url)}" alt="">` : "")}
+    ${shareRowHtml(data)}
     <div class="article-body">${paragraphs}</div>
     <div id="related-section"></div>
     <div class="engage-row">
