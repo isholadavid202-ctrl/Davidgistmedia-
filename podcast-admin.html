@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Podcast admin | Davidgistmedia</title>
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="bbc.css?v=10">
+  <link rel="icon" href="favicon.png" type="image/png">
+</head>
+<body>
+  <div class="wrap" style="padding:16px 0 4px">
+    <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
+  </div>
+
+  <main class="admin-shell">
+    <a class="back-link" href="podcasts.html">← View podcasts page</a>
+
+    <!-- Sign in -->
+    <div class="admin-card" id="login-card" style="display:none">
+      <h2>Staff sign in</h2>
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username">
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password">
+      <button class="primary" id="login-btn" type="button">Sign in</button>
+      <p class="admin-status" id="login-status"></p>
+    </div>
+
+    <!-- Publish + list -->
+    <div id="panel" style="display:none">
+      <div class="admin-card">
+        <a href="#" class="logout-link" id="logout">Sign out</a>
+        <h2>Add a podcast episode</h2>
+
+        <label for="title">Title</label>
+        <input id="title" maxlength="140" placeholder="Episode title">
+
+        <label for="desc">Description</label>
+        <textarea id="desc" style="min-height:110px" placeholder="What is this episode about?"></textarea>
+
+        <label for="host">Host</label>
+        <input id="host" value="Ishola David">
+
+        <label for="audio-file">Audio file (MP3 or M4A, up to 50 MB)</label>
+        <input id="audio-file" type="file" accept="audio/*">
+
+        <label for="audio-link">Or paste a direct audio link instead</label>
+        <input id="audio-link" type="url" placeholder="https://.../episode.mp3">
+
+        <label for="cover-file">Cover picture (optional)</label>
+        <input id="cover-file" type="file" accept="image/*">
+
+        <label for="duration">Length (filled in for you when you pick a file)</label>
+        <input id="duration" placeholder="e.g. 32 min">
+
+        <button class="primary" id="save-btn" type="button">Publish episode</button>
+        <p class="admin-status" id="status"></p>
+      </div>
+
+      <div class="admin-list">
+        <h3 style="margin-bottom:12px">Published episodes</h3>
+        <div id="eps"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+
+  <script>
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      var loginCard = $("login-card"), panel = $("panel");
+
+      function esc(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      function setStatus(el, msg, kind) {
+        el.textContent = msg;
+        el.className = "admin-status" + (kind ? " " + kind : "");
+      }
+      function show(signedIn) {
+        loginCard.style.display = signedIn ? "none" : "block";
+        panel.style.display = signedIn ? "block" : "none";
+        if (signedIn) loadEpisodes();
+      }
+
+      async function init() {
+        var s = await supabaseClient.auth.getSession();
+        show(!!(s.data && s.data.session));
+      }
+
+      $("login-btn").addEventListener("click", async function () {
+        setStatus($("login-status"), "Signing in...");
+        var r = await supabaseClient.auth.signInWithPassword({
+          email: $("email").value.trim(),
+          password: $("password").value
+        });
+        if (r.error) { setStatus($("login-status"), "Wrong email or password.", "error"); return; }
+        setStatus($("login-status"), "");
+        show(true);
+      });
+
+      $("logout").addEventListener("click", async function (e) {
+        e.preventDefault();
+        await supabaseClient.auth.signOut();
+        show(false);
+      });
+
+      // Fill in the length automatically when a file is chosen
+      $("audio-file").addEventListener("change", function () {
+        var f = this.files[0];
+        if (!f) return;
+        var a = new Audio();
+        a.preload = "metadata";
+        a.onloadedmetadata = function () {
+          if (isFinite(a.duration) && !$("duration").value) {
+            $("duration").value = Math.max(1, Math.round(a.duration / 60)) + " min";
+          }
+          URL.revokeObjectURL(a.src);
+        };
+        a.src = URL.createObjectURL(f);
+      });
+
+      async function upload(file, folder) {
+        var name = folder + "/" + Date.now() + "-" + file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+        var up = await supabaseClient.storage.from("podcasts")
+          .upload(name, file, { cacheControl: "3600", upsert: false, contentType: file.type || undefined });
+        if (up.error) throw up.error;
+        return supabaseClient.storage.from("podcasts").getPublicUrl(name).data.publicUrl;
+      }
+
+      $("save-btn").addEventListener("click", async function () {
+        var btn = this, st = $("status");
+        var title = $("title").value.trim();
+        var audioFile = $("audio-file").files[0];
+        var audioLink = $("audio-link").value.trim();
+        var coverFile = $("cover-file").files[0];
+
+        if (!title) { setStatus(st, "Please type a title.", "error"); return; }
+        if (!audioFile && !audioLink) { setStatus(st, "Choose an audio file or paste an audio link.", "error"); return; }
+
+        btn.disabled = true;
+        try {
+          var audioUrl = audioLink;
+          if (audioFile) {
+            setStatus(st, "Uploading audio... please keep this page open.");
+            audioUrl = await upload(audioFile, "audio");
+          }
+          var coverUrl = null;
+          if (coverFile) {
+            setStatus(st, "Uploading cover picture...");
+            coverUrl = await upload(coverFile, "covers");
+          }
+          setStatus(st, "Publishing...");
+          var ins = await supabaseClient.from("podcasts").insert({
+            title: title,
+            description: $("desc").value.trim() || null,
+            host: $("host").value.trim() || null,
+            audio_url: audioUrl,
+            cover_url: coverUrl,
+            duration: $("duration").value.trim() || null
+          });
+          if (ins.error) throw ins.error;
+
+          setStatus(st, "Published! It is now on the podcasts page.", "ok");
+          ["title", "desc", "audio-file", "audio-link", "cover-file", "duration"].forEach(function (id) { $(id).value = ""; });
+          loadEpisodes();
+        } catch (e) {
+          setStatus(st, "Couldn't publish: " + (e.message || "unknown error"), "error");
+        }
+        btn.disabled = false;
+      });
+
+      async function loadEpisodes() {
+        var box = $("eps");
+        var r = await supabaseClient.from("podcasts").select("id,title,published_at")
+          .order("published_at", { ascending: false }).limit(50);
+        if (r.error) { box.innerHTML = '<p class="admin-status error">Couldn\'t load episodes.</p>'; return; }
+        if (!r.data.length) { box.innerHTML = '<p class="admin-status">No episodes yet.</p>'; return; }
+        box.innerHTML = r.data.map(function (p) {
+          return '<div class="admin-list-item"><div><h4>' + esc(p.title) + '</h4>' +
+            '<div class="meta">' + new Date(p.published_at).toLocaleDateString("en-GB") + '</div></div>' +
+            '<div class="actions"><button class="danger" data-id="' + esc(p.id) + '">Delete</button></div></div>';
+        }).join("");
+      }
+
+      $("eps").addEventListener("click", async function (e) {
+        var b = e.target.closest("button[data-id]");
+        if (!b) return;
+        if (!confirm("Delete this episode from the site?")) return;
+        var r = await supabaseClient.from("podcasts").delete().eq("id", b.dataset.id);
+        if (r.error) { alert("Couldn't delete: " + r.error.message); return; }
+        loadEpisodes();
+      });
+
+      init();
+    })();
+  </script>
+</body>
+</html>
