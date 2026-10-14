@@ -1,4 +1,5 @@
-document.getElementById("year").textContent = new Date().getFullYear();
+var yr = document.getElementById("year");
+if (yr) yr.textContent = new Date().getFullYear();
 
 /* Share-button styles live here so this file is all you need to change */
 (function () {
