@@ -84,8 +84,11 @@ body{background:var(--paper);color:var(--ink)}
   .story-card .body{padding:0}
   .secondary-item > :last-child,.story-card > :last-child,.story-card .body{padding-right:0;min-width:0}
 
+  /* The gap on the right of the headline, like the BBC: the headline stops before the screen edge.
+     Only the headline gets the gap, so "time | category" can still use the full width. */
   .secondary-item h3,.story-card h3{margin-top:-2px;overflow-wrap:break-word;padding-right:32px}
 
+  /* Short time and category on ONE line with a divider, like the BBC: "7 hrs ago | World" */
   .secondary-item .meta,.story-card .meta{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
   .secondary-item .cat,.story-card .cat{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
   .secondary-item .cat::before,.story-card .cat::before{display:inline-block;margin:0 8px}
@@ -99,12 +102,16 @@ body{background:var(--paper);color:var(--ink)}
 /* ===== Article page (BBC style) ===== */
 .article-page{max-width:700px;padding:22px 0 40px}
 
+/* Back link: small and grey */
 .back-link{color:var(--muted);font-weight:400;font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
 
+/* Category label above the headline: small red capitals */
 .article-page > .cat{color:var(--red);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;margin-top:8px}
 
+/* Headline: serif, bold, comfortable size */
 .article-page > h1{font-size:clamp(1.7rem,5.8vw,2.3rem);line-height:1.2;font-weight:700;margin:8px 0 16px;letter-spacing:-.2px}
 
+/* Byline: "By author" on one line, date, time and reading time on the next */
 .article-page > .meta.byline{display:block;margin:0 0 20px;padding:0 0 16px;border:0;border-bottom:1px solid var(--line);color:var(--muted)}
 .byline-author{font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:6px}
 .byline-author a{color:inherit;font-weight:700}
@@ -114,32 +121,40 @@ body{background:var(--paper);color:var(--ink)}
 .byline-info .by-bar{width:1px;height:14px;background:var(--muted);opacity:.6}
 .dg-read{display:none}
 
+/* Fix: old rule in styles.css put a line under every date inside a story page */
 .article-page .story-card .meta{margin:0;padding:0;border:0}
 .article-page .comment-head .meta{margin:0;padding:0;border:0}
 
+/* Main photo and video: full width, flat */
 .article-page img.hero-img{border-radius:0;box-shadow:none;max-height:none;width:100%;aspect-ratio:16/9;object-fit:cover;margin-bottom:22px}
 .article-page > div[style*="56.25%"]{border-radius:0!important;box-shadow:none!important}
 
+/* Story text: easy to read on a phone */
 .article-body{font-size:1.1rem;line-height:1.6;color:var(--ink)}
 .article-body p{margin-bottom:1.1em}
 
+/* Like / share row under the story */
 .article-page .engage-row{border-top:1px solid var(--line);margin:24px 0;padding-top:18px}
 .article-page .engage-btn{border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--ink);box-shadow:none;padding:9px 16px;font-size:.9rem;font-weight:700}
 .article-page .engage-btn:hover{border-color:var(--ink);color:var(--ink);box-shadow:none}
 .article-page .engage-btn.liked{background:var(--paper);color:var(--red);border-color:var(--red)}
 
+/* Comments: plain and flat */
 .comments-section{border-top:2px solid var(--ink)}
 .comments-section h3{font-size:1.4rem}
 .comment-form input,.comment-form textarea{border-radius:2px;border-color:#8a8a8a}
 .comment-form input:focus,.comment-form textarea:focus{border-color:var(--ink);box-shadow:none}
 .comment-item{border-bottom:1px solid var(--line)}
 
+/* Related stories at the bottom of a story */
 .article-page .cat-section{margin-top:10px}
 
+/* ===== Related Stories on phones: same compact BBC cards as the homepage ===== */
 @media(max-width:819px){
   .article-page .story-card > :last-child,
   .article-page .story-card .body{padding-right:0;min-width:0}
 
+  /* Headline: same size, weight and right gap as the homepage */
   .article-page .story-card h3{
     font-family:var(--serif)!important;
     font-size:1.08rem!important;
@@ -149,15 +164,18 @@ body{background:var(--paper);color:var(--ink)}
     padding-right:32px!important;
   }
 
+  /* Time and category on one line, same as the homepage */
   .article-page .story-card .meta,
   .article-page .story-card .cat{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
   .article-page .story-card .cat::before{display:inline-block;margin:0 8px}
 }
 
+/* ===== Homepage cards: no like, comment or share row (readers use them on the story page) ===== */
 #hero-section .engage-row,
 #trending-section .engage-row,
 #category-sections .engage-row{display:none !important}
 
+/* ===== OLD footer (kept so pages you have not updated yet still look fine) ===== */
 footer.bbc-footer{
   background:#fff;
   color:#000;
@@ -185,6 +203,7 @@ footer.bbc-footer{
 
 .bbc-footer .bf-copy{color:#000;font-size:.85rem;line-height:1.5;margin:0}
 
+/* ===== Footer logo: show the whole name on the white background ===== */
 footer.bbc-footer .brand-title,
 footer.bbc-footer .brand-title span,
 footer.bbc-footer .brand-title .gold,
@@ -198,6 +217,7 @@ footer.bbc-footer [class*="brand"] span {
   background: none !important;
 }
 
+/* ===== NEW BBC-style footer (class "dgf") - compact ===== */
 .dgf{background:#fff;color:#141414;border-top:1px solid #e6e6e6;padding:22px 16px 28px;margin-top:28px}
 .dgf-inner{max-width:1100px;margin:0 auto}
 .dgf-title{font-size:1.1rem;font-weight:700;line-height:1.25;margin:0 0 14px;color:#141414}
@@ -213,28 +233,16 @@ footer.bbc-footer [class*="brand"] span {
 .dgf a:focus-visible{outline:2px solid #c8102e;outline-offset:3px}
 @media(min-width:768px){.dgf{padding:28px 32px 34px}.dgf-links{gap:10px 24px}}
 
-/* ===== Fix menu drawer overlapping and Author image styling ===== */
-.masthead .drawer {
-  display: none !important;
-  flex-direction: column;
-  background: var(--paper, #fff);
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--line, #e6e6e6);
-}
-
-.masthead .drawer.open {
-  display: flex !important;
-}
-
-.author-image-wrap {
-  width: 120px;
-  height: 120px;
-  margin: 15px 0;
-}
-
-.author-image {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
+/* ===== Footer: section list + "More sections" button (BBC style) ===== */
+.dgf-sections{display:flex;flex-direction:column;margin:0 0 14px}
+.dgf-sections a{padding:11px 0;font-size:1rem;color:#141414;text-decoration:none}
+.dgf-sections a:hover{color:#c8102e}
+.dgf-more{margin:0 0 24px}
+.dgf-more summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:12px;background:#e8e9eb;color:#141414;padding:14px 18px;font-size:.95rem;font-weight:500}
+.dgf-more summary::-webkit-details-marker{display:none}
+.dgf-more summary::after{content:"";border:5px solid transparent;border-top:6px solid #141414;border-bottom:0;margin-top:2px}
+.dgf-more[open] summary::after{transform:rotate(180deg)}
+.dgf-more div{display:flex;flex-direction:column;padding:8px 0 0}
+.dgf-more div a{padding:10px 0;font-size:.95rem;color:#141414;text-decoration:none}
+.dgf-more div a:hover{color:#c8102e}
+.dgf-rule{border:0;border-top:1px solid #e6e6e6;margin:0 0 20px}
