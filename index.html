@@ -20,7 +20,7 @@
   <link rel="canonical" href="https://davidgistmedia.onrender.com/">
   <title>Davidgistmedia | Home</title>
   <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=8">
+  <link rel="stylesheet" href="bbc.css?v=10">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -92,6 +92,7 @@
       <a href="editorial-policy.html">Editorial Policy</a>
       <a href="privacy-policy.html">Privacy</a>
       <a href="terms.html">Terms</a>
+      <a href="podcasts.html">Podcasts</a>
       <a href="live.html">Live</a>
       <a href="staff.html">Staff login</a>
       <a href="admin.html">Admin login</a>
@@ -115,6 +116,7 @@
       <button data-cat="technology">Technology</button>
       <button data-cat="world">World</button>
       <button data-cat="local">Local News</button>
+      <a href="podcasts.html">Podcasts</a>
       <a href="live.html">Live</a>
     </nav>
   </header>
@@ -137,40 +139,9 @@
     </section>
   </main>
 
-  <footer class="dgf" aria-label="Davidgistmedia site footer">
-    <div class="dgf-inner">
-      <h2 class="dgf-title">Follow Davidgistmedia on:</h2>
-
-      <div class="dgf-social">
-        <a href="https://x.com/YOUR_HANDLE" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="https://www.facebook.com/YOUR_PAGE" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="https://www.instagram.com/davidgistmediang/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-        <a href="https://www.linkedin.com/company/YOUR_PAGE" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-        <a href="https://www.youtube.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-      </div>
-
-      <nav class="dgf-links" aria-label="Footer">
-        <a href="terms.html">Terms of Use</a>
-        <a href="about.html">About Davidgistmedia</a>
-        <a href="privacy-policy.html">Privacy Policy</a>
-        <a href="cookies.html">Cookies</a>
-        <a href="accessibility.html">Accessibility Help</a>
-        <a href="contact.html">Contact Davidgistmedia</a>
-        <a href="advertise.html">Advertise with us</a>
-        <a href="help.html">Help &amp; FAQs</a>
-        <a href="editorial-policy.html">Editorial Policy</a>
-        <a href="corrections.html">Corrections</a>
-        <a href="live.html">Live</a>
-      </nav>
-
-      <p class="dgf-copy">
-        Copyright <span id="year">2026</span> Davidgistmedia. All rights reserved.
-        Davidgistmedia is not responsible for the content of external sites.
-        <a href="editorial-policy.html">Read about our approach to external linking.</a>
-      </p>
-    </div>
-  </footer>
+  <!-- Footer (built by js/footer.js). Keep these two lines ABOVE home.js. -->
+  <div id="site-footer"></div>
+  <script src="js/footer.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
@@ -178,7 +149,7 @@
   <script src="js/home.js?v=3"></script>
   <script src="js/extras.js"></script>
   <script>
-    // Menu and search icons in the new top bar
+    // Menu and search icons in the top bar
     (function () {
       var menuBtn = document.getElementById("menu-btn");
       var drawer = document.getElementById("drawer");
