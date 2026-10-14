@@ -42,6 +42,30 @@
 </head>
 <body>
 
+  <!-- TEMPORARY DEBUG: shows a red bar at the bottom if a script fails. Delete this block when done. -->
+  <script>
+  (function(){
+    function show(t){
+      var d=document.createElement("div");
+      d.style.cssText="position:fixed;left:0;right:0;bottom:0;background:#b00020;color:#fff;padding:10px;font:12px monospace;z-index:99999;word-break:break-all";
+      d.textContent=t;
+      document.body.appendChild(d);
+    }
+    function ignore(s){return /googlesyndication|googletagmanager|google-analytics|doubleclick/i.test(s||"");}
+    window.addEventListener("error",function(e){
+      if(e.target&&e.target.src){
+        if(ignore(e.target.src))return;
+        show("FAILED TO LOAD: "+e.target.src);
+      }else{
+        show("ERROR: "+e.message+" ("+String(e.filename||"").split("/").pop()+":"+e.lineno+")");
+      }
+    },true);
+    window.addEventListener("unhandledrejection",function(e){
+      show("PROMISE ERROR: "+(e.reason&&e.reason.message||e.reason));
+    });
+  })();
+  </script>
+
   <div class="util-bar">
     <div class="wrap"><span id="today"></span></div>
   </div>
@@ -88,7 +112,7 @@
   <!-- Scripts: ORDER MATTERS. Supabase library, then your client, then article.js (only once). -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/supabase-client.js"></script>
-  <script src="js/article.js?v=4"></script>
+  <script src="js/article.js?v=5"></script>
   <script src="js/extras.js?v=2"></script>
 
   <!-- Menu and today's date -->
