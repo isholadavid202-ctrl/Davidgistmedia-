@@ -249,6 +249,31 @@ function renderHero(list) {
   `;
 }
 
+function storyRow(a) {
+  return `
+    <a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">
+      ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : ""}
+      <div class="body">
+        <div class="cat">${escapeHtml(a.category)}</div>
+        <h3>${escapeHtml(a.title)}</h3>
+        <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
+      </div>
+    </a>`;
+}
+
+function storyFeature(a) {
+  return `
+    <a class="story-card feature" href="article.html?slug=${encodeURIComponent(a.slug)}">
+      ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : ""}
+      <div class="body">
+        <div class="cat">${escapeHtml(a.category)}</div>
+        <h3>${escapeHtml(a.title)}</h3>
+        ${a.excerpt ? `<p class="excerpt">${escapeHtml(a.excerpt)}</p>` : ""}
+        <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
+      </div>
+    </a>`;
+}
+
 function renderCategorySections(list) {
   const container = document.getElementById("category-sections");
   const cats = activeCategory === "all" ? CATEGORIES : [activeCategory];
@@ -258,20 +283,11 @@ function renderCategorySections(list) {
     return `
       <section class="cat-section">
         <div class="cat-head">
-          <div class="left"><span class="bar"></span><h2>${escapeHtml(cat)}</h2></div>
+          <div class="left"><span class="bar"></span><h2><a href="#${cat}">${escapeHtml(cat)}</a></h2></div>
         </div>
         ${items.length === 0
           ? `<div class="empty-state">No ${escapeHtml(cat)} stories yet.</div>`
-          : `<div class="card-grid">${items.map((a) => `
-              <a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">
-                ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : ""}
-                <div class="body">
-                  <div class="cat">${escapeHtml(a.category)}</div>
-                  <h3>${escapeHtml(a.title)}</h3>
-                  <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
-                </div>
-              </a>
-            `).join("")}</div>`}
+          : `<div class="card-grid">${storyFeature(items[0])}${items.slice(1).map(storyRow).join("")}</div>`}
       </section>
     `;
   }).join("");
@@ -307,7 +323,7 @@ document.getElementById("search-input").addEventListener("input", (e) => {
   activeCategory = cat;
 })();
 
-// When a footer section link (for example #sports) is tapped on the homepage, open that section
+// When a footer or section link (for example #sports) is tapped on the homepage, open that section
 window.addEventListener("hashchange", function () { location.reload(); });
 
 loadArticles();
