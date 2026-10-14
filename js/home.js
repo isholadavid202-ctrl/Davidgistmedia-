@@ -1,7 +1,12 @@
-document.getElementById("year").textContent = new Date().getFullYear();
-document.getElementById("today").textContent = new Date().toLocaleDateString("en-NG", {
-  weekday: "long", day: "numeric", month: "long", year: "numeric",
-});
+/* Year (footer) and today's date (top strip). Safe if either is missing. */
+(function () {
+  var y = document.getElementById("year");
+  if (y) y.textContent = new Date().getFullYear();
+  var t = document.getElementById("today");
+  if (t) t.textContent = new Date().toLocaleDateString("en-NG", {
+    weekday: "long", day: "numeric", month: "long", year: "numeric",
+  });
+})();
 
 /* Date and time of upload, shown in Nigeria time (for example: 10 Oct 2026, 8:15 PM) */
 function formatWhen(d) {
@@ -330,5 +335,8 @@ document.getElementById("newsletter-form").addEventListener("submit", async (e) 
   btn.classList.add("active");
   activeCategory = cat;
 })();
+
+// When a footer section link (for example #sports) is tapped on the homepage, open that section
+window.addEventListener("hashchange", function () { location.reload(); });
 
 loadArticles();
