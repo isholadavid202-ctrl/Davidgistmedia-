@@ -1,44 +1,57 @@
-/* bbc.css - BBC-style look for Davidgistmedia.
-   Loads AFTER styles.css. To undo: delete the <link> to this file in the HTML pages. */
+/* bbc.css - Davidgistmedia news layout (BBC-style structure, own identity).
+   Loads AFTER styles.css. */
 
-body{background:var(--paper);color:var(--ink)}
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:wght@400;600;700&display=swap");
 
-/* ===== Top strip: quiet ===== */
+:root{
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --radius:4px;
+}
+
+/* ===== Base ===== */
+body{background:var(--paper);color:var(--ink);font-family:var(--font)}
+button,input,textarea,select{font-family:inherit}
+@media(max-width:819px){body{overflow-x:hidden}}
+
+/* ===== Top strip ===== */
 .util-bar{background:var(--paper);color:var(--muted);border-bottom:1px solid var(--line)}
 .util-bar a{color:var(--muted)}
 .util-bar a:hover{color:var(--ink)}
 .util-bar .dg-theme-btn{color:var(--ink);border-color:var(--line)}
 
-/* ===== Masthead: simple wordmark, flat search ===== */
+/* ===== Masthead ===== */
 .masthead{box-shadow:none;padding-top:18px}
 .masthead .wrap{gap:10px}
-.brand-title{border-bottom:0;padding-bottom:0;font-size:clamp(1.9rem,6vw,2.6rem)}
+.brand-title{font-family:var(--serif);font-weight:700;letter-spacing:-.01em;border-bottom:0;padding-bottom:0;font-size:clamp(1.9rem,6vw,2.6rem)}
 .brand-title::first-letter{font-size:1em}
 .tagline{font-size:.72rem}
-.search-row{border-radius:3px;border:1px solid var(--ink);box-shadow:none;max-width:560px}
+.search-row{border-radius:var(--radius);border:1px solid var(--ink);box-shadow:none;max-width:560px}
 .search-row button{border-radius:0}
 
-/* ===== Section menu: bold, underline on the current page, scrolls sideways ===== */
+/* ===== Section menu: red underline on the current page ===== */
 .tabs{margin-top:14px;border-top:0;border-bottom:1px solid var(--line)}
 .tabs > :first-child,.tabs > :last-child{margin-left:0;margin-right:0}
-.tabs a,.tabs button{font-size:.95rem;padding:14px 15px 11px}
-.tabs a.active,.tabs button.active{border-bottom-color:var(--ink)}
-.tabs a:not(.active):hover,.tabs button:not(.active):hover{color:var(--ink);border-bottom-color:var(--line)}
+.tabs a,.tabs button{font-size:.95rem;font-weight:600;padding:14px 15px 11px}
+.tabs a.active,.tabs button.active{border-bottom-color:var(--red)}
+.tabs a:not(.active):hover,.tabs button:not(.active):hover{color:var(--red);border-bottom-color:var(--line)}
 
-/* ===== Lead story: big serif headline, no underline, like the BBC ===== */
-.lead-story{border-bottom:2px solid var(--ink)}
-.lead-story h1{font-weight:400;line-height:1.2;text-decoration:none;font-size:clamp(1.6rem,6vw,2.2rem)}
-.lead-story:hover h1{color:var(--ink)}
-.lead-story p{font-family:var(--serif);font-size:1.05rem;line-height:1.45;color:var(--ink)}
+/* ===== Lead story ===== */
+.lead-story{border-bottom:2px solid var(--line)}
+.lead-story img{border-radius:0}
+.lead-story .overlay{padding-top:18px}
+.lead-story h1{font-family:var(--serif);font-weight:700;line-height:1.2;letter-spacing:-.005em;text-decoration:none;font-size:clamp(1.55rem,6.4vw,2.3rem)}
+.lead-story:hover h1{color:var(--red)}
+.lead-story p{font-family:var(--serif);font-size:1.02rem;line-height:1.45;color:var(--ink);opacity:.9}
 
-/* ===== Order inside each story: headline, summary, "time | category", then buttons ===== */
+/* ===== Order inside each story: headline, summary, "time | category" ===== */
 .lead-story .overlay,
 .secondary-item > :last-child,
 .story-card .body{display:flex;flex-wrap:wrap;align-items:center}
 .lead-story h1,.lead-story p,
 .secondary-item h3,.story-card h3{flex:0 0 100%}
 .lead-story h1,.secondary-item h3,.story-card h3{order:1}
-.lead-story p{order:2}
+.lead-story p,.story-card .excerpt{order:2}
 .lead-meta,.secondary-item .meta,.story-card .meta{order:3;color:var(--muted);font-size:.9rem}
 .lead-tag,.secondary-item .cat,.story-card .cat{order:4;background:none;color:var(--muted);padding:0;margin:0;border-radius:0;text-transform:capitalize;font-weight:400;font-size:.9rem;letter-spacing:0}
 .lead-tag::before,.secondary-item .cat::before,.story-card .cat::before{content:"";display:inline-block;width:1px;height:17px;background:var(--muted);margin:0 12px;vertical-align:middle}
@@ -46,72 +59,99 @@ body{background:var(--paper);color:var(--ink)}
 .lead-story .overlay{margin-top:0}
 .engage-row{order:5;flex:0 0 100%;margin-top:12px}
 
-/* ===== Like, comment and share buttons: small and quiet ===== */
-.engage-btn{border:0;background:none;box-shadow:none;padding:6px 18px 6px 0;font-weight:400;color:var(--muted);border-radius:0}
+/* ===== Like, comment and share buttons ===== */
+.engage-btn{border:0;background:none;box-shadow:none;padding:6px 18px 6px 0;font-weight:500;color:var(--muted);border-radius:0}
 .engage-btn:hover{box-shadow:none;color:var(--ink)}
 .engage-btn.liked{background:none;color:var(--red)}
 
-/* ===== Story headlines in lists: BBC style (dark, sturdy, easy to read) ===== */
+/* ===== Headlines in lists and cards (serif) ===== */
 .secondary-item h3,.story-card h3{
   font-family:var(--serif);
-  font-size:1.08rem;
+  font-size:1.1rem;
   line-height:1.22;
-  font-weight:600;
+  font-weight:700;
   color:var(--ink);
-  margin:0 0 12px;
+  margin:0 0 10px;
   text-decoration:none;
-  letter-spacing:0;
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
 }
-.secondary-item:hover h3,.story-card:hover h3{color:var(--ink);text-decoration:none}
+.secondary-item:hover h3,.story-card:hover h3{color:var(--red);text-decoration:none}
+.story-card img,.secondary-item img{border-radius:var(--radius)}
 
-/* ===== Category sections: heavy rule on top, plain heading ===== */
-.cat-section{border-top:2px solid var(--ink);padding-top:16px}
+/* Summary under a big story */
+.story-card .excerpt{flex:0 0 100%;font-family:var(--serif);font-size:1rem;line-height:1.45;margin:0 0 12px;opacity:.9}
+.story-card.feature h3{font-size:1.5rem;line-height:1.2}
+
+/* ===== Section headings: dark rule, red segment, uppercase title with arrow ===== */
+.cat-section,#podcast-home .ph-sec{border-top:2px solid var(--ink);padding-top:14px;position:relative}
+.cat-section::before,#podcast-home .ph-sec::before{content:"";position:absolute;top:-2px;left:0;width:56px;height:2px;background:var(--red)}
+.cat-head{border-bottom:0;padding-bottom:0;margin-bottom:14px}
 .cat-head .bar{display:none}
-.cat-head h2{font-size:1.5rem}
-.cat-head a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.cat-head h2,#podcast-home .ph-head h2{font-family:var(--font);font-size:1rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+.cat-head h2 a{color:inherit;font-size:inherit;font-weight:inherit;display:inline-flex;align-items:center;text-decoration:none}
+.cat-head h2 a::after,#podcast-home .ph-head h2::after{content:"";display:inline-block;width:.5em;height:.5em;border-top:.2em solid currentColor;border-right:.2em solid currentColor;transform:rotate(45deg);margin-left:.45em}
+#podcast-home .ph-head{border-bottom:0;padding-bottom:0;margin-bottom:6px;justify-content:flex-start;gap:12px;align-items:center}
+#podcast-home .ph-head a{margin-left:auto}
 
-/* ===== Phones: photo on the LEFT, headline on the RIGHT (BBC layout) ===== */
+/* ===== Phones ===== */
 @media(max-width:819px){
+  /* Lead photo runs edge to edge */
+  .lead-story img{width:100vw;max-width:100vw;margin:0 calc(50% - 50vw);aspect-ratio:16/9}
+
   .card-grid{grid-template-columns:1fr;gap:0}
   .secondary-item,.story-card{display:grid;grid-template-columns:40% 1fr;gap:0 16px;align-items:start;padding:20px 0;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none}
   .secondary-item > :first-child,.story-card > :first-child{grid-column:1;grid-row:1}
   .secondary-item > :last-child,.story-card > :last-child{grid-column:2;grid-row:1}
-  .secondary-item img,.story-card img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:0;margin:0}
-  .secondary-item > div:first-child{aspect-ratio:16/9;border-radius:0!important}
+  .secondary-item img,.story-card img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;margin:0}
+  .secondary-item > div:first-child{aspect-ratio:16/9;border-radius:var(--radius)!important}
   .story-card:not(:has(img)){display:block}
   .story-card .body{padding:0}
   .secondary-item > :last-child,.story-card > :last-child,.story-card .body{padding-right:0;min-width:0}
-
-  /* The gap on the right of the headline, like the BBC: the headline stops before the screen edge.
-     Only the headline gets the gap, so "time | category" can still use the full width. */
-  .secondary-item h3,.story-card h3{margin-top:-2px;overflow-wrap:break-word;padding-right:32px}
-
-  /* Short time and category on ONE line with a divider, like the BBC: "7 hrs ago | World" */
+  .secondary-item h3,.story-card h3{margin-top:-2px;overflow-wrap:break-word;padding-right:16px}
   .secondary-item .meta,.story-card .meta{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
   .secondary-item .cat,.story-card .cat{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
   .secondary-item .cat::before,.story-card .cat::before{display:inline-block;margin:0 8px}
+
+  /* First story of each section: big, full-width photo */
+  .story-card.feature{display:block;overflow:visible;padding:8px 0 22px}
+  .story-card.feature img{width:100vw;max-width:100vw;margin:0 calc(50% - 50vw) 16px;aspect-ratio:16/9;border-radius:0}
+  .story-card.feature h3{margin:0 0 10px;padding-right:0;font-size:1.45rem}
+
+  /* Podcasts slide sideways */
+  #podcast-home .ph-list{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(50% - 50vw);padding:6px calc(50vw - 50%) 14px;scroll-padding-left:calc(50vw - 50%);scrollbar-width:none}
+  #podcast-home .ph-list::-webkit-scrollbar{display:none}
+  #podcast-home .ph-item{flex:0 0 76%;display:block;border:0;padding:8px 0;scroll-snap-align:start}
+  #podcast-home .ph-cover{width:100%;height:auto;aspect-ratio:1/1;margin-bottom:10px}
+  #podcast-home .ph-item audio{margin-top:10px}
 }
 
+/* ===== Desktop: big lead story on the left, story list on the right ===== */
 @media(min-width:820px){
-  .lead-story{border-bottom:0}
   .tabs{display:flex;justify-content:flex-start}
+  .hero-grid{grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:0 32px;align-items:start}
+  .hero-grid .lead-story{grid-column:1;grid-row:1 / span 4;padding:0 0 20px;margin:0;border-top:0;border-left:0;border-right:0}
+  .hero-grid .lead-story img{aspect-ratio:16/9;border-radius:var(--radius)}
+  .hero-grid .secondary-item:nth-child(n){
+    grid-column:2;grid-row:auto;display:grid;grid-template-columns:minmax(0,1fr) 112px;gap:0 14px;
+    padding:0 0 16px;margin:0 0 16px;border-bottom:1px solid var(--line)
+  }
+  .hero-grid .secondary-item:nth-child(n) > :first-child{grid-column:2;grid-row:1}
+  .hero-grid .secondary-item:nth-child(n) > :last-child{grid-column:1;grid-row:1}
+  .hero-grid .secondary-item:nth-child(n) img{display:block;width:112px;height:auto;aspect-ratio:3/2;margin:0}
+  .hero-grid .secondary-item:nth-child(n) > div:first-child{width:112px;aspect-ratio:3/2}
+  .hero-grid .secondary-item:nth-child(n) h3{font-size:1.02rem}
+
+  /* First story of each section is a big card spanning two columns */
+  .card-grid .story-card.feature{grid-column:span 2;grid-row:span 2}
+  .card-grid .story-card.feature img{aspect-ratio:16/9}
 }
 
-/* ===== Article page (BBC style) ===== */
+/* ===== Article page ===== */
 .article-page{max-width:700px;padding:22px 0 40px}
-
-/* Back link: small and grey */
-.back-link{color:var(--muted);font-weight:400;font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
-
-/* Category label above the headline: small red capitals */
+.back-link{color:var(--muted);font-weight:500;font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
 .article-page > .cat{color:var(--red);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;margin-top:8px}
-
-/* Headline: serif, bold, comfortable size */
-.article-page > h1{font-size:clamp(1.7rem,5.8vw,2.3rem);line-height:1.2;font-weight:700;margin:8px 0 16px;letter-spacing:-.2px}
-
-/* Byline: "By author" on one line, date, time and reading time on the next */
+.article-page > h1{font-family:var(--serif);font-size:clamp(1.7rem,5.8vw,2.3rem);line-height:1.2;font-weight:700;margin:8px 0 16px}
 .article-page > .meta.byline{display:block;margin:0 0 20px;padding:0 0 16px;border:0;border-bottom:1px solid var(--line);color:var(--muted)}
 .byline-author{font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:6px}
 .byline-author a{color:inherit;font-weight:700}
@@ -120,140 +160,96 @@ body{background:var(--paper);color:var(--ink)}
 .byline-info svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .byline-info .by-bar{width:1px;height:14px;background:var(--muted);opacity:.6}
 .dg-read{display:none}
-
-/* Fix: old rule in styles.css put a line under every date inside a story page */
 .article-page .story-card .meta{margin:0;padding:0;border:0}
 .article-page .comment-head .meta{margin:0;padding:0;border:0}
-
-/* Main photo and video: full width, flat */
-.article-page img.hero-img{border-radius:0;box-shadow:none;max-height:none;width:100%;aspect-ratio:16/9;object-fit:cover;margin-bottom:22px}
-.article-page > div[style*="56.25%"]{border-radius:0!important;box-shadow:none!important}
-
-/* Story text: easy to read on a phone */
-.article-body{font-size:1.1rem;line-height:1.6;color:var(--ink)}
+.article-page img.hero-img{border-radius:var(--radius);box-shadow:none;max-height:none;width:100%;aspect-ratio:16/9;object-fit:cover;margin-bottom:22px}
+.article-page > div[style*="56.25%"]{border-radius:var(--radius)!important;box-shadow:none!important}
+.article-body{font-size:1.1rem;line-height:1.7;color:var(--ink)}
 .article-body p{margin-bottom:1.1em}
-
-/* Like / share row under the story */
 .article-page .engage-row{border-top:1px solid var(--line);margin:24px 0;padding-top:18px}
-.article-page .engage-btn{border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--ink);box-shadow:none;padding:9px 16px;font-size:.9rem;font-weight:700}
+.article-page .engage-btn{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);color:var(--ink);box-shadow:none;padding:9px 16px;font-size:.9rem;font-weight:700}
 .article-page .engage-btn:hover{border-color:var(--ink);color:var(--ink);box-shadow:none}
 .article-page .engage-btn.liked{background:var(--paper);color:var(--red);border-color:var(--red)}
-
-/* Comments: plain and flat */
 .comments-section{border-top:2px solid var(--ink)}
-.comments-section h3{font-size:1.4rem}
-.comment-form input,.comment-form textarea{border-radius:2px;border-color:#8a8a8a}
+.comments-section h3{font-family:var(--font);font-size:1.1rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+.comment-form input,.comment-form textarea{border-radius:var(--radius);border-color:#8a8a8a}
 .comment-form input:focus,.comment-form textarea:focus{border-color:var(--ink);box-shadow:none}
 .comment-item{border-bottom:1px solid var(--line)}
-
-/* Related stories at the bottom of a story */
 .article-page .cat-section{margin-top:10px}
 
-/* ===== Related Stories on phones: same compact BBC cards as the homepage ===== */
 @media(max-width:819px){
   .article-page .story-card > :last-child,
   .article-page .story-card .body{padding-right:0;min-width:0}
-
-  /* Headline: same size, weight and right gap as the homepage */
   .article-page .story-card h3{
     font-family:var(--serif)!important;
-    font-size:1.08rem!important;
+    font-size:1.1rem!important;
     line-height:1.22!important;
-    font-weight:600!important;
+    font-weight:700!important;
     margin:-2px 0 10px!important;
-    padding-right:32px!important;
+    padding-right:16px!important;
   }
-
-  /* Time and category on one line, same as the homepage */
   .article-page .story-card .meta,
   .article-page .story-card .cat{flex:0 0 auto;font-size:.85rem;line-height:1.5;margin:0;white-space:nowrap}
   .article-page .story-card .cat::before{display:inline-block;margin:0 8px}
 }
 
-/* ===== Homepage cards: no like, comment or share row (readers use them on the story page) ===== */
+/* ===== Homepage cards: no like/comment/share row ===== */
 #hero-section .engage-row,
 #trending-section .engage-row,
 #category-sections .engage-row{display:none !important}
 
-/* ===== OLD footer (kept so pages you have not updated yet still look fine) ===== */
-footer.bbc-footer{
-  background:#fff;
-  color:#000;
-  padding:0 0 28px;
-  text-align:left;
-  border-top:1px solid #e6e6e6;
-}
+/* ===== Podcast pages ===== */
+.pod-page .pod-list{border-top:2px solid var(--ink)}
+.pod-page h1{font-family:var(--serif);font-weight:700}
+.pod-cover,.ph-cover,.ep-cover{border-radius:var(--radius)}
+#podcast-home .ph-item h3{font-family:var(--serif);font-weight:700}
+
+/* ===== OLD footer (only for pages you have not updated yet) ===== */
+footer.bbc-footer{background:var(--paper);color:var(--ink);padding:0 0 28px;text-align:left;border-top:1px solid var(--line)}
 .bbc-footer .wrap{padding-top:22px}
-
-.bbc-footer .bf-follow{
-  margin:0 0 14px;
-  font-family:inherit;
-  font-size:1.15rem;
-  font-weight:700;
-  color:#000;
-}
-
+.bbc-footer .bf-follow{margin:0 0 14px;font-size:1.15rem;font-weight:700;color:var(--ink)}
 .bbc-footer .bf-social{display:flex;gap:26px;margin-bottom:22px}
-.bbc-footer .bf-social a{color:#000;font-size:1.35rem;line-height:1;text-decoration:none}
-.bbc-footer .bf-social a:hover{color:#000;opacity:.7}
-
+.bbc-footer .bf-social a{color:var(--ink);font-size:1.35rem;line-height:1}
 .bbc-footer .bf-links{display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:22px}
-.bbc-footer .bf-links a{color:#000;font-size:.92rem;text-decoration:none}
-.bbc-footer .bf-links a:hover{text-decoration:underline}
+.bbc-footer .bf-links a{color:var(--ink);font-size:.92rem}
+.bbc-footer .bf-copy{color:var(--ink);font-size:.85rem;line-height:1.5;margin:0}
 
-.bbc-footer .bf-copy{color:#000;font-size:.85rem;line-height:1.5;margin:0}
-
-/* ===== Footer logo: show the whole name on the white background ===== */
-footer.bbc-footer .brand-title,
-footer.bbc-footer .brand-title span,
-footer.bbc-footer .brand-title .gold,
-footer.bbc-footer [class*="logo"],
-footer.bbc-footer [class*="logo"] span,
-footer.bbc-footer [class*="brand"],
-footer.bbc-footer [class*="brand"] span {
-  color: var(--red) !important;
-  text-shadow: none !important;
-  -webkit-text-fill-color: var(--red) !important;
-  background: none !important;
-}
-
-/* ===== NEW BBC-style footer (class "dgf") - compact ===== */
-.dgf{background:#fff;color:#141414;border-top:1px solid #e6e6e6;padding:22px 16px 28px;margin-top:28px}
+/* ===== Footer (class "dgf"): follows light and dark mode ===== */
+.dgf{background:var(--paper);color:var(--ink);border-top:1px solid var(--line);padding:22px 16px 28px;margin-top:28px}
 .dgf-inner{max-width:1100px;margin:0 auto}
-.dgf-title{font-size:1.1rem;font-weight:700;line-height:1.25;margin:0 0 14px;color:#141414}
+.dgf-title{font-size:1.1rem;font-weight:800;line-height:1.25;margin:0 0 14px;color:var(--ink)}
 .dgf-social{display:flex;flex-wrap:wrap;gap:8px 20px;margin:0 0 20px}
-.dgf-social a{width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;color:#141414;font-size:1.15rem;text-decoration:none}
-.dgf-social a:hover{color:#c8102e}
+.dgf-social a{width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);font-size:1.15rem}
+.dgf-social a:hover{color:var(--red)}
 .dgf-links{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 20px}
-.dgf-links a{color:#141414;font-size:.9rem;line-height:1.4;text-decoration:none}
-.dgf-links a:hover{color:#c8102e;text-decoration:underline;text-underline-offset:3px}
-.dgf-copy{margin:0;max-width:60ch;font-size:.85rem;line-height:1.5;color:#141414}
-.dgf-copy a{color:#141414;font-weight:700;text-decoration:none}
-.dgf-copy a:hover{color:#c8102e;text-decoration:underline}
-.dgf a:focus-visible{outline:2px solid #c8102e;outline-offset:3px}
+.dgf-links a{color:var(--ink);font-size:.9rem;line-height:1.4}
+.dgf-links a:hover{color:var(--red);text-decoration:underline;text-underline-offset:3px}
+.dgf-copy{margin:0;max-width:60ch;font-size:.85rem;line-height:1.5;color:var(--muted)}
+.dgf-copy a{color:var(--ink);font-weight:700}
+.dgf-copy a:hover{color:var(--red);text-decoration:underline}
+.dgf a:focus-visible{outline:2px solid var(--red);outline-offset:3px}
 @media(min-width:768px){.dgf{padding:28px 32px 34px}.dgf-links{gap:10px 24px}}
 
-/* ===== Footer: section list + "More sections" button (BBC style) ===== */
 .dgf-sections{display:flex;flex-direction:column;margin:0 0 14px}
-.dgf-sections a{padding:11px 0;font-size:1rem;color:#141414;text-decoration:none}
-.dgf-sections a:hover{color:#c8102e}
+.dgf-sections a{padding:11px 0;font-size:1rem;font-weight:500;color:var(--ink)}
+.dgf-sections a:hover{color:var(--red)}
 .dgf-more{margin:0 0 24px}
-.dgf-more summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:12px;background:#e8e9eb;color:#141414;padding:14px 18px;font-size:.95rem;font-weight:500}
+.dgf-more summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:12px;background:var(--line);color:var(--ink);padding:14px 18px;font-size:.95rem;font-weight:600;border-radius:var(--radius)}
 .dgf-more summary::-webkit-details-marker{display:none}
-.dgf-more summary::after{content:"";border:5px solid transparent;border-top:6px solid #141414;border-bottom:0;margin-top:2px}
+.dgf-more summary::after{content:"";border:5px solid transparent;border-top:6px solid var(--ink);border-bottom:0;margin-top:2px}
 .dgf-more[open] summary::after{transform:rotate(180deg)}
 .dgf-more div{display:flex;flex-direction:column;padding:8px 0 0}
-.dgf-more div a{padding:10px 0;font-size:.95rem;color:#141414;text-decoration:none}
-.dgf-more div a:hover{color:#c8102e}
-.dgf-rule{border:0;border-top:1px solid #e6e6e6;margin:0 0 20px}
+.dgf-more div a{padding:10px 0;font-size:.95rem;color:var(--ink)}
+.dgf-more div a:hover{color:var(--red)}
+.dgf-rule{border:0;border-top:1px solid var(--line);margin:0 0 20px}
 
 /* ===== Newsletter signup inside "More sections" ===== */
-.dgf-more .dgf-news{display:block;padding:18px 0 4px;margin-top:10px;border-top:1px solid #e6e6e6}
-.dgf-news h3{font-size:1.05rem;font-weight:700;margin:0 0 4px;color:#141414}
-.dgf-news p{margin:0 0 10px;font-size:.9rem;line-height:1.5;color:#545454}
+.dgf-more .dgf-news{display:block;padding:18px 0 4px;margin-top:10px;border-top:1px solid var(--line)}
+.dgf-news h3{font-size:1.05rem;font-weight:800;margin:0 0 4px;color:var(--ink)}
+.dgf-news p{margin:0 0 10px;font-size:.9rem;line-height:1.5;color:var(--muted)}
 .dgf-news form{display:flex;flex-direction:column;gap:8px;max-width:360px}
-.dgf-news input{padding:11px 12px;border:1px solid #8a8a8a;border-radius:2px;font:inherit;font-size:.95rem;background:#fff;color:#141414}
-.dgf-news input:focus{outline:2px solid #c8102e;outline-offset:1px}
-.dgf-news button{align-self:flex-start;background:#c8102e;color:#fff;font-weight:800;padding:11px 20px;border-radius:2px}
+.dgf-news input{padding:11px 12px;border:1px solid #8a8a8a;border-radius:var(--radius);font:inherit;font-size:.95rem;background:var(--paper);color:var(--ink)}
+.dgf-news input:focus{outline:2px solid var(--red);outline-offset:1px}
+.dgf-news button{align-self:flex-start;background:var(--red);color:#fff;font-weight:800;padding:11px 20px;border-radius:var(--radius)}
 .dgf-news button:disabled{opacity:.6}
 .dgf-news .dgf-news-status{margin:8px 0 0;font-size:.85rem}
