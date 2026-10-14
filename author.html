@@ -18,7 +18,7 @@
   <meta property="og:type" content="profile">
   <title>Ishola David | Davidgistmedia</title>
   <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=9">
+  <link rel="stylesheet" href="bbc.css?v=10">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -81,6 +81,7 @@
       <a href="editorial-policy.html">Editorial Policy</a>
       <a href="privacy-policy.html">Privacy</a>
       <a href="terms.html">Terms</a>
+      <a href="podcasts.html">Podcasts</a>
       <a href="live.html">Live</a>
       <a href="staff.html">Staff login</a>
       <a href="admin.html">Admin login</a>
@@ -88,6 +89,7 @@
 
     <nav class="tabs" aria-label="Main navigation">
       <a href="index.html">Home</a>
+      <a href="podcasts.html">Podcasts</a>
       <a href="live.html">Live</a>
     </nav>
   </header>
@@ -119,47 +121,16 @@
     <section class="author-stories" id="author-stories" aria-label="Stories by Ishola David"></section>
   </main>
 
-  <footer class="dgf" aria-label="Davidgistmedia site footer">
-    <div class="dgf-inner">
-      <h2 class="dgf-title">Follow Davidgistmedia on:</h2>
-
-      <div class="dgf-social">
-        <a href="https://x.com/YOUR_HANDLE" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="https://www.facebook.com/YOUR_PAGE" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="https://www.instagram.com/davidgistmediang/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-        <a href="https://www.linkedin.com/company/YOUR_PAGE" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-        <a href="https://www.youtube.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-      </div>
-
-      <nav class="dgf-links" aria-label="Footer">
-        <a href="terms.html">Terms of Use</a>
-        <a href="about.html">About Davidgistmedia</a>
-        <a href="privacy-policy.html">Privacy Policy</a>
-        <a href="cookies.html">Cookies</a>
-        <a href="accessibility.html">Accessibility Help</a>
-        <a href="contact.html">Contact Davidgistmedia</a>
-        <a href="advertise.html">Advertise with us</a>
-        <a href="help.html">Help &amp; FAQs</a>
-        <a href="editorial-policy.html">Editorial Policy</a>
-        <a href="corrections.html">Corrections</a>
-        <a href="live.html">Live</a>
-      </nav>
-
-      <p class="dgf-copy">
-        Copyright <span id="year">2026</span> Davidgistmedia. All rights reserved.
-        Davidgistmedia is not responsible for the content of external sites.
-        <a href="editorial-policy.html">Read about our approach to external linking.</a>
-      </p>
-    </div>
-  </footer>
+  <!-- Footer (built by js/footer.js) -->
+  <div id="site-footer"></div>
+  <script src="js/footer.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
   <script src="js/extras.js"></script>
 
-  <!-- Menu, year, today's date, badge and photo -->
+  <!-- Menu, today's date, badge and photo -->
   <script>
     (function () {
       /* Your photo file. The space in the name is written as %20. */
@@ -184,7 +155,7 @@
       img.onerror = next;
       next();
 
-      /* Scalloped orange verified badge (same style as the story pages) */
+      /* Scalloped orange verified badge */
       var pts = [];
       for (var k = 0; k < 48; k++) {
         var a = (k / 48) * Math.PI * 2;
@@ -205,9 +176,7 @@
         menuBtn.setAttribute("aria-expanded", open);
       });
 
-      /* Year and today's date */
-      var year = document.getElementById("year");
-      if (year) year.textContent = new Date().getFullYear();
+      /* Today's date */
       var today = document.getElementById("today");
       if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
         weekday: "long", day: "numeric", month: "long", year: "numeric"
