@@ -47,6 +47,13 @@ function liveStyles() {
     ".lv-container iframe{position:absolute;inset:0;width:100%;height:100%;border:0}" +
     ".lv-top-shield{position:absolute;top:0;left:0;right:0;height:60px;z-index:10}" +
     ".lv-bottom-shield{position:absolute;bottom:0;right:0;width:180px;height:50px;z-index:10}" +
+    /* full shield + custom controls (blocks every YouTube link) */
+    ".lv-container:fullscreen{padding-top:0;height:100%;border-radius:0}" +
+    ".lv-container:-webkit-full-screen{padding-top:0;height:100%;border-radius:0}" +
+    ".lv-shield{position:absolute;inset:0;z-index:10}" +
+    ".lv-controls{position:absolute;left:0;right:0;bottom:0;z-index:11;display:flex;gap:8px;padding:28px 10px 10px;background:linear-gradient(transparent,rgba(0,0,0,.7))}" +
+    ".lv-btn{border:0;border-radius:6px;background:rgba(0,0,0,.6);color:#fff;font:inherit;font-weight:700;font-size:.85rem;padding:8px 14px;cursor:pointer}" +
+    ".lv-btn.lv-unmute{background:var(--red)}" +
     /* like, views and share */
     ".lx-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:18px}" +
     ".lx-group{display:flex;gap:10px}" +
@@ -91,15 +98,15 @@ function toEmbedUrl(url) {
     let videoId = null;
     if (u.hostname.includes("youtu.be")) {
       videoId = u.pathname.slice(1);
-    } else if (u.hostname.includes("youtube.com")) {
+    } else if (u.hostname.includes("youtube.com") || u.hostname.includes("youtube-nocookie.com")) {
       if (u.searchParams.get("v")) videoId = u.searchParams.get("v");
       else {
         const parts = u.pathname.split("/").filter(Boolean);
-        if (parts[0] === "live" && parts[1]) videoId = parts[1];
+        if ((parts[0] === "live" || parts[0] === "embed") && parts[1]) videoId = parts[1];
       }
     }
     if (videoId) {
-      return `https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&playsinline=1`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1&fs=0&iv_load_policy=3&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`;
     }
   } catch {
     return null;
@@ -128,6 +135,13 @@ function playerFor(raw) {
     if (!src) return { type: "bad" };
     const url = src[1].replace(/&amp;/g, "&");
     if (!/^https:\/\//i.test(url)) return { type: "bad" };
+
+    /* a pasted YouTube iframe gets the same protection as a plain link */
+    if (/youtube\.com|youtube-nocookie\.com|youtu\.be/i.test(url)) {
+      const e = toEmbedUrl(url);
+      if (e && e !== url) return { type: "video", url: e };
+    }
+
     const height = Math.min(Math.max(parseInt(h && h[1], 10) || 200, 80), 600);
     return { type: "frame", url: url, height: height };
   }
@@ -137,12 +151,96 @@ function playerFor(raw) {
   return { type: "video", url: embed };
 }
 
+/* ---- YouTube control (own buttons, no YouTube links reachable) ---- */
+
+let ytPlayer = null;
+let ytApiPromise = null;
+
+function loadYTApi() {
+  if (window.YT && window.YT.Player) return Promise.resolve();
+  if (ytApiPromise) return ytApiPromise;
+  ytApiPromise = new Promise((resolve, reject) => {
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = function () {
+      if (prev) prev();
+      resolve();
+    };
+    const s = document.createElement("script");
+    s.src = "https://www.youtube.com/iframe_api";
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+  return ytApiPromise;
+}
+
+function stopYT() {
+  if (ytPlayer && ytPlayer.destroy) {
+    try { ytPlayer.destroy(); } catch (e) {}
+  }
+  ytPlayer = null;
+}
+
+function startYT(root) {
+  const box = root.querySelector("#lv-box");
+  const frame = root.querySelector("#lv-frame");
+  const playBtn = root.querySelector("#lv-play");
+  const muteBtn = root.querySelector("#lv-mute");
+  const fullBtn = root.querySelector("#lv-full");
+  const canFull = box.requestFullscreen || box.webkitRequestFullscreen;
+  if (!canFull) fullBtn.style.display = "none";
+
+  function fallback() {
+    /* if the YouTube API can't load, use the small corner shields instead */
+    const shield = box.querySelector(".lv-shield");
+    const controls = box.querySelector(".lv-controls");
+    if (shield) shield.remove();
+    if (controls) controls.remove();
+    box.insertAdjacentHTML("afterbegin", '<div class="lv-top-shield"></div><div class="lv-bottom-shield"></div>');
+  }
+
+  loadYTApi().then(() => {
+    ytPlayer = new YT.Player(frame, {
+      events: {
+        onReady: () => {
+          muteBtn.style.display = ytPlayer.isMuted() ? "" : "none";
+        },
+        onStateChange: (ev) => {
+          playBtn.textContent = ev.data === 1 ? "⏸ Pause" : "▶ Play";
+        }
+      }
+    });
+  }).catch(fallback);
+
+  playBtn.addEventListener("click", () => {
+    if (!ytPlayer || !ytPlayer.getPlayerState) return;
+    if (ytPlayer.getPlayerState() === 1) ytPlayer.pauseVideo();
+    else ytPlayer.playVideo();
+  });
+
+  muteBtn.addEventListener("click", () => {
+    if (!ytPlayer || !ytPlayer.unMute) return;
+    ytPlayer.unMute();
+    ytPlayer.setVolume(100);
+    muteBtn.style.display = "none";
+  });
+
+  fullBtn.addEventListener("click", () => {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (box.requestFullscreen || box.webkitRequestFullscreen).call(box);
+    }
+  });
+}
+
 const NO_LIVE = MODE === "audio"
   ? `<div class="empty-state">No live audio right now. Check back soon, or follow our social channels for a notification when we go live.</div>`
   : `<div class="empty-state">No live broadcast right now. Check back soon, or follow our social channels for a notification when we go live.</div>`;
 const BAD_LINK = `<div class="empty-state">The live stream link couldn't be loaded.</div>`;
 
 function render(root, p) {
+  stopYT();
+
   if (p.type === "audio") {
     root.innerHTML = `
       <div class="la">
@@ -159,7 +257,23 @@ function render(root, p) {
     return;
   }
 
-  if (p.type === "frame" || p.type === "video") {
+  if (p.type === "video") {
+    root.innerHTML = `
+      <div class="lv-container" id="lv-box">
+        <iframe id="lv-frame" src="${esc(p.url)}" title="Live broadcast" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+        <div class="lv-shield"></div>
+        <div class="lv-controls">
+          <button type="button" class="lv-btn" id="lv-play">⏸ Pause</button>
+          <button type="button" class="lv-btn lv-unmute" id="lv-mute">🔊 Tap to unmute</button>
+          <button type="button" class="lv-btn" id="lv-full" style="margin-left:auto" aria-label="Fullscreen">⛶</button>
+        </div>
+      </div>
+    `;
+    startYT(root);
+    return;
+  }
+
+  if (p.type === "frame") {
     root.innerHTML = `
       <div class="lv-container">
         <div class="lv-top-shield"></div>
@@ -315,8 +429,8 @@ function drawChat(list) {
     box.innerHTML = list.map((m) => {
       const rawName = m.name || "Guest";
       const isAdmin = rawName.toLowerCase() === "ishola david" || rawName.toLowerCase() === "david gist media";
-      
-      const displayName = isAdmin 
+
+      const displayName = isAdmin
         ? `<a href="author.html" target="_blank" rel="noopener noreferrer">${esc(rawName)}${VERIFIED_BADGE_SVG}</a>`
         : esc(rawName);
 
@@ -502,6 +616,7 @@ async function loadLive() {
 
   if (error) {
     if (lastValue === null) {
+      stopYT();
       root.innerHTML = NO_LIVE;
       hideExtras();
     }
@@ -514,6 +629,7 @@ async function loadLive() {
   lastValue = value;
 
   if (!value) {
+    stopYT();
     root.innerHTML = NO_LIVE;
     hideExtras();
     return;
@@ -521,6 +637,7 @@ async function loadLive() {
 
   const player = playerFor(value);
   if (!player) {
+    stopYT();
     root.innerHTML = NO_LIVE;
     hideExtras();
     return;
