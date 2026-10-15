@@ -96,6 +96,7 @@ function showApp() {
   loadBadgeManager();
   loadAdminList();
   loadLiveUrl();
+  loadAudioUrl();
   loadCommentsAdmin();
 }
 
@@ -227,7 +228,7 @@ async function deleteComment(id) {
   loadCommentsAdmin();
 }
 
-// ---- Live broadcast ----
+// ---- Live broadcast (video) ----
 async function loadLiveUrl() {
   const { data } = await supabaseClient
     .from("settings")
@@ -261,6 +262,78 @@ document.getElementById("live-form").addEventListener("submit", async (e) => {
   }
   status.textContent = value ? "Live link saved." : "Live link cleared.";
   status.className = "admin-status ok";
+});
+
+// ---- Live audio ----
+async function loadAudioUrl() {
+  const { data } = await supabaseClient
+    .from("settings")
+    .select("value")
+    .eq("key", "live_audio_url")
+    .maybeSingle();
+  document.getElementById("audio_url").value = (data && data.value) || "";
+}
+
+async function saveAudioUrl(value) {
+  const saveBtn = document.getElementById("audio-save-btn");
+  const stopBtn = document.getElementById("audio-stop-btn");
+  const status = document.getElementById("audio-status");
+
+  /* Light check so a typo doesn't leave a broken player on the page */
+  if (value) {
+    const okStart = /^audio:\s*https:\/\//i.test(value) || /^https:\/\//i.test(value) || /^<iframe/i.test(value);
+    if (!okStart) {
+      status.textContent = /^(audio:\s*)?http:\/\//i.test(value)
+        ? "The link must start with https:// (not http://), or the page can't play it."
+        : "The link should start with audio:https://, https://, or be an embed code that starts with <iframe.";
+      status.className = "admin-status error";
+      return;
+    }
+  }
+
+  saveBtn.disabled = true;
+  stopBtn.disabled = true;
+  status.textContent = "Saving...";
+  status.className = "admin-status";
+
+  /* Update the row; if it doesn't exist yet, create it */
+  let res = await supabaseClient
+    .from("settings")
+    .update({ value })
+    .eq("key", "live_audio_url")
+    .select();
+  let error = res.error;
+
+  if (!error && (!res.data || res.data.length === 0)) {
+    const ins = await supabaseClient
+      .from("settings")
+      .insert({ key: "live_audio_url", value });
+    error = ins.error;
+  }
+
+  saveBtn.disabled = false;
+  stopBtn.disabled = false;
+
+  if (error) {
+    status.textContent = error.message + " (If this keeps happening, run the live audio SQL from Supabase first.)";
+    status.className = "admin-status error";
+    return;
+  }
+
+  status.textContent = value
+    ? "Live audio link saved. It shows on the Live Audio page within about 30 seconds."
+    : "Live audio stopped. The Live Audio page now shows \"No live audio right now\".";
+  status.className = "admin-status ok";
+}
+
+document.getElementById("audio-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  saveAudioUrl(document.getElementById("audio_url").value.trim());
+});
+
+document.getElementById("audio-stop-btn").addEventListener("click", () => {
+  document.getElementById("audio_url").value = "";
+  saveAudioUrl("");
 });
 
 // ---- Publish / edit form ----
