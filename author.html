@@ -28,7 +28,7 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
 
-  <!-- Top bar -->
+  <!-- Top bar & Breaking Ticker -->
   <style>
     .masthead{padding-top:12px}
     .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
@@ -41,21 +41,30 @@
     .masthead .drawer.open{display:flex}
     .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
     .drawer a:hover{color:var(--red)}
+
+    /* Breaking Ticker */
+    .ticker-bar{display:flex;align-items:center;background:#b80000;color:#fff;overflow:hidden;font-size:.9rem;height:38px}
+    .ticker-label{background:#111;color:#fff;font-weight:900;text-transform:uppercase;padding:0 14px;height:100%;display:flex;align-items:center;gap:6px;letter-spacing:.05em;flex-shrink:0}
+    .ticker-dot{width:7px;height:7px;border-radius:50%;background:#ff3b30;display:inline-block}
+    .ticker-content{padding:0 14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
+    .ticker-content a{color:#fff;text-decoration:none}
   </style>
 
-  <!-- Author card -->
+  <!-- Author card styling based on screenshot -->
   <style>
-    .author-page{max-width:760px;padding:22px 0 40px}
-    .author-back{display:inline-block;color:var(--muted);font-size:.88rem;text-decoration:underline;text-underline-offset:3px}
-    .author-title{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-size:clamp(1.5rem,5vw,1.9rem);line-height:1.2;margin:14px 0 18px}
-    .author-title svg{width:22px;height:22px;flex:none}
-    .author-card{border:1px solid var(--line);border-radius:8px;padding:26px 22px;background:var(--paper);text-align:center}
-    .author-photo{width:150px;height:150px;margin:0 auto 18px;border:3px solid #f97316;border-radius:50%;padding:3px;display:grid;place-items:center;overflow:hidden}
+    .author-page{max-width:760px;padding:22px 16px 40px;margin:0 auto}
+    .author-back{display:inline-block;color:var(--muted);font-size:.92rem;text-decoration:underline;text-underline-offset:4px;margin-bottom:18px}
+    .author-title{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:clamp(1.8rem,6vw,2.3rem);font-weight:800;color:var(--ink);margin:0 0 24px}
+    .author-title svg{width:24px;height:24px;flex-shrink:0}
+    
+    .author-card{border:1px solid #e2e8f0;border-radius:12px;padding:32px 24px;background:var(--paper);text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+    .author-photo{width:160px;height:160px;margin:0 auto 20px;border:3px solid #f97316;border-radius:50%;padding:3px;display:grid;place-items:center;overflow:hidden}
     .author-photo img{width:100%;height:100%;border-radius:50%;object-fit:cover}
-    .author-photo.no-photo::after{content:"ID";font-family:var(--serif);font-weight:700;font-size:2.4rem;color:var(--muted)}
-    .author-role{font-size:.95rem;font-weight:800;letter-spacing:.05em;color:#c25a00;margin:0 0 14px;text-transform:uppercase}
-    .author-bio{font-size:1.05rem;line-height:1.75;color:var(--ink);max-width:60ch;margin:0 auto}
-    .author-stories{margin-top:28px}
+    .author-photo.no-photo::after{content:"ID";font-family:var(--serif);font-weight:700;font-size:2.6rem;color:var(--muted)}
+    
+    .author-role{font-size:.98rem;font-weight:800;letter-spacing:.04em;color:#c25a00;margin:0 0 16px;text-transform:uppercase}
+    .author-bio{font-size:1.1rem;line-height:1.7;color:var(--ink);max-width:58ch;margin:0 auto}
+    .author-stories{margin-top:32px}
   </style>
 </head>
 <body>
@@ -94,7 +103,13 @@
     </nav>
   </header>
 
-  <main class="wrap author-page" id="author-root">
+  <!-- Breaking Ticker -->
+  <div class="ticker-bar" id="ticker-bar">
+    <div class="ticker-label"><span class="ticker-dot"></span> Breaking</div>
+    <div class="ticker-content" id="ticker-text">Welcome to Davidgistmedia Live Broadcast</div>
+  </div>
+
+  <main class="author-page" id="author-root">
     <a href="index.html" class="author-back">← Back to home</a>
 
     <h1 class="author-title">
@@ -110,7 +125,7 @@
       <h2 class="author-role">Founder &amp; CEO, Davidgistmedia</h2>
 
       <p class="author-bio">
-        Ishola David is the Founder and CEO of Davidgistmedia, a digital news platform covering Nigeria and global affairs. He writes and publishes coverage on entertainment, sports, business, politics, and breaking news with a commitment to fast and accurate reporting.
+        Ishola David is the Founder and CEO of Davidgistmedia, a news and entertainment platform covering Nigeria and the world. He writes and publishes stories on entertainment, sports, business, politics and breaking news from home and abroad, with a focus on keeping readers informed quickly and accurately.
       </p>
     </section>
 
@@ -127,7 +142,7 @@
   <script src="js/supabase-client.js"></script>
   <script src="js/extras.js"></script>
 
-  <!-- Menu, today's date, badge and photo -->
+  <!-- Image handler, verified badge, menu and date -->
   <script>
     (function () {
       var PHOTO = "Snapchat-1872033241%20(1)_1748345725348.jpg";
@@ -149,7 +164,7 @@
       img.onerror = next;
       next();
 
-      /* Scalloped orange verified badge */
+      /* Serrated Orange SVG Verified Badge */
       var pts = [];
       for (var k = 0; k < 48; k++) {
         var a = (k / 48) * Math.PI * 2;
@@ -180,7 +195,7 @@
     })();
   </script>
 
-  <!-- Fetch & display articles written by Ishola David -->
+  <!-- Dynamic Articles loader from Supabase -->
   <script>
     (function () {
       var AUTHOR_NAME = "Ishola David";
