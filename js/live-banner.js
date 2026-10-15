@@ -17,6 +17,23 @@
     ".lb-btn{align-self:flex-start;background:#fff;color:#111;font-weight:800;padding:10px 20px;border-radius:999px;font-size:.95rem}";
   document.head.appendChild(css);
 
+  /* Keep the live card right after the big headline card */
+  function place() {
+    var hero = document.getElementById("hero-section");
+    if (!hero) return;
+    var first = hero.firstElementChild;
+    if (!first || first === host) return;
+    if (first.nextElementSibling !== host) {
+      first.insertAdjacentElement("afterend", host);
+    }
+  }
+
+  var heroEl = document.getElementById("hero-section");
+  if (heroEl && window.MutationObserver) {
+    new MutationObserver(place).observe(heroEl, { childList: true });
+  }
+  place();
+
   function videoId(v) {
     var s = String(v || "");
     var src = s.match(/src\s*=\s*["']([^"']+)["']/i);
@@ -61,6 +78,8 @@
         '<p class="lb-sub">Tap to join the live broadcast and chat.</p>' +
         '<span class="lb-btn">Watch now →</span>' +
       '</a>';
+
+    place();
   }
 
   check();
