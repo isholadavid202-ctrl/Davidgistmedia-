@@ -326,3 +326,19 @@ footer.bbc-footer{background:var(--paper);color:var(--ink);padding:0 0 28px;text
   font-size:.85rem;
 }
 .lead-story:hover h1{color:#fff;text-decoration:underline}
+
+/* ===== Live broadcast protection overlay ===== */
+.lv-wrap {
+  position: relative;
+  padding-top: 56.25%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: none;
+  background: #000;
+}
+.lv-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  cursor: pointer;
+}
