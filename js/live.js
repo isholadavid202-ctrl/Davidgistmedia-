@@ -42,12 +42,15 @@ function liveStyles() {
     ".la-title{font-family:var(--serif);font-weight:700;font-size:1.15rem;margin:0 0 4px}" +
     ".la-sub{color:#c9c9c6;font-size:.92rem;margin:0 0 16px}" +
     ".la audio{width:100%}" +
-    /* like and share */
-    ".lx-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}" +
+    /* like, views and share */
+    ".lx-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:18px}" +
+    ".lx-group{display:flex;gap:10px}" +
     ".lx-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);font:inherit;font-size:.9rem;font-weight:700;cursor:pointer}" +
     ".lx-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}" +
     ".lx-btn:hover{border-color:var(--ink)}" +
     ".lx-btn.liked{color:var(--red);border-color:var(--red)}" +
+    ".lx-views{display:inline-flex;align-items:center;gap:6px;font-size:.9rem;font-weight:700;color:var(--muted);padding:0 4px}" +
+    ".lx-views svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}" +
     ".lx-icons{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}" +
     ".lx-icons a{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;color:var(--ink);font-size:1.05rem;background:var(--paper);text-decoration:none}" +
     ".lx-icons a:hover{border-color:var(--ink);color:var(--red)}" +
@@ -91,12 +94,10 @@ function toEmbedUrl(url) {
   return url;
 }
 
-/* Works out what kind of player to show from the saved setting */
 function playerFor(raw) {
   const value = String(raw || "").trim();
   if (!value) return null;
 
-  /* 1. Audio: "audio:https://..." or a direct audio file link */
   let audioUrl = null;
   if (/^audio:/i.test(value)) {
     audioUrl = value.replace(/^audio:\s*/i, "");
@@ -108,7 +109,6 @@ function playerFor(raw) {
     return { type: "audio", url: audioUrl };
   }
 
-  /* 2. Embed code pasted from a streaming service: <iframe src="...">  */
   if (/<iframe/i.test(value)) {
     const src = value.match(/src\s*=\s*["']([^"']+)["']/i);
     const h = value.match(/height\s*=\s*["']?(\d+)/i);
@@ -119,7 +119,6 @@ function playerFor(raw) {
     return { type: "frame", url: url, height: height };
   }
 
-  /* 3. Video: YouTube link (or another page that allows embedding) */
   const embed = toEmbedUrl(value);
   if (!embed || !/^https:\/\//i.test(embed)) return { type: "bad" };
   return { type: "video", url: embed };
@@ -149,17 +148,21 @@ function render(root, p) {
 
   if (p.type === "frame") {
     root.innerHTML = `
-      <iframe src="${esc(p.url)}" title="Live broadcast" allow="autoplay; encrypted-media"
-        style="width:100%;height:${p.height}px;border:0;border-radius:8px;background:var(--paper)"></iframe>
+      <div class="lv-wrap">
+        <div class="lv-shield" onclick="this.nextElementSibling.style.pointerEvents='auto';this.remove();" title="Click to interact"></div>
+        <iframe src="${esc(p.url)}" title="Live broadcast" allow="autoplay; encrypted-media"
+          style="position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none"></iframe>
+      </div>
     `;
     return;
   }
 
   if (p.type === "video") {
     root.innerHTML = `
-      <div style="position:relative;padding-top:56.25%;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-md);background:#000">
+      <div class="lv-wrap">
+        <div class="lv-shield" onclick="this.nextElementSibling.style.pointerEvents='auto';this.remove();" title="Click to interact"></div>
         <iframe src="${esc(p.url)}" title="Live broadcast" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen
-          style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
+          style="position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none"></iframe>
       </div>
     `;
     return;
@@ -168,12 +171,12 @@ function render(root, p) {
   root.innerHTML = BAD_LINK;
 }
 
-/* ================= Like, share and chat (each page has its own room) ================= */
+/* ================= Stats, Share & Chat ================= */
 
-const CHAT_MAX_SHOWN = 50;        // newest messages shown
-const CHAT_WINDOW_HOURS = 12;     // older messages are not shown
-const CHAT_COOLDOWN_MS = 4000;    // wait between two messages from one person
-const CHAT_POLL_MS = 4000;        // how often new messages are fetched
+const CHAT_MAX_SHOWN = 50;
+const CHAT_WINDOW_HOURS = 12;
+const CHAT_COOLDOWN_MS = 4000;
+const CHAT_POLL_MS = 4000;
 
 let extrasEl = null;
 let chatEl = null;
@@ -209,18 +212,30 @@ function chatTime(d) {
   }).replace(/am|pm/i, (m) => m.toUpperCase());
 }
 
-/* ---- Likes ---- */
-async function refreshLikes() {
+/* ---- Stats (Likes & Live Viewers) ---- */
+async function refreshStats() {
   if (!extrasEl || likeBusy || document.hidden) return;
   try {
     const r = await supabaseClient
       .from("live_stats")
-      .select("likes")
+      .select("likes, viewers")
       .eq("room", ROOM)
       .maybeSingle();
     if (!r.error && r.data && extrasEl) {
-      extrasEl.querySelector("#lx-like-count").textContent = r.data.likes || 0;
+      const likesEl = extrasEl.querySelector("#lx-like-count");
+      const viewsEl = extrasEl.querySelector("#lx-view-count");
+      if (likesEl) likesEl.textContent = r.data.likes || 0;
+      if (viewsEl) viewsEl.textContent = r.data.viewers || 1;
     }
+  } catch (e) {}
+}
+
+async function registerViewer(isEntering) {
+  try {
+    await supabaseClient.rpc("live_view", {
+      p_room: ROOM,
+      p_delta: isEntering ? 1 : -1
+    });
   } catch (e) {}
 }
 
@@ -234,7 +249,6 @@ async function handleLiveLike() {
   const before = parseInt(countEl.textContent, 10) || 0;
   const after = wasLiked ? Math.max(before - 1, 0) : before + 1;
 
-  /* Show the change straight away, and undo it if Supabase says no */
   btn.classList.toggle("liked", !wasLiked);
   btn.setAttribute("aria-pressed", String(!wasLiked));
   countEl.textContent = after;
@@ -328,7 +342,6 @@ async function pollChat() {
     chatLastSig = sig;
     drawChat(list);
   } catch (e) {
-    /* ignore, the next poll will try again */
   } finally {
     chatBusy = false;
   }
@@ -377,7 +390,7 @@ async function sendChat(e) {
   pollChat();
 }
 
-/* ---- Everything under the player: like, share, chat ---- */
+/* ---- Everything under the player ---- */
 function showExtras() {
   if (extrasEl) return;
   const root = document.getElementById("live-root");
@@ -389,10 +402,16 @@ function showExtras() {
   extrasEl.id = "live-extras";
   extrasEl.innerHTML = `
     <div class="lx-actions">
-      <button type="button" class="lx-btn ${liked ? "liked" : ""}" id="lx-like" aria-pressed="${liked}">
-        <svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-        <span id="lx-like-count">0</span> Like
-      </button>
+      <div class="lx-group">
+        <button type="button" class="lx-btn ${liked ? "liked" : ""}" id="lx-like" aria-pressed="${liked}">
+          <svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+          <span id="lx-like-count">0</span> Like
+        </button>
+        <div class="lx-views" title="Current viewers watching on the site">
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span id="lx-view-count">1</span> Watching
+        </div>
+      </div>
       <button type="button" class="lx-btn" id="lx-share">
         <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></svg>
         Share
@@ -420,14 +439,19 @@ function showExtras() {
   extrasEl.querySelector("#lx-share").addEventListener("click", handleLiveShare);
   chatEl.querySelector(".lc-form").addEventListener("submit", sendChat);
 
-  refreshLikes();
+  registerViewer(true);
+  refreshStats();
   pollChat();
   pollTicks = 0;
   chatTimer = setInterval(function () {
     pollChat();
     pollTicks++;
-    if (pollTicks % 5 === 0) refreshLikes();
+    if (pollTicks % 5 === 0) refreshStats();
   }, CHAT_POLL_MS);
+
+  window.addEventListener("beforeunload", function () {
+    registerViewer(false);
+  });
 }
 
 function hideExtras() {
@@ -436,6 +460,7 @@ function hideExtras() {
     chatTimer = null;
   }
   if (extrasEl) {
+    registerViewer(false);
     extrasEl.remove();
     extrasEl = null;
   }
@@ -467,7 +492,6 @@ async function loadLive() {
   const data = res.data;
   const error = res.error;
 
-  /* A short hiccup must not wipe a stream that is already playing */
   if (error) {
     if (lastValue === null) {
       root.innerHTML = NO_LIVE;
@@ -478,7 +502,6 @@ async function loadLive() {
 
   const value = data && data.value ? String(data.value).trim() : "";
 
-  /* Nothing changed, so leave the player alone (re-drawing would restart the stream) */
   if (value === lastValue) return;
   lastValue = value;
 
