@@ -42,6 +42,11 @@ function liveStyles() {
     ".la-title{font-family:var(--serif);font-weight:700;font-size:1.15rem;margin:0 0 4px}" +
     ".la-sub{color:#c9c9c6;font-size:.92rem;margin:0 0 16px}" +
     ".la audio{width:100%}" +
+    /* player wrapper & protection overlay */
+    ".lv-container{position:relative;width:100%;padding-top:56.25%;border-radius:8px;overflow:hidden;background:#000}" +
+    ".lv-container iframe{position:absolute;inset:0;width:100%;height:100%;border:0}" +
+    ".lv-bottom-shield{position:absolute;bottom:0;right:0;width:180px;height:50px;z-index:10}" +
+    ".lv-top-shield{position:absolute;top:0;left:0;right:0;height:60px;z-index:10}" +
     /* like, views and share */
     ".lx-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:18px}" +
     ".lx-group{display:flex;gap:10px}" +
@@ -80,13 +85,18 @@ function liveStyles() {
 function toEmbedUrl(url) {
   try {
     const u = new URL(url);
+    let videoId = null;
     if (u.hostname.includes("youtu.be")) {
-      return `https://www.youtube.com/embed/${u.pathname.slice(1)}`;
+      videoId = u.pathname.slice(1);
+    } else if (u.hostname.includes("youtube.com")) {
+      if (u.searchParams.get("v")) videoId = u.searchParams.get("v");
+      else {
+        const parts = u.pathname.split("/").filter(Boolean);
+        if (parts[0] === "live" && parts[1]) videoId = parts[1];
+      }
     }
-    if (u.hostname.includes("youtube.com")) {
-      if (u.searchParams.get("v")) return `https://www.youtube.com/embed/${u.searchParams.get("v")}`;
-      const parts = u.pathname.split("/").filter(Boolean);
-      if (parts[0] === "live" && parts[1]) return `https://www.youtube.com/embed/${parts[1]}`;
+    if (videoId) {
+      return `https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&playsinline=1`;
     }
   } catch {
     return null;
@@ -148,9 +158,10 @@ function render(root, p) {
 
   if (p.type === "frame" || p.type === "video") {
     root.innerHTML = `
-      <div style="position:relative;padding-top:56.25%;border-radius:8px;overflow:hidden;background:#000">
-        <iframe src="${esc(p.url)}" title="Live broadcast" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen
-          style="position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none"></iframe>
+      <div class="lv-container">
+        <div class="lv-top-shield"></div>
+        <div class="lv-bottom-shield"></div>
+        <iframe src="${esc(p.url)}" title="Live broadcast" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
       </div>
     `;
     return;
