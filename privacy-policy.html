@@ -11,24 +11,66 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#141414">
+  <meta name="theme-color" content="#0d0d0d">
   <title>Privacy Policy | Davidgistmedia</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="bbc.css?v=15">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
+
+  <!-- Top bar (same as homepage) -->
+  <style>
+    .masthead{padding-top:12px}
+    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
+    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
+    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
+    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
+    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
+    .masthead .drawer.open{display:flex}
+    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
+    .drawer a:hover{color:var(--red)}
+  </style>
 </head>
 <body>
+
+  <div class="util-bar">
+    <div class="wrap"><span id="today"></span></div>
+  </div>
+
   <header class="masthead">
-    <div class="wrap">
-      <a href="index.html" style="text-decoration:none;color:inherit">
-        <div class="brand-title">David<span class="gold">gistmedia</span></div>
-        <p class="tagline">Your Source for Entertainment &amp; Breaking News</p>
-      </a>
+    <div class="wrap topbar">
+      <div class="icons">
+        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+      <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
+      <div class="acct"></div>
     </div>
-    <nav class="tabs">
+
+    <div class="wrap drawer" id="drawer">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="editorial-policy.html">Editorial Policy</a>
+      <a href="privacy-policy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="podcasts.html">Podcasts</a>
+      <a href="live.html">Live</a>
+      <a href="staff.html">Staff login</a>
+      <a href="admin.html">Admin login</a>
+    </div>
+
+    <nav class="tabs" aria-label="Main navigation">
       <a href="index.html">Home</a>
+      <a href="podcasts.html">Podcasts</a>
       <a href="live.html">Live</a>
     </nav>
   </header>
@@ -37,7 +79,7 @@
     <a href="index.html" class="back-link">&larr; Back to home</a>
     <h1>Privacy Policy</h1>
     <div class="article-body">
-      <p><em>Last updated: <span id="today"></span></em></p>
+      <p><em>Last updated: <span id="updated"></span></em></p>
       <p>This Privacy Policy explains how Davidgistmedia ("we", "us", "our") collects, uses and protects information when you visit davidgistmedia.onrender.com (the "Site"). By using the Site, you agree to this policy.</p>
 
       <p><strong>Information we collect</strong></p>
@@ -88,23 +130,37 @@
     </div>
   </main>
 
-  <footer>
-    <div class="wrap">
-      <div class="brand-title">David<span class="gold">gistmedia</span></div>
-      <div class="socials" style="margin-top:12px">
-        <a class="social-btn" href="about.html">About</a>
-        <a class="social-btn" href="contact.html">Contact</a>
-        <a class="social-btn" href="privacy-policy.html">Privacy</a>
-        <a class="social-btn" href="terms.html">Terms</a>
-        <a class="social-btn" href="editorial-policy.html">Editorial Policy</a>
-      </div>
-      <div class="copyright">&copy; <span id="year"></span> Davidgistmedia. All rights reserved.</div>
-    </div>
-  </footer>
+  <!-- Footer (built by js/footer.js) -->
+  <div id="site-footer"></div>
+  <script src="js/footer.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/extras.js"></script>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-    document.getElementById("today").textContent = new Date().toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" });
+    (function () {
+      /* Menu */
+      var menuBtn = document.getElementById("menu-btn");
+      var drawer = document.getElementById("drawer");
+      menuBtn.addEventListener("click", function () {
+        var open = drawer.classList.toggle("open");
+        menuBtn.setAttribute("aria-expanded", open);
+      });
+
+      /* Today's date (top strip) */
+      var today = document.getElementById("today");
+      if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
+        weekday: "long", day: "numeric", month: "long", year: "numeric"
+      });
+
+      /* "Last updated" date in the policy */
+      var updated = document.getElementById("updated");
+      if (updated) updated.textContent = new Date().toLocaleDateString("en-NG", {
+        day: "numeric", month: "long", year: "numeric"
+      });
+    })();
   </script>
   <script>
     if ("serviceWorker" in navigator) {
