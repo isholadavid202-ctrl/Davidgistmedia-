@@ -317,7 +317,7 @@ function drawChat(list) {
       const isAdmin = rawName.toLowerCase() === "ishola david" || rawName.toLowerCase() === "david gist media";
       
       const displayName = isAdmin 
-        ? `<a href="author.html">${esc(rawName)}${VERIFIED_BADGE_SVG}</a>`
+        ? `<a href="author.html" target="_blank" rel="noopener noreferrer">${esc(rawName)}${VERIFIED_BADGE_SVG}</a>`
         : esc(rawName);
 
       return `
