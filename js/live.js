@@ -4,6 +4,9 @@
 const MODE = window.LIVE_MODE === "audio" ? "audio" : "video";
 const SETTING_KEY = MODE === "audio" ? "live_audio_url" : "live_stream_url";
 const ROOM = MODE;
+const SHARE_TITLE = MODE === "audio"
+  ? "Listen live on Davidgistmedia"
+  : "Watch live on Davidgistmedia";
 
 var yr = document.getElementById("year");
 if (yr) yr.textContent = new Date().getFullYear();
@@ -13,6 +16,63 @@ function esc(s) {
     .replace(/&/g, "&amp;").replace(/</g, "&lt;")
     .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
+
+/* ================= Styles ================= */
+
+function liveStyles() {
+  if (document.getElementById("live-style")) return;
+  const st = document.createElement("style");
+  st.id = "live-style";
+  st.textContent =
+    /* audio player with picture */
+    ".la{border-radius:8px;background:#161617;color:#fff;text-align:center;padding:24px 18px}" +
+    ".la-live{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#ff5c72;margin-bottom:16px}" +
+    ".la-dot{width:9px;height:9px;border-radius:50%;background:#ff5c72;display:inline-block;animation:lapulse 1.4s infinite}" +
+    ".la-cover{width:150px;height:150px;margin:0 auto 14px;border-radius:12px;overflow:hidden;background:#2a2a2d;display:grid;place-items:center}" +
+    ".la-cover img{width:100%;height:100%;object-fit:cover;display:block}" +
+    ".la-cover.la-noimg::after{content:'DG';font-family:var(--serif);font-weight:700;font-size:2.6rem;color:#fff}" +
+    ".la-bars{display:flex;align-items:flex-end;justify-content:center;gap:4px;height:28px;margin:0 auto 14px}" +
+    ".la-bars span{width:5px;height:28px;background:#e8344c;border-radius:2px;transform-origin:bottom;animation:labar 1s ease-in-out infinite}" +
+    ".la-bars span:nth-child(1){animation-delay:-.4s}.la-bars span:nth-child(2){animation-delay:-.2s}" +
+    ".la-bars span:nth-child(3){animation-delay:-.6s}.la-bars span:nth-child(4){animation-delay:-.1s}" +
+    ".la-bars span:nth-child(5){animation-delay:-.5s}" +
+    "@keyframes labar{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}" +
+    "@keyframes lapulse{50%{opacity:.3}}" +
+    "@media(prefers-reduced-motion:reduce){.la-bars span,.la-dot{animation:none}}" +
+    ".la-title{font-family:var(--serif);font-weight:700;font-size:1.15rem;margin:0 0 4px}" +
+    ".la-sub{color:#c9c9c6;font-size:.92rem;margin:0 0 16px}" +
+    ".la audio{width:100%}" +
+    /* like and share */
+    ".lx-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}" +
+    ".lx-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);font:inherit;font-size:.9rem;font-weight:700;cursor:pointer}" +
+    ".lx-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}" +
+    ".lx-btn:hover{border-color:var(--ink)}" +
+    ".lx-btn.liked{color:var(--red);border-color:var(--red)}" +
+    ".lx-icons{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}" +
+    ".lx-icons a{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;color:var(--ink);font-size:1.05rem;background:var(--paper);text-decoration:none}" +
+    ".lx-icons a:hover{border-color:var(--ink);color:var(--red)}" +
+    /* chat */
+    ".lc{margin-top:22px;border:1px solid var(--line);border-radius:8px;background:var(--paper);overflow:hidden}" +
+    ".lc-head{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);font-weight:800;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase}" +
+    ".lc-dot{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block}" +
+    ".lc-list{height:320px;overflow-y:auto;padding:12px 16px;-webkit-overflow-scrolling:touch}" +
+    ".lc-msg{margin:0 0 12px;line-height:1.4;overflow-wrap:anywhere}" +
+    ".lc-name{font-weight:800;margin-right:6px}" +
+    ".lc-time{color:var(--muted);font-size:.75rem;margin-left:6px;white-space:nowrap}" +
+    ".lc-text{color:var(--ink)}" +
+    ".lc-empty{color:var(--muted);font-size:.92rem}" +
+    ".lc-form{display:flex;flex-direction:column;gap:8px;padding:12px 16px;border-top:1px solid var(--line)}" +
+    ".lc-form input,.lc-form textarea{width:100%;padding:10px 12px;border:1px solid #8a8a8a;border-radius:4px;font:inherit;font-size:.95rem;background:var(--paper);color:var(--ink);box-sizing:border-box}" +
+    ".lc-form textarea{resize:none;height:64px}" +
+    ".lc-form input:focus,.lc-form textarea:focus{outline:2px solid var(--red);outline-offset:1px}" +
+    ".lc-row{display:flex;align-items:center;justify-content:space-between;gap:10px}" +
+    ".lc-form button{background:var(--red);color:#fff;font-weight:800;padding:10px 20px;border:0;border-radius:4px;cursor:pointer}" +
+    ".lc-form button:disabled{opacity:.6}" +
+    ".lc-status{font-size:.82rem;color:var(--muted);min-height:1em}";
+  document.head.appendChild(st);
+}
+
+/* ================= Player ================= */
 
 function toEmbedUrl(url) {
   try {
@@ -73,12 +133,15 @@ const BAD_LINK = `<div class="empty-state">The live stream link couldn't be load
 function render(root, p) {
   if (p.type === "audio") {
     root.innerHTML = `
-      <div style="border:1px solid var(--line);border-radius:8px;padding:22px 18px;background:var(--paper);text-align:center">
-        <div style="display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:12px">
-          <span style="width:9px;height:9px;border-radius:50%;background:var(--red);display:inline-block"></span> Live now
+      <div class="la">
+        <div class="la-live"><span class="la-dot"></span> Live now</div>
+        <div class="la-cover">
+          <img src="apple-touch-icon.png" alt="Davidgistmedia" onerror="this.parentNode.classList.add('la-noimg');this.remove()">
         </div>
-        <p style="margin:0 0 16px;color:var(--muted)">Press play to listen to our live broadcast.</p>
-        <audio controls preload="none" src="${esc(p.url)}" style="width:100%"></audio>
+        <div class="la-bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="la-title">Davidgistmedia Live Audio</p>
+        <p class="la-sub">Press play to listen to our live broadcast.</p>
+        <audio controls preload="none" src="${esc(p.url)}"></audio>
       </div>
     `;
     return;
@@ -105,49 +168,37 @@ function render(root, p) {
   root.innerHTML = BAD_LINK;
 }
 
-/* ================= Live chat (each page has its own room) ================= */
+/* ================= Like, share and chat (each page has its own room) ================= */
 
 const CHAT_MAX_SHOWN = 50;        // newest messages shown
 const CHAT_WINDOW_HOURS = 12;     // older messages are not shown
 const CHAT_COOLDOWN_MS = 4000;    // wait between two messages from one person
 const CHAT_POLL_MS = 4000;        // how often new messages are fetched
 
+let extrasEl = null;
 let chatEl = null;
 let chatTimer = null;
 let chatBusy = false;
 let chatLastSig = "";
 let chatLastSent = 0;
-
-function chatStyles() {
-  if (document.getElementById("live-chat-style")) return;
-  const st = document.createElement("style");
-  st.id = "live-chat-style";
-  st.textContent =
-    ".lc{margin-top:22px;border:1px solid var(--line);border-radius:8px;background:var(--paper);overflow:hidden}" +
-    ".lc-head{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);font-weight:800;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase}" +
-    ".lc-dot{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block}" +
-    ".lc-list{height:320px;overflow-y:auto;padding:12px 16px;-webkit-overflow-scrolling:touch}" +
-    ".lc-msg{margin:0 0 12px;line-height:1.4;overflow-wrap:anywhere}" +
-    ".lc-name{font-weight:800;margin-right:6px}" +
-    ".lc-time{color:var(--muted);font-size:.75rem;margin-left:6px;white-space:nowrap}" +
-    ".lc-text{color:var(--ink)}" +
-    ".lc-empty{color:var(--muted);font-size:.92rem}" +
-    ".lc-form{display:flex;flex-direction:column;gap:8px;padding:12px 16px;border-top:1px solid var(--line)}" +
-    ".lc-form input,.lc-form textarea{width:100%;padding:10px 12px;border:1px solid #8a8a8a;border-radius:4px;font:inherit;font-size:.95rem;background:var(--paper);color:var(--ink);box-sizing:border-box}" +
-    ".lc-form textarea{resize:none;height:64px}" +
-    ".lc-form input:focus,.lc-form textarea:focus{outline:2px solid var(--red);outline-offset:1px}" +
-    ".lc-row{display:flex;align-items:center;justify-content:space-between;gap:10px}" +
-    ".lc-form button{background:var(--red);color:#fff;font-weight:800;padding:10px 20px;border:0;border-radius:4px;cursor:pointer}" +
-    ".lc-form button:disabled{opacity:.6}" +
-    ".lc-status{font-size:.82rem;color:var(--muted);min-height:1em}";
-  document.head.appendChild(st);
-}
+let pollTicks = 0;
+let likeBusy = false;
 
 function savedChatName() {
   try { return localStorage.getItem("dg_chat_name") || ""; } catch (e) { return ""; }
 }
 function saveChatName(n) {
   try { localStorage.setItem("dg_chat_name", n); } catch (e) {}
+}
+
+function getLiveLiked() {
+  try { return localStorage.getItem("dg_live_liked_" + ROOM) === "1"; } catch (e) { return false; }
+}
+function setLiveLiked(on) {
+  try {
+    if (on) localStorage.setItem("dg_live_liked_" + ROOM, "1");
+    else localStorage.removeItem("dg_live_liked_" + ROOM);
+  } catch (e) {}
 }
 
 function chatTime(d) {
@@ -158,6 +209,84 @@ function chatTime(d) {
   }).replace(/am|pm/i, (m) => m.toUpperCase());
 }
 
+/* ---- Likes ---- */
+async function refreshLikes() {
+  if (!extrasEl || likeBusy || document.hidden) return;
+  try {
+    const r = await supabaseClient
+      .from("live_stats")
+      .select("likes")
+      .eq("room", ROOM)
+      .maybeSingle();
+    if (!r.error && r.data && extrasEl) {
+      extrasEl.querySelector("#lx-like-count").textContent = r.data.likes || 0;
+    }
+  } catch (e) {}
+}
+
+async function handleLiveLike() {
+  if (!extrasEl || likeBusy) return;
+  likeBusy = true;
+
+  const btn = extrasEl.querySelector("#lx-like");
+  const countEl = extrasEl.querySelector("#lx-like-count");
+  const wasLiked = getLiveLiked();
+  const before = parseInt(countEl.textContent, 10) || 0;
+  const after = wasLiked ? Math.max(before - 1, 0) : before + 1;
+
+  /* Show the change straight away, and undo it if Supabase says no */
+  btn.classList.toggle("liked", !wasLiked);
+  btn.setAttribute("aria-pressed", String(!wasLiked));
+  countEl.textContent = after;
+
+  let failed = false;
+  let newCount = null;
+  try {
+    const r = await supabaseClient.rpc("live_like", {
+      p_room: ROOM,
+      p_delta: wasLiked ? -1 : 1
+    });
+    if (r.error) failed = true;
+    else if (typeof r.data === "number") newCount = r.data;
+  } catch (e) {
+    failed = true;
+  }
+
+  if (failed) {
+    btn.classList.toggle("liked", wasLiked);
+    btn.setAttribute("aria-pressed", String(wasLiked));
+    countEl.textContent = before;
+    alert("Couldn't save that. Please try again.");
+  } else {
+    setLiveLiked(!wasLiked);
+    if (newCount !== null) countEl.textContent = newCount;
+  }
+  likeBusy = false;
+}
+
+/* ---- Share ---- */
+function handleLiveShare() {
+  const url = window.location.href;
+  if (navigator.share) {
+    navigator.share({ title: SHARE_TITLE, url: url }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => alert("Link copied to clipboard."));
+  }
+}
+
+function shareIconsHtml() {
+  const url = encodeURIComponent(window.location.href);
+  const title = encodeURIComponent(SHARE_TITLE);
+  return `
+    <a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+    <a href="https://x.com/intent/post?text=${title}&url=${url}&via=Davidgistmedian" target="_blank" rel="noopener noreferrer" aria-label="Share on X"><i class="fa-brands fa-x-twitter"></i></a>
+    <a href="mailto:?subject=${title}&body=${title}%0A${url}" aria-label="Share by email"><i class="fa-solid fa-envelope"></i></a>
+    <a href="https://t.me/share/url?url=${url}&text=${title}" target="_blank" rel="noopener noreferrer" aria-label="Share on Telegram"><i class="fa-brands fa-telegram"></i></a>
+    <a href="https://wa.me/?text=${title}%20${url}" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+  `;
+}
+
+/* ---- Chat ---- */
 function drawChat(list) {
   if (!chatEl) return;
   const box = chatEl.querySelector(".lc-list");
@@ -248,45 +377,69 @@ async function sendChat(e) {
   pollChat();
 }
 
-function showChat() {
-  if (chatEl) return;
+/* ---- Everything under the player: like, share, chat ---- */
+function showExtras() {
+  if (extrasEl) return;
   const root = document.getElementById("live-root");
   if (!root) return;
 
-  chatStyles();
-  chatEl = document.createElement("section");
-  chatEl.id = "live-chat";
-  chatEl.className = "lc";
-  chatEl.setAttribute("aria-label", "Live chat");
-  chatEl.innerHTML = `
-    <div class="lc-head"><span class="lc-dot"></span> Live chat</div>
-    <div class="lc-list" aria-live="polite"><div class="lc-empty">Loading chat…</div></div>
-    <form class="lc-form">
-      <input class="lc-name-input" type="text" maxlength="40" placeholder="Your name (optional)" value="${esc(savedChatName())}" aria-label="Your name">
-      <textarea class="lc-text-input" maxlength="300" placeholder="Write a message…" required aria-label="Your message"></textarea>
-      <div class="lc-row">
-        <span class="lc-status" role="status"></span>
-        <button class="lc-send" type="submit">Send</button>
-      </div>
-    </form>
-  `;
-  root.insertAdjacentElement("afterend", chatEl);
+  const liked = getLiveLiked();
 
+  extrasEl = document.createElement("div");
+  extrasEl.id = "live-extras";
+  extrasEl.innerHTML = `
+    <div class="lx-actions">
+      <button type="button" class="lx-btn ${liked ? "liked" : ""}" id="lx-like" aria-pressed="${liked}">
+        <svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+        <span id="lx-like-count">0</span> Like
+      </button>
+      <button type="button" class="lx-btn" id="lx-share">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></svg>
+        Share
+      </button>
+    </div>
+    <div class="lx-icons" aria-label="Share this live broadcast">${shareIconsHtml()}</div>
+
+    <section class="lc" aria-label="Live chat">
+      <div class="lc-head"><span class="lc-dot"></span> Live chat</div>
+      <div class="lc-list" aria-live="polite"><div class="lc-empty">Loading chat…</div></div>
+      <form class="lc-form">
+        <input class="lc-name-input" type="text" maxlength="40" placeholder="Your name (optional)" value="${esc(savedChatName())}" aria-label="Your name">
+        <textarea class="lc-text-input" maxlength="300" placeholder="Write a message…" required aria-label="Your message"></textarea>
+        <div class="lc-row">
+          <span class="lc-status" role="status"></span>
+          <button class="lc-send" type="submit">Send</button>
+        </div>
+      </form>
+    </section>
+  `;
+  root.insertAdjacentElement("afterend", extrasEl);
+
+  chatEl = extrasEl.querySelector(".lc");
+  extrasEl.querySelector("#lx-like").addEventListener("click", handleLiveLike);
+  extrasEl.querySelector("#lx-share").addEventListener("click", handleLiveShare);
   chatEl.querySelector(".lc-form").addEventListener("submit", sendChat);
 
+  refreshLikes();
   pollChat();
-  chatTimer = setInterval(pollChat, CHAT_POLL_MS);
+  pollTicks = 0;
+  chatTimer = setInterval(function () {
+    pollChat();
+    pollTicks++;
+    if (pollTicks % 5 === 0) refreshLikes();
+  }, CHAT_POLL_MS);
 }
 
-function hideChat() {
+function hideExtras() {
   if (chatTimer) {
     clearInterval(chatTimer);
     chatTimer = null;
   }
-  if (chatEl) {
-    chatEl.remove();
-    chatEl = null;
+  if (extrasEl) {
+    extrasEl.remove();
+    extrasEl = null;
   }
+  chatEl = null;
   chatLastSig = "";
 }
 
@@ -297,6 +450,8 @@ let lastValue = null;
 async function loadLive() {
   const root = document.getElementById("live-root");
   if (!root) return;
+
+  liveStyles();
 
   let res;
   try {
@@ -316,7 +471,7 @@ async function loadLive() {
   if (error) {
     if (lastValue === null) {
       root.innerHTML = NO_LIVE;
-      hideChat();
+      hideExtras();
     }
     return;
   }
@@ -329,21 +484,21 @@ async function loadLive() {
 
   if (!value) {
     root.innerHTML = NO_LIVE;
-    hideChat();
+    hideExtras();
     return;
   }
 
   const player = playerFor(value);
   if (!player) {
     root.innerHTML = NO_LIVE;
-    hideChat();
+    hideExtras();
     return;
   }
 
   render(root, player);
 
-  if (player.type === "bad") hideChat();
-  else showChat();
+  if (player.type === "bad") hideExtras();
+  else showExtras();
 }
 
 loadLive();
