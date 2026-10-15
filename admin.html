@@ -83,13 +83,25 @@
       </div>
 
       <div class="admin-card">
-        <h2>Live Broadcast</h2>
+        <h2>Live Broadcast (video)</h2>
         <p style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">Paste your YouTube Live link here when you go live. Clear it when you're done to remove the player from the Live page.</p>
         <form id="live-form">
           <label for="live_url">Live stream URL</label>
           <input id="live_url" placeholder="https://www.youtube.com/watch?v=...">
           <button class="primary" type="submit" id="live-save-btn">Save live link</button>
           <p class="admin-status" id="live-status"></p>
+        </form>
+      </div>
+
+      <div class="admin-card">
+        <h2>Live Audio</h2>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">Shows on the Live Audio page (live-audio.html), separate from the video Live page. Paste one of these when you go live: <strong>audio:</strong> followed by your stream link (for example audio:https://your-stream-address/live), a YouTube live link, or the embed code from your streaming service. Tap "Stop live audio" when you're done.</p>
+        <form id="audio-form">
+          <label for="audio_url">Live audio link</label>
+          <textarea id="audio_url" style="min-height:70px" placeholder="audio:https://your-stream-address/live"></textarea>
+          <button class="primary" type="submit" id="audio-save-btn">Save audio link</button>
+          <button type="button" class="primary" id="audio-stop-btn" style="background:#eee;color:#111;margin-top:8px">Stop live audio</button>
+          <p class="admin-status" id="audio-status"></p>
         </form>
       </div>
 
