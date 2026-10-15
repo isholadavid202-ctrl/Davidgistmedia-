@@ -146,21 +146,9 @@ function render(root, p) {
     return;
   }
 
-  if (p.type === "frame") {
+  if (p.type === "frame" || p.type === "video") {
     root.innerHTML = `
-      <div class="lv-wrap">
-        <div class="lv-shield" onclick="this.nextElementSibling.style.pointerEvents='auto';this.remove();" title="Click to interact"></div>
-        <iframe src="${esc(p.url)}" title="Live broadcast" allow="autoplay; encrypted-media"
-          style="position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none"></iframe>
-      </div>
-    `;
-    return;
-  }
-
-  if (p.type === "video") {
-    root.innerHTML = `
-      <div class="lv-wrap">
-        <div class="lv-shield" onclick="this.nextElementSibling.style.pointerEvents='auto';this.remove();" title="Click to interact"></div>
+      <div style="position:relative;padding-top:56.25%;border-radius:8px;overflow:hidden;background:#000">
         <iframe src="${esc(p.url)}" title="Live broadcast" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen
           style="position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none"></iframe>
       </div>
@@ -212,7 +200,6 @@ function chatTime(d) {
   }).replace(/am|pm/i, (m) => m.toUpperCase());
 }
 
-/* ---- Stats (Likes & Live Viewers) ---- */
 async function refreshStats() {
   if (!extrasEl || likeBusy || document.hidden) return;
   try {
@@ -278,7 +265,6 @@ async function handleLiveLike() {
   likeBusy = false;
 }
 
-/* ---- Share ---- */
 function handleLiveShare() {
   const url = window.location.href;
   if (navigator.share) {
@@ -300,7 +286,6 @@ function shareIconsHtml() {
   `;
 }
 
-/* ---- Chat ---- */
 function drawChat(list) {
   if (!chatEl) return;
   const box = chatEl.querySelector(".lc-list");
@@ -390,7 +375,6 @@ async function sendChat(e) {
   pollChat();
 }
 
-/* ---- Everything under the player ---- */
 function showExtras() {
   if (extrasEl) return;
   const root = document.getElementById("live-root");
@@ -467,8 +451,6 @@ function hideExtras() {
   chatEl = null;
   chatLastSig = "";
 }
-
-/* ================= Live page ================= */
 
 let lastValue = null;
 
