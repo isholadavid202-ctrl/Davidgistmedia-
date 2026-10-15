@@ -42,11 +42,11 @@ function liveStyles() {
     ".la-title{font-family:var(--serif);font-weight:700;font-size:1.15rem;margin:0 0 4px}" +
     ".la-sub{color:#c9c9c6;font-size:.92rem;margin:0 0 16px}" +
     ".la audio{width:100%}" +
-    /* player wrapper & protection overlay */
+    /* player wrapper */
     ".lv-container{position:relative;width:100%;padding-top:56.25%;border-radius:8px;overflow:hidden;background:#000}" +
     ".lv-container iframe{position:absolute;inset:0;width:100%;height:100%;border:0}" +
-    ".lv-bottom-shield{position:absolute;bottom:0;right:0;width:180px;height:50px;z-index:10}" +
     ".lv-top-shield{position:absolute;top:0;left:0;right:0;height:60px;z-index:10}" +
+    ".lv-bottom-shield{position:absolute;bottom:0;right:0;width:180px;height:50px;z-index:10}" +
     /* like, views and share */
     ".lx-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:18px}" +
     ".lx-group{display:flex;gap:10px}" +
@@ -66,6 +66,10 @@ function liveStyles() {
     ".lc-list{height:320px;overflow-y:auto;padding:12px 16px;-webkit-overflow-scrolling:touch}" +
     ".lc-msg{margin:0 0 12px;line-height:1.4;overflow-wrap:anywhere}" +
     ".lc-name{font-weight:800;margin-right:6px}" +
+    ".lc-name a{color:inherit;text-decoration:none}" +
+    ".lc-name a:hover{text-decoration:underline}" +
+    ".lc-verified{display:inline-block;width:13px;height:13px;background:#f97316;border-radius:50%;margin-left:4px;vertical-align:middle;position:relative}" +
+    ".lc-verified::after{content:'✓';position:absolute;top:-2px;left:2px;font-size:9px;color:#fff;font-weight:900}" +
     ".lc-time{color:var(--muted);font-size:.75rem;margin-left:6px;white-space:nowrap}" +
     ".lc-text{color:var(--ink)}" +
     ".lc-empty{color:var(--muted);font-size:.92rem}" +
@@ -306,11 +310,20 @@ function drawChat(list) {
   if (!list.length) {
     box.innerHTML = `<div class="lc-empty">No messages yet. Say hello!</div>`;
   } else {
-    box.innerHTML = list.map((m) => `
-      <div class="lc-msg">
-        <span class="lc-name">${esc(m.name || "Guest")}</span><span class="lc-text">${esc(m.content)}</span><span class="lc-time">${esc(chatTime(m.created_at))}</span>
-      </div>
-    `).join("");
+    box.innerHTML = list.map((m) => {
+      const rawName = m.name || "Guest";
+      const isAdmin = rawName.toLowerCase() === "ishola david" || rawName.toLowerCase() === "david gist media";
+      
+      const displayName = isAdmin 
+        ? `<a href="https://www.davidgistmedia.com" target="_blank" rel="noopener noreferrer">${esc(rawName)}</a><span class="lc-verified" title="Verified Publisher"></span>`
+        : esc(rawName);
+
+      return `
+        <div class="lc-msg">
+          <span class="lc-name">${displayName}</span><span class="lc-text">${esc(m.content)}</span><span class="lc-time">${esc(chatTime(m.created_at))}</span>
+        </div>
+      `;
+    }).join("");
   }
 
   box.dataset.drawn = "1";
