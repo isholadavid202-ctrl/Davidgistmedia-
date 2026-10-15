@@ -8,6 +8,13 @@ const SHARE_TITLE = MODE === "audio"
   ? "Listen live on Davidgistmedia"
   : "Watch live on Davidgistmedia";
 
+/* ===== GIFT BOX: your bank details =====
+   Leave all three empty ("") to hide the gift box. */
+const GIFT_BANK = "Zenith Bank";
+const GIFT_ACCOUNT_NAME = "Ishola David";
+const GIFT_ACCOUNT_NUMBER = "4242274467";
+/* ======================================= */
+
 var yr = document.getElementById("year");
 if (yr) yr.textContent = new Date().getFullYear();
 
@@ -51,6 +58,17 @@ function liveStyles() {
     ".lx-icons{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}" +
     ".lx-icons a{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;color:var(--ink);font-size:1.05rem;background:var(--paper);text-decoration:none}" +
     ".lx-icons a:hover{border-color:var(--ink);color:var(--red)}" +
+    /* gift box */
+    ".lg{margin-top:22px;border:1px solid var(--line);border-left:4px solid var(--ink);border-radius:8px;background:var(--paper);padding:16px}" +
+    ".lg h3{font-family:var(--font);font-size:.95rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin:0 0 6px}" +
+    ".lg p{margin:0 0 12px;font-size:.9rem;line-height:1.5;color:var(--muted)}" +
+    ".lg-rows{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0 0 12px;font-size:.95rem}" +
+    ".lg-rows dt{color:var(--muted)}" +
+    ".lg-rows dd{margin:0;font-weight:700;overflow-wrap:anywhere}" +
+    ".lg-num{font-size:1.15rem;letter-spacing:.06em}" +
+    ".lg-copy{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--ink);border-radius:4px;background:var(--paper);color:var(--ink);font:inherit;font-size:.9rem;font-weight:700;cursor:pointer}" +
+    ".lg-copy:hover{background:var(--ink);color:var(--paper)}" +
+    ".lg-note{margin:12px 0 0;font-size:.8rem;color:var(--muted)}" +
     /* chat */
     ".lc{margin-top:22px;border:1px solid var(--line);border-radius:8px;background:var(--paper);overflow:hidden}" +
     ".lc-head{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);font-weight:800;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase}" +
@@ -168,7 +186,7 @@ function render(root, p) {
   root.innerHTML = BAD_LINK;
 }
 
-/* ================= Like, share and chat (each page has its own room) ================= */
+/* ================= Like, share, gift and chat (each page has its own room) ================= */
 
 const CHAT_MAX_SHOWN = 50;        // newest messages shown
 const CHAT_WINDOW_HOURS = 12;     // older messages are not shown
@@ -286,6 +304,60 @@ function shareIconsHtml() {
   `;
 }
 
+/* ---- Gift box (bank transfer) ---- */
+function giftEnabled() {
+  return !!(GIFT_BANK.trim() && GIFT_ACCOUNT_NAME.trim() && GIFT_ACCOUNT_NUMBER.trim());
+}
+
+function giftHtml() {
+  if (!giftEnabled()) return "";
+  return `
+    <section class="lg" aria-label="Send a gift to the host">
+      <h3>Send a gift to the host</h3>
+      <p>Gifts are optional and voluntary. They do not buy coverage and do not influence what we report.</p>
+      <dl class="lg-rows">
+        <dt>Bank</dt><dd>${esc(GIFT_BANK.trim())}</dd>
+        <dt>Account name</dt><dd>${esc(GIFT_ACCOUNT_NAME.trim())}</dd>
+        <dt>Account number</dt><dd class="lg-num" id="lg-number">${esc(GIFT_ACCOUNT_NUMBER.trim())}</dd>
+      </dl>
+      <button type="button" class="lg-copy" id="lg-copy">Copy account number</button>
+      <p class="lg-note">Send a transfer from your bank app. Davidgistmedia will never ask you for your card details or PIN in the chat.</p>
+    </section>
+  `;
+}
+
+function copyGiftNumber() {
+  const num = GIFT_ACCOUNT_NUMBER.trim();
+  const btn = extrasEl && extrasEl.querySelector("#lg-copy");
+
+  function done() {
+    if (!btn) return;
+    btn.textContent = "Copied";
+    setTimeout(function () { if (btn) btn.textContent = "Copy account number"; }, 2000);
+  }
+  function fallback() {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = num;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      done();
+    } catch (e) {
+      alert("Account number: " + num);
+    }
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(num).then(done).catch(fallback);
+  } else {
+    fallback();
+  }
+}
+
 /* ---- Chat ---- */
 function drawChat(list) {
   if (!chatEl) return;
@@ -377,7 +449,7 @@ async function sendChat(e) {
   pollChat();
 }
 
-/* ---- Everything under the player: like, share, chat ---- */
+/* ---- Everything under the player: like, share, gift, chat ---- */
 function showExtras() {
   if (extrasEl) return;
   const root = document.getElementById("live-root");
@@ -400,6 +472,8 @@ function showExtras() {
     </div>
     <div class="lx-icons" aria-label="Share this live broadcast">${shareIconsHtml()}</div>
 
+    ${giftHtml()}
+
     <section class="lc" aria-label="Live chat">
       <div class="lc-head"><span class="lc-dot"></span> Live chat</div>
       <div class="lc-list" aria-live="polite"><div class="lc-empty">Loading chat…</div></div>
@@ -418,6 +492,8 @@ function showExtras() {
   chatEl = extrasEl.querySelector(".lc");
   extrasEl.querySelector("#lx-like").addEventListener("click", handleLiveLike);
   extrasEl.querySelector("#lx-share").addEventListener("click", handleLiveShare);
+  const copyBtn = extrasEl.querySelector("#lg-copy");
+  if (copyBtn) copyBtn.addEventListener("click", copyGiftNumber);
   chatEl.querySelector(".lc-form").addEventListener("submit", sendChat);
 
   refreshLikes();
