@@ -65,11 +65,10 @@ function liveStyles() {
     ".lc-dot{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block}" +
     ".lc-list{height:320px;overflow-y:auto;padding:12px 16px;-webkit-overflow-scrolling:touch}" +
     ".lc-msg{margin:0 0 12px;line-height:1.4;overflow-wrap:anywhere}" +
-    ".lc-name{font-weight:800;margin-right:6px}" +
-    ".lc-name a{color:inherit;text-decoration:none}" +
+    ".lc-name{font-weight:800;margin-right:6px;display:inline-flex;align-items:center;gap:4px}" +
+    ".lc-name a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:4px}" +
     ".lc-name a:hover{text-decoration:underline}" +
-    ".lc-verified{display:inline-block;width:13px;height:13px;background:#f97316;border-radius:50%;margin-left:4px;vertical-align:middle;position:relative}" +
-    ".lc-verified::after{content:'✓';position:absolute;top:-2px;left:2px;font-size:9px;color:#fff;font-weight:900}" +
+    ".lc-vbadge{width:15px;height:15px;display:inline-block;vertical-align:middle;flex-shrink:0}" +
     ".lc-time{color:var(--muted);font-size:.75rem;margin-left:6px;white-space:nowrap}" +
     ".lc-text{color:var(--ink)}" +
     ".lc-empty{color:var(--muted);font-size:.92rem}" +
@@ -301,6 +300,9 @@ function shareIconsHtml() {
   `;
 }
 
+/* Orange SVG Verified Badge Icon */
+const VERIFIED_BADGE_SVG = `<svg class="lc-vbadge" viewBox="0 0 24 24" title="Verified Publisher"><path fill="#ff5722" d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.79-4-4-4-.495 0-.965.084-1.4.238C14.55 2.475 13.18 1.6 11.6 1.6c-1.58 0-2.95.875-3.6 2.148-.435-.154-.905-.238-1.4-.238-2.21 0-4 1.79-4 4 0 .495.084.965.238 1.4C1.575 9.55.7 10.92.7 12.5c0 1.58.875 2.95 2.148 3.6-.154.435-.238.905-.238 1.4 0 2.21 1.79 4 4 4 .495 0 .965-.084 1.4-.238.65 1.273 2.02 2.148 3.6 2.148 1.58 0 2.95-.875 3.6-2.148.435.154.905.238 1.4.238 2.21 0 4-1.79 4-4 0-.495-.084-.965-.238-1.4 1.273-.65 2.148-2.02 2.148-3.6z"/><path fill="#ffffff" d="M10.2 16.2l-3.5-3.5 1.4-1.4 2.1 2.1 5.3-5.3 1.4 1.4z"/></svg>`;
+
 function drawChat(list) {
   if (!chatEl) return;
   const box = chatEl.querySelector(".lc-list");
@@ -315,7 +317,7 @@ function drawChat(list) {
       const isAdmin = rawName.toLowerCase() === "ishola david" || rawName.toLowerCase() === "david gist media";
       
       const displayName = isAdmin 
-        ? `<a href="https://www.davidgistmedia.com" target="_blank" rel="noopener noreferrer">${esc(rawName)}</a><span class="lc-verified" title="Verified Publisher"></span>`
+        ? `<a href="https://www.davidgistmedia.com" target="_blank" rel="noopener noreferrer">${esc(rawName)}${VERIFIED_BADGE_SVG}</a>`
         : esc(rawName);
 
       return `
