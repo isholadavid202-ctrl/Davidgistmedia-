@@ -1,3 +1,10 @@
+/* One script for both pages.
+   live.html sets nothing, so it runs in video mode.
+   live-audio.html sets window.LIVE_MODE = "audio" before loading this file. */
+const MODE = window.LIVE_MODE === "audio" ? "audio" : "video";
+const SETTING_KEY = MODE === "audio" ? "live_audio_url" : "live_stream_url";
+const ROOM = MODE;
+
 var yr = document.getElementById("year");
 if (yr) yr.textContent = new Date().getFullYear();
 
@@ -41,7 +48,7 @@ function playerFor(raw) {
     return { type: "audio", url: audioUrl };
   }
 
-  /* 2. Embed code pasted from a radio service: <iframe src="...">  */
+  /* 2. Embed code pasted from a streaming service: <iframe src="...">  */
   if (/<iframe/i.test(value)) {
     const src = value.match(/src\s*=\s*["']([^"']+)["']/i);
     const h = value.match(/height\s*=\s*["']?(\d+)/i);
@@ -58,7 +65,9 @@ function playerFor(raw) {
   return { type: "video", url: embed };
 }
 
-const NO_LIVE = `<div class="empty-state">No live broadcast right now. Check back soon, or follow our social channels for a notification when we go live.</div>`;
+const NO_LIVE = MODE === "audio"
+  ? `<div class="empty-state">No live audio right now. Check back soon, or follow our social channels for a notification when we go live.</div>`
+  : `<div class="empty-state">No live broadcast right now. Check back soon, or follow our social channels for a notification when we go live.</div>`;
 const BAD_LINK = `<div class="empty-state">The live stream link couldn't be loaded.</div>`;
 
 function render(root, p) {
@@ -96,7 +105,7 @@ function render(root, p) {
   root.innerHTML = BAD_LINK;
 }
 
-/* ================= Live chat ================= */
+/* ================= Live chat (each page has its own room) ================= */
 
 const CHAT_MAX_SHOWN = 50;        // newest messages shown
 const CHAT_WINDOW_HOURS = 12;     // older messages are not shown
@@ -177,6 +186,7 @@ async function pollChat() {
     const res = await supabaseClient
       .from("live_messages")
       .select("id,name,content,created_at")
+      .eq("room", ROOM)
       .gte("created_at", since)
       .order("created_at", { ascending: false })
       .limit(CHAT_MAX_SHOWN);
@@ -218,7 +228,7 @@ async function sendChat(e) {
   try {
     const r = await supabaseClient
       .from("live_messages")
-      .insert({ name: name, content: content.slice(0, 300) });
+      .insert({ name: name, content: content.slice(0, 300), room: ROOM });
     error = r.error;
   } catch (err) {
     error = err;
@@ -293,7 +303,7 @@ async function loadLive() {
     res = await supabaseClient
       .from("settings")
       .select("value")
-      .eq("key", "live_stream_url")
+      .eq("key", SETTING_KEY)
       .maybeSingle();
   } catch (e) {
     res = { error: e };
