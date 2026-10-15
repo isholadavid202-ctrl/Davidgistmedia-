@@ -7,6 +7,7 @@
     <nav class="dgf-sections" aria-label="Sections">
       <a href="podcasts.html">Podcasts</a>
       <a href="live.html">Live</a>
+      <a href="live-audio.html">Live Audio</a>
       <a href="index.html#entertainment">Entertainment</a>
       <a href="index.html#sports">Sports</a>
       <a href="index.html#business">Business</a>
