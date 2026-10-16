@@ -62,7 +62,7 @@ jobs:
             "isMetaQuest": false,
             "orientation": "default",
             "fullScopeUrl": "$SITE/",
-            "minSdkVersion": 21
+            "minSdkVersion": 24
           }
           EOF
           bubblewrap update --skipVersionUpgrade
