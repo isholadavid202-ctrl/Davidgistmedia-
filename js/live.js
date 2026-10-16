@@ -286,7 +286,7 @@ const CHAT_MAX_SHOWN = 50;
 const CHAT_WINDOW_HOURS = 12;
 const CHAT_COOLDOWN_MS = 4000;
 const CHAT_POLL_MS = 4000;
-const HEARTBEAT_MS = 15000;
+const HEARTBEAT_MS = 5000;
 
 let extrasEl = null;
 let chatEl = null;
@@ -359,6 +359,23 @@ async function heartbeat() {
   } catch (e) {}
 }
 
+/* Tell the site straight away that this visitor left (works while the page is closing) */
+function leaveNow() {
+  try {
+    const key = supabaseClient.supabaseKey;
+    fetch(supabaseClient.supabaseUrl + "/rest/v1/rpc/live_leave", {
+      method: "POST",
+      keepalive: true,
+      headers: {
+        "Content-Type": "application/json",
+        apikey: key,
+        Authorization: "Bearer " + key
+      },
+      body: JSON.stringify({ p_room: ROOM, p_visitor: visitorId() })
+    }).catch(function () {});
+  } catch (e) {}
+}
+
 function startHeartbeat() {
   stopHeartbeat();
   heartbeat();
@@ -373,7 +390,17 @@ function stopHeartbeat() {
 }
 
 document.addEventListener("visibilitychange", function () {
-  if (!document.hidden && extrasEl) heartbeat();
+  if (!extrasEl) return;
+  if (document.hidden) leaveNow();
+  else heartbeat();
+});
+
+window.addEventListener("pagehide", function () {
+  if (extrasEl) leaveNow();
+});
+
+window.addEventListener("pageshow", function (e) {
+  if (e.persisted && extrasEl) heartbeat();
 });
 
 /* ---- Likes ---- */
@@ -620,6 +647,7 @@ function hideExtras() {
   }
   stopHeartbeat();
   if (extrasEl) {
+    leaveNow();
     extrasEl.remove();
     extrasEl = null;
   }
