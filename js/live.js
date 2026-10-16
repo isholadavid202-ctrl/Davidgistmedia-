@@ -183,7 +183,6 @@ function stopYT() {
 function startYT(root) {
   const box = root.querySelector("#lv-box");
   const frame = root.querySelector("#lv-frame");
-  const playBtn = root.querySelector("#lv-play");
   const muteBtn = root.querySelector("#lv-mute");
   const fullBtn = root.querySelector("#lv-full");
   const canFull = box.requestFullscreen || box.webkitRequestFullscreen;
@@ -205,17 +204,12 @@ function startYT(root) {
           muteBtn.style.display = ytPlayer.isMuted() ? "" : "none";
         },
         onStateChange: (ev) => {
-          playBtn.textContent = ev.data === 1 ? "⏸ Pause" : "▶ Play";
+          /* keep the broadcast live: if it ever gets paused, play it again */
+          if (ev.data === 2) ytPlayer.playVideo();
         }
       }
     });
   }).catch(fallback);
-
-  playBtn.addEventListener("click", () => {
-    if (!ytPlayer || !ytPlayer.getPlayerState) return;
-    if (ytPlayer.getPlayerState() === 1) ytPlayer.pauseVideo();
-    else ytPlayer.playVideo();
-  });
 
   muteBtn.addEventListener("click", () => {
     if (!ytPlayer || !ytPlayer.unMute) return;
@@ -263,7 +257,6 @@ function render(root, p) {
         <iframe id="lv-frame" src="${esc(p.url)}" title="Live broadcast" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
         <div class="lv-shield"></div>
         <div class="lv-controls">
-          <button type="button" class="lv-btn" id="lv-play">⏸ Pause</button>
           <button type="button" class="lv-btn lv-unmute" id="lv-mute">🔊 Tap to unmute</button>
           <button type="button" class="lv-btn" id="lv-full" style="margin-left:auto" aria-label="Fullscreen">⛶</button>
         </div>
