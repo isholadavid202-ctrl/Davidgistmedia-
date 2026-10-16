@@ -1,0 +1,99 @@
+name: Build APK
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      KS_PASS: davidgist-build-2026
+      SITE: https://davidgistmedia.onrender.com
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Bubblewrap
+        run: |
+          npm i -g @bubblewrap/cli
+          mkdir -p ~/.bubblewrap
+          echo "{\"jdkPath\":\"$JAVA_HOME\",\"androidSdkPath\":\"$ANDROID_HOME\"}" > ~/.bubblewrap/config.json
+      - name: Build app
+        run: |
+          mkdir twa && cd twa
+          curl -sL $SITE/manifest.json -o m.json
+          ICON=$(jq -r '[.icons[] | select(.sizes | contains("512"))][0].src' m.json)
+          case "$ICON" in http*) ;; /*) ICON="$SITE$ICON" ;; *) ICON="$SITE/$ICON" ;; esac
+          THEME=$(jq -r '.theme_color // "#C8102E"' m.json)
+          keytool -genkeypair -keystore android.keystore -alias android -keyalg RSA -keysize 2048 -validity 10000 -storepass "$KS_PASS" -keypass "$KS_PASS" -dname "CN=Davidgistmedia, O=Davidgistmedia, C=NG"
+          cat > twa-manifest.json <<EOF
+          {
+            "packageId": "com.onrender.davidgistmedia.twa",
+            "host": "davidgistmedia.onrender.com",
+            "name": "Davidgistmedia",
+            "launcherName": "Davidgistmedia",
+            "display": "standalone",
+            "themeColor": "$THEME",
+            "themeColorDark": "$THEME",
+            "navigationColor": "$THEME",
+            "navigationColorDark": "$THEME",
+            "navigationDividerColor": "$THEME",
+            "navigationDividerColorDark": "$THEME",
+            "backgroundColor": "#FFFFFF",
+            "enableNotifications": false,
+            "startUrl": "/",
+            "iconUrl": "$ICON",
+            "splashScreenFadeOutDuration": 0,
+            "signingKey": { "path": "./android.keystore", "alias": "android" },
+            "appVersionName": "1.0.0",
+            "appVersionCode": 1,
+            "shortcuts": [],
+            "generatorApp": "bubblewrap-cli",
+            "fallbackType": "customtabs",
+            "features": {},
+            "alphaDependencies": { "enabled": false },
+            "enableSiteSettingsShortcut": true,
+            "isChromeOSOnly": false,
+            "isMetaQuest": false,
+            "orientation": "default",
+            "fullScopeUrl": "$SITE/",
+            "minSdkVersion": 21
+          }
+          EOF
+          bubblewrap update --skipVersionUpgrade
+          for f in app/src/main/res/drawable-*/splash.png; do
+            [ -f "$f" ] || continue
+            convert -size 512x512 xc:white "$f"
+          done
+          export BUBBLEWRAP_KEYSTORE_PASSWORD="$KS_PASS"
+          export BUBBLEWRAP_KEY_PASSWORD="$KS_PASS"
+          bubblewrap build --skipPwaValidation
+          FP=$(keytool -list -v -keystore android.keystore -alias android -storepass "$KS_PASS" | grep 'SHA256:' | head -1 | sed 's/.*SHA256: //')
+          cd ..
+          mkdir -p .well-known
+          cat > .well-known/assetlinks.json <<EOF
+          [{
+            "relation": ["delegate_permission/common.handle_all_urls"],
+            "target": {
+              "namespace": "android_app",
+              "package_name": "com.onrender.davidgistmedia.twa",
+              "sha256_cert_fingerprints": ["$FP"]
+            }
+          }]
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: davidgistmedia-apk
+          path: twa/app-release-signed.apk
+      - name: Save assetlinks.json
+        run: |
+          git config user.name github-actions
+          git config user.email actions@github.com
+          git add .well-known/assetlinks.json
+          git commit -m "Update assetlinks.json" || echo "no change"
+          git push
