@@ -66,9 +66,19 @@ jobs:
           }
           EOF
           bubblewrap update --skipVersionUpgrade
+          python3 - <<'PY'
+          import zlib, struct
+          def chunk(t, d):
+              c = struct.pack(">I", len(d)) + t + d
+              return c + struct.pack(">I", zlib.crc32(t + d) & 0xffffffff)
+          w = h = 64
+          raw = b"".join(b"\x00" + b"\xff\xff\xff" * w for _ in range(h))
+          png = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0)) + chunk(b"IDAT", zlib.compress(raw)) + chunk(b"IEND", b"")
+          open("white.png", "wb").write(png)
+          PY
           for f in app/src/main/res/drawable-*/splash.png; do
             [ -f "$f" ] || continue
-            convert -size 512x512 xc:white "$f"
+            cp white.png "$f"
           done
           export BUBBLEWRAP_KEYSTORE_PASSWORD="$KS_PASS"
           export BUBBLEWRAP_KEY_PASSWORD="$KS_PASS"
