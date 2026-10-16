@@ -80,9 +80,13 @@ jobs:
             [ -f "$f" ] || continue
             cp white.png "$f"
           done
-          export BUBBLEWRAP_KEYSTORE_PASSWORD="$KS_PASS"
-          export BUBBLEWRAP_KEY_PASSWORD="$KS_PASS"
-          bubblewrap build --skipPwaValidation
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          $BT/zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk aligned.apk
+          $BT/apksigner sign --ks android.keystore --ks-key-alias android --ks-pass pass:$KS_PASS --key-pass pass:$KS_PASS --out app-release-signed.apk aligned.apk
           FP=$(keytool -list -v -keystore android.keystore -alias android -storepass "$KS_PASS" | grep 'SHA256:' | head -1 | sed 's/.*SHA256: //')
           cd ..
           mkdir -p .well-known
