@@ -1,12 +1,8 @@
-[
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "com.onrender.davidgistmedia.twa",
-      "sha256_cert_fingerprints": [
-        "21:14:E0:AA:25:73:6B:2A:56:EA:23:98:57:78:7C:CC:A2:11:0E:84:42:7B:6B:59:A5:2D:37:B2:75:EE:B7:05"
-      ]
-    }
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.onrender.davidgistmedia.twa",
+    "sha256_cert_fingerprints": ["85:4F:8A:5D:0A:A3:43:7E:F8:00:78:62:A7:AA:E7:29:39:2D:09:E8:BD:21:B6:8C:2A:EA:49:26:C7:AA:90:13"]
   }
-]
+}]
