@@ -380,6 +380,8 @@ app.get(["/article.html", "/article"], async (req, res) => {
   res.set("Cache-Control", "no-cache");
   res.status(status).type("html").send(html);
 });
+
+app.use("/.well-known", express.static(path.join(__dirname, ".well-known"), { dotfiles: "allow" }));
 app.use(express.static(ROOT, { extensions: ["html"] }));
 
 app.listen(PORT, () => console.log("Davidgistmedia running on port " + PORT));
