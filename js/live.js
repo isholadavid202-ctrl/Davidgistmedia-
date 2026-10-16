@@ -286,10 +286,12 @@ const CHAT_MAX_SHOWN = 50;
 const CHAT_WINDOW_HOURS = 12;
 const CHAT_COOLDOWN_MS = 4000;
 const CHAT_POLL_MS = 4000;
+const HEARTBEAT_MS = 15000;
 
 let extrasEl = null;
 let chatEl = null;
 let chatTimer = null;
+let hbTimer = null;
 let chatBusy = false;
 let chatLastSig = "";
 let chatLastSent = 0;
@@ -321,29 +323,73 @@ function chatTime(d) {
   }).replace(/am|pm/i, (m) => m.toUpperCase());
 }
 
+/* ---- Real viewer count: each open page sends a "still here" signal ---- */
+
+function randomId() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+}
+
+let memVisitorId = null;
+function visitorId() {
+  try {
+    let v = localStorage.getItem("dg_visitor_id");
+    if (!v) {
+      v = randomId();
+      localStorage.setItem("dg_visitor_id", v);
+    }
+    return v;
+  } catch (e) {
+    if (!memVisitorId) memVisitorId = randomId();
+    return memVisitorId;
+  }
+}
+
+async function heartbeat() {
+  if (!extrasEl || document.hidden) return;
+  try {
+    const r = await supabaseClient.rpc("live_heartbeat", {
+      p_room: ROOM,
+      p_visitor: visitorId()
+    });
+    if (!r.error && typeof r.data === "number" && extrasEl) {
+      const viewsEl = extrasEl.querySelector("#lx-view-count");
+      if (viewsEl) viewsEl.textContent = Math.max(r.data, 1);
+    }
+  } catch (e) {}
+}
+
+function startHeartbeat() {
+  stopHeartbeat();
+  heartbeat();
+  hbTimer = setInterval(heartbeat, HEARTBEAT_MS);
+}
+
+function stopHeartbeat() {
+  if (hbTimer) {
+    clearInterval(hbTimer);
+    hbTimer = null;
+  }
+}
+
+document.addEventListener("visibilitychange", function () {
+  if (!document.hidden && extrasEl) heartbeat();
+});
+
+/* ---- Likes ---- */
+
 async function refreshStats() {
   if (!extrasEl || likeBusy || document.hidden) return;
   try {
     const r = await supabaseClient
       .from("live_stats")
-      .select("likes, viewers")
+      .select("likes")
       .eq("room", ROOM)
       .maybeSingle();
     if (!r.error && r.data && extrasEl) {
       const likesEl = extrasEl.querySelector("#lx-like-count");
-      const viewsEl = extrasEl.querySelector("#lx-view-count");
       if (likesEl) likesEl.textContent = r.data.likes || 0;
-      if (viewsEl) viewsEl.textContent = r.data.viewers || 1;
     }
-  } catch (e) {}
-}
-
-async function registerViewer(isEntering) {
-  try {
-    await supabaseClient.rpc("live_view", {
-      p_room: ROOM,
-      p_delta: isEntering ? 1 : -1
-    });
   } catch (e) {}
 }
 
@@ -524,7 +570,7 @@ function showExtras() {
           <svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
           <span id="lx-like-count">0</span> Like
         </button>
-        <div class="lx-views" title="Current viewers watching on the site">
+        <div class="lx-views" title="People watching on the site right now">
           <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           <span id="lx-view-count">1</span> Watching
         </div>
@@ -556,7 +602,7 @@ function showExtras() {
   extrasEl.querySelector("#lx-share").addEventListener("click", handleLiveShare);
   chatEl.querySelector(".lc-form").addEventListener("submit", sendChat);
 
-  registerViewer(true);
+  startHeartbeat();
   refreshStats();
   pollChat();
   pollTicks = 0;
@@ -565,10 +611,6 @@ function showExtras() {
     pollTicks++;
     if (pollTicks % 5 === 0) refreshStats();
   }, CHAT_POLL_MS);
-
-  window.addEventListener("beforeunload", function () {
-    registerViewer(false);
-  });
 }
 
 function hideExtras() {
@@ -576,8 +618,8 @@ function hideExtras() {
     clearInterval(chatTimer);
     chatTimer = null;
   }
+  stopHeartbeat();
   if (extrasEl) {
-    registerViewer(false);
     extrasEl.remove();
     extrasEl = null;
   }
