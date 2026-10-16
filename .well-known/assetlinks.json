@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.onrender.davidgistmedia.twa",
+      "sha256_cert_fingerprints": [
+        "21:14:E0:AA:25:73:6B:2A:56:EA:23:98:57:78:7C:CC:A2:11:0E:84:42:7B:6B:59:A5:2D:37:B2:75:EE:B7:05"
+      ]
+    }
+  }
+]
