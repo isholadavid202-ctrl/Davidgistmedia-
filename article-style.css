@@ -1,0 +1,10 @@
+/* Article headline: smaller, bold sans-serif (BBC style). Loads after bbc.css. */
+.article-page h1,
+.ssr-article h1 {
+  font-family: var(--font) !important;
+  font-weight: 700 !important;
+  font-size: clamp(1.4rem, 5.2vw, 1.9rem) !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.01em !important;
+  margin: 8px 0 14px !important;
+}
