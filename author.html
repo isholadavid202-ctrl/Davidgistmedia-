@@ -18,12 +18,25 @@
   <meta property="og:type" content="profile">
   <title>Ishola David | Davidgistmedia</title>
   <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=10">
+  <link rel="stylesheet" href="bbc.css?v=16">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Ishola David",
+    "jobTitle": "Founder and CEO",
+    "worksFor": {
+      "@type": "NewsMediaOrganization",
+      "name": "Davidgistmedia",
+      "url": "https://davidgistmedia.onrender.com/"
+    }
+  }
+  </script>
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
@@ -43,21 +56,43 @@
     .drawer a:hover{color:var(--red)}
   </style>
 
-  <!-- Author card styling -->
+  <!-- Author profile styling -->
   <style>
-    .author-page{max-width:760px;padding:22px 16px 40px;margin:0 auto}
-    .author-back{display:inline-block;color:var(--muted);font-size:.92rem;text-decoration:underline;text-underline-offset:4px;margin-bottom:18px}
-    .author-title{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:clamp(1.8rem,6vw,2.3rem);font-weight:800;color:var(--ink);margin:0 0 24px}
-    .author-title svg{width:24px;height:24px;flex-shrink:0}
-    
-    .author-card{border:1px solid #e2e8f0;border-radius:12px;padding:32px 24px;background:var(--paper);text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
-    .author-photo{width:160px;height:160px;margin:0 auto 20px;border:3px solid #f97316;border-radius:50%;padding:3px;display:grid;place-items:center;overflow:hidden}
+    .author-page{max-width:760px;padding:20px 16px 40px;margin:0 auto}
+    .author-back{display:inline-block;color:var(--muted);font-size:.9rem;text-decoration:underline;text-underline-offset:4px;margin-bottom:16px}
+
+    .author-profile{border:1px solid var(--line);border-radius:12px;padding:18px 16px 16px;background:var(--paper);box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+    .ap-top{display:flex;align-items:center;gap:14px}
+    .author-photo{width:88px;height:88px;flex:0 0 88px;border:3px solid #f97316;border-radius:50%;padding:3px;display:grid;place-items:center;overflow:hidden}
     .author-photo img{width:100%;height:100%;border-radius:50%;object-fit:cover}
-    .author-photo.no-photo::after{content:"ID";font-family:var(--serif);font-weight:700;font-size:2.6rem;color:var(--muted)}
-    
-    .author-role{font-size:.98rem;font-weight:800;letter-spacing:.04em;color:#c25a00;margin:0 0 16px;text-transform:uppercase}
-    .author-bio{font-size:1.1rem;line-height:1.7;color:var(--ink);max-width:58ch;margin:0 auto}
-    .author-stories{margin-top:32px}
+    .author-photo.no-photo::after{content:"ID";font-family:var(--serif);font-weight:700;font-size:1.8rem;color:var(--muted)}
+    .ap-id{min-width:0}
+    .author-title{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-family:var(--serif);font-size:clamp(1.45rem,5.6vw,1.9rem);font-weight:800;line-height:1.15;color:var(--ink);margin:0}
+    .author-title svg{width:22px;height:22px;flex-shrink:0}
+    .author-role{font-size:.74rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--red);line-height:1.35;margin:6px 0 0}
+    .author-bio{font-size:.98rem;line-height:1.65;color:var(--ink);margin:16px 0 0}
+
+    .ap-stats{display:flex;margin:18px 0 0;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .ap-stat{flex:1;text-align:center}
+    .ap-stat + .ap-stat{border-left:1px solid var(--line)}
+    .ap-stat b{display:block;font-size:1.15rem;font-weight:800;line-height:1.2;color:var(--ink)}
+    .ap-stat span{display:block;font-size:.75rem;color:var(--muted);margin-top:2px}
+
+    .ap-links{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:16px 0 0}
+    .ap-btn{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 18px;border-radius:8px;background:var(--red);color:#fff;font-weight:700;font-size:.9rem}
+    .ap-icon{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font-size:1.05rem}
+    .ap-icon:hover{border-color:var(--ink)}
+
+    .author-stories{margin-top:28px}
+
+    @media(min-width:640px){
+      .author-profile{padding:24px 24px 20px}
+      .ap-top{gap:20px}
+      .author-photo{width:112px;height:112px;flex-basis:112px}
+      .author-title{font-size:2.1rem}
+      .author-role{font-size:.8rem}
+      .author-bio{font-size:1.02rem}
+    }
   </style>
 </head>
 <body>
@@ -99,21 +134,37 @@
   <main class="author-page" id="author-root">
     <a href="index.html" class="author-back">← Back to home</a>
 
-    <h1 class="author-title">
-      Ishola David
-      <span id="author-badge"></span>
-    </h1>
-
-    <section class="author-card" aria-label="Author information">
-      <div class="author-photo" id="author-photo">
-        <img id="author-img" alt="Ishola David">
+    <section class="author-profile" aria-label="Author information">
+      <div class="ap-top">
+        <div class="author-photo" id="author-photo">
+          <img id="author-img" alt="Ishola David">
+        </div>
+        <div class="ap-id">
+          <h1 class="author-title">
+            Ishola David
+            <span id="author-badge"></span>
+          </h1>
+          <p class="author-role">Founder &amp; CEO, Davidgistmedia</p>
+        </div>
       </div>
-
-      <h2 class="author-role">Founder &amp; CEO, Davidgistmedia</h2>
 
       <p class="author-bio">
         Ishola David is the Founder and CEO of Davidgistmedia, a news and entertainment platform covering Nigeria and the world. He writes and publishes stories on entertainment, sports, business, politics and breaking news from home and abroad, with a focus on keeping readers informed quickly and accurately.
       </p>
+
+      <div class="ap-stats" aria-label="Author facts">
+        <div class="ap-stat"><b id="stat-stories">–</b><span>Stories</span></div>
+        <div class="ap-stat"><b id="stat-topics">–</b><span>Topics</span></div>
+        <div class="ap-stat"><b id="stat-since">–</b><span>First story</span></div>
+      </div>
+
+      <div class="ap-links">
+        <a class="ap-btn" href="contact.html">Contact</a>
+        <a class="ap-icon" href="https://x.com/Davidgistmedian" target="_blank" rel="noopener" aria-label="Davidgistmedia on X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a class="ap-icon" href="https://www.instagram.com/davidgistmediang/" target="_blank" rel="noopener" aria-label="Davidgistmedia on Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a class="ap-icon" href="https://www.tiktok.com/@davidgistmediang" target="_blank" rel="noopener" aria-label="Davidgistmedia on TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        <a class="ap-icon" href="https://www.youtube.com/@davidgistmediang" target="_blank" rel="noopener" aria-label="Davidgistmedia on YouTube"><i class="fa-brands fa-youtube"></i></a>
+      </div>
     </section>
 
     <!-- Stories by this author -->
@@ -153,7 +204,7 @@
 
       /* Single clean verified badge */
       document.getElementById("author-badge").innerHTML =
-        '<svg viewBox="0 0 24 24" role="img" aria-label="Verified" style="width:24px;height:24px;vertical-align:middle">' +
+        '<svg viewBox="0 0 24 24" role="img" aria-label="Verified" style="width:22px;height:22px;vertical-align:middle">' +
         '<path fill="#ff5722" d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.79-4-4-4-.495 0-.965.084-1.4.238C14.55 2.475 13.18 1.6 11.6 1.6c-1.58 0-2.95.875-3.6 2.148-.435-.154-.905-.238-1.4-.238-2.21 0-4 1.79-4 4 0 .495.084.965.238 1.4C1.575 9.55.7 10.92.7 12.5c0 1.58.875 2.95 2.148 3.6-.154.435-.238.905-.238 1.4 0 2.21 1.79 4 4 4 .495 0 .965-.084 1.4-.238.65 1.273 2.02 2.148 3.6 2.148 1.58 0 2.95-.875 3.6-2.148.435.154.905.238 1.4.238 2.21 0 4-1.79 4-4 0-.495-.084-.965-.238-1.4 1.273-.65 2.148-2.02 2.148-3.6z"/>' +
         '<path fill="#ffffff" d="M10.2 16.2l-3.5-3.5 1.4-1.4 2.1 2.1 5.3-5.3 1.4 1.4z"/>' +
         '</svg>';
@@ -176,7 +227,7 @@
     })();
   </script>
 
-  <!-- Dynamic Articles loader from Supabase -->
+  <!-- Dynamic stories and facts from Supabase -->
   <script>
     (function () {
       var AUTHOR_NAME = "Ishola David";
@@ -221,9 +272,40 @@
         box.innerHTML =
           '<div class="cat-section">' +
             '<div class="cat-head"><div class="left"><span class="bar"></span>' +
-            '<h2>Stories by ' + esc(AUTHOR_NAME) + '</h2></div></div>' +
+            '<h2>Latest stories by ' + esc(AUTHOR_NAME) + '</h2></div></div>' +
             inner +
           '</div>';
+      }
+
+      function setStat(id, value) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = value;
+      }
+
+      async function loadStats() {
+        try {
+          var res = await supabaseClient
+            .from("articles")
+            .select("category,published_at")
+            .ilike("author", AUTHOR_NAME)
+            .limit(1000);
+          if (res.error) throw res.error;
+
+          var rows = res.data || [];
+          var topics = {};
+          var first = null;
+          rows.forEach(function (r) {
+            if (r.category) topics[String(r.category).toLowerCase()] = 1;
+            var t = new Date(r.published_at);
+            if (!isNaN(t.getTime()) && (!first || t < first)) first = t;
+          });
+
+          setStat("stat-stories", String(rows.length));
+          setStat("stat-topics", String(Object.keys(topics).length));
+          setStat("stat-since", first
+            ? first.toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "Africa/Lagos" })
+            : "–");
+        } catch (e) {}
       }
 
       async function load() {
@@ -249,6 +331,7 @@
         }
       }
 
+      loadStats();
       load();
     })();
   </script>
