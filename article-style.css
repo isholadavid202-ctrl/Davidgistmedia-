@@ -11,24 +11,32 @@
   margin: 8px 0 14px !important;
 }
 
-/* Author name and date: small and quiet */
-.article-page .byline-author {
-  font-size: 0.82rem !important;
-  font-weight: 600 !important;
-  margin-bottom: 3px !important;
+/* Order: back link, category, headline, photo, then author and date, then the rest */
+.article-page {
+  display: flex;
+  flex-direction: column;
 }
-.article-page .byline-author svg,
-.article-page .byline-author img {
-  width: 14px !important;
-  height: 14px !important;
+.article-page > .back-link {
+  order: -5;
+  align-self: flex-start;
 }
-.article-page .byline-author i {
-  font-size: 0.9em !important;
+.article-page > .cat {
+  order: -4;
 }
-.article-page .byline-info {
-  font-size: 0.78rem !important;
+.article-page > h1 {
+  order: -3;
 }
-.article-page .byline-info svg {
-  width: 13px !important;
-  height: 13px !important;
+.article-page > img.hero-img,
+.article-page > div[style*="56.25%"] {
+  order: -2;
+}
+
+/* Author and date line now sits under the photo */
+.article-page img.hero-img {
+  margin-bottom: 0 !important;
+}
+.article-page > .meta.byline {
+  margin: 14px 0 14px !important;
+  padding: 0 !important;
+  border: 0 !important;
 }
