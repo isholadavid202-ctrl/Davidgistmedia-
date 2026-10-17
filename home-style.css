@@ -1,0 +1,114 @@
+/* Daily Mail style homepage. Loads after bbc.css. */
+
+/* ===== Lead story: full-width photo fading into black ===== */
+.hero-grid .lead-story {
+  position: relative !important;
+  display: block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  background: #000 !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+.hero-grid .lead-story img {
+  position: static !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  aspect-ratio: 5 / 4 !important;
+  object-fit: cover !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 58%, transparent 100%);
+}
+.hero-grid .lead-story .overlay {
+  position: relative !important;
+  inset: auto !important;
+  z-index: 1;
+  margin: -40px 0 0 !important;
+  padding: 0 16px 22px !important;
+  background: none !important;
+  color: #fff !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+}
+.hero-grid .lead-story .lead-tag {
+  order: 0 !important;
+  background: none !important;
+  color: #ff4d5e !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  margin: 0 !important;
+}
+.hero-grid .lead-story .lead-tag::before {
+  display: none !important;
+}
+.hero-grid .lead-story h1 {
+  order: 1 !important;
+  flex: none !important;
+  font-family: var(--font) !important;
+  font-weight: 700 !important;
+  font-size: clamp(1.55rem, 6.8vw, 2.1rem) !important;
+  line-height: 1.18 !important;
+  letter-spacing: -0.01em !important;
+  color: #fff !important;
+  margin: 0 !important;
+}
+.hero-grid .lead-story p {
+  display: none !important;
+}
+.hero-grid .lead-story .lead-meta {
+  order: 3 !important;
+  flex: none !important;
+  color: #aaa !important;
+  font-size: 0.85rem !important;
+  margin: 4px 0 0 !important;
+}
+
+/* ===== Phones: the lead story runs edge to edge ===== */
+@media (max-width: 819px) {
+  .hero-grid .lead-story {
+    border-radius: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+  }
+  #hero-section .secondary-list {
+    border-top: 4px solid var(--red);
+    margin-top: 16px;
+  }
+}
+
+/* ===== Story headlines: bold sans in red (the Daily Mail uses blue) ===== */
+#hero-section .secondary-item h3,
+#trending-section .story-card h3,
+#category-sections .story-card h3 {
+  font-family: var(--font) !important;
+  font-weight: 700 !important;
+  font-size: 1.08rem !important;
+  line-height: 1.25 !important;
+  color: var(--red) !important;
+}
+#category-sections .story-card.feature h3 {
+  font-size: 1.45rem !important;
+}
+
+/* ===== Section lines: thick red rule on top ===== */
+#category-sections .cat-section {
+  border-top: 4px solid var(--red) !important;
+}
+#category-sections .cat-section::before {
+  display: none !important;
+}
