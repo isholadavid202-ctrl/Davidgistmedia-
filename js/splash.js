@@ -6,7 +6,7 @@
     sessionStorage.setItem("dg_splash", "1");
   } catch (e) {}
 
-  var SECONDS = 15;          // change this number to make it shorter or longer
+  var SECONDS = 9;           // change this number to make it shorter or longer
   var RED = "#C8102E";
   var esc = function (s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
