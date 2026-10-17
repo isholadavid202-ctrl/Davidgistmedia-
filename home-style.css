@@ -91,7 +91,7 @@
   }
 }
 
-/* ===== Story headlines: bold sans in red (the Daily Mail uses blue) ===== */
+/* ===== Story headlines: bold sans in black ===== */
 #hero-section .secondary-item h3,
 #trending-section .story-card h3,
 #category-sections .story-card h3 {
@@ -99,7 +99,7 @@
   font-weight: 700 !important;
   font-size: 1.08rem !important;
   line-height: 1.25 !important;
-  color: var(--red) !important;
+  color: var(--ink) !important;
 }
 #category-sections .story-card.feature h3 {
   font-size: 1.45rem !important;
