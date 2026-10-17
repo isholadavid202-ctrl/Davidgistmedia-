@@ -1,6 +1,4 @@
-/* Article page styles. Loads after bbc.css. */
-
-/* Headline: smaller, bold sans-serif (BBC style) */
+/* Article headline: smaller, bold sans-serif (BBC style). Loads after bbc.css. */
 .article-page h1,
 .ssr-article h1 {
   font-family: var(--font) !important;
@@ -9,34 +7,4 @@
   line-height: 1.25 !important;
   letter-spacing: -0.01em !important;
   margin: 8px 0 14px !important;
-}
-
-/* Order: back link, category, headline, photo, then author and date, then the rest */
-.article-page {
-  display: flex;
-  flex-direction: column;
-}
-.article-page > .back-link {
-  order: -5;
-  align-self: flex-start;
-}
-.article-page > .cat {
-  order: -4;
-}
-.article-page > h1 {
-  order: -3;
-}
-.article-page > img.hero-img,
-.article-page > div[style*="56.25%"] {
-  order: -2;
-}
-
-/* Author and date line now sits under the photo */
-.article-page img.hero-img {
-  margin-bottom: 0 !important;
-}
-.article-page > .meta.byline {
-  margin: 14px 0 14px !important;
-  padding: 0 !important;
-  border: 0 !important;
 }
