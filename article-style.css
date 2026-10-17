@@ -11,15 +11,7 @@
   margin: 8px 0 14px !important;
 }
 
-/* Author and date line: small and quiet, no line under it */
-.article-page > .meta.byline {
-  margin: 0 0 14px !important;
-  padding: 0 !important;
-  border: 0 !important;
-}
-.article-page img.hero-img {
-  margin-bottom: 12px !important;
-}
+/* Author name and date: small and quiet */
 .article-page .byline-author {
   font-size: 0.82rem !important;
   font-weight: 600 !important;
