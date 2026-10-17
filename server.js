@@ -361,13 +361,18 @@ app.get(["/article.html", "/article"], async (req, res) => {
           .filter((p) => p.trim())
           .map((p) => `<p>${esc(p)}</p>`)
           .join("");
+
+        // Same order as the finished page: category, headline, photo, then the author line
         const ssr =
           `<div class="ssr-article">` +
           `<a href="index.html" class="back-link">&larr; Back to home</a>` +
           `<div class="cat">${esc(a.category)}</div>` +
           `<h1>${esc(title)}</h1>` +
-          `<div class="meta">${esc(author)} · ${esc(fmtDate(a.published_at))}</div>` +
           (img ? `<img class="hero-img" src="${esc(img)}" alt="${esc(title)}">` : "") +
+          `<div class="meta byline">` +
+          `<div class="byline-author">By ${esc(author)}</div>` +
+          `<div class="byline-info"><time>${esc(fmtDate(a.published_at))}</time></div>` +
+          `</div>` +
           `<div class="ssr-body">${paragraphs}</div>` +
           `</div>`;
         html = html.replace(/(<main[^>]*id="article-root"[^>]*>)[\s\S]*?(<\/main>)/i, (m, open, close) => open + ssr + close);
