@@ -7,7 +7,12 @@ if (yr) yr.textContent = new Date().getFullYear();
   st.textContent =
     ".share-row{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 22px}" +
     ".share-row a{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;color:var(--ink);font-size:1.05rem;text-decoration:none;background:var(--paper)}" +
-    ".share-row a:hover{border-color:var(--ink);color:var(--red)}";
+    ".share-row a:hover{border-color:var(--ink);color:var(--red)}" +
+    /* Facebook-style comment avatar layout */
+    ".comment-item{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--line)}" +
+    ".comment-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;background:var(--line);flex-shrink:0}" +
+    ".comment-content{flex:1}" +
+    ".comment-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}";
   document.head.appendChild(st);
 })();
 
@@ -367,9 +372,17 @@ async function loadRelated() {
 
 async function loadComments() {
   const list = document.getElementById("comments-list");
+  
+  // Fetch comments and join with profiles table to get avatar & full_name
   const { data, error } = await supabaseClient
     .from("comments")
-    .select("*")
+    .select(`
+      *,
+      profiles (
+        full_name,
+        avatar_url
+      )
+    `)
     .eq("article_id", currentArticle.id)
     .order("created_at", { ascending: false });
 
@@ -385,18 +398,27 @@ async function loadComments() {
   }
 
   list.innerHTML = data.map((c) => {
-    // Clickable link if commenter has a registered name/account
-    const authorLink = c.name 
-      ? `<a href="author.html?name=${encodeURIComponent(c.name)}" style="color:inherit; font-weight:700; text-decoration:underline;">${escapeHtml(c.name)}</a>`
-      : `<strong>${escapeHtml(c.name || "Anonymous")}</strong>`;
+    // Fallback profile details if profile table join exists
+    const profile = c.profiles || {};
+    const displayName = profile.full_name || c.name || "Anonymous";
+    
+    // Default avatar icon or user photo URL
+    const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'></path><circle cx='12' cy='7' r='4'></circle></svg>";
+    const avatarUrl = profile.avatar_url ? escapeHtml(profile.avatar_url) : defaultAvatar;
+
+    // Clickable author name/profile link
+    const authorLink = `<a href="author.html?name=${encodeURIComponent(displayName)}" style="color:inherit; font-weight:700; text-decoration:none;">${escapeHtml(displayName)}</a>`;
 
     return `
       <div class="comment-item">
-        <div class="comment-head">
-          ${authorLink}
-          <span class="meta">${formatWhen(c.created_at)}</span>
+        <img class="comment-avatar" src="${avatarUrl}" alt="">
+        <div class="comment-content">
+          <div class="comment-head">
+            ${authorLink}
+            <span class="meta">${formatWhen(c.created_at)}</span>
+          </div>
+          <p>${escapeHtml(c.content)}</p>
         </div>
-        <p>${escapeHtml(c.content)}</p>
       </div>
     `;
   }).join("");
