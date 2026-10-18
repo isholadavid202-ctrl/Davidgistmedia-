@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account Settings | Davidgistmedia</title>
+  <title>Account Center | Davidgistmedia</title>
   <link rel="stylesheet" href="styles.css?v=3">
   <link rel="stylesheet" href="bbc.css?v=16">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -29,7 +29,7 @@
     }
 
     .account-container {
-      max-width: 540px;
+      max-width: 520px;
       margin: 30px auto;
       padding: 0 16px;
     }
@@ -64,14 +64,14 @@
 
     .avatar-wrapper {
       position: relative;
-      width: 80px;
-      height: 80px;
+      width: 72px;
+      height: 72px;
       flex-shrink: 0;
     }
 
     .avatar-img {
-      width: 80px;
-      height: 80px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--accent-red);
@@ -84,8 +84,8 @@
       right: 0;
       background: var(--accent-red);
       color: #fff;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -98,7 +98,7 @@
 
     .user-info h2 {
       margin: 0;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
     }
 
@@ -117,7 +117,7 @@
     .menu-item {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       padding: 12px 14px;
       background: #141414;
       border: 1px solid var(--border-color);
@@ -127,18 +127,12 @@
       font-weight: 600;
       font-size: 0.95rem;
       cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .menu-item:hover {
-      background: #252525;
     }
 
     .menu-item i {
       width: 20px;
       text-align: center;
       color: var(--accent-red);
-      font-size: 1.1rem;
     }
 
     .form-group {
@@ -211,11 +205,10 @@
         </div>
         <div class="user-info">
           <h2 id="profile-title-name">Account Center</h2>
-          <p id="profile-email">Checking account...</p>
+          <p id="profile-email">Checking session...</p>
         </div>
       </div>
 
-      <!-- Logged-in options form -->
       <div id="logged-in-section">
         <form id="profile-form">
           <div class="form-group">
@@ -225,7 +218,7 @@
 
           <div class="form-group">
             <label for="bio">Bio / About</label>
-            <textarea id="bio" class="form-control" rows="3" placeholder="Short bio..."></textarea>
+            <textarea id="bio" class="form-control" rows="3" placeholder="Write a short summary..."></textarea>
           </div>
 
           <button type="submit" id="save-btn" class="btn-save">Save Profile Changes</button>
@@ -236,13 +229,6 @@
           <a href="#" id="reset-pw-btn" class="menu-item"><i class="fa-solid fa-key"></i> Change / Reset Password</a>
           <button id="logout-btn" class="menu-item logout-btn" style="width:100%; border:none; text-align:left;"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
         </div>
-      </div>
-
-      <!-- Logged-out options fallback -->
-      <div id="logged-out-section" class="menu-list" style="display:none;">
-        <a href="login.html" class="menu-item"><i class="fa-solid fa-right-to-bracket"></i> Sign In to Account</a>
-        <a href="login.html?action=register" class="menu-item"><i class="fa-solid fa-user-plus"></i> Create New Account</a>
-        <a href="login.html?action=reset" class="menu-item"><i class="fa-solid fa-unlock-keyhole"></i> Forgot Password?</a>
       </div>
     </div>
   </div>
@@ -255,11 +241,7 @@
       const { data: { user } } = await supabaseClient.auth.getUser();
 
       if (!user) {
-        document.getElementById("logged-in-section").style.display = "none";
-        document.getElementById("logged-out-section").style.display = "flex";
-        document.getElementById("upload-badge").style.display = "none";
-        document.getElementById("profile-title-name").textContent = "Not Logged In";
-        document.getElementById("profile-email").textContent = "Please sign in to manage your profile.";
+        window.location.href = "login.html";
         return;
       }
 
@@ -284,7 +266,6 @@
       }
     }
 
-    // Direct Image Selection
     document.getElementById("file-input").addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -297,7 +278,6 @@
       }
     });
 
-    // Save Profile
     document.getElementById("profile-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!currentUserId) return;
@@ -306,7 +286,7 @@
       const btn = document.getElementById("save-btn");
 
       btn.disabled = true;
-      status.textContent = "Saving changes...";
+      status.textContent = "Saving...";
       status.style.color = "#aaa";
 
       let avatarUrl = document.getElementById("avatar-preview").src;
@@ -344,16 +324,15 @@
       btn.disabled = false;
 
       if (error) {
-        status.textContent = "Error saving profile. Try again.";
+        status.textContent = "Error saving profile.";
         status.style.color = "#ff4d4d";
       } else {
-        status.textContent = "Profile updated!";
+        status.textContent = "Profile updated successfully!";
         status.style.color = "#4edf72";
         document.getElementById("profile-title-name").textContent = fullName;
       }
     });
 
-    // Forgot / Reset Password Action
     document.getElementById("reset-pw-btn").addEventListener("click", async (e) => {
       e.preventDefault();
       const { data: { user } } = await supabaseClient.auth.getUser();
@@ -361,11 +340,10 @@
         const { error } = await supabaseClient.auth.resetPasswordForEmail(user.email, {
           redirectTo: window.location.origin + '/login.html?action=reset'
         });
-        alert(error ? error.message : "Password reset email sent to " + user.email);
+        alert(error ? error.message : "Password reset link sent to " + user.email);
       }
     });
 
-    // Log Out Action
     document.getElementById("logout-btn").addEventListener("click", async () => {
       await supabaseClient.auth.signOut();
       window.location.href = "index.html";
