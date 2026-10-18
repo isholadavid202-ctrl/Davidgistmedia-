@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Turns night mode on before the page is drawn, so it does not flash white -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("dg_theme") || localStorage.getItem("theme");
+        if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      } catch (e) {}
+    })();
+  </script>
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6QHB1S6KFV"></script>
   <script>
@@ -27,32 +37,67 @@
      crossorigin="anonymous"></script>
 
   <style>
-    /* Dark Mode Styling Fix for Articles */
+    /* Night mode colors: text, boxes, lines and muted text all use these */
+    html[data-theme="dark"],
+    body.dark-mode {
+      --ink: #ececea;
+      --paper: #1b1b1d;
+      --page: #121213;
+      --line: #2f2f31;
+      --muted: #a3a3a0;
+      --near-black: #0a0a0b;
+      --red: #e8344c;
+      color-scheme: dark;
+    }
+    html[data-theme="dark"] body,
     body.dark-mode {
       background-color: #0d0d0d !important;
       color: #f0f0f0 !important;
     }
-    body.dark-mode .masthead, 
-    body.dark-mode .util-bar {
+    html[data-theme="dark"] .masthead,
+    html[data-theme="dark"] .util-bar,
+    html[data-theme="dark"] .tabs,
+    body.dark-mode .masthead,
+    body.dark-mode .util-bar,
+    body.dark-mode .tabs {
       background-color: #161616 !important;
       border-color: #2a2a2a !important;
     }
-    body.dark-mode a, 
-    body.dark-mode h1, 
-    body.dark-mode h2, 
-    body.dark-mode h3, 
-    body.dark-mode h4, 
-    body.dark-mode p, 
-    body.dark-mode span, 
-    body.dark-mode div,
-    body.dark-mode .article-title,
-    body.dark-mode .article-body,
-    body.dark-mode .byline,
-    body.dark-mode .time-read {
-      color: #f0f0f0 !important;
+    html[data-theme="dark"] a,
+    body.dark-mode a {
+      color: #f0f0f0;
     }
-    body.dark-mode .top-account-link {
-      color: #bb1919 !important;
+    html[data-theme="dark"] a.top-account-link,
+    body.dark-mode a.top-account-link {
+      color: #e8344c !important;
+    }
+    html[data-theme="dark"] .comment-form input,
+    html[data-theme="dark"] .comment-form textarea,
+    body.dark-mode .comment-form input,
+    body.dark-mode .comment-form textarea {
+      background: #242427;
+      color: #ececea;
+      border-color: #3a3a3d;
+    }
+    html[data-theme="dark"] .empty-state,
+    body.dark-mode .empty-state {
+      background: #18181a;
+      border-color: #3a3a3d;
+    }
+    html[data-theme="dark"] .engage-btn,
+    body.dark-mode .engage-btn {
+      color: #d6d6d3;
+    }
+    /* The "Get the app" card */
+    html[data-theme="dark"] #dgm-install,
+    body.dark-mode #dgm-install {
+      background: #1b1b1d;
+      color: #ececea;
+      border-color: #333;
+    }
+    html[data-theme="dark"] #dgm-install span,
+    body.dark-mode #dgm-install span {
+      color: #bdbdbd;
     }
 
     .util-bar .wrap {
@@ -190,7 +235,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
-  <script src="js/article.js?v=5"></script>
+  <script src="js/article.js?v=6"></script>
   <script src="/js/install-banner.js?v=1"></script>
 
   <script>
@@ -213,21 +258,26 @@
     (function () {
       const themeBtn = document.getElementById("theme-toggle-btn");
       const themeIcon = document.getElementById("theme-icon");
-      
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme === "dark") {
-        document.body.classList.add("dark-mode");
-        if (themeIcon) themeIcon.className = "fa-solid fa-sun";
+
+      function applyTheme(isDark) {
+        document.body.classList.toggle("dark-mode", isDark);
+        document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+        if (themeIcon) themeIcon.className = isDark ? "fa-solid fa-sun" : "fa-regular fa-moon";
       }
+
+      let saved = null;
+      try { saved = localStorage.getItem("dg_theme") || localStorage.getItem("theme"); } catch (e) {}
+      applyTheme(saved === "dark");
 
       if (themeBtn) {
         themeBtn.addEventListener("click", function () {
-          document.body.classList.toggle("dark-mode");
-          const isDark = document.body.classList.contains("dark-mode");
-          localStorage.setItem("theme", isDark ? "dark" : "light");
-          if (themeIcon) {
-            themeIcon.className = isDark ? "fa-solid fa-sun" : "fa-regular fa-moon";
-          }
+          const isDark = !document.body.classList.contains("dark-mode");
+          applyTheme(isDark);
+          // Saved under both names so the homepage and the story pages stay in step
+          try {
+            localStorage.setItem("dg_theme", isDark ? "dark" : "light");
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+          } catch (e) {}
         });
       }
     })();
