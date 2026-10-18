@@ -384,12 +384,22 @@ async function loadComments() {
     return;
   }
 
-  list.innerHTML = data.map((c) => `
-    <div class="comment-item">
-      <div class="comment-head"><strong>${escapeHtml(c.name || "Anonymous")}</strong><span class="meta">${formatWhen(c.created_at)}</span></div>
-      <p>${escapeHtml(c.content)}</p>
-    </div>
-  `).join("");
+  list.innerHTML = data.map((c) => {
+    // Clickable link if commenter has a registered name/account
+    const authorLink = c.name 
+      ? `<a href="author.html?name=${encodeURIComponent(c.name)}" style="color:inherit; font-weight:700; text-decoration:underline;">${escapeHtml(c.name)}</a>`
+      : `<strong>${escapeHtml(c.name || "Anonymous")}</strong>`;
+
+    return `
+      <div class="comment-item">
+        <div class="comment-head">
+          ${authorLink}
+          <span class="meta">${formatWhen(c.created_at)}</span>
+        </div>
+        <p>${escapeHtml(c.content)}</p>
+      </div>
+    `;
+  }).join("");
 }
 
 async function handleCommentSubmit(e) {
