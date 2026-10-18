@@ -5,42 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#000000">
-  <title>Sign in | Davidgistmedia</title>
+  <title>Your account | Davidgistmedia</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     *{box-sizing:border-box}
     html,body{margin:0;min-height:100%;background:#000;color:#fff}
-    body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.4}
-    .page{min-height:100vh;display:flex;flex-direction:column;max-width:520px;margin:0 auto;padding:16px 20px calc(24px + env(safe-area-inset-bottom))}
-    .top{display:flex;justify-content:flex-end}
-    .close{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;background:#fff;color:#000;font-size:28px;line-height:1;text-decoration:none;font-weight:700}
-    .logo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:72px;height:72px;margin:20px 0 28px;background:#c8102e;color:#fff}
-    .logo b{font:700 44px/40px Georgia,"Times New Roman",serif}
-    .logo i{display:block;width:36px;height:2px;background:#fff}
-    h1{font-size:1.6rem;line-height:1.2;margin:0 0 28px;font-weight:700}
-    .lede{color:#cfcfcf;margin:-12px 0 24px}
-    label{display:block;color:#bdbdbd;margin:0 0 4px}
-    input{width:100%;background:transparent;border:0;border-bottom:2px solid #fff;color:#fff;font:inherit;font-size:1.15rem;padding:10px 0;border-radius:0;outline:none}
+    body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.45}
+    .page{min-height:100vh;display:flex;flex-direction:column;max-width:520px;margin:0 auto;padding:14px 20px calc(24px + env(safe-area-inset-bottom))}
+
+    .top{display:flex;align-items:center;justify-content:space-between;padding-bottom:16px;border-bottom:1px solid #1f1f1f}
+    .brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none}
+    .mark{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:40px;height:40px;background:#c8102e}
+    .mark b{font:700 25px/22px Georgia,"Times New Roman",serif}
+    .mark i{display:block;width:20px;height:1.5px;background:#fff}
+    .brand span{font:700 1.15rem Georgia,"Times New Roman",serif}
+    .close{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:#fff;color:#000;font-size:26px;line-height:1;text-decoration:none;font-weight:700}
+
+    section{padding-top:28px}
+    h1{font-size:1.6rem;line-height:1.2;margin:0 0 26px;font-weight:700}
+    .lede{color:#cfcfcf;margin:-10px 0 22px}
+    label{display:block;color:#bdbdbd;margin:0 0 4px;font-size:.92rem}
+    input{width:100%;background:transparent;border:0;border-bottom:2px solid #fff;color:#fff;font:inherit;font-size:1.1rem;padding:10px 0;border-radius:0;outline:none}
     input:focus{border-bottom-color:#ff4d5e}
-    input::placeholder{color:#8a8a8a}
-    .btn{display:block;width:100%;margin:28px 0 0;padding:18px 12px;background:#c8102e;color:#fff;border:0;font:inherit;font-weight:700;font-size:1.05rem;cursor:pointer;text-align:center;text-decoration:none}
+    input::placeholder{color:#7d7d7d}
+
+    .btn{display:block;width:100%;margin:26px 0 0;padding:17px 12px;background:#c8102e;color:#fff;border:2px solid #c8102e;font:inherit;font-weight:700;font-size:1.02rem;cursor:pointer;text-align:center;text-decoration:none;border-radius:10px}
     .btn:disabled{opacity:.6;cursor:default}
-    .btn.alt{background:transparent;border:2px solid #fff;margin-top:14px}
+    .btn.alt{background:transparent;border-color:#4a4a4a;color:#fff}
+    .btn.small{margin-top:16px;padding:13px 12px;font-size:.95rem}
     .link{display:inline-block;margin-top:22px;color:#ff6b7d;font-weight:600;text-decoration:underline;text-underline-offset:4px;background:none;border:0;padding:0;font-size:1rem;cursor:pointer}
+
     .msg{min-height:1.4em;margin:14px 0 0;font-size:.95rem}
     .msg.err{color:#ff7a8a}
     .msg.ok{color:#8be3a1}
+
+    .profile{display:flex;align-items:center;gap:16px;margin-bottom:6px}
+    .avatar{flex:0 0 76px;width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#d3132f,#8f0b21);color:#fff;font-size:2rem;font-weight:800;box-shadow:0 0 0 3px #000,0 0 0 5px #c8102e}
+    .who{min-width:0}
+    .pill{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8be3a1;margin-bottom:4px}
+    .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:#8be3a1}
+    .who h1{font-size:1.55rem;margin:0}
+    .email{margin:3px 0 0;color:#cfcfcf;font-size:.95rem;word-break:break-all}
+    .since{margin:2px 0 0;color:#8a8a8a;font-size:.85rem}
+
+    .card{background:#101010;border:1px solid #262626;border-radius:14px;padding:18px;margin-top:20px}
+    .card h2{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:#9a9a9a;margin:0 0 12px;font-weight:700}
+    .tile{display:flex;align-items:center;justify-content:space-between;padding:14px 2px;color:#fff;text-decoration:none;font-weight:600}
+    .tile + .tile{border-top:1px solid #262626}
+    .tile span{color:#c8102e;font-size:1.2rem}
+
     .spacer{flex:1}
-    .foot{margin-top:40px;font-size:.9rem;color:#cfcfcf}
+    .foot{margin-top:36px;font-size:.88rem;color:#bdbdbd}
     .foot a{color:#fff;font-weight:600}
     [hidden]{display:none !important}
   </style>
 </head>
 <body>
   <div class="page">
-    <div class="top"><a class="close" href="index.html" aria-label="Close">&times;</a></div>
-    <div class="logo" aria-hidden="true"><b>D</b><i></i><i></i></div>
+    <div class="top">
+      <a class="brand" href="index.html" aria-label="Davidgistmedia home">
+        <div class="mark" aria-hidden="true"><b>D</b><i></i><i></i></div>
+        <span>Davidgistmedia</span>
+      </a>
+      <a class="close" href="index.html" aria-label="Close">&times;</a>
+    </div>
 
     <section id="step-email">
       <h1>Enter your email address to sign in or create an account</h1>
@@ -60,14 +92,39 @@
         <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="123456" required>
         <button class="btn" id="verify-btn" type="submit">Verify</button>
       </form>
-      <button class="btn alt" id="resend-btn" type="button" disabled>Send a new code</button>
+      <button class="btn alt small" id="resend-btn" type="button" disabled>Send a new code</button>
       <button class="link" id="change-email" type="button">Use a different email</button>
     </section>
 
     <section id="step-in" hidden>
-      <h1>You&rsquo;re signed in</h1>
-      <p class="lede">Signed in as <strong id="who"></strong></p>
+      <div class="profile">
+        <div class="avatar" id="avatar" aria-hidden="true">D</div>
+        <div class="who">
+          <div class="pill">Signed in</div>
+          <h1 id="hello">Welcome</h1>
+          <p class="email" id="who-email"></p>
+          <p class="since" id="since"></p>
+        </div>
+      </div>
+
       <a class="btn" href="index.html">Go to the homepage</a>
+
+      <div class="card">
+        <h2>Your details</h2>
+        <form id="name-form" novalidate>
+          <label for="name">Your name</label>
+          <input id="name" type="text" autocomplete="name" maxlength="60" placeholder="How should we call you?">
+          <button class="btn alt small" id="save-name" type="submit">Save name</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Explore</h2>
+        <a class="tile" href="index.html">Latest news <span aria-hidden="true">&rsaquo;</span></a>
+        <a class="tile" href="podcasts.html">Podcasts <span aria-hidden="true">&rsaquo;</span></a>
+        <a class="tile" href="live.html">Live <span aria-hidden="true">&rsaquo;</span></a>
+      </div>
+
       <button class="btn alt" id="signout-btn" type="button">Sign out</button>
     </section>
 
@@ -164,8 +221,26 @@
         cooldown(30);
       }
 
+      function displayName(user) {
+        var m = (user && user.user_metadata) || {};
+        return String(m.full_name || m.name || "").trim();
+      }
+
       function signedIn(user) {
-        $("who").textContent = user.email || email;
+        var name = displayName(user);
+        var mail = user.email || email;
+        $("hello").textContent = name ? "Welcome, " + name.split(/\s+/)[0] : "Welcome";
+        $("who-email").textContent = mail;
+        $("avatar").textContent = (name || mail || "D").charAt(0).toUpperCase();
+        $("name").value = name;
+        $("since").textContent = "";
+        if (user.created_at) {
+          var d = new Date(user.created_at);
+          if (!isNaN(d.getTime())) {
+            $("since").textContent = "Member since " +
+              d.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+          }
+        }
         show("signedin");
       }
 
@@ -183,6 +258,23 @@
         signedIn(r.data.user);
       }
 
+      async function saveName() {
+        var name = $("name").value.trim();
+        var btn = $("save-name");
+        busy(btn, true, "Saving...");
+        var r = await sb.auth.updateUser({ data: { full_name: name } });
+        busy(btn, false, "Save name");
+        if (r.error || !r.data || !r.data.user) {
+          say("We couldn't save your name. Please try again.", "err");
+          return;
+        }
+        var user = r.data.user;
+        var saved = displayName(user);
+        $("hello").textContent = saved ? "Welcome, " + saved.split(/\s+/)[0] : "Welcome";
+        $("avatar").textContent = (saved || user.email || "D").charAt(0).toUpperCase();
+        say(saved ? "Your name has been saved." : "Your name has been removed.", "ok");
+      }
+
       async function signOut() {
         await sb.auth.signOut();
         $("email").value = "";
@@ -193,6 +285,7 @@
 
       $("email-form").addEventListener("submit", function (e) { e.preventDefault(); sendCode(false); });
       $("code-form").addEventListener("submit", function (e) { e.preventDefault(); verify(); });
+      $("name-form").addEventListener("submit", function (e) { e.preventDefault(); saveName(); });
       $("resend-btn").addEventListener("click", function () { sendCode(true); });
       $("change-email").addEventListener("click", function () { clearInterval(timer); show("email"); });
       $("signout-btn").addEventListener("click", signOut);
@@ -204,7 +297,7 @@
           else show("email");
         });
         sb.auth.onAuthStateChange(function (event, session) {
-          if (event === "SIGNED_IN" && session && session.user) signedIn(session.user);
+          if (event === "SIGNED_IN" && session && session.user && steps.signedin.hidden) signedIn(session.user);
         });
       } else {
         show("email");
