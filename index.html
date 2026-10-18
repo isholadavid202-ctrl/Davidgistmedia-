@@ -46,31 +46,79 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
 
-  <!-- BBC-style top bar (works together with bbc.css) -->
+  <!-- Header Layout & Topbar Styles -->
   <style>
-    .masthead{padding-top:12px}
-    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
-    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
-    .topbar .acct{flex:0 0 auto;display:flex;justify-content:flex-end;align-items:center}
-    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
-    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-    .search-row.is-closed{display:none}
-    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
-    .masthead .drawer.open{display:flex}
-    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
-    .drawer a:hover{color:var(--red)}
-    .header-account-btn{display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--ink);font-weight:700;font-size:0.9rem;padding:4px 8px;border-radius:4px}
-    .header-account-btn:hover{background:rgba(0,0,0,0.05)}
-    @media(min-width:820px){
-      .search-row.is-closed{display:flex}
-      #search-btn{display:none}
+    .masthead { padding-top: 12px; }
+    .masthead .topbar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar .brand-title {
+      font-size: clamp(1.2rem, 5vw, 1.8rem);
+      white-space: nowrap;
+    }
+    .topbar .icons {
+      display: flex;
+      gap: 4px;
+      flex: 0 0 auto;
+    }
+    .topbar .acct {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .topbar button {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+    }
+    .topbar svg {
+      width: 25px;
+      height: 25px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .header-account-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(128, 128, 128, 0.15);
+      white-space: nowrap;
+    }
+    .header-account-btn:hover {
+      background: rgba(128, 128, 128, 0.25);
+    }
+    .search-row.is-closed { display: none; }
+    .masthead .drawer { display: none; flex-direction: column; align-items: stretch; text-align: left; gap: 0; padding: 4px 0 8px; }
+    .masthead .drawer.open { display: flex; }
+    .drawer a { padding: 13px 0; border-bottom: 1px solid var(--line); font-weight: 700; font-size: .95rem; }
+    .drawer a:hover { color: var(--red); }
+    @media(min-width: 820px) {
+      .search-row.is-closed { display: flex; }
+      #search-btn { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Splash screen (shows once per app session) -->
+  <!-- Splash screen -->
   <script src="js/splash.js?v=5"></script>
 
   <div class="util-bar">
@@ -132,19 +180,12 @@
 
   <main class="wrap">
     <section class="hero-section" id="hero-section"></section>
-
-    <!-- Live broadcast card (filled in by js/live-banner.js, empty when nothing is live) -->
     <div id="live-banner"></div>
-
     <div id="trending-section"></div>
-
-    <!-- Latest podcast episodes (filled in by js/podcast-home.js) -->
     <div id="podcast-home"></div>
-
     <div id="category-sections"></div>
   </main>
 
-  <!-- Footer (built by js/footer.js). Keep these two lines ABOVE home.js. -->
   <div id="site-footer"></div>
   <script src="js/footer.js"></script>
 
@@ -153,29 +194,31 @@
   <script src="js/supabase-client.js"></script>
   <script src="js/live-banner.js?v=1"></script>
   <script src="js/home.js?v=6"></script>
-  <script src="js/extras.js"></script>
   <script src="js/podcast-home.js"></script>
   <script src="js/install-banner.js?v=1"></script>
+
   <script>
-    // Menu and search icons in the top bar
     (function () {
       var menuBtn = document.getElementById("menu-btn");
       var drawer = document.getElementById("drawer");
       var searchBtn = document.getElementById("search-btn");
       var form = document.getElementById("search-form");
       var input = document.getElementById("search-input");
-      menuBtn.addEventListener("click", function () {
-        var open = drawer.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", open);
-      });
-      searchBtn.addEventListener("click", function () {
-        var closed = form.classList.toggle("is-closed");
-        searchBtn.setAttribute("aria-expanded", !closed);
-        if (!closed) input.focus();
-      });
+      if (menuBtn && drawer) {
+        menuBtn.addEventListener("click", function () {
+          var open = drawer.classList.toggle("open");
+          menuBtn.setAttribute("aria-expanded", open);
+        });
+      }
+      if (searchBtn && form) {
+        searchBtn.addEventListener("click", function () {
+          var closed = form.classList.toggle("is-closed");
+          searchBtn.setAttribute("aria-expanded", !closed);
+          if (!closed && input) input.focus();
+        });
+      }
     })();
 
-    // Automatically check auth session and display profile picture/name in header
     async function updateHeaderAccount() {
       const accountBtn = document.getElementById("header-account-link");
       if (!accountBtn) return;
@@ -195,7 +238,7 @@
 
           if (avatarUrl) {
             accountBtn.innerHTML = `
-              <img src="${escapeHtml(avatarUrl)}" alt="" style="width:26px; height:26px; border-radius:50%; object-fit:cover; border:1px solid var(--red);">
+              <img src="${escapeHtml(avatarUrl)}" alt="" style="width:22px; height:22px; border-radius:50%; object-fit:cover; border:1px solid var(--red);">
               <span>${escapeHtml(displayName)}</span>
             `;
           } else {
@@ -218,6 +261,7 @@
 
     document.addEventListener("DOMContentLoaded", updateHeaderAccount);
   </script>
+
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
