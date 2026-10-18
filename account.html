@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#000000">
+  <title>Sign in | Davidgistmedia</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#000;color:#fff}
+    body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.4}
+    .page{min-height:100vh;display:flex;flex-direction:column;max-width:520px;margin:0 auto;padding:16px 20px calc(24px + env(safe-area-inset-bottom))}
+    .top{display:flex;justify-content:flex-end}
+    .close{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;background:#fff;color:#000;font-size:28px;line-height:1;text-decoration:none;font-weight:700}
+    .logo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:72px;height:72px;margin:20px 0 28px;background:#c8102e;color:#fff}
+    .logo b{font:700 44px/40px Georgia,"Times New Roman",serif}
+    .logo i{display:block;width:36px;height:2px;background:#fff}
+    h1{font-size:1.6rem;line-height:1.2;margin:0 0 28px;font-weight:700}
+    .lede{color:#cfcfcf;margin:-12px 0 24px}
+    label{display:block;color:#bdbdbd;margin:0 0 4px}
+    input{width:100%;background:transparent;border:0;border-bottom:2px solid #fff;color:#fff;font:inherit;font-size:1.15rem;padding:10px 0;border-radius:0;outline:none}
+    input:focus{border-bottom-color:#ff4d5e}
+    input::placeholder{color:#8a8a8a}
+    .btn{display:block;width:100%;margin:28px 0 0;padding:18px 12px;background:#c8102e;color:#fff;border:0;font:inherit;font-weight:700;font-size:1.05rem;cursor:pointer;text-align:center;text-decoration:none}
+    .btn:disabled{opacity:.6;cursor:default}
+    .btn.alt{background:transparent;border:2px solid #fff;margin-top:14px}
+    .link{display:inline-block;margin-top:22px;color:#ff6b7d;font-weight:600;text-decoration:underline;text-underline-offset:4px;background:none;border:0;padding:0;font-size:1rem;cursor:pointer}
+    .msg{min-height:1.4em;margin:14px 0 0;font-size:.95rem}
+    .msg.err{color:#ff7a8a}
+    .msg.ok{color:#8be3a1}
+    .spacer{flex:1}
+    .foot{margin-top:40px;font-size:.9rem;color:#cfcfcf}
+    .foot a{color:#fff;font-weight:600}
+    [hidden]{display:none !important}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top"><a class="close" href="index.html" aria-label="Close">&times;</a></div>
+    <div class="logo" aria-hidden="true"><b>D</b><i></i><i></i></div>
+
+    <section id="step-email">
+      <h1>Enter your email address to sign in or create an account</h1>
+      <form id="email-form" novalidate>
+        <label for="email">Email</label>
+        <input id="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" required>
+        <button class="btn" id="send-btn" type="submit">Continue</button>
+      </form>
+      <a class="link" href="contact.html">Get help signing in</a>
+    </section>
+
+    <section id="step-code" hidden>
+      <h1>Check your email</h1>
+      <p class="lede">We sent a code to <strong id="sent-to"></strong>. Enter it below to continue.</p>
+      <form id="code-form" novalidate>
+        <label for="code">Code</label>
+        <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="123456" required>
+        <button class="btn" id="verify-btn" type="submit">Verify</button>
+      </form>
+      <button class="btn alt" id="resend-btn" type="button" disabled>Send a new code</button>
+      <button class="link" id="change-email" type="button">Use a different email</button>
+    </section>
+
+    <section id="step-in" hidden>
+      <h1>You&rsquo;re signed in</h1>
+      <p class="lede">Signed in as <strong id="who"></strong></p>
+      <a class="btn" href="index.html">Go to the homepage</a>
+      <button class="btn alt" id="signout-btn" type="button">Sign out</button>
+    </section>
+
+    <p class="msg" id="msg" role="status" aria-live="polite"></p>
+
+    <div class="spacer"></div>
+    <p class="foot">
+      By continuing you agree to our <a href="terms.html">Terms</a> and <a href="privacy-policy.html">Privacy Policy</a>.<br><br>
+      <a href="privacy-policy.html">Find out more about Davidgistmedia accounts</a>
+    </p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script>
+    (function () {
+      var sb = typeof supabaseClient !== "undefined" ? supabaseClient : null;
+      var $ = function (id) { return document.getElementById(id); };
+      var steps = { email: $("step-email"), code: $("step-code"), signedin: $("step-in") };
+      var msg = $("msg");
+      var email = "";
+      var timer = null;
+
+      function say(text, kind) {
+        msg.textContent = text || "";
+        msg.className = "msg" + (kind ? " " + kind : "");
+      }
+
+      function show(name) {
+        Object.keys(steps).forEach(function (k) { steps[k].hidden = k !== name; });
+        say("");
+        var focusId = name === "email" ? "email" : name === "code" ? "code" : null;
+        if (focusId) setTimeout(function () { $(focusId).focus(); }, 50);
+      }
+
+      function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+
+      function friendly(err) {
+        var t = String((err && err.message) || "").toLowerCase();
+        if (t.indexOf("rate limit") > -1 || t.indexOf("too many") > -1 || (err && err.status === 429))
+          return "Too many attempts. Please wait a little while and try again.";
+        if (t.indexOf("signups not allowed") > -1 || t.indexOf("signup is disabled") > -1)
+          return "New accounts are switched off right now. Please try again later.";
+        if (t.indexOf("invalid") > -1 || t.indexOf("expired") > -1)
+          return "That code didn't work. Check it, or ask for a new one.";
+        return "Something went wrong. Please check your connection and try again.";
+      }
+
+      function busy(btn, on, label) {
+        btn.disabled = on;
+        if (label) btn.textContent = label;
+      }
+
+      function cooldown(seconds) {
+        var btn = $("resend-btn");
+        clearInterval(timer);
+        var left = seconds;
+        btn.disabled = true;
+        btn.textContent = "Send a new code (" + left + ")";
+        timer = setInterval(function () {
+          left--;
+          if (left <= 0) {
+            clearInterval(timer);
+            btn.disabled = false;
+            btn.textContent = "Send a new code";
+          } else {
+            btn.textContent = "Send a new code (" + left + ")";
+          }
+        }, 1000);
+      }
+
+      async function sendCode(isResend) {
+        if (!sb) { say("Sign-in is not available right now.", "err"); return; }
+        var v = isResend ? email : $("email").value.trim().toLowerCase();
+        if (!validEmail(v)) { say("Please enter a valid email address.", "err"); return; }
+        var btn = isResend ? $("resend-btn") : $("send-btn");
+        var old = btn.textContent;
+        busy(btn, true, "Sending...");
+        var r = await sb.auth.signInWithOtp({
+          email: v,
+          options: { shouldCreateUser: true, emailRedirectTo: location.origin + "/account.html" }
+        });
+        if (r.error) {
+          busy(btn, false, old);
+          say(friendly(r.error), "err");
+          return;
+        }
+        email = v;
+        $("sent-to").textContent = v;
+        busy($("send-btn"), false, "Continue");
+        show("code");
+        say("Code sent. It can take a minute to arrive. Check your spam folder too.", "ok");
+        cooldown(30);
+      }
+
+      function signedIn(user) {
+        $("who").textContent = user.email || email;
+        show("signedin");
+      }
+
+      async function verify() {
+        var token = $("code").value.replace(/\s+/g, "");
+        if (token.length < 6) { say("Enter the code from your email.", "err"); return; }
+        var btn = $("verify-btn");
+        busy(btn, true, "Checking...");
+        var r = await sb.auth.verifyOtp({ email: email, token: token, type: "email" });
+        busy(btn, false, "Verify");
+        if (r.error || !r.data || !r.data.user) {
+          say(friendly(r.error || { message: "invalid" }), "err");
+          return;
+        }
+        signedIn(r.data.user);
+      }
+
+      async function signOut() {
+        await sb.auth.signOut();
+        $("email").value = "";
+        $("code").value = "";
+        show("email");
+        say("You have signed out.", "ok");
+      }
+
+      $("email-form").addEventListener("submit", function (e) { e.preventDefault(); sendCode(false); });
+      $("code-form").addEventListener("submit", function (e) { e.preventDefault(); verify(); });
+      $("resend-btn").addEventListener("click", function () { sendCode(true); });
+      $("change-email").addEventListener("click", function () { clearInterval(timer); show("email"); });
+      $("signout-btn").addEventListener("click", signOut);
+
+      if (sb) {
+        sb.auth.getSession().then(function (r) {
+          var s = r && r.data && r.data.session;
+          if (s && s.user) signedIn(s.user);
+          else show("email");
+        });
+        sb.auth.onAuthStateChange(function (event, session) {
+          if (event === "SIGNED_IN" && session && session.user) signedIn(session.user);
+        });
+      } else {
+        show("email");
+      }
+    })();
+  </script>
+</body>
+</html>
