@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Profile | Davidgistmedia</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+</head>
+<body style="max-width:500px; margin:40px auto; padding:20px; font-family:sans-serif;">
+  <h2>Edit Your Profile</h2>
+  <form id="profile-form">
+    <label>Full Name</label><br>
+    <input type="text" id="full-name" required style="width:100%; padding:8px; margin-bottom:15px;"><br>
+
+    <label>Avatar / Profile Photo URL</label><br>
+    <input type="url" id="avatar-url" placeholder="https://example.com/photo.jpg" style="width:100%; padding:8px; margin-bottom:15px;"><br>
+
+    <button type="submit" style="padding:10px 20px;">Save Profile</button>
+    <p id="profile-status"></p>
+  </form>
+
+  <script>
+    async function loadProfile() {
+      const { data: { user } } = await supabaseClient.auth.getUser();
+      if (!user) {
+        alert("Please log in first.");
+        return;
+      }
+      const { data } = await supabaseClient.from("profiles").select("*").eq("id", user.id).single();
+      if (data) {
+        document.getElementById("full-name").value = data.full_name || "";
+        document.getElementById("avatar-url").value = data.avatar_url || "";
+      }
+    }
+
+    document.getElementById("profile-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const status = document.getElementById("profile-status");
+      status.textContent = "Saving...";
+
+      const { data: { user } } = await supabaseClient.auth.getUser();
+      if (!user) return;
+
+      const full_name = document.getElementById("full-name").value.trim();
+      const avatar_url = document.getElementById("avatar-url").value.trim();
+
+      const { error } = await supabaseClient.from("profiles").upsert({
+        id: user.id,
+        full_name,
+        avatar_url,
+        updated_at: new Date()
+      });
+
+      if (error) status.textContent = "Error saving profile.";
+      else status.textContent = "Profile updated successfully!";
+    });
+
+    loadProfile();
+  </script>
+</body>
+</html>
