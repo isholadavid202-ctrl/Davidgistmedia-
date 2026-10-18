@@ -26,8 +26,49 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
 
-  <!-- Top bar styles -->
   <style>
+    /* Dark Mode Styling Fix for Articles */
+    body.dark-mode {
+      background-color: #0d0d0d !important;
+      color: #f0f0f0 !important;
+    }
+    body.dark-mode .masthead, 
+    body.dark-mode .util-bar {
+      background-color: #161616 !important;
+      border-color: #2a2a2a !important;
+    }
+    body.dark-mode a, 
+    body.dark-mode h1, 
+    body.dark-mode h2, 
+    body.dark-mode h3, 
+    body.dark-mode h4, 
+    body.dark-mode p, 
+    body.dark-mode span, 
+    body.dark-mode div,
+    body.dark-mode .article-title,
+    body.dark-mode .article-body,
+    body.dark-mode .byline,
+    body.dark-mode .time-read {
+      color: #f0f0f0 !important;
+    }
+    body.dark-mode .top-account-link {
+      color: #bb1919 !important;
+    }
+
+    .util-bar .wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .top-account-link {
+      color: #bb1919;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
     .masthead { padding-top: 12px; }
     .masthead .topbar {
       display: flex;
@@ -39,19 +80,33 @@
       border-bottom: 1px solid var(--line);
     }
     .topbar .brand-title {
-      font-size: clamp(1.2rem, 5vw, 1.8rem);
+      font-size: clamp(1.35rem, 5.6vw, 2rem);
       white-space: nowrap;
     }
     .topbar .icons {
       display: flex;
       gap: 4px;
-      flex: 0 0 auto;
+      flex: 0 0 80px;
     }
     .topbar .acct {
-      flex: 0 0 auto;
+      flex: 0 0 80px;
       display: flex;
-      align-items: center;
-      gap: 6px;
+      justify-content: flex-end;
+    }
+    .theme-toggle-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(128,128,128,0.3);
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      padding: 0;
+    }
+    .theme-toggle-btn i {
+      font-size: 0.95rem;
     }
     .topbar button {
       width: 36px;
@@ -69,22 +124,6 @@
       stroke-linecap: round;
       stroke-linejoin: round;
     }
-    .header-account-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      text-decoration: none;
-      color: var(--ink);
-      font-weight: 700;
-      font-size: 0.85rem;
-      padding: 4px 10px;
-      border-radius: 20px;
-      background: rgba(128, 128, 128, 0.15);
-      white-space: nowrap;
-    }
-    .header-account-btn:hover {
-      background: rgba(128, 128, 128, 0.25);
-    }
     .masthead .drawer { display: none; flex-direction: column; align-items: stretch; text-align: left; gap: 0; padding: 4px 0 8px; }
     .masthead .drawer.open { display: flex; }
     .drawer a { padding: 13px 0; border-bottom: 1px solid var(--line); font-weight: 700; font-size: .95rem; }
@@ -93,10 +132,15 @@
 </head>
 <body>
 
+  <!-- Top Utility Bar -->
   <div class="util-bar">
-    <div class="wrap"><span id="today"></span></div>
+    <div class="wrap">
+      <span id="today"></span>
+      <a href="profile.html" id="top-account-link" class="top-account-link">Sign in</a>
+    </div>
   </div>
 
+  <!-- Main Header with Night Mode Icon -->
   <header class="masthead">
     <div class="wrap topbar">
       <div class="icons">
@@ -106,7 +150,9 @@
       </div>
       <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
       <div class="acct">
-        <a href="profile.html" id="header-account-link" class="header-account-btn">My account</a>
+        <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
+          <i class="fa-regular fa-moon" id="theme-icon"></i>
+        </button>
       </div>
     </div>
 
@@ -129,15 +175,18 @@
     </nav>
   </header>
 
+  <!-- The story is built here by js/article.js -->
   <main class="wrap article-page" id="article-root">
     <div class="empty-state">Loading story…</div>
   </main>
 
   <script src="js/article-tweaks.js?v=3"></script>
 
+  <!-- Footer -->
   <div id="site-footer"></div>
   <script src="js/footer.js"></script>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
@@ -160,14 +209,39 @@
       });
     })();
 
+    // Night Mode Toggle Logic (Persistent Across Articles)
+    (function () {
+      const themeBtn = document.getElementById("theme-toggle-btn");
+      const themeIcon = document.getElementById("theme-icon");
+      
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+        if (themeIcon) themeIcon.className = "fa-solid fa-sun";
+      }
+
+      if (themeBtn) {
+        themeBtn.addEventListener("click", function () {
+          document.body.classList.toggle("dark-mode");
+          const isDark = document.body.classList.contains("dark-mode");
+          localStorage.setItem("theme", isDark ? "dark" : "light");
+          if (themeIcon) {
+            themeIcon.className = isDark ? "fa-solid fa-sun" : "fa-regular fa-moon";
+          }
+        });
+      }
+    })();
+
+    // Dynamic Header Account Check
     async function updateHeaderAccount() {
-      const accountBtn = document.getElementById("header-account-link");
+      const accountBtn = document.getElementById("top-account-link");
       if (!accountBtn) return;
 
       try {
         const { data: { user } } = await supabaseClient.auth.getUser();
 
         if (user) {
+          accountBtn.href = "profile.html";
           const { data: profile } = await supabaseClient
             .from("profiles")
             .select("full_name, avatar_url")
@@ -179,15 +253,14 @@
 
           if (avatarUrl) {
             accountBtn.innerHTML = `
-              <img src="${escapeHtml(avatarUrl)}" alt="" style="width:22px; height:22px; border-radius:50%; object-fit:cover; border:1px solid var(--red);">
+              <img src="${escapeHtml(avatarUrl)}" alt="" style="width:18px; height:18px; border-radius:50%; object-fit:cover; border:1px solid #bb1919;">
               <span>${escapeHtml(displayName)}</span>
             `;
           } else {
             accountBtn.textContent = displayName;
           }
-          accountBtn.href = "profile.html";
         } else {
-          accountBtn.textContent = "My account";
+          accountBtn.textContent = "Sign in";
           accountBtn.href = "profile.html";
         }
       } catch (e) {
