@@ -142,15 +142,15 @@
   <!-- Splash screen -->
   <script src="js/splash.js?v=5"></script>
 
-  <!-- Top Utility Bar: Date on the left, "Sign in" on the right -->
+  <!-- Top Utility Bar: Date on left, "Sign in" on right pointing to profile.html -->
   <div class="util-bar">
     <div class="wrap">
       <span id="today"></span>
-      <a href="login.html" id="top-account-link" class="top-account-link">Sign in</a>
+      <a href="profile.html" id="top-account-link" class="top-account-link">Sign in</a>
     </div>
   </div>
 
-  <!-- Main Header: Menu/Search on left, Logo in center, Night Mode on right -->
+  <!-- Main Header -->
   <header class="masthead">
     <div class="wrap topbar">
       <div class="icons">
@@ -268,7 +268,7 @@
       }
     })();
 
-    // Dynamic Account Authentication Check
+    // Dynamic Account Check
     async function updateHeaderAccount() {
       const accountBtn = document.getElementById("top-account-link");
       if (!accountBtn) return;
@@ -297,7 +297,7 @@
           }
         } else {
           accountBtn.textContent = "Sign in";
-          accountBtn.href = "login.html";
+          accountBtn.href = "profile.html";
         }
       } catch (e) {
         console.error("Auth check error:", e);
