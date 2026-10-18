@@ -26,48 +26,72 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
 
-  <!-- Top bar (same as homepage) -->
+  <!-- Top bar styles -->
   <style>
-    .masthead{padding-top:12px}
-    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
-    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
-    .topbar .acct{flex:0 0 auto;display:flex;justify-content:flex-end;align-items:center}
-    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
-    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
-    .masthead .drawer.open{display:flex}
-    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
-    .drawer a:hover{color:var(--red)}
-    .header-account-btn{display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--ink);font-weight:700;font-size:0.9rem;padding:4px 8px;border-radius:4px}
-    .header-account-btn:hover{background:rgba(0,0,0,0.05)}
+    .masthead { padding-top: 12px; }
+    .masthead .topbar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar .brand-title {
+      font-size: clamp(1.2rem, 5vw, 1.8rem);
+      white-space: nowrap;
+    }
+    .topbar .icons {
+      display: flex;
+      gap: 4px;
+      flex: 0 0 auto;
+    }
+    .topbar .acct {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .topbar button {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+    }
+    .topbar svg {
+      width: 25px;
+      height: 25px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .header-account-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(128, 128, 128, 0.15);
+      white-space: nowrap;
+    }
+    .header-account-btn:hover {
+      background: rgba(128, 128, 128, 0.25);
+    }
+    .masthead .drawer { display: none; flex-direction: column; align-items: stretch; text-align: left; gap: 0; padding: 4px 0 8px; }
+    .masthead .drawer.open { display: flex; }
+    .drawer a { padding: 13px 0; border-bottom: 1px solid var(--line); font-weight: 700; font-size: .95rem; }
+    .drawer a:hover { color: var(--red); }
   </style>
 </head>
 <body>
-
-  <!-- TEMPORARY DEBUG: shows a red bar at the bottom if a script fails. Delete this block when done. -->
-  <script>
-  (function(){
-    function show(t){
-      var d=document.createElement("div");
-      d.style.cssText="position:fixed;left:0;right:0;bottom:0;background:#b00020;color:#fff;padding:10px;font:12px monospace;z-index:99999;word-break:break-all";
-      d.textContent=t;
-      document.body.appendChild(d);
-    }
-    function ignore(s){return /googlesyndication|googletagmanager|google-analytics|doubleclick/i.test(s||"");}
-    window.addEventListener("error",function(e){
-      if(e.target&&e.target.src){
-        if(ignore(e.target.src))return;
-        show("FAILED TO LOAD: "+e.target.src);
-      }else{
-        show("ERROR: "+e.message+" ("+String(e.filename||"").split("/").pop()+":"+e.lineno+")");
-      }
-    },true);
-    window.addEventListener("unhandledrejection",function(e){
-      show("PROMISE ERROR: "+(e.reason&&e.reason.message||e.reason));
-    });
-  })();
-  </script>
 
   <div class="util-bar">
     <div class="wrap"><span id="today"></span></div>
@@ -105,35 +129,31 @@
     </nav>
   </header>
 
-  <!-- The story is built here by js/article.js -->
   <main class="wrap article-page" id="article-root">
     <div class="empty-state">Loading story…</div>
   </main>
 
-  <!-- Keeps the author line above the photo from the first moment -->
   <script src="js/article-tweaks.js?v=3"></script>
 
-  <!-- Footer (built by js/footer.js). Keep these two lines ABOVE article.js. -->
   <div id="site-footer"></div>
   <script src="js/footer.js"></script>
 
-  <!-- Scripts: ORDER MATTERS. Supabase library, then config, then your client, then article.js (only once). -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
   <script src="js/article.js?v=5"></script>
-  <script src="js/extras.js?v=2"></script>
   <script src="/js/install-banner.js?v=1"></script>
 
-  <!-- Menu, today's date, and header account check -->
   <script>
     (function () {
       var menuBtn = document.getElementById("menu-btn");
       var drawer = document.getElementById("drawer");
-      menuBtn.addEventListener("click", function () {
-        var open = drawer.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", open);
-      });
+      if (menuBtn && drawer) {
+        menuBtn.addEventListener("click", function () {
+          var open = drawer.classList.toggle("open");
+          menuBtn.setAttribute("aria-expanded", open);
+        });
+      }
       var today = document.getElementById("today");
       if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
         weekday: "long", day: "numeric", month: "long", year: "numeric"
@@ -159,7 +179,7 @@
 
           if (avatarUrl) {
             accountBtn.innerHTML = `
-              <img src="${escapeHtml(avatarUrl)}" alt="" style="width:26px; height:26px; border-radius:50%; object-fit:cover; border:1px solid var(--red);">
+              <img src="${escapeHtml(avatarUrl)}" alt="" style="width:22px; height:22px; border-radius:50%; object-fit:cover; border:1px solid var(--red);">
               <span>${escapeHtml(displayName)}</span>
             `;
           } else {
