@@ -3,98 +3,324 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Profile | Davidgistmedia</title>
-  <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=14">
+  <title>User Profile | Davidgistmedia</title>
+  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="bbc.css?v=15">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --card-bg: #1e1e1e;
+      --border-color: #333333;
+      --accent-red: #bb1919;
+      --text-main: #f0f0f0;
+      --text-muted: #aaaaaa;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .profile-container {
+      max-width: 640px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .profile-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin-bottom: 16px;
+    }
+
+    .avatar-img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-red);
+      background: #2a2a2a;
+    }
+
+    .upload-btn-badge {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      background: var(--accent-red);
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
+    }
+
+    .upload-btn-badge:hover {
+      transform: scale(1.1);
+    }
+
+    #file-input {
+      display: none;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .form-control {
+      width: 100%;
+      background: #141414;
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent-red);
+    }
+
+    .btn-save {
+      width: 100%;
+      background: var(--accent-red);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-save:hover {
+      background: #d41f1f;
+    }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+    }
+
+    .nav-back:hover {
+      color: #fff;
+    }
+
+    .status-msg {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      text-align: center;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
-  <main style="max-width:600px; margin:40px auto; padding:20px;">
-    <h2>Your Profile & Account</h2>
-    <form id="profile-form" style="display:flex; flex-direction:column; gap:16px;">
-      
-      <div>
-        <label style="font-weight:700;">Full Name</label><br>
-        <input type="text" id="full-name" required maxlength="60" style="width:100%; padding:10px; margin-top:5px;">
+
+  <div class="profile-container">
+    <a href="index.html" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="avatar-wrapper">
+          <img id="avatar-preview" class="avatar-img" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" alt="Avatar">
+          <label for="file-input" class="upload-btn-badge" id="upload-badge">
+            <i class="fa-solid fa-camera"></i>
+          </label>
+          <input type="file" id="file-input" accept="image/*">
+        </div>
+        <h2 id="profile-title-name" style="margin:0; font-size:1.4rem;">User Profile</h2>
+        <p id="profile-email" style="margin:4px 0 0; color:var(--text-muted); font-size:0.85rem;"></p>
       </div>
 
-      <div>
-        <label style="font-weight:700;">Profile Picture (Avatar URL)</label><br>
-        <input type="url" id="avatar-url" placeholder="https://example.com/photo.jpg" style="width:100%; padding:10px; margin-top:5px;">
-      </div>
+      <form id="profile-form">
+        <div class="form-group">
+          <label for="full-name">Display Name</label>
+          <input type="text" id="full-name" class="form-control" placeholder="Enter your full name" required>
+        </div>
 
-      <div>
-        <label style="font-weight:700;">Bio / About Yourself</label><br>
-        <textarea id="bio" placeholder="Write a short bio about yourself..." rows="4" maxlength="300" style="width:100%; padding:10px; margin-top:5px;"></textarea>
-      </div>
+        <div class="form-group">
+          <label for="bio">Bio / About</label>
+          <textarea id="bio" class="form-control" rows="4" placeholder="Write a short summary about yourself..."></textarea>
+        </div>
 
-      <button type="submit" id="save-btn" class="engage-btn" style="padding:12px; font-weight:700; cursor:pointer;">Save Profile</button>
-      <p id="profile-status" style="font-weight:bold;"></p>
-    </form>
-    <p><a href="index.html">&larr; Go to the homepage</a></p>
-  </main>
+        <button type="submit" id="save-btn" class="btn-save">Save Profile Changes</button>
+        <p id="profile-status" class="status-msg"></p>
+      </form>
+    </div>
+  </div>
 
   <script>
-    async function loadUserData() {
+    let selectedFile = null;
+    let currentUserId = null;
+    let isOwnerView = false;
+
+    async function initProfile() {
+      const params = new URLSearchParams(window.location.search);
+      const targetUserId = params.get("id");
+
       const { data: { user } } = await supabaseClient.auth.getUser();
-      if (!user) {
-        window.location.href = "login.html"; // Redirect to login if not signed in
+
+      if (user) currentUserId = user.id;
+
+      // Determine whether viewing own profile or another reader's profile
+      const activeId = targetUserId || currentUserId;
+
+      if (!activeId) {
+        window.location.href = "login.html";
         return;
       }
 
-      // Fetch existing profile data
+      isOwnerView = (currentUserId && activeId === currentUserId);
+
+      if (!isOwnerView) {
+        // Read-only view for other users
+        document.getElementById("upload-badge").style.display = "none";
+        document.getElementById("save-btn").style.display = "none";
+        document.getElementById("full-name").readOnly = true;
+        document.getElementById("bio").readOnly = true;
+      }
+
+      // Load profile record
       const { data, error } = await supabaseClient
         .from("profiles")
         .select("*")
-        .eq("id", user.id)
+        .eq("id", activeId)
         .single();
 
       if (data) {
-        document.getElementById("full-name").value = data.full_name || user.user_metadata?.full_name || "";
-        document.getElementById("avatar-url").value = data.avatar_url || "";
+        document.getElementById("full-name").value = data.full_name || "";
         document.getElementById("bio").value = data.bio || "";
+        document.getElementById("profile-title-name").textContent = data.full_name || "Community Member";
+        if (data.avatar_url) {
+          document.getElementById("avatar-preview").src = data.avatar_url;
+        }
+      } else if (isOwnerView && user) {
+        document.getElementById("full-name").value = user.user_metadata?.full_name || user.email.split("@")[0];
+        document.getElementById("profile-email").textContent = user.email;
       }
     }
 
+    // Direct Image Upload Preview
+    document.getElementById("file-input").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          document.getElementById("avatar-preview").src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Save profile logic
     document.getElementById("profile-form").addEventListener("submit", async (e) => {
       e.preventDefault();
+      if (!isOwnerView || !currentUserId) return;
+
       const status = document.getElementById("profile-status");
       const btn = document.getElementById("save-btn");
 
       btn.disabled = true;
-      status.textContent = "Saving changes...";
-      status.style.color = "inherit";
+      status.textContent = "Uploading & Saving...";
+      status.style.color = "#aaa";
 
-      const { data: { user } } = await supabaseClient.auth.getUser();
-      if (!user) return;
+      let avatarUrl = document.getElementById("avatar-preview").src;
 
-      const full_name = document.getElementById("full-name").value.trim();
-      const avatar_url = document.getElementById("avatar-url").value.trim();
+      // Upload profile image to Supabase Storage if chosen
+      if (selectedFile) {
+        const fileExt = selectedFile.name.split('.').pop();
+        const filePath = `${currentUserId}-${Date.now()}.${fileExt}`;
+
+        const { error: uploadErr } = await supabaseClient
+          .storage
+          .from('avatars')
+          .upload(filePath, selectedFile, { upsert: true });
+
+        if (!uploadErr) {
+          const { data: publicUrlData } = supabaseClient
+            .storage
+            .from('avatars')
+            .getPublicUrl(filePath);
+            
+          avatarUrl = publicUrlData.publicUrl;
+        }
+      }
+
+      // Save name, bio, avatar URL to profiles table
+      const fullName = document.getElementById("full-name").value.trim();
       const bio = document.getElementById("bio").value.trim();
 
       const { error } = await supabaseClient.from("profiles").upsert({
-        id: user.id,
-        full_name,
-        avatar_url,
-        bio,
+        id: currentUserId,
+        full_name: fullName,
+        bio: bio,
+        avatar_url: avatarUrl,
         updated_at: new Date()
       });
 
       btn.disabled = false;
 
       if (error) {
-        status.textContent = "Error saving profile. Please try again.";
-        status.style.color = "#b00020";
+        status.textContent = "Could not save profile. Try again.";
+        status.style.color = "#ff4d4d";
       } else {
-        status.textContent = "Profile updated successfully!";
-        status.style.color = "green";
+        status.textContent = "Profile successfully updated!";
+        status.style.color = "#4edf72";
+        document.getElementById("profile-title-name").textContent = fullName;
       }
     });
 
-    loadUserData();
+    initProfile();
   </script>
 </body>
 </html>
