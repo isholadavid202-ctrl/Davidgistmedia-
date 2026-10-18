@@ -324,6 +324,7 @@ async function loadRelated() {
     .from("articles")
     .select("id,slug,title,image_url,category,published_at")
     .eq("category", currentArticle.category)
+    .eq("is_approved", true) // Ensures unapproved articles don't show up here
     .neq("id", currentArticle.id)
     .order("published_at", { ascending: false })
     .limit(3);
@@ -390,7 +391,6 @@ async function handleCommentSubmit(e) {
   const status = document.getElementById("comment-status");
 
   if (honeypot && honeypot.value.trim()) {
-    // Likely a bot. Pretend it worked, but don't actually post it.
     textInput.value = "";
     status.textContent = "";
     return;
@@ -433,7 +433,6 @@ async function handleLike() {
   const before = currentArticle.likes || 0;
   const after = wasLiked ? Math.max(before - 1, 0) : before + 1;
 
-  // Show the change straight away, and undo it if Supabase says no.
   btn.classList.toggle("liked", !wasLiked);
   btn.setAttribute("aria-pressed", String(!wasLiked));
   countEl.textContent = after;
