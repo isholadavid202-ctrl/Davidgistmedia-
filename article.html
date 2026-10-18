@@ -32,13 +32,15 @@
     .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
     .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
     .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
-    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
+    .topbar .acct{flex:0 0 auto;display:flex;justify-content:flex-end;align-items:center}
     .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
     .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
     .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
     .masthead .drawer.open{display:flex}
     .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
     .drawer a:hover{color:var(--red)}
+    .header-account-btn{display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--ink);font-weight:700;font-size:0.9rem;padding:4px 8px;border-radius:4px}
+    .header-account-btn:hover{background:rgba(0,0,0,0.05)}
   </style>
 </head>
 <body>
@@ -79,7 +81,9 @@
         </button>
       </div>
       <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
-      <div class="acct"></div>
+      <div class="acct">
+        <a href="profile.html" id="header-account-link" class="header-account-btn">My account</a>
+      </div>
     </div>
 
     <div class="wrap drawer" id="drawer">
@@ -121,7 +125,7 @@
   <script src="js/extras.js?v=2"></script>
   <script src="/js/install-banner.js?v=1"></script>
 
-  <!-- Menu and today's date -->
+  <!-- Menu, today's date, and header account check -->
   <script>
     (function () {
       var menuBtn = document.getElementById("menu-btn");
@@ -135,6 +139,48 @@
         weekday: "long", day: "numeric", month: "long", year: "numeric"
       });
     })();
+
+    async function updateHeaderAccount() {
+      const accountBtn = document.getElementById("header-account-link");
+      if (!accountBtn) return;
+
+      try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+
+        if (user) {
+          const { data: profile } = await supabaseClient
+            .from("profiles")
+            .select("full_name, avatar_url")
+            .eq("id", user.id)
+            .single();
+
+          const displayName = profile?.full_name || user.user_metadata?.full_name || "My account";
+          const avatarUrl = profile?.avatar_url;
+
+          if (avatarUrl) {
+            accountBtn.innerHTML = `
+              <img src="${escapeHtml(avatarUrl)}" alt="" style="width:26px; height:26px; border-radius:50%; object-fit:cover; border:1px solid var(--red);">
+              <span>${escapeHtml(displayName)}</span>
+            `;
+          } else {
+            accountBtn.textContent = displayName;
+          }
+          accountBtn.href = "profile.html";
+        } else {
+          accountBtn.textContent = "My account";
+          accountBtn.href = "profile.html";
+        }
+      } catch (e) {
+        console.error("Auth check error:", e);
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str == null ? "" : str)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    document.addEventListener("DOMContentLoaded", updateHeaderAccount);
   </script>
 
   <script>
