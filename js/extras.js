@@ -21,6 +21,10 @@
   .dg-read{white-space:nowrap}
   .article-page .meta a:hover,.article-page .meta a:active{color:var(--red) !important}
 
+  .util-bar a.dg-util-acct{margin-left:auto;float:right;font-size:.85rem;font-weight:700;color:var(--red);text-decoration:none;white-space:nowrap}
+  .util-bar a.dg-util-acct:hover{text-decoration:underline}
+  .drawer a.dg-signin{color:var(--red)}
+
   .dg-theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;padding:0;flex:0 0 auto}
   .dg-theme-btn:hover{border-color:var(--red);color:var(--red)}
   .dg-theme-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -80,6 +84,7 @@
   const CLOSE = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 
   const SOCIAL_LINKS = [
+    ["X (Twitter)", "https://x.com/davidgistmedian"],
     ["TikTok", "https://www.tiktok.com/@davidgistmediang"],
     ["Instagram", "https://www.instagram.com/davidgistmediang/"],
     ["YouTube", "https://www.youtube.com/@davidgistmediang"]
@@ -261,6 +266,50 @@
     bar.querySelector(".dg-tick-track").style.animationDuration = Math.max(25, chars * 0.12) + "s";
   }
   addTicker();
+
+  /* ---------- Sign in link and menu items (all pages) ---------- */
+  function initAccount() {
+    const bar = document.querySelector(".util-bar .wrap");
+    const menu = document.getElementById("drawer");
+
+    let signIn = null;
+    if (bar && !document.getElementById("dg-acct-link")) {
+      signIn = document.createElement("a");
+      signIn.id = "dg-acct-link";
+      signIn.className = "dg-util-acct";
+      signIn.href = "account.html";
+      signIn.textContent = "Sign in";
+      bar.appendChild(signIn);
+    }
+
+    let menuLink = null;
+    if (menu && !menu.querySelector(".dg-signin")) {
+      menuLink = document.createElement("a");
+      menuLink.className = "dg-signin";
+      menuLink.href = "account.html";
+      menuLink.textContent = "Sign in or create account";
+      menu.insertBefore(menuLink, menu.firstChild);
+
+      const x = document.createElement("a");
+      x.href = "https://x.com/davidgistmedian";
+      x.target = "_blank";
+      x.rel = "noopener noreferrer";
+      x.textContent = "Follow us on X";
+      menu.appendChild(x);
+    }
+
+    const client = db();
+    if (!client || !client.auth) return;
+    client.auth.getSession().then((r) => {
+      const s = r && r.data && r.data.session;
+      if (!s || !s.user) return;
+      const m = s.user.user_metadata || {};
+      const first = String(m.full_name || m.name || "").trim().split(/\s+/)[0];
+      if (signIn) signIn.textContent = first ? "Hi, " + first : "My account";
+      if (menuLink) menuLink.textContent = "My account";
+    }).catch(() => {});
+  }
+  initAccount();
 
   /* ---------- Article page extras ---------- */
   const root = document.getElementById("article-root");
