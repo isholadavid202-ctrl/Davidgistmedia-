@@ -85,6 +85,21 @@
       display: flex;
       justify-content: flex-end;
     }
+    .theme-toggle-btn {
+      width: 30px !important;
+      height: 30px !important;
+      border-radius: 50%;
+      border: 1px solid rgba(128,128,128,0.3);
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      padding: 0;
+    }
+    .theme-toggle-btn i {
+      font-size: 0.85rem;
+    }
     .topbar button {
       width: 36px;
       height: 36px;
@@ -117,11 +132,11 @@
   <!-- Splash screen -->
   <script src="js/splash.js?v=5"></script>
 
-  <!-- Top Utility Bar: Date on the left, "My account" in RED on the right -->
+  <!-- Top Utility Bar: Date on the left, "Sign in" in RED on the right -->
   <div class="util-bar">
     <div class="wrap">
       <span id="today"></span>
-      <a href="profile.html" id="top-account-link" class="top-account-link">My account</a>
+      <a href="profile.html" id="top-account-link" class="top-account-link">Sign in</a>
     </div>
   </div>
 
@@ -138,8 +153,8 @@
       </div>
       <a class="brand-title" href="/">David<span class="gold">gistmedia</span></a>
       <div class="acct">
-        <button type="button" id="theme-toggle-btn" aria-label="Toggle Dark Mode" style="border:1px solid rgba(128,128,128,0.3); border-radius:50%;">
-          <i class="fa-regular fa-moon" style="font-size:1.1rem;"></i>
+        <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
+          <i class="fa-regular fa-moon" id="theme-icon"></i>
         </button>
       </div>
     </div>
@@ -220,7 +235,30 @@
       }
     })();
 
-    // Dynamic Account Check for top "My account" link
+    // Night Mode Toggle Logic
+    (function () {
+      const themeBtn = document.getElementById("theme-toggle-btn");
+      const themeIcon = document.getElementById("theme-icon");
+      
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        document.body.classList.add("dark-theme");
+        if (themeIcon) themeIcon.className = "fa-solid fa-sun";
+      }
+
+      if (themeBtn) {
+        themeBtn.addEventListener("click", function () {
+          document.body.classList.toggle("dark-theme");
+          const isDark = document.body.classList.contains("dark-theme");
+          localStorage.setItem("theme", isDark ? "dark" : "light");
+          if (themeIcon) {
+            themeIcon.className = isDark ? "fa-solid fa-sun" : "fa-regular fa-moon";
+          }
+        });
+      }
+    })();
+
+    // Dynamic Account Check
     async function updateHeaderAccount() {
       const accountBtn = document.getElementById("top-account-link");
       if (!accountBtn) return;
@@ -246,6 +284,8 @@
           } else {
             accountBtn.textContent = displayName;
           }
+        } else {
+          accountBtn.textContent = "Sign in";
         }
       } catch (e) {
         console.error("Auth check error:", e);
