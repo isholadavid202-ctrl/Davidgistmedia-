@@ -112,3 +112,31 @@
 #category-sections .cat-section::before {
   display: none !important;
 }
+
+/* ===== Night mode: light headlines, dark grey lines ===== */
+html[data-theme="dark"] #hero-section .secondary-item h3,
+html[data-theme="dark"] #trending-section .story-card h3,
+html[data-theme="dark"] #category-sections .story-card h3 {
+  color: #ececea !important;
+}
+html[data-theme="dark"] .secondary-item,
+html[data-theme="dark"] .story-card {
+  border-bottom-color: #2f2f31 !important;
+}
+html[data-theme="dark"] .secondary-item .meta,
+html[data-theme="dark"] .secondary-item .cat,
+html[data-theme="dark"] .story-card .meta,
+html[data-theme="dark"] .story-card .cat,
+html[data-theme="dark"] .story-card .excerpt {
+  color: #a3a3a0 !important;
+}
+html[data-theme="dark"] #hero-section .secondary-list {
+  border-top-color: #e8344c;
+}
+html[data-theme="dark"] #category-sections .cat-section {
+  border-top-color: #e8344c !important;
+}
+html[data-theme="dark"] .cat-head h2,
+html[data-theme="dark"] .cat-head h2 a {
+  color: #ececea !important;
+}
