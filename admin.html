@@ -62,10 +62,10 @@
               <input id="author" placeholder="Davidgistmedia" value="Davidgistmedia">
             </div>
           </div>
-          <label for="image_url">Image URL</label>
-          <input id="image_url" placeholder="https://...">
-          <label for="video_url">Video URL (optional — YouTube link)</label>
-          <input id="video_url" placeholder="https://www.youtube.com/watch?v=...">
+
+          <!-- Pictures and video are added here by js/media-upload.js -->
+          <div id="media-box"></div>
+
           <label for="tags">Tags (comma-separated, optional)</label>
           <input id="tags" placeholder="e.g. music, tour, celebrity">
           <label for="excerpt">Excerpt (short summary shown on the homepage)</label>
@@ -118,6 +118,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
-  <script src="js/admin.js"></script>
+  <script src="js/media-upload.js?v=1"></script>
+  <script src="js/admin.js?v=2"></script>
 </body>
 </html>
