@@ -8,6 +8,20 @@
   });
 })();
 
+/* Styles for the top story slideshow live here so this file is all you need to change */
+(function () {
+  var st = document.createElement("style");
+  st.textContent = `
+    .hero-grid .lead-story.lead-multi .lead-slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .hero-grid .lead-story.lead-multi .lead-slides::-webkit-scrollbar{display:none}
+    .hero-grid .lead-story.lead-multi .lead-slides img{flex:0 0 100% !important;scroll-snap-align:start}
+    .hero-grid .lead-story.lead-multi .overlay{pointer-events:none}
+    .hero-grid .lead-story .lead-count{position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.62);color:#fff;font-size:.8rem;font-weight:700}
+    .lead-count svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  `;
+  document.head.appendChild(st);
+})();
+
 /* Date and time of upload, shown in Nigeria time (for example: 10 Oct 2026, 8:15 PM) */
 function formatWhen(d) {
   try {
@@ -84,6 +98,22 @@ function authorHtml(name) {
   return escapeHtml(n) + (b ? DGB.svg(b, 16) : "");
 }
 
+/* ---- Pictures for the top story ---- */
+function isHttpsUrl(u) {
+  return /^https:\/\//i.test(String(u || ""));
+}
+function pictureList(v) {
+  let list = v;
+  if (typeof list === "string") {
+    try { list = JSON.parse(list); } catch (e) { list = []; }
+  }
+  return Array.isArray(list) ? list.filter(isHttpsUrl) : [];
+}
+/* The main picture first, then the extra ones (up to 6 in the slideshow) */
+function leadPictures(a) {
+  return [a.image_url].concat(pictureList(a.images)).filter(isHttpsUrl).slice(0, 6);
+}
+
 const CATEGORIES = ["nigeria", "politics", "entertainment", "sports", "business", "technology", "world", "local"];
 let allArticles = [];
 let commentCounts = {};
@@ -130,6 +160,23 @@ function showPlaceholders() {
   document.getElementById("hero-section").innerHTML = row.repeat(5);
 }
 
+async function fetchStories() {
+  // Ask for the extra pictures too. If that column isn't there yet, ask without it.
+  let res = await supabaseClient
+    .from("articles")
+    .select(LIST_COLUMNS + ",images")
+    .order("published_at", { ascending: false })
+    .limit(100);
+  if (res.error && /images/i.test(res.error.message || "")) {
+    res = await supabaseClient
+      .from("articles")
+      .select(LIST_COLUMNS)
+      .order("published_at", { ascending: false })
+      .limit(100);
+  }
+  return res;
+}
+
 async function loadArticles() {
   // 1. If we have stories saved from the last visit, show them instantly
   const cached = readCache();
@@ -142,11 +189,7 @@ async function loadArticles() {
   }
 
   // 2. Ask for fresh stories (headline fields only, newest 100)
-  const { data, error } = await supabaseClient
-    .from("articles")
-    .select(LIST_COLUMNS)
-    .order("published_at", { ascending: false })
-    .limit(100);
+  const { data, error } = await fetchStories();
 
   if (error) {
     if (!cached || !cached.length) {
@@ -213,6 +256,18 @@ function renderTrending() {
   `;
 }
 
+/* Keeps the "1/4" counter in step while the reader swipes through the pictures */
+function wireSlides(section) {
+  section.querySelectorAll(".lead-slides").forEach((slides) => {
+    const counter = slides.parentElement.querySelector(".lead-count span");
+    if (!counter) return;
+    slides.addEventListener("scroll", () => {
+      const w = slides.clientWidth || 1;
+      counter.textContent = String(Math.round(slides.scrollLeft / w) + 1);
+    }, { passive: true });
+  });
+}
+
 function renderHero(list) {
   const section = document.getElementById("hero-section");
   if (list.length === 0) {
@@ -222,10 +277,21 @@ function renderHero(list) {
   const lead = list.find((a) => a.featured) || list[0];
   const secondary = list.filter((a) => a.id !== lead.id).slice(0, 4);
 
+  // One picture shows as before. Several pictures become a slideshow the reader can swipe.
+  const pics = leadPictures(lead);
+  const multi = pics.length > 1;
+  const camera = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>';
+  const leadMedia = multi
+    ? `<div class="lead-slides">${pics.map((u, i) =>
+        `<img src="${escapeHtml(u)}" alt="" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`
+      ).join("")}</div>
+      <div class="lead-count" aria-hidden="true">${camera}<span>1</span>/${pics.length}</div>`
+    : (lead.image_url ? `<img src="${escapeHtml(lead.image_url)}" alt="" fetchpriority="high" decoding="async">` : "");
+
   section.innerHTML = `
     <div class="hero-grid">
-      <a class="lead-story" href="article.html?slug=${encodeURIComponent(lead.slug)}">
-        ${lead.image_url ? `<img src="${escapeHtml(lead.image_url)}" alt="" fetchpriority="high" decoding="async">` : ""}
+      <a class="lead-story${multi ? " lead-multi" : ""}" href="article.html?slug=${encodeURIComponent(lead.slug)}">
+        ${leadMedia}
         <div class="overlay">
           <span class="lead-tag">${escapeHtml(lead.category)}</span>
           <h1>${escapeHtml(lead.title)}</h1>
@@ -247,6 +313,7 @@ function renderHero(list) {
       </div>
     </div>
   `;
+  wireSlides(section);
 }
 
 function storyRow(a) {
