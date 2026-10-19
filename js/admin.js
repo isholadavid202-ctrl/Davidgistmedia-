@@ -345,6 +345,7 @@ const formTitle = document.getElementById("form-title");
 
 function resetForm() {
   form.reset();
+  if (window.DGMedia) DGMedia.reset();
   document.getElementById("article-id").value = "";
   formTitle.textContent = "New story";
   saveBtn.textContent = "Publish story";
@@ -356,12 +357,18 @@ cancelEditBtn.addEventListener("click", resetForm);
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  if (window.DGMedia && DGMedia.isBusy()) {
+    saveStatus.textContent = "Please wait until the uploads finish, then publish.";
+    saveStatus.className = "admin-status error";
+    return;
+  }
+
   const id = document.getElementById("article-id").value;
   const title = document.getElementById("title").value.trim();
   const category = document.getElementById("category").value;
   const author = document.getElementById("author").value.trim() || "Davidgistmedia";
-  const image_url = document.getElementById("image_url").value.trim() || null;
-  const video_url = document.getElementById("video_url").value.trim() || null;
+  const media = window.DGMedia ? DGMedia.getValues() : { image_url: null, images: [], video_url: null };
   const tags = document.getElementById("tags").value.trim() || null;
   const excerpt = document.getElementById("excerpt").value.trim();
   const content = document.getElementById("content").value.trim();
@@ -377,7 +384,18 @@ form.addEventListener("submit", async (e) => {
   saveStatus.textContent = "Saving...";
   saveStatus.className = "admin-status";
 
-  const payload = { title, category, author, image_url, video_url, tags, excerpt, content, featured };
+  const payload = {
+    title,
+    category,
+    author,
+    image_url: media.image_url,
+    images: media.images,
+    video_url: media.video_url,
+    tags,
+    excerpt,
+    content,
+    featured
+  };
 
   let result;
   if (id) {
@@ -399,6 +417,8 @@ form.addEventListener("submit", async (e) => {
   saveStatus.textContent = id ? "Story updated." : "Story published.";
   saveStatus.className = "admin-status ok";
   resetForm();
+  saveStatus.textContent = id ? "Story updated." : "Story published.";
+  saveStatus.className = "admin-status ok";
   loadAdminList();
 });
 
@@ -457,8 +477,9 @@ function editArticle(id, list) {
   document.getElementById("title").value = a.title;
   document.getElementById("category").value = a.category;
   document.getElementById("author").value = a.author || "";
-  document.getElementById("image_url").value = a.image_url || "";
-  document.getElementById("video_url").value = a.video_url || "";
+  if (window.DGMedia) {
+    DGMedia.setValues({ image_url: a.image_url, images: a.images, video_url: a.video_url });
+  }
   document.getElementById("tags").value = a.tags || "";
   document.getElementById("excerpt").value = a.excerpt || "";
   document.getElementById("content").value = a.content || "";
@@ -479,4 +500,5 @@ async function deleteArticle(id) {
   loadAdminList();
 }
 
+if (window.DGMedia) DGMedia.mount("media-box");
 checkSession();
