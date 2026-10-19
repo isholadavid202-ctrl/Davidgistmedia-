@@ -56,7 +56,7 @@
       <a href="advertise.html">Advertise with us</a>
       <a href="help.html">Help &amp; FAQs</a>
       <a href="editorial-policy.html">Editorial Policy</a>
-      <a href="corrections.html">Corrections</a>
+      <a href="editorial-policy.html#corrections">Corrections</a>
     </nav>
 
     <p class="dgf-copy">
