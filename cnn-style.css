@@ -179,6 +179,9 @@
 .story-card {
   display: flex !important;
   flex-direction: column !important;
+  align-items: stretch !important;
+  height: auto !important;
+  min-height: 0 !important;
   padding: 22px 0 26px !important;
   background: none !important;
   border: 0 !important;
@@ -196,6 +199,7 @@
 }
 .story-card h3 {
   order: 2;
+  flex: none !important;
   font-family: var(--font) !important;
   font-weight: 500 !important;
   font-size: 1.45rem !important;
@@ -210,6 +214,7 @@
 }
 .story-card img {
   order: 3;
+  flex: none !important;
   width: 100% !important;
   max-width: 100% !important;
   height: auto !important;
