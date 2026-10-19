@@ -123,7 +123,7 @@
         <a href="cookies.html">Cookies</a>
         <a href="accessibility.html">Accessibility Help</a>
         <a href="editorial-policy.html">Editorial Policy</a>
-        <a href="corrections.html">Corrections</a>
+        <a href="editorial-policy.html#corrections">Corrections</a>
       </nav>
     </div>
 
