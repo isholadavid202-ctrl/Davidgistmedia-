@@ -6,7 +6,7 @@
      Any link that still contains "YOUR_" is hidden automatically,
      so visitors never see an icon that leads nowhere. */
   var social = [
-    { name: "X",         icon: "fa-x-twitter",    url: "https://x.com/YOUR_HANDLE" },
+    { name: "X",         icon: "fa-x-twitter",    url: "https://x.com/Davidgistmedian" },
     { name: "Facebook",  icon: "fa-facebook-f",   url: "https://www.facebook.com/YOUR_PAGE" },
     { name: "Instagram", icon: "fa-instagram",    url: "https://www.instagram.com/davidgistmediang/" },
     { name: "TikTok",    icon: "fa-tiktok",       url: "https://www.tiktok.com/@davidgistmediang" },
@@ -22,12 +22,17 @@
     .join("");
 
   var css = `
-.dgx{background:#111;color:#e6e6e6;margin-top:48px;font-family:var(--font,"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif);line-height:1.4}
+/* Pull the footer close to the last story, like CNN */
+main,main.wrap{margin-bottom:0 !important;padding-bottom:0 !important}
+#category-sections,#category-sections .cat-section:last-child,.cat-section:last-child,.card-grid:last-child{margin-bottom:0 !important;padding-bottom:0 !important}
+.story-card:last-child{margin-bottom:0 !important;padding-bottom:0 !important;border-bottom:0 !important}
+footer.dgx{margin:24px 0 0 !important;padding:0 !important;background:#111;color:#e6e6e6;font-family:var(--font,"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif);line-height:1.4}
+
 .dgx,.dgx *{box-sizing:border-box}
 .dgx a{color:inherit;text-decoration:none}
 .dgx-inner{max-width:1200px;margin:0 auto;padding:0 20px}
 
-.dgx-news{padding:34px 0 30px;border-bottom:1px solid #2b2b2b}
+.dgx-news{padding:28px 0 24px;border-bottom:1px solid #2b2b2b}
 .dgx-news h3{margin:0 0 6px;font-size:1.4rem;font-weight:700;color:#fff;letter-spacing:-.01em}
 .dgx-news p{margin:0 0 16px;font-size:.95rem;color:#b4b4b4}
 .dgx-form{display:flex;gap:8px;max-width:480px}
@@ -39,7 +44,7 @@
 .dgx-form button:disabled{opacity:.6;cursor:default}
 .dgx-status{margin:10px 0 0 !important;min-height:1.2em;font-size:.9rem !important;color:#b4b4b4}
 
-.dgx-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 20px;padding:34px 0 28px}
+.dgx-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 20px;padding:28px 0 26px}
 .dgx-col h4{display:flex;align-items:center;margin:0 0 10px;font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff}
 .dgx-col h4::before{content:"";display:inline-block;width:5px;height:1.1em;background:#fff;margin-right:9px}
 .dgx-col a{display:block;padding:6px 0;font-size:.95rem;color:#c9c9c9}
@@ -51,11 +56,11 @@
 .dgx-social a{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid #474747;border-radius:50%;font-size:1.05rem;color:#fff;transition:background .15s,color .15s}
 .dgx-social a:hover{background:#fff;color:#111}
 
-.dgx-copy{margin:0;padding:20px 0 34px;border-top:1px solid #2b2b2b;font-size:.82rem;line-height:1.6;color:#8f8f8f}
+.dgx-copy{margin:0;padding:20px 0 30px;border-top:1px solid #2b2b2b;font-size:.82rem;line-height:1.6;color:#8f8f8f}
 .dgx-copy a{color:#d4d4d4;text-decoration:underline}
 
 @media (min-width:820px){
-  .dgx-cols{grid-template-columns:repeat(4,minmax(0,1fr));gap:30px 32px;padding:40px 0 34px}
+  .dgx-cols{grid-template-columns:repeat(4,minmax(0,1fr));gap:30px 32px;padding:36px 0 30px}
   .dgx-news .dgx-inner{display:flex;align-items:center;justify-content:space-between;gap:40px}
   .dgx-news-text{flex:1}
   .dgx-news p{margin-bottom:0}
@@ -146,6 +151,44 @@
 
   var slot = document.getElementById("site-footer");
   if (slot) slot.outerHTML = html;
+
+  /* ---------- Remove the empty space above the footer ----------
+     Walks up from the footer through the last element of each block above it
+     and removes its bottom margin, padding and line. It runs again whenever
+     the page redraws its stories, so the gap cannot come back. */
+  function skip(el) {
+    return !el || /^(SCRIPT|STYLE|LINK|TEMPLATE|NOSCRIPT)$/.test(el.tagName) ||
+      getComputedStyle(el).display === "none";
+  }
+  function lastReal(el) {
+    var c = el.lastElementChild;
+    while (c && skip(c)) c = c.previousElementSibling;
+    return c;
+  }
+  function tighten() {
+    var f = document.querySelector("footer.dgx");
+    if (!f) return;
+    var prev = f.previousElementSibling;
+    while (prev && skip(prev)) prev = prev.previousElementSibling;
+    while (prev) {
+      prev.style.setProperty("margin-bottom", "0", "important");
+      prev.style.setProperty("padding-bottom", "0", "important");
+      prev.style.setProperty("border-bottom", "0", "important");
+      prev = lastReal(prev);
+    }
+  }
+  tighten();
+  window.addEventListener("load", tighten);
+
+  var mainEl = document.querySelector("main");
+  if (mainEl && window.MutationObserver) {
+    var waiting = false;
+    new MutationObserver(function () {
+      if (waiting) return;
+      waiting = true;
+      requestAnimationFrame(function () { waiting = false; tighten(); });
+    }).observe(mainEl, { childList: true, subtree: true });
+  }
 
   /* ---------- Newsletter signup ---------- */
   var form = document.getElementById("dgx-news-form");
