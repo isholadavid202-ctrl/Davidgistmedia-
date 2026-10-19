@@ -43,14 +43,6 @@
   background: linear-gradient(to top, rgba(0,0,0,.94) 0%, rgba(0,0,0,.72) 50%, rgba(0,0,0,0) 100%) !important;
   color: #fff !important;
 }
-.hero-grid .lead-story .overlay::before {
-  content: "";
-  display: block;
-  width: 80px;
-  height: 6px;
-  background: #fff;
-  margin: 0 0 16px;
-}
 .hero-grid .lead-story .lead-tag {
   display: none !important;
 }
