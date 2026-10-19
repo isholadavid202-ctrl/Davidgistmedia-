@@ -1,30 +1,24 @@
 var yr = document.getElementById("year");
 if (yr) yr.textContent = new Date().getFullYear();
 
-/* Share-button styles live here so this file is all you need to change */
+/* Share-button, comment-box and story-picture styles live here so this file is all you need to change */
 (function () {
   var st = document.createElement("style");
   st.textContent =
     ".share-row{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 22px}" +
     ".share-row a{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;color:var(--ink);font-size:1.05rem;text-decoration:none;background:var(--paper)}" +
     ".share-row a:hover{border-color:var(--ink);color:var(--red)}" +
-    /* Facebook-style comment avatar layout */
-    ".comment-item{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--line)}" +
-    ".comment-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;background:var(--line);flex-shrink:0}" +
-    ".comment-content{flex:1}" +
-    ".comment-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}";
+    ".comment-gate{border:1px solid var(--line);border-radius:10px;padding:18px;margin:0 0 20px;background:var(--paper)}" +
+    ".comment-gate p{margin:0 0 12px;color:var(--muted);font-size:.95rem}" +
+    ".comment-gate p strong{color:var(--ink);font-size:1.05rem}" +
+    ".comment-gate a.engage-btn{display:inline-flex;align-items:center;text-decoration:none}" +
+    ".comment-as{margin:0 0 10px;color:var(--muted);font-size:.92rem}" +
+    ".comment-as a{text-decoration:underline;text-underline-offset:3px}" +
+    ".story-photo{margin:22px 0}" +
+    ".story-photo img{display:block;width:100%;height:auto;border-radius:8px}" +
+    ".story-video{display:block;width:100%;border-radius:8px;background:#000;margin:0 0 20px}";
   document.head.appendChild(st);
 })();
-
-/* Helper function to escape HTML special characters to prevent XSS */
-function escapeHtml(str) {
-  return String(str == null ? "" : str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
 
 /* Date and time in Nigeria time. formatWhen gives text such as "10 Oct 2026, 8:15 PM";
    whenHtml gives the same inside a <time> tag with a small clock icon, for the byline. */
@@ -145,6 +139,34 @@ function toEmbedUrl(url) {
   return url;
 }
 
+/* ---- Extra pictures and uploaded video ---- */
+function isHttpsUrl(u) {
+  return /^https:\/\//i.test(String(u || ""));
+}
+function pictureList(v) {
+  let list = v;
+  if (typeof list === "string") {
+    try { list = JSON.parse(list); } catch (e) { list = []; }
+  }
+  return Array.isArray(list) ? list.filter(isHttpsUrl) : [];
+}
+function figureHtml(url) {
+  return `<figure class="story-photo"><img src="${escapeHtml(url)}" alt="" loading="lazy" decoding="async"></figure>`;
+}
+/* Puts the extra pictures between the paragraphs, then any left over at the end */
+function bodyWithPictures(paragraphs, pictures) {
+  if (!pictures.length) return paragraphs.join("");
+  const out = [];
+  const gap = Math.max(2, Math.floor(paragraphs.length / (pictures.length + 1)));
+  let next = 0;
+  paragraphs.forEach((p, i) => {
+    out.push(p);
+    if (next < pictures.length && (i + 1) % gap === 0) out.push(figureHtml(pictures[next++]));
+  });
+  while (next < pictures.length) out.push(figureHtml(pictures[next++]));
+  return out.join("");
+}
+
 /* ---- Share row: Facebook, X, email, Telegram, WhatsApp ---- */
 function shareRowHtml(data) {
   const url = encodeURIComponent(window.location.href);
@@ -218,7 +240,8 @@ function addSeo(data) {
       logo: { "@type": "ImageObject", url: site + "/icon-512.png" }
     }
   };
-  if (data.image_url) ld.image = [data.image_url];
+  const allPictures = [data.image_url].concat(pictureList(data.images)).filter(isHttpsUrl);
+  if (allPictures.length) ld.image = allPictures;
   if (data.category) ld.articleSection = data.category;
 
   const old = document.getElementById("article-ld");
@@ -255,14 +278,28 @@ async function loadArticle() {
   document.getElementById("page-title").textContent = `${data.title} | Davidgistmedia`;
   addSeo(data);
 
-  const paragraphs = (data.content || "")
+  const paraList = (data.content || "")
     .split(/\n+/)
     .filter((p) => p.trim())
-    .map((p) => `<p>${escapeHtml(p)}</p>`)
-    .join("");
+    .map((p) => `<p>${escapeHtml(p)}</p>`);
+  const paragraphs = bodyWithPictures(paraList, pictureList(data.images));
 
   const liked = getLikedIds().includes(data.id);
-  const videoEmbed = data.video_url ? toEmbedUrl(data.video_url) : null;
+
+  // Video: an uploaded file plays in a normal player, a link (such as YouTube) is embedded
+  const videoUrl = data.video_url || "";
+  const videoIsFile = /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(videoUrl) && isHttpsUrl(videoUrl);
+  const videoEmbed = videoUrl && !videoIsFile ? toEmbedUrl(videoUrl) : null;
+  const fileVideoBlock = videoIsFile
+    ? `<video class="story-video" controls playsinline preload="metadata"${data.image_url ? ` poster="${escapeHtml(data.image_url)}"` : ""} src="${escapeHtml(videoUrl)}"></video>`
+    : "";
+  const embedBlock = videoEmbed
+    ? `<div style="position:relative;padding-top:56.25%;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-md);background:#000;margin-bottom:20px">
+         <iframe src="${escapeHtml(videoEmbed)}" title="Story video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen
+           style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
+       </div>`
+    : "";
+  const videoBlock = fileVideoBlock || embedBlock;
 
   // Reading time (about 200 words a minute)
   const words = String(data.content || "").trim().split(/\s+/).filter(Boolean).length;
@@ -292,11 +329,8 @@ async function loadArticle() {
         <span>${readMins} min read</span>
       </div>
     </div>
-    ${videoEmbed
-      ? `<div style="position:relative;padding-top:56.25%;border-radius:8px;overflow:hidden;box-shadow:var(--shadow-md);background:#000;margin-bottom:20px">
-           <iframe src="${videoEmbed}" title="Story video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen
-             style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
-         </div>`
+    ${videoBlock
+      ? videoBlock
       : (data.image_url ? `<img class="hero-img" src="${escapeHtml(data.image_url)}" alt="">` : "")}
     ${shareRowHtml(data)}
     <div class="article-body">${paragraphs}</div>
@@ -314,20 +348,14 @@ async function loadArticle() {
 
     <div class="comments-section">
       <h3 id="comments-heading">Comments</h3>
-      <form id="comment-form" class="comment-form">
-        <input id="comment-website" name="website" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true">
-        <input id="comment-name" placeholder="Your name (optional)" maxlength="60">
-        <textarea id="comment-text" placeholder="Write a comment..." required maxlength="1000"></textarea>
-        <button class="engage-btn" type="submit" id="comment-submit-btn">Post comment</button>
-        <p class="admin-status" id="comment-status"></p>
-      </form>
+      <div id="comment-box"></div>
       <div id="comments-list"></div>
     </div>
   `;
 
   document.getElementById("like-btn").addEventListener("click", handleLike);
   document.getElementById("share-btn").addEventListener("click", handleShare);
-  document.getElementById("comment-form").addEventListener("submit", handleCommentSubmit);
+  renderCommentBox();
   loadComments();
   loadRelated();
 }
@@ -339,7 +367,6 @@ async function loadRelated() {
     .from("articles")
     .select("id,slug,title,image_url,category,published_at")
     .eq("category", currentArticle.category)
-    .eq("is_approved", true)
     .neq("id", currentArticle.id)
     .order("published_at", { ascending: false })
     .limit(3);
@@ -370,19 +397,55 @@ async function loadRelated() {
   `;
 }
 
+/* ---- Who is signed in (comments need an account) ---- */
+async function getUser() {
+  try {
+    const { data } = await supabaseClient.auth.getSession();
+    return data && data.session ? data.session.user : null;
+  } catch (e) {
+    return null;
+  }
+}
+function savedName(user) {
+  const m = (user && user.user_metadata) || {};
+  return String(m.full_name || m.name || "").trim();
+}
+
+async function renderCommentBox() {
+  const box = document.getElementById("comment-box");
+  if (!box) return;
+  const user = await getUser();
+
+  if (!user) {
+    const next = encodeURIComponent(window.location.pathname + window.location.search);
+    box.innerHTML = `
+      <div class="comment-gate">
+        <p><strong>Join the conversation</strong></p>
+        <p>Sign in with your email to leave a comment. It takes a few seconds and there is no password.</p>
+        <a class="engage-btn" href="account.html?next=${next}">Sign in or create account</a>
+      </div>`;
+    return;
+  }
+
+  const name = savedName(user);
+  box.innerHTML = `
+    <form id="comment-form" class="comment-form">
+      <input id="comment-website" name="website" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true">
+      ${name
+        ? `<p class="comment-as">Commenting as <strong>${escapeHtml(name)}</strong> &middot; <a href="account.html">Change</a></p>`
+        : `<input id="comment-name" placeholder="Your name (shown with your comment)" maxlength="60" required>`}
+      <textarea id="comment-text" placeholder="Write a comment..." required maxlength="1000"></textarea>
+      <button class="engage-btn" type="submit" id="comment-submit-btn">Post comment</button>
+      <p class="admin-status" id="comment-status"></p>
+    </form>`;
+  document.getElementById("comment-form").addEventListener("submit", handleCommentSubmit);
+}
+
 async function loadComments() {
   const list = document.getElementById("comments-list");
-  
-  // Fetch comments and join with profiles table to get avatar & full_name
   const { data, error } = await supabaseClient
     .from("comments")
-    .select(`
-      *,
-      profiles (
-        full_name,
-        avatar_url
-      )
-    `)
+    .select("*")
     .eq("article_id", currentArticle.id)
     .order("created_at", { ascending: false });
 
@@ -397,31 +460,12 @@ async function loadComments() {
     return;
   }
 
-  list.innerHTML = data.map((c) => {
-    // Fallback profile details if profile table join exists
-    const profile = c.profiles || {};
-    const displayName = profile.full_name || c.name || "Anonymous";
-    
-    // Default avatar icon or user photo URL
-    const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'></path><circle cx='12' cy='7' r='4'></circle></svg>";
-    const avatarUrl = profile.avatar_url ? escapeHtml(profile.avatar_url) : defaultAvatar;
-
-    // Clickable author name/profile link
-    const authorLink = `<a href="author.html?name=${encodeURIComponent(displayName)}" style="color:inherit; font-weight:700; text-decoration:none;">${escapeHtml(displayName)}</a>`;
-
-    return `
-      <div class="comment-item">
-        <img class="comment-avatar" src="${avatarUrl}" alt="">
-        <div class="comment-content">
-          <div class="comment-head">
-            ${authorLink}
-            <span class="meta">${formatWhen(c.created_at)}</span>
-          </div>
-          <p>${escapeHtml(c.content)}</p>
-        </div>
-      </div>
-    `;
-  }).join("");
+  list.innerHTML = data.map((c) => `
+    <div class="comment-item">
+      <div class="comment-head"><strong>${escapeHtml(c.name || "Anonymous")}</strong><span class="meta">${formatWhen(c.created_at)}</span></div>
+      <p>${escapeHtml(c.content)}</p>
+    </div>
+  `).join("");
 }
 
 async function handleCommentSubmit(e) {
@@ -433,6 +477,7 @@ async function handleCommentSubmit(e) {
   const status = document.getElementById("comment-status");
 
   if (honeypot && honeypot.value.trim()) {
+    // Likely a bot. Pretend it worked, but don't actually post it.
     textInput.value = "";
     status.textContent = "";
     return;
@@ -441,48 +486,54 @@ async function handleCommentSubmit(e) {
   const content = textInput.value.trim();
   if (!content) return;
 
+  const user = await getUser();
+  if (!user) {
+    renderCommentBox();
+    return;
+  }
+
+  const hadName = !!savedName(user);
+  let name = savedName(user);
+  if (!name) {
+    name = nameInput ? nameInput.value.trim() : "";
+    if (!name) {
+      status.textContent = "Please enter the name to show with your comment.";
+      status.className = "admin-status error";
+      return;
+    }
+  }
+
   btn.disabled = true;
   status.textContent = "Posting...";
   status.className = "admin-status";
 
-  let commenterName = nameInput ? nameInput.value.trim() : "";
-  let userId = null;
-
-  try {
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (user) {
-      userId = user.id;
-      commenterName = user.user_metadata?.full_name || 
-                      user.user_metadata?.name || 
-                      user.email.split("@")[0];
-    }
-  } catch (err) {
-    console.log("Not logged in");
-  }
-
-  if (!commenterName) {
-    commenterName = "Anonymous";
+  // The first time, save the name on the account so it is remembered
+  if (!hadName) {
+    try { await supabaseClient.auth.updateUser({ data: { full_name: name } }); } catch (err) {}
   }
 
   const { error } = await supabaseClient.from("comments").insert({
     article_id: currentArticle.id,
-    name: commenterName,
-    user_id: userId,
+    user_id: user.id,
+    name,
     content,
   });
 
   btn.disabled = false;
 
   if (error) {
-    status.textContent = "Couldn't post your comment. Try again.";
+    const blocked = error.code === "42501" || /row-level security|permission/i.test(error.message || "");
+    status.textContent = blocked
+      ? "Please sign in again to post your comment."
+      : "Couldn't post your comment. Try again.";
     status.className = "admin-status error";
     return;
   }
 
   status.textContent = "";
   textInput.value = "";
-  if (nameInput) nameInput.value = "";
   loadComments();
+  if (!hadName) renderCommentBox();
 }
 
 async function handleLike() {
@@ -496,6 +547,7 @@ async function handleLike() {
   const before = currentArticle.likes || 0;
   const after = wasLiked ? Math.max(before - 1, 0) : before + 1;
 
+  // Show the change straight away, and undo it if Supabase says no.
   btn.classList.toggle("liked", !wasLiked);
   btn.setAttribute("aria-pressed", String(!wasLiked));
   countEl.textContent = after;
