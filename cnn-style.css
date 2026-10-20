@@ -135,6 +135,22 @@
   color: var(--ink) !important;
 }
 
+/* ===== "Analysis" label above a headline, like CNN ===== */
+.kicker {
+  display: block !important;
+  font-family: var(--font) !important;
+  font-weight: 800 !important;
+  font-size: 1.05rem !important;
+  line-height: 1.2 !important;
+  color: var(--ink) !important;
+  margin: 0 0 8px !important;
+}
+.story-card .kicker {
+  order: 1;
+  flex: none !important;
+  margin: 0 0 10px !important;
+}
+
 /* ===== Sections: black bar and uppercase label ===== */
 #trending-section .cat-section,
 #category-sections .cat-section {
