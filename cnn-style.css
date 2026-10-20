@@ -239,3 +239,11 @@
   font-size: 0.85rem !important;
   color: var(--muted) !important;
 }
+
+/* ===== Homepage categories: show only one article per category ===== */
+#category-sections .card-grid .story-card:nth-child(n+2) {
+  display: none !important;
+}
+#category-sections .card-grid .story-card:first-child {
+  grid-column: 1 / -1 !important;
+}
