@@ -177,6 +177,36 @@
       .search-row.is-closed { display: flex; }
       #search-btn { display: none; }
     }
+
+    /* Advertisement space: a small label above the banner */
+    .ad-slot {
+      margin: 20px 0;
+      text-align: center;
+    }
+    .ad-slot .ad-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .ad-slot .ad-box {
+      display: flex;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .ad-slot .ad-box.ad-small { min-height: 50px; }
+    .ad-slot .ad-box.ad-tall { min-height: 250px; }
+    .ad-slot .ad-box.ad-wide { min-height: 90px; }
+
+    /* The 320x50 banner is for phones, the 728x90 banner is for computers */
+    .ad-mobile { display: block; }
+    .ad-desktop { display: none; }
+    @media(min-width: 768px) {
+      .ad-mobile { display: none; }
+      .ad-desktop { display: block; }
+    }
   </style>
 </head>
 <body>
@@ -254,10 +284,67 @@
 
   <main class="wrap">
     <section class="hero-section" id="hero-section"></section>
+
+    <!-- Adsterra banner 320x50 (phones only) -->
+    <div class="ad-slot ad-mobile">
+      <span class="ad-label">Advertisement</span>
+      <div class="ad-box ad-small">
+        <script>
+          if (window.innerWidth < 768) {
+            atOptions = {
+              'key' : '9977ebe385fd5bcc794d085739e547b1',
+              'format' : 'iframe',
+              'height' : 50,
+              'width' : 320,
+              'params' : {}
+            };
+            document.write('<scr' + 'ipt src="https://bauval.org/22/9977ebe385fd5bcc794d085739e547b1"></scr' + 'ipt>');
+          }
+        </script>
+      </div>
+    </div>
+
+    <!-- Adsterra banner 728x90 (computers only) -->
+    <div class="ad-slot ad-desktop">
+      <span class="ad-label">Advertisement</span>
+      <div class="ad-box ad-wide">
+        <script>
+          if (window.innerWidth >= 768) {
+            atOptions = {
+              'key' : 'b1efa552ea21b90dc79455108f6238ef',
+              'format' : 'iframe',
+              'height' : 90,
+              'width' : 728,
+              'params' : {}
+            };
+            document.write('<scr' + 'ipt src="https://bauval.org/22/b1efa552ea21b90dc79455108f6238ef"></scr' + 'ipt>');
+          }
+        </script>
+      </div>
+    </div>
+
     <div id="live-banner"></div>
     <div id="trending-section"></div>
     <div id="podcast-home"></div>
     <div id="video-home"></div>
+
+    <!-- Adsterra banner 300x250 (phones and computers) -->
+    <div class="ad-slot">
+      <span class="ad-label">Advertisement</span>
+      <div class="ad-box ad-tall">
+        <script>
+          atOptions = {
+            'key' : '1de90f316aa8dede9349d9abffc48ea9',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script src="https://bauval.org/22/1de90f316aa8dede9349d9abffc48ea9"></script>
+      </div>
+    </div>
+
     <div id="category-sections"></div>
   </main>
 
