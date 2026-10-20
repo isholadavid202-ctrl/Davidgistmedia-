@@ -31,7 +31,7 @@
   <title>Davidgistmedia | Home</title>
   <link rel="stylesheet" href="styles.css?v=3">
   <link rel="stylesheet" href="bbc.css?v=16">
-  <link rel="stylesheet" href="cnn-style.css?v=3">
+  <link rel="stylesheet" href="cnn-style.css?v=4">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -74,21 +74,8 @@
       background-color: #121212 !important;
       color: #ffffff !important;
     }
-    html[data-theme="dark"] .masthead,
-    html[data-theme="dark"] .util-bar,
-    body.dark-mode .masthead,
-    body.dark-mode .util-bar {
-      background-color: #1a1a1a !important;
-      border-color: #333 !important;
-    }
     html[data-theme="dark"] a,
     body.dark-mode a { color: #ffffff; }
-    html[data-theme="dark"] .search-row input,
-    body.dark-mode .search-row input {
-      background: #242427;
-      color: #ececea;
-      border-color: #3a3a3d;
-    }
     html[data-theme="dark"] .empty-state,
     body.dark-mode .empty-state {
       background: #18181a;
@@ -98,85 +85,6 @@
     body.dark-mode .secondary-item > div[style] {
       background: #2a2a2d !important;
     }
-
-    .util-bar .wrap {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .top-account-link {
-      color: #bb1919;
-      font-weight: 700;
-      text-decoration: none;
-      font-size: 0.9rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .masthead { padding-top: 12px; }
-    .masthead .topbar {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--line);
-    }
-    .topbar .brand-title {
-      font-size: clamp(1.35rem, 5.6vw, 2rem);
-      white-space: nowrap;
-    }
-    .topbar .icons {
-      display: flex;
-      gap: 4px;
-      flex: 0 0 80px;
-    }
-    .topbar .acct {
-      flex: 0 0 80px;
-      display: flex;
-      justify-content: flex-end;
-    }
-    .theme-toggle-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 1px solid rgba(128,128,128,0.3);
-      background: transparent;
-      color: var(--ink);
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      padding: 0;
-    }
-    .theme-toggle-btn i {
-      font-size: 0.95rem;
-    }
-    .topbar button {
-      width: 36px;
-      height: 36px;
-      display: grid;
-      place-items: center;
-      color: var(--ink);
-    }
-    .topbar svg {
-      width: 25px;
-      height: 25px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .search-row.is-closed { display: none; }
-    .masthead .drawer { display: none; flex-direction: column; align-items: stretch; text-align: left; gap: 0; padding: 4px 0 8px; }
-    .masthead .drawer.open { display: flex; }
-    .drawer a { padding: 13px 0; border-bottom: 1px solid var(--line); font-weight: 700; font-size: .95rem; }
-    .drawer a:hover { color: var(--red); }
-    @media(min-width: 820px) {
-      .search-row.is-closed { display: flex; }
-      #search-btn { display: none; }
-    }
   </style>
 </head>
 <body>
@@ -184,67 +92,55 @@
   <!-- Splash screen -->
   <script src="js/splash.js?v=5"></script>
 
-  <!-- Top Utility Bar: Date on left, "Sign in" on right pointing to profile.html -->
-  <div class="util-bar">
-    <div class="wrap">
-      <span id="today"></span>
+  <!-- Header like CNN: menu button, logo and a red button. It stays at the top while you scroll.
+       Search, the sections list, the other pages and night mode are all inside the menu. -->
+  <header class="dgh" id="site-header">
+    <div class="wrap dgh-bar">
+      <button type="button" class="dgh-menu" id="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="drawer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <a class="brand-title" href="/">David<span class="gold">gistmedia</span></a>
       <a href="profile.html" id="top-account-link" class="top-account-link">Sign in</a>
     </div>
-  </div>
 
-  <!-- Main Header -->
-  <header class="masthead">
-    <div class="wrap topbar">
-      <div class="icons">
-        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-        </button>
-        <button type="button" id="search-btn" aria-label="Search" aria-expanded="false">
-          <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
-        </button>
-      </div>
-      <a class="brand-title" href="/">David<span class="gold">gistmedia</span></a>
-      <div class="acct">
-        <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
+    <div class="dgh-drawer" id="drawer">
+      <div class="wrap">
+        <form class="dgh-search" id="search-form">
+          <input type="text" id="search-input" placeholder="Search news..." aria-label="Search news">
+          <button type="submit">Search</button>
+        </form>
+
+        <nav class="dgh-nav" id="tabs" aria-label="Sections">
+          <button class="active" data-cat="all">Home</button>
+          <button data-cat="nigeria">Nigeria</button>
+          <button data-cat="politics">Politics</button>
+          <button data-cat="entertainment">Entertainment</button>
+          <button data-cat="sports">Sports</button>
+          <button data-cat="business">Business</button>
+          <button data-cat="technology">Technology</button>
+          <button data-cat="world">World</button>
+          <button data-cat="local">Local News</button>
+          <a href="podcasts.html">Podcasts</a>
+          <a href="live.html">Live</a>
+          <a href="videos.html">Videos</a>
+        </nav>
+
+        <div class="dgh-more">
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+          <a href="editorial-policy.html">Editorial Policy</a>
+          <a href="privacy-policy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+          <a href="staff.html">Staff login</a>
+          <a href="admin.html">Admin login</a>
+        </div>
+
+        <button type="button" id="theme-toggle-btn" class="dgh-theme" aria-label="Toggle dark mode">
           <i class="fa-regular fa-moon" id="theme-icon"></i>
+          <span id="theme-label">Switch to dark mode</span>
         </button>
       </div>
     </div>
-
-    <div class="wrap drawer" id="drawer">
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="editorial-policy.html">Editorial Policy</a>
-      <a href="privacy-policy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
-      <a href="staff.html">Staff login</a>
-      <a href="admin.html">Admin login</a>
-    </div>
-
-    <div class="wrap">
-      <p class="tagline">Your Source for Entertainment &amp; Breaking News</p>
-      <form class="search-row is-closed" id="search-form">
-        <input type="text" id="search-input" placeholder="Search news...">
-        <button type="submit">Search</button>
-      </form>
-    </div>
-
-    <nav class="tabs" id="tabs">
-      <button class="active" data-cat="all">Home</button>
-      <button data-cat="nigeria">Nigeria</button>
-      <button data-cat="politics">Politics</button>
-      <button data-cat="entertainment">Entertainment</button>
-      <button data-cat="sports">Sports</button>
-      <button data-cat="business">Business</button>
-      <button data-cat="technology">Technology</button>
-      <button data-cat="world">World</button>
-      <button data-cat="local">Local News</button>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
-      <a href="videos.html">Videos</a>
-    </nav>
   </header>
 
   <main class="wrap">
@@ -269,36 +165,58 @@
   <script src="js/install-banner.js?v=1"></script>
 
   <script>
+    // Menu: opens and closes the panel under the header
     (function () {
       var menuBtn = document.getElementById("menu-btn");
       var drawer = document.getElementById("drawer");
-      var searchBtn = document.getElementById("search-btn");
+      var tabs = document.getElementById("tabs");
       var form = document.getElementById("search-form");
-      var input = document.getElementById("search-input");
-      if (menuBtn && drawer) {
-        menuBtn.addEventListener("click", function () {
-          var open = drawer.classList.toggle("open");
-          menuBtn.setAttribute("aria-expanded", open);
-        });
+      if (!menuBtn || !drawer) return;
+
+      var BARS = "M3 6h18M3 12h18M3 18h18";
+      var CROSS = "M5 5l14 14M19 5L5 19";
+
+      function setOpen(open) {
+        drawer.classList.toggle("open", open);
+        menuBtn.setAttribute("aria-expanded", String(open));
+        menuBtn.setAttribute("aria-label", open ? "Close menu" : "Menu");
+        var path = menuBtn.querySelector("path");
+        if (path) path.setAttribute("d", open ? CROSS : BARS);
       }
-      if (searchBtn && form) {
-        searchBtn.addEventListener("click", function () {
-          var closed = form.classList.toggle("is-closed");
-          searchBtn.setAttribute("aria-expanded", !closed);
-          if (!closed && input) input.focus();
-        });
-      }
+
+      menuBtn.addEventListener("click", function () {
+        setOpen(!drawer.classList.contains("open"));
+      });
+      // Choosing a section closes the menu and goes back to the top
+      if (tabs) tabs.addEventListener("click", function (e) {
+        if (e.target.closest("button[data-cat]")) {
+          setOpen(false);
+          window.scrollTo(0, 0);
+        }
+      });
+      if (form) form.addEventListener("submit", function () {
+        setOpen(false);
+        window.scrollTo(0, 0);
+      });
+      document.addEventListener("click", function (e) {
+        if (drawer.classList.contains("open") && !e.target.closest("#site-header")) setOpen(false);
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") setOpen(false);
+      });
     })();
 
     // Night Mode Toggle Functionality
     (function () {
       const themeBtn = document.getElementById("theme-toggle-btn");
       const themeIcon = document.getElementById("theme-icon");
+      const themeLabel = document.getElementById("theme-label");
 
       function applyTheme(isDark) {
         document.body.classList.toggle("dark-mode", isDark);
         document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
         if (themeIcon) themeIcon.className = isDark ? "fa-solid fa-sun" : "fa-regular fa-moon";
+        if (themeLabel) themeLabel.textContent = isDark ? "Switch to light mode" : "Switch to dark mode";
       }
 
       let saved = null;
@@ -343,7 +261,7 @@
               <span>${escapeHtml(displayName)}</span>
             `;
           } else {
-            accountBtn.textContent = displayName;
+            accountBtn.innerHTML = "<span>" + escapeHtml(displayName) + "</span>";
           }
         } else {
           accountBtn.textContent = "Sign in";
