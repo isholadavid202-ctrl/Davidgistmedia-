@@ -121,6 +121,20 @@ function ldJson(obj) {
   return JSON.stringify(obj).replace(/</g, "\\u003c");
 }
 
+// Finds the YouTube video id inside a YouTube link, so its thumbnail can be used
+function ytId(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname.indexOf("youtu.be") > -1) return u.pathname.slice(1);
+    if (u.hostname.indexOf("youtube.com") > -1) {
+      if (u.searchParams.get("v")) return u.searchParams.get("v");
+      const m = u.pathname.match(/\/(shorts|embed)\/([\w-]+)/);
+      if (m) return m[2];
+    }
+  } catch (e) {}
+  return null;
+}
+
 // The homepage stories that are put into the page before the browser's scripts run.
 // It uses the same layout as home.js, so the first screen already looks like your site.
 function homeBlock(rows) {
@@ -384,6 +398,68 @@ app.get(["/article.html", "/article"], async (req, res) => {
 
   res.set("Cache-Control", "no-cache");
   res.status(status).type("html").send(html);
+});
+
+// Video share links look like /videos.html?v=ID. This adds the video's title and
+// picture to the page so WhatsApp, Facebook and X show a preview card.
+app.get(["/videos.html", "/videos"], async (req, res) => {
+  let html = template("videos.html");
+  const id = req.query.v ? String(req.query.v).slice(0, 100) : "";
+
+  if (id) {
+    try {
+      const rows = await cached("v:" + id, 60 * 1000, () =>
+        sb(
+          `videos?id=eq.${encodeURIComponent(id)}&published=eq.true` +
+            `&select=id,title,kind,video_url,thumbnail_url&limit=1`
+        ),
+        false
+      );
+      const v = Array.isArray(rows) ? rows[0] : null;
+
+      if (v) {
+        const origin = originOf(req);
+        const pageUrl = `${origin}/videos.html?v=${encodeURIComponent(id)}`;
+        const title = v.title || "Davidgistmedia Video";
+        const desc =
+          v.kind === "short"
+            ? "Watch this short video on Davidgistmedia."
+            : "Watch this video on Davidgistmedia.";
+
+        // Use the saved thumbnail first. If there is none, use the YouTube picture.
+        let img = v.thumbnail_url || "";
+        if (!img) {
+          const yt = ytId(v.video_url);
+          if (yt) img = "https://img.youtube.com/vi/" + encodeURIComponent(yt) + "/hqdefault.jpg";
+        }
+        if (img && !/^https?:\/\//i.test(img)) {
+          img = origin + "/" + img.replace(/^\/+/, "");
+        }
+
+        const tags = `
+  <link rel="canonical" href="${esc(pageUrl)}">
+  <meta name="description" content="${esc(desc)}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Davidgistmedia">
+  <meta property="og:title" content="${esc(title)}">
+  <meta property="og:description" content="${esc(desc)}">
+  <meta property="og:url" content="${esc(pageUrl)}">
+  ${img ? `<meta property="og:image" content="${esc(img)}">` : ""}
+  <meta name="twitter:card" content="${img ? "summary_large_image" : "summary"}">
+  <meta name="twitter:title" content="${esc(title)}">
+  <meta name="twitter:description" content="${esc(desc)}">
+  ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ""}
+`;
+        html = html.replace(/<title[^>]*>[\s\S]*?<\/title>/i, () => `<title>${esc(title)} | Davidgistmedia</title>`);
+        html = html.replace("</head>", () => tags + "</head>");
+      }
+    } catch (e) {
+      console.error("Video render failed:", e.message);
+    }
+  }
+
+  res.set("Cache-Control", "no-cache");
+  res.type("html").send(html);
 });
 
 app.use("/.well-known", express.static(path.join(__dirname, ".well-known"), { dotfiles: "allow" }));
