@@ -1,11 +1,196 @@
 /* CNN-inspired homepage. Loads after bbc.css. */
 
-/* ===== Header: a thick rule under the top bar ===== */
-.masthead .topbar {
-  border-bottom: 3px solid var(--ink) !important;
+/* ===== Header: menu button, logo and a red button, with a thick rule under it.
+   It stays at the top of the screen while the page scrolls, like CNN. ===== */
+.dgh {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  margin: 0;
+  padding: 12px 0 0;
+  border: 0;
+  background: var(--paper, #fff);
+}
+.dgh .dgh-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid var(--ink);
+}
+.dgh .dgh-menu {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 0 0 -6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+.dgh .dgh-menu svg {
+  width: 28px;
+  height: 28px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.dgh .brand-title {
+  margin: 0 !important;
+  font-size: clamp(1.3rem, 5.6vw, 1.9rem) !important;
+  line-height: 1 !important;
+  text-align: left !important;
+  white-space: nowrap;
+}
+.dgh .top-account-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 42vw;
+  margin-left: auto;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: #cc0000;
+  color: #fff !important;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+}
+.dgh .top-account-link span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dgh .top-account-link img {
+  flex: none;
+  width: 20px !important;
+  height: 20px !important;
+  border: 1px solid #fff !important;
 }
 
-/* ===== Lead story: photo card with the headline and summary over the photo ===== */
+/* The menu panel that opens under the header */
+.dgh .dgh-drawer {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  max-height: calc(100vh - 76px);
+  max-height: calc(100dvh - 76px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--paper, #fff);
+  border-top: 1px solid var(--line);
+  border-bottom: 3px solid var(--ink);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.25);
+}
+.dgh .dgh-drawer.open {
+  display: block;
+}
+.dgh .dgh-drawer .wrap {
+  padding-top: 8px;
+  padding-bottom: 16px;
+}
+.dgh-search {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 6px;
+}
+.dgh .dgh-search input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+}
+.dgh .dgh-search button {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--paper, #fff);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.dgh-nav {
+  display: flex;
+  flex-direction: column;
+  margin: 6px 0 0;
+}
+.dgh .dgh-nav button,
+.dgh .dgh-nav a {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 15px 2px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+  color: var(--ink);
+  font-family: var(--font, inherit);
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.dgh .dgh-nav button.active {
+  color: var(--red, #cc0000);
+}
+.dgh-more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 18px;
+  margin: 14px 0 4px;
+}
+.dgh .dgh-more a {
+  padding: 8px 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.dgh .dgh-theme {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 10px 0 0;
+  padding: 14px 2px 4px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Space between the header rule and the lead story */
+main.wrap {
+  padding-top: 24px !important;
+}
+#hero-section {
+  margin-top: 0 !important;
+}
+
+/* ===== Lead story: tall photo card with a white tag, headline and summary over the photo ===== */
 .hero-grid .lead-story {
   position: relative !important;
   display: block !important;
@@ -26,7 +211,7 @@
   max-width: 100% !important;
   height: auto !important;
   max-height: none !important;
-  aspect-ratio: 4 / 5 !important;
+  aspect-ratio: 2 / 3 !important;
   object-fit: cover !important;
   margin: 0 !important;
   border-radius: 0 !important;
@@ -39,12 +224,23 @@
   top: auto !important;
   display: block !important;
   margin: 0 !important;
-  padding: 120px 20px 22px !important;
-  background: linear-gradient(to top, rgba(0,0,0,.94) 0%, rgba(0,0,0,.72) 50%, rgba(0,0,0,0) 100%) !important;
+  padding: 140px 24px 28px !important;
+  background: linear-gradient(to top, rgba(0,0,0,.96) 0%, rgba(0,0,0,.78) 50%, rgba(0,0,0,0) 100%) !important;
   color: #fff !important;
 }
 .hero-grid .lead-story .lead-tag {
-  display: none !important;
+  display: inline-block !important;
+  margin: 0 0 14px !important;
+  padding: 9px 15px !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  color: #111 !important;
+  font-family: var(--font) !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-transform: capitalize !important;
 }
 .hero-grid .lead-story h1 {
   font-family: var(--font) !important;
@@ -78,7 +274,7 @@
   }
 }
 
-/* ===== Headlines under the lead story: text only, short grey line above each ===== */
+/* ===== Headlines under the lead story: a short grey line, a small bold label, then the headline ===== */
 #hero-section .secondary-list {
   margin-top: 18px !important;
 }
@@ -103,10 +299,18 @@
   display: none !important;
 }
 #hero-section .secondary-item > :last-child {
-  display: flex !important;
-  flex-wrap: wrap;
-  align-items: center;
+  display: block !important;
   padding: 0 !important;
+}
+#hero-section .secondary-item .cat {
+  display: block !important;
+  margin: 0 0 4px !important;
+  color: var(--ink) !important;
+  font-family: var(--font) !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  text-transform: capitalize !important;
 }
 #hero-section .secondary-item h3 {
   font-family: var(--font) !important;
