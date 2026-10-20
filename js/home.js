@@ -114,6 +114,24 @@ function leadPictures(a) {
   return [a.image_url].concat(pictureList(a.images)).filter(isHttpsUrl).slice(0, 6);
 }
 
+/* ---- "Analysis" label ----
+   A story gets the bold "Analysis" label above its headline when
+   "analysis" is typed in the Tags box in the newsroom. */
+function tagList(a) {
+  let t = a.tags;
+  if (typeof t === "string") {
+    try {
+      const parsed = JSON.parse(t);
+      if (Array.isArray(parsed)) t = parsed;
+    } catch (e) {}
+  }
+  if (typeof t === "string") t = t.split(",");
+  return Array.isArray(t) ? t.map((x) => String(x).trim().toLowerCase()) : [];
+}
+function kickerHtml(a) {
+  return tagList(a).indexOf("analysis") > -1 ? '<div class="kicker">Analysis</div>' : "";
+}
+
 const CATEGORIES = [
   "nigeria",
   "africa",
@@ -175,18 +193,21 @@ function showPlaceholders() {
 }
 
 async function fetchStories() {
-  // Ask for the extra pictures too. If that column isn't there yet, ask without it.
-  let res = await supabaseClient
-    .from("articles")
-    .select(LIST_COLUMNS + ",images")
-    .order("published_at", { ascending: false })
-    .limit(100);
-  if (res.error && /images/i.test(res.error.message || "")) {
+  // Ask for the extra pictures and the tags too. If a column isn't there, ask without it.
+  const sets = [
+    LIST_COLUMNS + ",images,tags",
+    LIST_COLUMNS + ",images",
+    LIST_COLUMNS,
+  ];
+  let res = null;
+  for (let i = 0; i < sets.length; i++) {
     res = await supabaseClient
       .from("articles")
-      .select(LIST_COLUMNS)
+      .select(sets[i])
       .order("published_at", { ascending: false })
       .limit(100);
+    if (!res.error) return res;
+    if (!/images|tags|column/i.test(res.error.message || "")) return res;
   }
   return res;
 }
@@ -259,6 +280,7 @@ function renderTrending() {
           <a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">
             ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : ""}
             <div class="body">
+              ${kickerHtml(a)}
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
               <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
@@ -318,6 +340,7 @@ function renderHero(list) {
           <a class="secondary-item" href="article.html?slug=${encodeURIComponent(a.slug)}">
             ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : `<div style="background:#eee;border-radius:4px"></div>`}
             <div>
+              ${kickerHtml(a)}
               <div class="cat">${escapeHtml(a.category)}</div>
               <h3>${escapeHtml(a.title)}</h3>
               <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
@@ -335,6 +358,7 @@ function storyRow(a) {
     <a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">
       ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : ""}
       <div class="body">
+        ${kickerHtml(a)}
         <div class="cat">${escapeHtml(a.category)}</div>
         <h3>${escapeHtml(a.title)}</h3>
         <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
@@ -347,6 +371,7 @@ function storyFeature(a) {
     <a class="story-card feature" href="article.html?slug=${encodeURIComponent(a.slug)}">
       ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : ""}
       <div class="body">
+        ${kickerHtml(a)}
         <div class="cat">${escapeHtml(a.category)}</div>
         <h3>${escapeHtml(a.title)}</h3>
         ${a.excerpt ? `<p class="excerpt">${escapeHtml(a.excerpt)}</p>` : ""}
