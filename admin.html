@@ -112,7 +112,7 @@
 
       <!-- ===== Videos: short and long, shown on videos.html ===== -->
       <div class="admin-card" id="videos-card">
-        <h2>Videos (short and long)</h2>
+        <h2 id="vid-heading">Videos (short and long)</h2>
         <p style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">Posts to the Videos page (videos.html). Short videos play in a swipe feed, long videos in a grid. For long videos, uploading to YouTube and pasting the link works best.</p>
         <form id="vid-form">
           <label for="vid-kind">Type</label>
@@ -138,6 +138,7 @@
           <input type="file" id="vid-thumb" accept="image/*">
 
           <button class="primary" type="submit" id="vid-btn">Post video</button>
+          <button type="button" class="primary" id="vid-cancel" style="display:none;background:#eee;color:#111;margin-top:8px">Cancel edit</button>
           <p class="admin-status" id="vid-status"></p>
         </form>
 
@@ -161,7 +162,7 @@
   <script src="js/media-upload.js?v=1"></script>
   <script src="js/admin.js?v=2"></script>
 
-  <!-- Video posting (works on its own, does not change admin.js) -->
+  <!-- Video posting and editing (works on its own, does not change admin.js) -->
   <script>
     (function () {
       /* Biggest file you can upload. Supabase's free plan allows 50 MB per file. */
@@ -171,6 +172,7 @@
       var $ = function (id) { return document.getElementById(id); };
       var MARK = "/storage/v1/object/public/videos/";
       var loaded = false;
+      var editing = null; /* the video being edited, or null when posting a new one */
 
       function esc(s) {
         return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
@@ -184,6 +186,7 @@
       }
       function isHttps(u) { return /^https:\/\//i.test(String(u || "")); }
       function isFile(u) { return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(String(u || "")); }
+      function isStored(u) { return String(u || "").indexOf(MARK) > -1; }
       function isYouTube(u) {
         try { var h = new URL(u).hostname; return h.indexOf("youtube.com") > -1 || h.indexOf("youtu.be") > -1; }
         catch (e) { return false; }
@@ -196,6 +199,23 @@
       }
       $("vid-kind").addEventListener("change", updateHint);
       updateHint();
+
+      /* Switches the form between "post a new video" and "edit this video" */
+      function setMode(v) {
+        editing = v || null;
+        $("vid-btn").textContent = editing ? "Save changes" : "Post video";
+        $("vid-heading").textContent = editing ? "Edit video" : "Videos (short and long)";
+        $("vid-cancel").style.display = editing ? "block" : "none";
+      }
+      function resetForm() {
+        $("vid-form").reset();
+        setMode(null);
+        updateHint();
+      }
+      $("vid-cancel").addEventListener("click", function () {
+        resetForm();
+        say("", true);
+      });
 
       async function uploadFile(file, folder) {
         var ext = (file.name.split(".").pop() || "bin").toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -231,12 +251,35 @@
           return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)">' +
             '<div style="flex:1;min-width:0"><b style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(v.title) + '</b>' +
             '<span style="font-size:0.8rem;color:var(--muted)">' + (v.kind === "short" ? "Short" : "Long") + ' &middot; ' + d + '</span></div>' +
+            '<button type="button" class="vid-edit" data-id="' + esc(v.id) +
+            '" style="background:none;border:1px solid #9aa7b5;color:#1f3a5f;border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer">Edit</button>' +
             '<button type="button" class="vid-del" data-id="' + esc(v.id) + '" data-v="' + esc(v.video_url) + '" data-t="' + esc(v.thumbnail_url || "") +
             '" style="background:none;border:1px solid #d9a3a3;color:#b00020;border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer">Delete</button></div>';
         }).join("");
       }
 
       $("vid-list").addEventListener("click", async function (e) {
+        var ed = e.target.closest(".vid-edit");
+        if (ed) {
+          say("Loading the video...", true);
+          var g = await sb.from("videos")
+            .select("id,title,description,kind,video_url,thumbnail_url")
+            .eq("id", ed.getAttribute("data-id")).maybeSingle();
+          if (g.error || !g.data) { say("Couldn't open that video to edit.", false); return; }
+          var v = g.data;
+          $("vid-form").reset();
+          setMode(v);
+          $("vid-kind").value = v.kind === "long" ? "long" : "short";
+          $("vid-title").value = v.title || "";
+          $("vid-desc").value = v.description || "";
+          /* Uploaded files are kept unless you choose a new one. Pasted links are shown so you can change them. */
+          $("vid-link").value = isStored(v.video_url) ? "" : (v.video_url || "");
+          updateHint();
+          say("Editing this video. To keep the current video or cover picture, leave those boxes empty.", true);
+          $("videos-card").scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+
         var b = e.target.closest(".vid-del");
         if (!b) return;
         if (!confirm("Delete this video? This can't be undone.")) return;
@@ -244,6 +287,7 @@
         if (r.error || !r.data || !r.data.length) { say("Couldn't delete that video.", false); return; }
         await removeFile(b.getAttribute("data-v"));
         await removeFile(b.getAttribute("data-t"));
+        if (editing && editing.id === b.getAttribute("data-id")) resetForm();
         say("Video deleted.", true);
         loadList();
       });
@@ -259,45 +303,75 @@
         var thumb = $("vid-thumb").files[0];
 
         if (!title) { say("Please give the video a title.", false); return; }
-        if (!file && !link) { say("Choose a video file or paste a link.", false); return; }
+        if (!editing && !file && !link) { say("Choose a video file or paste a link.", false); return; }
         if (file && file.size > MAX_MB * 1024 * 1024) {
           say("That file is over " + MAX_MB + " MB. Upload it to YouTube and paste the link instead.", false);
           return;
         }
-        if (!file) {
+
+        /* Work out which video address to save */
+        var keepUrl = editing ? editing.video_url : "";
+        var linkChanged = !!link && (!editing || link !== editing.video_url);
+        if (!file && linkChanged) {
           if (!isHttps(link)) { say("The link must start with https://", false); return; }
           if (kind === "short" && !isFile(link)) { say("Short videos need an uploaded file or a link ending in .mp4 or .webm.", false); return; }
           if (kind === "long" && !isYouTube(link) && !isFile(link)) { say("Use a YouTube link, or a link ending in .mp4 or .webm.", false); return; }
+        }
+        if (editing && !file && !linkChanged && kind === "short" && !isFile(keepUrl) && !isStored(keepUrl)) {
+          say("A short video needs an uploaded file or a link ending in .mp4 or .webm. Choose a file or paste a new link.", false);
+          return;
         }
         if (thumb && thumb.size > 5 * 1024 * 1024) { say("The cover picture is over 5 MB. Choose a smaller one.", false); return; }
 
         var btn = $("vid-btn");
         btn.disabled = true;
         try {
-          var videoUrl = link;
+          var videoUrl = keepUrl;
           if (file) {
             say("Uploading the video. This can take a few minutes, please keep this page open...", true);
             videoUrl = await uploadFile(file, kind);
+          } else if (linkChanged) {
+            videoUrl = link;
           }
-          var thumbUrl = null;
+
+          var thumbUrl = editing ? (editing.thumbnail_url || null) : null;
           if (thumb) {
             say("Uploading the cover picture...", true);
             thumbUrl = await uploadFile(thumb, "covers");
           }
+
           say("Saving...", true);
-          var r = await sb.from("videos").insert({
-            title: title, description: desc || null, kind: kind,
-            video_url: videoUrl, thumbnail_url: thumbUrl, published: true
-          });
-          if (r.error) throw r.error;
-          say("Posted! It is now on the Videos page.", true);
-          $("vid-form").reset();
-          updateHint();
+
+          if (editing) {
+            var u = await sb.from("videos").update({
+              title: title, description: desc || null, kind: kind,
+              video_url: videoUrl, thumbnail_url: thumbUrl
+            }).eq("id", editing.id).select();
+            if (u.error) throw u.error;
+            if (!u.data || !u.data.length) {
+              say("Couldn't save the changes. Your Supabase login may not be allowed to edit videos yet.", false);
+              btn.disabled = false;
+              return;
+            }
+            /* Remove the old uploaded files that were replaced */
+            if (videoUrl !== editing.video_url) await removeFile(editing.video_url);
+            if (thumbUrl !== (editing.thumbnail_url || null)) await removeFile(editing.thumbnail_url);
+            say("Changes saved.", true);
+          } else {
+            var r = await sb.from("videos").insert({
+              title: title, description: desc || null, kind: kind,
+              video_url: videoUrl, thumbnail_url: thumbUrl, published: true
+            });
+            if (r.error) throw r.error;
+            say("Posted! It is now on the Videos page.", true);
+          }
+
+          resetForm();
           loadList();
         } catch (err) {
           var t = String((err && err.message) || "");
           if ((err && (err.code === "42501" || err.statusCode === "403")) || /row-level security|not allowed|unauthorized/i.test(t)) {
-            say("This login isn't allowed to post videos. Check the admin email in your Supabase setup.", false);
+            say("This login isn't allowed to " + (editing ? "edit" : "post") + " videos. Check the admin email in your Supabase setup.", false);
           } else if (/exceeds|too large|maximum allowed size|payload/i.test(t)) {
             say("The file is too big for your Supabase plan. Upload it to YouTube and paste the link.", false);
           } else {
