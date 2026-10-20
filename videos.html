@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Videos | Davidgistmedia</title>
+  <meta name="description" content="Watch short and long videos from Davidgistmedia.">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;background:#0d0d0d;color:#fff}
+    body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.4}
+    a{color:inherit;text-decoration:none}
+    [hidden]{display:none !important}
+
+    .vh-top{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:14px 16px}
+    .brand{font:700 1.4rem Georgia,"Times New Roman",serif}
+    .brand span{color:#c8102e}
+    .back{font-size:.9rem;color:#bbb;font-weight:600}
+    .vh-tabs{display:flex;max-width:1200px;margin:0 auto;padding:0 16px;border-bottom:1px solid #222}
+    .vh-tabs button{flex:1;background:none;border:0;border-bottom:3px solid transparent;color:#999;font-family:inherit;font-size:1rem;font-weight:700;padding:13px 0;cursor:pointer}
+    .vh-tabs button.on{color:#fff;border-bottom-color:#c8102e}
+    main{max-width:1200px;margin:0 auto;padding:16px}
+
+    /* Short videos */
+    #short-feed{height:calc(100vh - 140px);height:calc(100dvh - 140px);min-height:420px;max-width:440px;margin:0 auto;overflow-y:auto;scroll-snap-type:y mandatory;border-radius:14px;background:#000;scrollbar-width:none}
+    #short-feed::-webkit-scrollbar{display:none}
+    .short{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;background:#000}
+    .short video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
+    .short .info{position:absolute;left:0;right:0;bottom:0;padding:70px 16px 16px;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);pointer-events:none}
+    .short h3{margin:0 0 4px;font-size:1.05rem}
+    .short p{margin:0 0 6px;font-size:.9rem;color:#ddd;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .short .views{font-size:.8rem;color:#bbb}
+    .mute{position:absolute;top:12px;right:12px;z-index:2;width:42px;height:42px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:1rem;cursor:pointer}
+
+    /* Long videos */
+    #long-grid{display:grid;grid-template-columns:1fr;gap:26px 20px}
+    @media(min-width:700px){#long-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(min-width:1000px){#long-grid{grid-template-columns:repeat(3,1fr)}}
+    .lcard{display:block;width:100%;text-align:left;background:none;border:0;color:inherit;font-family:inherit;padding:0;cursor:pointer}
+    .thumb{position:relative;aspect-ratio:16/9;background:#1a1a1a;border-radius:10px;overflow:hidden}
+    .thumb img,.thumb video{display:block;width:100%;height:100%;object-fit:cover}
+    .thumb .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+    .thumb .play i{display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,.62);font-size:1.2rem;padding-left:3px}
+    .lcard h3{margin:10px 0 4px;font-size:1.1rem;line-height:1.3;font-weight:600}
+    .lcard .meta{font-size:.85rem;color:#9a9a9a}
+
+    .empty{padding:60px 16px;text-align:center;color:#999}
+
+    /* Player window */
+    .modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:16px;overflow:auto;background:rgba(0,0,0,.93)}
+    .modal.open{display:flex}
+    .modal-box{width:100%;max-width:960px}
+    .player{position:relative;aspect-ratio:16/9;background:#000;border-radius:10px;overflow:hidden}
+    .player iframe,.player video{position:absolute;inset:0;width:100%;height:100%;border:0}
+    .modal h2{margin:14px 0 6px;font-size:1.25rem}
+    .modal p{margin:0;color:#cfcfcf;white-space:pre-line}
+    .modal-close{position:fixed;top:12px;right:14px;z-index:60;width:42px;height:42px;border-radius:50%;border:0;background:#fff;color:#000;font-size:1.4rem;cursor:pointer}
+  </style>
+</head>
+<body>
+
+  <div class="vh-top">
+    <a class="brand" href="index.html">David<span>gistmedia</span></a>
+    <a class="back" href="index.html">&larr; Home</a>
+  </div>
+
+  <div class="vh-tabs">
+    <button type="button" id="t-short" class="on">Short</button>
+    <button type="button" id="t-long">Long</button>
+  </div>
+
+  <main>
+    <div id="short-feed"></div>
+    <div id="long-grid" hidden></div>
+  </main>
+
+  <div class="modal" id="modal" aria-hidden="true">
+    <button type="button" class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+    <div class="modal-box">
+      <div class="player" id="player"></div>
+      <h2 id="m-title"></h2>
+      <p id="m-desc"></p>
+    </div>
+  </div>
+
+  <div id="site-footer"></div>
+  <script src="js/footer.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script>
+    (function () {
+      var sb = typeof supabaseClient !== "undefined" ? supabaseClient : null;
+      var $ = function (id) { return document.getElementById(id); };
+      var shorts = [], longs = [];
+      var soundOn = false;
+      var counted = {};
+      var io = null;
+
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      function isHttps(u) { return /^https:\/\//i.test(String(u || "")); }
+      function isFile(u) { return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(String(u || "")); }
+      function ytId(url) {
+        try {
+          var u = new URL(url);
+          if (u.hostname.indexOf("youtu.be") > -1) return u.pathname.slice(1);
+          if (u.hostname.indexOf("youtube.com") > -1) {
+            if (u.searchParams.get("v")) return u.searchParams.get("v");
+            var m = u.pathname.match(/\/(shorts|embed)\/([\w-]+)/);
+            if (m) return m[2];
+          }
+        } catch (e) {}
+        return null;
+      }
+      function dateText(d) {
+        var t = new Date(d);
+        if (isNaN(t.getTime())) return "";
+        return t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
+      }
+      function viewsText(n) {
+        n = Number(n) || 0;
+        return n + (n === 1 ? " view" : " views");
+      }
+      function countView(id) {
+        if (!sb || counted[id]) return;
+        counted[id] = true;
+        sb.rpc("increment_video_views", { video_id: id }).then(function () {}, function () {});
+      }
+
+      /* ---------- Short videos ---------- */
+      function renderShorts() {
+        var feed = $("short-feed");
+        if (!shorts.length) {
+          feed.style.height = "auto";
+          feed.style.background = "transparent";
+          feed.innerHTML = '<div class="empty">No short videos yet. Check back soon.</div>';
+          return;
+        }
+        feed.innerHTML = shorts.map(function (v) {
+          return '<article class="short" data-id="' + esc(v.id) + '">' +
+            '<video src="' + esc(v.video_url) + '"' + (v.thumbnail_url ? ' poster="' + esc(v.thumbnail_url) + '"' : "") +
+            ' loop muted playsinline preload="metadata"></video>' +
+            '<button type="button" class="mute" aria-label="Sound on or off"><i class="fa-solid fa-volume-xmark"></i></button>' +
+            '<div class="info"><h3>' + esc(v.title) + '</h3>' +
+            (v.description ? '<p>' + esc(v.description) + '</p>' : "") +
+            '<div class="views">' + viewsText(v.views) + ' &middot; ' + dateText(v.created_at) + '</div></div>' +
+            '</article>';
+        }).join("");
+
+        io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            var v = en.target.querySelector("video");
+            if (!v) return;
+            if (en.isIntersecting && en.intersectionRatio >= 0.6) {
+              v.muted = !soundOn;
+              var p = v.play();
+              if (p && p.catch) p.catch(function () {});
+              countView(en.target.getAttribute("data-id"));
+            } else {
+              v.pause();
+            }
+          });
+        }, { root: feed, threshold: [0, 0.6, 1] });
+        feed.querySelectorAll(".short").forEach(function (el) { io.observe(el); });
+      }
+
+      function applySound() {
+        document.querySelectorAll("#short-feed video").forEach(function (v) { v.muted = !soundOn; });
+        document.querySelectorAll("#short-feed .mute i").forEach(function (i) {
+          i.className = soundOn ? "fa-solid fa-volume-high" : "fa-solid fa-volume-xmark";
+        });
+      }
+
+      $("short-feed").addEventListener("click", function (e) {
+        if (e.target.closest(".mute")) {
+          soundOn = !soundOn;
+          applySound();
+          return;
+        }
+        var v = e.target.closest(".short") && e.target.closest(".short").querySelector("video");
+        if (v) { if (v.paused) v.play().catch(function () {}); else v.pause(); }
+      });
+
+      /* ---------- Long videos ---------- */
+      function thumbHtml(v) {
+        var id = ytId(v.video_url);
+        var img = v.thumbnail_url || (id ? "https://img.youtube.com/vi/" + encodeURIComponent(id) + "/hqdefault.jpg" : "");
+        var media = img
+          ? '<img src="' + esc(img) + '" alt="" loading="lazy">'
+          : (isFile(v.video_url) ? '<video src="' + esc(v.video_url) + '#t=0.5" preload="metadata" muted playsinline></video>' : "");
+        return '<div class="thumb">' + media + '<div class="play"><i class="fa-solid fa-play"></i></div></div>';
+      }
+
+      function renderLongs() {
+        var grid = $("long-grid");
+        if (!longs.length) {
+          grid.style.display = "block";
+          grid.innerHTML = '<div class="empty">No long videos yet. Check back soon.</div>';
+          return;
+        }
+        grid.innerHTML = longs.map(function (v, i) {
+          return '<button type="button" class="lcard" data-i="' + i + '">' + thumbHtml(v) +
+            '<h3>' + esc(v.title) + '</h3>' +
+            '<div class="meta">' + dateText(v.created_at) + ' &middot; ' + viewsText(v.views) + '</div></button>';
+        }).join("");
+      }
+
+      $("long-grid").addEventListener("click", function (e) {
+        var card = e.target.closest(".lcard");
+        if (card) openVideo(longs[Number(card.getAttribute("data-i"))]);
+      });
+
+      function openVideo(v) {
+        if (!v) return;
+        var id = ytId(v.video_url);
+        $("player").innerHTML = id
+          ? '<iframe src="https://www.youtube.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0" title="' + esc(v.title) +
+            '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>'
+          : '<video src="' + esc(v.video_url) + '" controls autoplay playsinline></video>';
+        $("m-title").textContent = v.title;
+        $("m-desc").textContent = v.description || "";
+        $("modal").classList.add("open");
+        $("modal").setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        countView(v.id);
+      }
+      function closeVideo() {
+        $("player").innerHTML = "";
+        $("modal").classList.remove("open");
+        $("modal").setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+      $("modal-close").addEventListener("click", closeVideo);
+      $("modal").addEventListener("click", function (e) { if (e.target === $("modal")) closeVideo(); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeVideo(); });
+
+      /* ---------- Tabs ---------- */
+      function tab(name) {
+        var isShort = name === "short";
+        $("t-short").classList.toggle("on", isShort);
+        $("t-long").classList.toggle("on", !isShort);
+        $("short-feed").hidden = !isShort;
+        $("long-grid").hidden = isShort;
+        if (!isShort) {
+          document.querySelectorAll("#short-feed video").forEach(function (v) { v.pause(); });
+        }
+      }
+      $("t-short").addEventListener("click", function () { tab("short"); history.replaceState(null, "", "#short"); });
+      $("t-long").addEventListener("click", function () { tab("long"); history.replaceState(null, "", "#long"); });
+
+      /* ---------- Load ---------- */
+      async function load() {
+        if (!sb) {
+          $("short-feed").innerHTML = '<div class="empty">Videos are not available right now.</div>';
+          return;
+        }
+        var r = await sb.from("videos").select("*").eq("published", true)
+          .order("created_at", { ascending: false }).limit(100);
+        if (r.error) {
+          $("short-feed").innerHTML = '<div class="empty">Couldn\'t load videos right now. Please try again.</div>';
+          return;
+        }
+        var all = (r.data || []).filter(function (v) { return isHttps(v.video_url); });
+        shorts = all.filter(function (v) { return v.kind === "short"; });
+        longs = all.filter(function (v) { return v.kind === "long"; });
+        renderShorts();
+        renderLongs();
+        var start = location.hash === "#long" ? "long" : (shorts.length || !longs.length ? "short" : "long");
+        tab(start);
+      }
+      load();
+    })();
+  </script>
+</body>
+</html>
