@@ -105,6 +105,41 @@
         </form>
       </div>
 
+      <!-- ===== Videos: short and long, shown on videos.html ===== -->
+      <div class="admin-card" id="videos-card">
+        <h2>Videos (short and long)</h2>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">Posts to the Videos page (videos.html). Short videos play in a swipe feed, long videos in a grid. For long videos, uploading to YouTube and pasting the link works best.</p>
+        <form id="vid-form">
+          <label for="vid-kind">Type</label>
+          <select id="vid-kind">
+            <option value="short">Short video</option>
+            <option value="long">Long video</option>
+          </select>
+
+          <label for="vid-title">Title</label>
+          <input id="vid-title" maxlength="120" placeholder="Give the video a title">
+
+          <label for="vid-desc">Description (optional)</label>
+          <textarea id="vid-desc" style="min-height:70px" maxlength="500" placeholder="A line or two about the video"></textarea>
+
+          <label for="vid-file">Video file</label>
+          <input type="file" id="vid-file" accept="video/*">
+          <p id="vid-hint" style="font-size:0.8rem;color:var(--muted);margin:6px 0 0"></p>
+
+          <label for="vid-link">Or paste a video link</label>
+          <input id="vid-link" placeholder="https://youtu.be/...">
+
+          <label for="vid-thumb">Cover picture (optional)</label>
+          <input type="file" id="vid-thumb" accept="image/*">
+
+          <button class="primary" type="submit" id="vid-btn">Post video</button>
+          <p class="admin-status" id="vid-status"></p>
+        </form>
+
+        <h2 style="margin-top:24px;font-size:1rem">Your videos</h2>
+        <div id="vid-list"></div>
+      </div>
+
       <div class="admin-card">
         <h2>Manage Comments</h2>
         <div class="admin-list" id="comments-admin-list"></div>
@@ -120,5 +155,170 @@
   <script src="js/supabase-client.js"></script>
   <script src="js/media-upload.js?v=1"></script>
   <script src="js/admin.js?v=2"></script>
+
+  <!-- Video posting (works on its own, does not change admin.js) -->
+  <script>
+    (function () {
+      /* Biggest file you can upload. Supabase's free plan allows 50 MB per file. */
+      var MAX_MB = 50;
+
+      var sb = typeof supabaseClient !== "undefined" ? supabaseClient : null;
+      var $ = function (id) { return document.getElementById(id); };
+      var MARK = "/storage/v1/object/public/videos/";
+      var loaded = false;
+
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      function say(text, ok) {
+        var s = $("vid-status");
+        s.textContent = text || "";
+        s.className = "admin-status" + (text ? (ok ? "" : " error") : "");
+        s.style.color = ok ? "#1a7f37" : "";
+      }
+      function isHttps(u) { return /^https:\/\//i.test(String(u || "")); }
+      function isFile(u) { return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(String(u || "")); }
+      function isYouTube(u) {
+        try { var h = new URL(u).hostname; return h.indexOf("youtube.com") > -1 || h.indexOf("youtu.be") > -1; }
+        catch (e) { return false; }
+      }
+
+      function updateHint() {
+        $("vid-hint").textContent = $("vid-kind").value === "short"
+          ? "Best: a vertical MP4 under 60 seconds. Files over " + MAX_MB + " MB won't upload. Links must end in .mp4 or .webm."
+          : "Uploaded files must be under " + MAX_MB + " MB. For bigger videos, use a YouTube link.";
+      }
+      $("vid-kind").addEventListener("change", updateHint);
+      updateHint();
+
+      async function uploadFile(file, folder) {
+        var ext = (file.name.split(".").pop() || "bin").toLowerCase().replace(/[^a-z0-9]/g, "");
+        var path = folder + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 8) + "." + ext;
+        var r = await sb.storage.from("videos").upload(path, file, {
+          cacheControl: "3600", upsert: false, contentType: file.type || undefined
+        });
+        if (r.error) throw r.error;
+        return sb.storage.from("videos").getPublicUrl(path).data.publicUrl;
+      }
+
+      function removeFile(u) {
+        var i = u ? String(u).indexOf(MARK) : -1;
+        if (i < 0) return Promise.resolve();
+        var path = decodeURIComponent(String(u).slice(i + MARK.length).split("?")[0]);
+        return sb.storage.from("videos").remove([path]).then(function () {}, function () {});
+      }
+
+      async function loadList() {
+        var list = $("vid-list");
+        var r = await sb.from("videos").select("id,title,kind,video_url,thumbnail_url,created_at")
+          .order("created_at", { ascending: false }).limit(50);
+        if (r.error) {
+          list.innerHTML = '<p style="font-size:0.85rem;color:var(--muted)">Couldn\'t load videos. Check that the Supabase video setup has been run.</p>';
+          return;
+        }
+        if (!r.data || !r.data.length) {
+          list.innerHTML = '<p style="font-size:0.85rem;color:var(--muted)">No videos yet.</p>';
+          return;
+        }
+        list.innerHTML = r.data.map(function (v) {
+          var d = new Date(v.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+          return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)">' +
+            '<div style="flex:1;min-width:0"><b style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(v.title) + '</b>' +
+            '<span style="font-size:0.8rem;color:var(--muted)">' + (v.kind === "short" ? "Short" : "Long") + ' &middot; ' + d + '</span></div>' +
+            '<button type="button" class="vid-del" data-id="' + esc(v.id) + '" data-v="' + esc(v.video_url) + '" data-t="' + esc(v.thumbnail_url || "") +
+            '" style="background:none;border:1px solid #d9a3a3;color:#b00020;border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer">Delete</button></div>';
+        }).join("");
+      }
+
+      $("vid-list").addEventListener("click", async function (e) {
+        var b = e.target.closest(".vid-del");
+        if (!b) return;
+        if (!confirm("Delete this video? This can't be undone.")) return;
+        var r = await sb.from("videos").delete().eq("id", b.getAttribute("data-id")).select();
+        if (r.error || !r.data || !r.data.length) { say("Couldn't delete that video.", false); return; }
+        await removeFile(b.getAttribute("data-v"));
+        await removeFile(b.getAttribute("data-t"));
+        say("Video deleted.", true);
+        loadList();
+      });
+
+      $("vid-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        if (!sb) { say("Not connected to Supabase.", false); return; }
+        var kind = $("vid-kind").value;
+        var title = $("vid-title").value.trim();
+        var desc = $("vid-desc").value.trim();
+        var file = $("vid-file").files[0];
+        var link = $("vid-link").value.trim();
+        var thumb = $("vid-thumb").files[0];
+
+        if (!title) { say("Please give the video a title.", false); return; }
+        if (!file && !link) { say("Choose a video file or paste a link.", false); return; }
+        if (file && file.size > MAX_MB * 1024 * 1024) {
+          say("That file is over " + MAX_MB + " MB. Upload it to YouTube and paste the link instead.", false);
+          return;
+        }
+        if (!file) {
+          if (!isHttps(link)) { say("The link must start with https://", false); return; }
+          if (kind === "short" && !isFile(link)) { say("Short videos need an uploaded file or a link ending in .mp4 or .webm.", false); return; }
+          if (kind === "long" && !isYouTube(link) && !isFile(link)) { say("Use a YouTube link, or a link ending in .mp4 or .webm.", false); return; }
+        }
+        if (thumb && thumb.size > 5 * 1024 * 1024) { say("The cover picture is over 5 MB. Choose a smaller one.", false); return; }
+
+        var btn = $("vid-btn");
+        btn.disabled = true;
+        try {
+          var videoUrl = link;
+          if (file) {
+            say("Uploading the video. This can take a few minutes, please keep this page open...", true);
+            videoUrl = await uploadFile(file, kind);
+          }
+          var thumbUrl = null;
+          if (thumb) {
+            say("Uploading the cover picture...", true);
+            thumbUrl = await uploadFile(thumb, "covers");
+          }
+          say("Saving...", true);
+          var r = await sb.from("videos").insert({
+            title: title, description: desc || null, kind: kind,
+            video_url: videoUrl, thumbnail_url: thumbUrl, published: true
+          });
+          if (r.error) throw r.error;
+          say("Posted! It is now on the Videos page.", true);
+          $("vid-form").reset();
+          updateHint();
+          loadList();
+        } catch (err) {
+          var t = String((err && err.message) || "");
+          if ((err && (err.code === "42501" || err.statusCode === "403")) || /row-level security|not allowed|unauthorized/i.test(t)) {
+            say("This login isn't allowed to post videos. Check the admin email in your Supabase setup.", false);
+          } else if (/exceeds|too large|maximum allowed size|payload/i.test(t)) {
+            say("The file is too big for your Supabase plan. Upload it to YouTube and paste the link.", false);
+          } else {
+            say("Something went wrong. Please try again.", false);
+          }
+        }
+        btn.disabled = false;
+      });
+
+      /* Load the list once the admin is logged in (now or after logging in) */
+      function ready(session) {
+        if (session && session.user && !loaded) {
+          loaded = true;
+          loadList();
+        }
+      }
+      if (sb) {
+        sb.auth.getSession().then(function (r) { ready(r && r.data && r.data.session); });
+        sb.auth.onAuthStateChange(function (event, session) {
+          setTimeout(function () {
+            if (event === "SIGNED_OUT") loaded = false;
+            else ready(session);
+          }, 0);
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
