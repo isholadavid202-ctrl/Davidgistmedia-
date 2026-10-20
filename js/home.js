@@ -114,7 +114,21 @@ function leadPictures(a) {
   return [a.image_url].concat(pictureList(a.images)).filter(isHttpsUrl).slice(0, 6);
 }
 
-const CATEGORIES = ["nigeria", "politics", "entertainment", "sports", "business", "technology", "world", "local"];
+const CATEGORIES = [
+  "nigeria",
+  "africa",
+  "politics",
+  "entertainment",
+  "sports",
+  "business",
+  "technology",
+  "science",
+  "education",
+  "fashion",
+  "europe",
+  "world",
+  "local",
+];
 let allArticles = [];
 let commentCounts = {};
 let activeCategory = "all";
