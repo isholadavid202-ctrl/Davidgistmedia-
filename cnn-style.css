@@ -240,10 +240,12 @@
   color: var(--muted) !important;
 }
 
-/* ===== Homepage categories: show only one article per category ===== */
+/* ===== Homepage: show only one article in Trending and in every category ===== */
+#trending-section .card-grid .story-card:nth-child(n+2),
 #category-sections .card-grid .story-card:nth-child(n+2) {
   display: none !important;
 }
+#trending-section .card-grid .story-card:first-child,
 #category-sections .card-grid .story-card:first-child {
   grid-column: 1 / -1 !important;
 }
