@@ -432,6 +432,8 @@ app.get(["/videos.html", "/videos"], async (req, res) => {
           const yt = ytId(v.video_url);
           if (yt) img = "https://img.youtube.com/vi/" + encodeURIComponent(yt) + "/hqdefault.jpg";
         }
+        // Last choice: the site icon, so the preview is never empty
+        if (!img) img = origin + "/apple-touch-icon.png";
         if (img && !/^https?:\/\//i.test(img)) {
           img = origin + "/" + img.replace(/^\/+/, "");
         }
