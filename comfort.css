@@ -1,0 +1,54 @@
+/* Eye-comfort colours for the whole site.
+   Load this LAST on every page, after the other stylesheets.
+   Soft off-white page, dark grey text (not pure black), softer greys for small text.
+   Night mode: softer white text and slightly dimmed pictures. */
+
+/* ===== Light mode ===== */
+:root {
+  --page: #f3f2ee;    /* page background: warm off-white instead of pure white */
+  --paper: #faf9f6;   /* cards, header and tabs: a touch lighter than the page */
+  --ink: #1f2023;     /* main text: soft near-black */
+  --muted: #5a5c63;   /* small text: readable grey */
+  --line: #dad8d2;    /* thin lines */
+}
+
+html body {
+  background-color: var(--page);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header, tabs and cards use the slightly lighter paper colour */
+.masthead,
+.author-profile {
+  background-color: var(--paper);
+}
+html .ad-top-bar {
+  background: #e9e8e3;
+  border-bottom-color: #d6d4ce;
+}
+
+/* ===== Night mode: softer white text, slightly dimmer pictures ===== */
+html[data-theme="dark"] {
+  --page: #141416;
+  --paper: #1c1c1f;
+  --ink: #e4e4e1;
+  --muted: #a4a4a1;
+  --line: #2e2e32;
+}
+html[data-theme="dark"] body.dark-mode {
+  background-color: #141416 !important;
+  color: #e4e4e1 !important;
+}
+html[data-theme="dark"] body.dark-mode a {
+  color: #e4e4e1;
+}
+html[data-theme="dark"] img {
+  filter: brightness(.92);
+}
+html[data-theme="dark"] .ad-top-bar,
+html[data-theme="dark"] body.dark-mode .ad-top-bar {
+  background: #1c1c1f;
+  border-bottom-color: #2e2e32;
+}
