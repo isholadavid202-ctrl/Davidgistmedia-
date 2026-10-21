@@ -128,10 +128,10 @@
     .author-photo.no-photo::after{content:"ID";font-family:var(--serif);font-weight:700;font-size:1.8rem;color:var(--muted)}
     .ap-id{min-width:0}
 
-    /* Name + badge: the badge sits right after the name, like the Facebook one */
+    /* Name + badge: the badge sits right after the name, like Facebook */
     .author-title{display:block;font-family:var(--serif);font-size:clamp(1.45rem,5.6vw,1.9rem);font-weight:800;line-height:1.15;color:var(--ink);margin:0}
     .author-title .name-end{white-space:nowrap}
-    .author-title #author-badge{display:inline;margin-left:4px}
+    .author-title #author-badge{display:inline;margin-left:2px}
     .author-title svg{width:22px;height:22px;display:inline-block;vertical-align:-3px}
 
     .author-role{font-size:.74rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--red);line-height:1.35;margin:6px 0 0}
@@ -321,7 +321,8 @@
       img.onerror = next;
       next();
 
-      /* Verified badge: exact same seal the article page draws in js/article.js (owner = orange) */
+      /* Verified badge: same seal the article page draws in js/article.js (owner = orange).
+         The viewBox is cropped to 1.5 1.5 21 21 so there is no empty space around the seal. */
       (function () {
         var size = 22, pts = [];
         for (var k = 0; k < 48; k++) {
@@ -330,7 +331,7 @@
           pts.push((12 + r * Math.cos(a)).toFixed(2) + "," + (12 + r * Math.sin(a)).toFixed(2));
         }
         document.getElementById("author-badge").innerHTML =
-          '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" role="img" aria-label="Verified owner" style="display:inline-block;vertical-align:-3px"><title>Verified owner</title>' +
+          '<svg viewBox="1.5 1.5 21 21" width="' + size + '" height="' + size + '" role="img" aria-label="Verified owner" style="display:inline-block;vertical-align:-3px"><title>Verified owner</title>' +
           '<polygon points="' + pts.join(" ") + '" fill="#f97316"/>' +
           '<path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
       })();
