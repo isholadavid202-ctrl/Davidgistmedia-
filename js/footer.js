@@ -107,8 +107,13 @@ footer.dgx{margin:24px 0 0 !important;padding:0 !important;background:#111;color
       <nav class="dgx-col" aria-label="More sections">
         <h4>More</h4>
         <a href="index.html#nigeria">Nigeria</a>
+        <a href="index.html#africa">Africa</a>
         <a href="index.html#politics">Politics</a>
         <a href="index.html#technology">Technology</a>
+        <a href="index.html#science">Science</a>
+        <a href="index.html#education">Education</a>
+        <a href="index.html#fashion">Fashion</a>
+        <a href="index.html#europe">Europe</a>
         <a href="index.html#world">World</a>
         <a href="index.html#local">Local News</a>
       </nav>
