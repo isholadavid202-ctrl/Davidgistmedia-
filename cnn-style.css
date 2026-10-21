@@ -1,145 +1,188 @@
-/* CNN-EXACT v15 - Davidgistmedia - Full file - No mistakes */
-/* Loads AFTER bbc.css - This makes your site look like CNN video */
+/* CNN.COM CLONE v16 - Exact replica of CNN mobile - Davidgistmedia */
+/* Based on CNN 2024-2026 redesign - hero with overlay + tight list */
 
-/* ===== Header line ===== */
-.masthead .topbar {
-  border-bottom: 3px solid var(--ink) !important;
+:root{
+  --cnn-black:#000;
+  --cnn-red:#cc0000;
+  --cnn-line:#e5e5e5;
+  --cnn-grey:#f6f6f6;
 }
 
-/* ===== HERO - Tall image with Analysis tag OVER image ===== */
+/* RESET SPACES - CNN has no gaps */
+main.wrap{max-width:1100px !important;padding:0 !important;margin:0 auto !important;}
+body{background:#fff !important;}
+#hero-section, #trending-section, #category-sections{margin:0 !important;padding:0 !important;}
+.ad-slot{margin:0 !important;padding:8px 0 !important;background:var(--cnn-grey);}
+
+/* HEADER THICK LINE LIKE CNN */
+.masthead .topbar{border-bottom:3px solid #000 !important;}
+
+/* ===== 1. LEAD STORY - EXACT CNN.COM ===== */
+.hero-grid{display:block !important;margin:0 !important;padding:0 !important;gap:0 !important;}
 .hero-grid .lead-story{
-  position: relative !important;
-  display: block !important;
-  height: auto !important;
-  min-height: 0 !important;
-  width: 100vw !important;
-  max-width: 100vw !important;
-  margin: 0 calc(50% - 50vw) !important;
-  background: #000 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  overflow: hidden !important;
-  padding: 0 !important;
+  position:relative !important;
+  width:100vw !important;
+  max-width:100vw !important;
+  margin:0 calc(50% - 50vw) !important;
+  background:#000 !important;
+  border-radius:0 !important;
+  border:0 !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  display:block !important;
 }
 .hero-grid .lead-story img{
-  position: static !important;
-  display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  height: 62vh !important;
-  min-height: 400px !important;
-  max-height: 600px !important;
-  aspect-ratio: unset !important;
-  object-fit: cover !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
+  width:100% !important;
+  height:58vh !important;
+  min-height:380px !important;
+  max-height:580px !important;
+  object-fit:cover !important;
+  aspect-ratio:unset !important;
+  margin:0 !important;
+  display:block !important;
+  border-radius:0 !important;
 }
 .hero-grid .lead-story .overlay{
-  position: absolute !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  top: auto !important;
-  display: block !important;
-  margin: 0 !important;
-  padding: 90px 16px 22px !important;
-  background: linear-gradient(to top, rgba(0,0,0,.96) 0%, rgba(0,0,0,.75) 50%, rgba(0,0,0,0) 100%) !important;
-  color: #fff !important;
+  position:absolute !important;
+  left:0 !important;
+  right:0 !important;
+  bottom:0 !important;
+  padding:120px 16px 18px !important;
+  margin:0 !important;
+  background:linear-gradient(to top, rgba(0,0,0,0.95) 15%, rgba(0,0,0,0.6) 55%, transparent 100%) !important;
+  display:block !important;
 }
 .hero-grid .lead-story .lead-tag{
-  display: inline-block !important;
-  margin: 0 0 12px !important;
-  padding: 6px 12px !important;
-  border-radius: 4px !important;
-  background: #fff !important;
-  color: #111 !important;
-  font-family: var(--font) !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  line-height: 1 !important;
-  letter-spacing: 0.02em !important;
-  text-transform: uppercase !important;
+  background:#fff !important;
+  color:#000 !important;
+  padding:5px 10px !important;
+  border-radius:4px !important;
+  font-size:11px !important;
+  font-weight:800 !important;
+  text-transform:uppercase !important;
+  letter-spacing:0.05em !important;
+  margin:0 0 10px !important;
+  display:inline-block !important;
 }
 .hero-grid .lead-story .lead-tag::before{display:none !important;}
 .hero-grid .lead-story h1{
-  font-family: Helvetica, Arial, sans-serif !important;
-  font-weight: 800 !important;
-  font-size: 24px !important;
-  line-height: 1.15 !important;
-  letter-spacing: -0.01em !important;
-  color: #fff !important;
-  margin: 0 0 8px !important;
+  font-family:CNN Sans, Helvetica, Arial, sans-serif !important;
+  font-weight:800 !important;
+  font-size:clamp(20px, 6vw, 28px) !important;
+  line-height:1.12 !important;
+  color:#fff !important;
+  margin:0 0 8px !important;
 }
 .hero-grid .lead-story p{
-  display: -webkit-box !important;
-  -webkit-line-clamp: 2 !important;
-  -webkit-box-orient: vertical !important;
-  overflow: hidden !important;
-  font-family: Helvetica, Arial, sans-serif !important;
-  font-size: 14px !important;
-  line-height: 1.35 !important;
-  color: #e6e6e6 !important;
-  opacity: 1 !important;
-  margin: 0 !important;
+  display:block !important;
+  font-size:13px !important;
+  line-height:1.35 !important;
+  color:#d9d9d9 !important;
+  margin:0 !important;
+  -webkit-line-clamp:2 !important;
+  -webkit-box-orient:vertical !important;
+  overflow:hidden !important;
 }
 .hero-grid .lead-story .lead-meta{display:none !important;}
-@media (min-width: 820px){
+
+/* Desktop hero */
+@media(min-width:820px){
   .hero-grid .lead-story{
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    border-radius: 8px !important;
+    width:100% !important;
+    margin:0 !important;
+    border-radius:6px !important;
+    max-width:100% !important;
   }
-  .hero-grid .lead-story img{height: 520px !important;}
+  .hero-grid .lead-story img{height:520px !important;}
 }
 
-/* ===== HEADLINES UNDER LEAD - 2 only, with grey line above ===== */
-#hero-section .secondary-list{margin:0 !important;padding:0 !important;display:block !important;}
-#hero-section .secondary-item:nth-child(n+3){display:none !important;}
+/* ===== 2. SECONDARY LIST - 2 HEADLINES WITH LINE ===== */
+#hero-section .secondary-list{
+  display:block !important;
+  margin:0 !important;
+  padding:0 !important;
+  background:#fff !important;
+}
 #hero-section .secondary-item{
   display:block !important;
-  padding:0 16px 16px !important;
-  margin:0 !important;
-  background:none !important;
+  padding:12px 16px 16px !important;
   border:0 !important;
-  border-bottom:1px solid #e5e5e5 !important;
-  border-radius:0 !important;
-  box-shadow:none !important;
-  grid-template-columns:1fr !important;
+  border-bottom:1px solid var(--cnn-line) !important;
+  background:#fff !important;
+  margin:0 !important;
 }
+#hero-section .secondary-item:nth-child(n+3){display:none !important;}
+#hero-section .secondary-item > :first-child{display:none !important;}
 #hero-section .secondary-item::before{
   content:"";
   display:block;
-  width:100%;
   height:1px;
   background:#ddd;
-  margin:0 0 14px;
+  margin:0 0 12px;
 }
-#hero-section .secondary-item > :first-child{display:none !important;}
-#hero-section .secondary-item > :last-child{display:block !important;padding:0 !important;}
+#hero-section .secondary-item h3{
+  font-family:Helvetica, Arial, sans-serif !important;
+  font-size:16px !important;
+  font-weight:600 !important;
+  line-height:1.35 !important;
+  color:#000 !important;
+  margin:0 !important;
+}
 #hero-section .secondary-item .cat,
 #hero-section .secondary-item .meta{display:none !important;}
-#hero-section .secondary-item h3{
-  font-family: Helvetica, Arial, sans-serif !important;
-  font-weight:600 !important;
-  font-size:17px !important;
-  line-height:1.3 !important;
+
+/* ===== 3. SECTION HEAD - CNN BLACK BAR + TITLE ===== */
+.cat-section{border-top:8px solid #f2f2f2 !important;margin:0 !important;padding:0 !important;}
+.cat-head{
+  display:flex !important;
+  align-items:center;
+  padding:14px 16px !important;
   margin:0 !important;
-  color:var(--ink) !important;
+  border-bottom:1px solid var(--cnn-line) !important;
+  background:#fff !important;
 }
-
-/* ===== Kicker label ===== */
-.kicker{
-  display:block !important;
-  font-family:var(--font) !important;
+.cat-head h2{
+  font-family:Helvetica, Arial, sans-serif !important;
+  font-size:14px !important;
   font-weight:800 !important;
-  font-size:13px !important;
   text-transform:uppercase !important;
-  margin:0 0 8px !important;
+  letter-spacing:0.04em !important;
+  color:#000 !important;
+  display:flex !important;
+  align-items:center !important;
 }
+.cat-head h2::before{
+  content:"" !important;
+  width:4px !important;
+  height:16px !important;
+  background:#000 !important;
+  margin-right:10px !important;
+  display:inline-block !important;
+}
+.cat-head h2 a{color:#000 !important;}
+.cat-head h2 a::after{display:none !important;}
 
-/* ===== SECTIONS - Tight like CNN ===== */
-#trending-section .cat-section,
-#category-sections .cat-section{
-  border-top:6px solid #f2f2f2 !important;
-  margin-top:
+/* ===== 4. CARDS - HEADLINE ON TOP, IMAGE BOTTOM ===== */
+.card-grid{display:block !important;margin:0 !important;gap:0 !important;padding:0 !important;}
+.story-card{
+  display:flex !important;
+  flex-direction:column !important;
+  background:#fff !important;
+  border:0 !important;
+  border-bottom:1px solid var(--cnn-line) !important;
+  margin:0 !important;
+  padding:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+.story-card .body{display:contents !important;}
+.story-card .cat, .story-card .excerpt, .story-card .meta, .story-card .kicker{display:none !important;}
+.story-card h3{
+  order:1 !important;
+  padding:14px 16px 10px !important;
+  margin:0 !important;
+  font-family:Helvetica, Arial, sans-serif !important;
+  font-size:19px !important;
+  font-weight:700 !important;
+  line-height:1.25 !important;
+  color
