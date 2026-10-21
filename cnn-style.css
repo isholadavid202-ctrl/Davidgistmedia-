@@ -1,11 +1,54 @@
-/* CNN-inspired homepage. Loads after bbc.css. */
+/* Homepage design. Loads after bbc.css.
+   Type scale: lead 28px, feature 24px, list 17px, summary 16px, labels 12px.
+   Headlines use the serif font, labels and times use the sans font. */
 
-/* ===== Header: a thick rule under the top bar ===== */
+/* ===== Header ===== */
 .masthead .topbar {
   border-bottom: 3px solid var(--ink) !important;
 }
+@media (max-width: 819px) {
+  .masthead .tagline { display: none !important; }
+}
 
-/* ===== Lead story: tall photo card with a white tag, headline and summary over the photo ===== */
+/* ===== Category tabs: stay at the top while scrolling ===== */
+#tabs {
+  display: flex !important;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  position: sticky !important;
+  top: 0;
+  z-index: 60;
+  background: var(--paper, #fff);
+  border-bottom: 1px solid var(--line);
+  padding: 0 8px;
+  margin: 0 0 14px;
+}
+#tabs::-webkit-scrollbar { display: none; }
+#tabs button,
+#tabs a {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+}
+#tabs button.active { border-bottom-color: var(--red); }
+
+/* ===== Small touches ===== */
+.story-card:active, .secondary-item:active, #tabs button:active { opacity: .85; }
+.story-card img, .secondary-item img, .lead-story img { animation: dgFade .4s ease; }
+@keyframes dgFade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ===== Lead story: shorter photo so headline, summary and the next stories are all visible ===== */
 .hero-grid .lead-story {
   position: relative !important;
   display: block !important;
@@ -26,7 +69,7 @@
   max-width: 100% !important;
   height: auto !important;
   max-height: none !important;
-  aspect-ratio: 2 / 3 !important;
+  aspect-ratio: 4 / 5 !important;
   object-fit: cover !important;
   margin: 0 !important;
   border-radius: 0 !important;
@@ -39,134 +82,133 @@
   top: auto !important;
   display: block !important;
   margin: 0 !important;
-  padding: 140px 24px 28px !important;
-  background: linear-gradient(to top, rgba(0,0,0,.96) 0%, rgba(0,0,0,.78) 50%, rgba(0,0,0,0) 100%) !important;
+  padding: 120px 20px 22px !important;
+  background: linear-gradient(to top, rgba(0,0,0,.95) 0%, rgba(0,0,0,.75) 55%, rgba(0,0,0,0) 100%) !important;
   color: #fff !important;
 }
 .hero-grid .lead-story .lead-tag {
   display: inline-block !important;
-  margin: 0 0 14px !important;
-  padding: 9px 15px !important;
+  margin: 0 0 12px !important;
+  padding: 8px 14px !important;
   border-radius: 999px !important;
   background: #fff !important;
   color: #111 !important;
   font-family: var(--font) !important;
-  font-size: 0.95rem !important;
+  font-size: .85rem !important;
   font-weight: 700 !important;
   line-height: 1 !important;
-  letter-spacing: 0 !important;
   text-transform: capitalize !important;
 }
 .hero-grid .lead-story h1 {
-  font-family: var(--font) !important;
+  font-family: var(--serif) !important;
   font-weight: 700 !important;
-  font-size: clamp(1.6rem, 7vw, 2.1rem) !important;
-  line-height: 1.15 !important;
-  letter-spacing: -0.01em !important;
+  font-size: clamp(1.45rem, 6.2vw, 1.75rem) !important;
+  line-height: 1.2 !important;
   color: #fff !important;
-  margin: 0 0 10px !important;
+  margin: 0 0 8px !important;
 }
 .hero-grid .lead-story p {
   display: -webkit-box !important;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-family: var(--serif) !important;
-  font-size: 1.1rem !important;
-  line-height: 1.35 !important;
+  font-family: var(--font) !important;
+  font-size: 1rem !important;
+  line-height: 1.45 !important;
   color: #fff !important;
-  opacity: 0.95 !important;
-  margin: 0 0 10px !important;
+  opacity: .92 !important;
+  margin: 0 0 8px !important;
 }
 .hero-grid .lead-story .lead-meta {
-  color: #cfcfcf !important;
-  font-size: 0.8rem !important;
+  color: #d0d0d0 !important;
+  font-size: .78rem !important;
   margin: 0 !important;
 }
 @media (min-width: 820px) {
-  .hero-grid .lead-story img {
-    aspect-ratio: 16 / 10 !important;
-  }
+  .hero-grid .lead-story img { aspect-ratio: 16 / 9 !important; }
 }
 
-/* ===== Headlines under the lead story: only two, like CNN. Each has a short grey line above it
-   and plain headline text. No category label and no time. ===== */
-#hero-section .secondary-list {
-  margin-top: 18px !important;
-}
-#hero-section .secondary-item:nth-child(n+3) {
-  display: none !important;
-}
+/* ===== Latest list under the lead story: up to 4 headlines, text left, thumbnail right ===== */
+#hero-section .secondary-list { margin-top: 4px !important; }
 #hero-section .secondary-item {
-  display: block !important;
-  padding: 0 0 16px !important;
+  display: flex !important;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 0 !important;
   margin: 0 !important;
   background: none !important;
   border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
   border-radius: 0 !important;
   box-shadow: none !important;
 }
-#hero-section .secondary-item::before {
-  content: "";
-  display: block;
-  width: 120px;
-  height: 1px;
-  background: var(--line);
-  margin: 0 0 14px;
-}
+#hero-section .secondary-item::before { display: none !important; }
 #hero-section .secondary-item > :first-child {
-  display: none !important;
+  display: block !important;
+  flex: 0 0 104px;
+  width: 104px !important;
+  height: 78px !important;
+  object-fit: cover;
+  border-radius: 8px !important;
 }
 #hero-section .secondary-item > :last-child {
   display: block !important;
+  flex: 1;
+  min-width: 0;
   padding: 0 !important;
 }
-#hero-section .secondary-item .cat,
-#hero-section .secondary-item .meta {
-  display: none !important;
+#hero-section .secondary-item .cat {
+  display: block !important;
+  font-family: var(--font);
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin: 0 0 4px;
 }
 #hero-section .secondary-item h3 {
-  font-family: var(--font) !important;
-  font-weight: 400 !important;
-  font-size: 1.05rem !important;
-  line-height: 1.4 !important;
-  margin: 0 !important;
+  font-family: var(--serif) !important;
+  font-weight: 700 !important;
+  font-size: 1.06rem !important;
+  line-height: 1.3 !important;
+  margin: 0 0 6px !important;
   padding: 0 !important;
   color: var(--ink) !important;
 }
+#hero-section .secondary-item .meta {
+  display: block !important;
+  font-size: .78rem;
+  color: var(--muted);
+}
 
-/* ===== "Analysis" label above a headline, like CNN ===== */
+/* ===== "Analysis" label ===== */
 .kicker {
   display: block !important;
   font-family: var(--font) !important;
   font-weight: 800 !important;
-  font-size: 1.05rem !important;
-  line-height: 1.2 !important;
-  color: var(--ink) !important;
-  margin: 0 0 8px !important;
-}
-.story-card .kicker {
-  order: 1;
-  flex: none !important;
-  margin: 0 0 10px !important;
+  font-size: .8rem !important;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--red) !important;
+  margin: 0 0 6px !important;
 }
 
-/* ===== Sections: black bar and uppercase label ===== */
+/* ===== Section headers: black bar and uppercase label ===== */
 #trending-section .cat-section,
 #category-sections .cat-section {
   border-top: 1px solid var(--line) !important;
-  margin-top: 30px !important;
-  padding-top: 22px !important;
+  margin-top: 28px !important;
+  padding-top: 20px !important;
 }
-.cat-section::before {
-  display: none !important;
-}
+.cat-section::before { display: none !important; }
 .cat-head h2 {
   display: flex !important;
   align-items: center;
-  font-size: 0.95rem !important;
+  font-size: .95rem !important;
   font-weight: 800 !important;
-  letter-spacing: 0.02em;
+  letter-spacing: .02em;
   text-transform: uppercase;
   color: var(--ink) !important;
 }
@@ -178,14 +220,10 @@
   background: var(--ink);
   margin-right: 10px;
 }
-.cat-head h2 a {
-  color: var(--ink) !important;
-}
-.cat-head h2 a::after {
-  display: none !important;
-}
+.cat-head h2 a { color: var(--ink) !important; }
+.cat-head h2 a::after { display: none !important; }
 
-/* ===== Story cards: headline first, then a big rounded photo ===== */
+/* ===== Story cards ===== */
 .card-grid {
   display: grid !important;
   grid-template-columns: 1fr !important;
@@ -202,12 +240,8 @@
   }
 }
 .story-card {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: stretch !important;
   height: auto !important;
   min-height: 0 !important;
-  padding: 22px 0 26px !important;
   background: none !important;
   border: 0 !important;
   border-bottom: 1px solid var(--line) !important;
@@ -215,53 +249,95 @@
   box-shadow: none !important;
   overflow: visible !important;
 }
-.story-card .body {
-  display: contents !important;
-}
-.story-card .cat,
-.story-card .excerpt {
-  display: none !important;
+.story-card .body { display: contents !important; }
+.story-card .cat {
+  display: block !important;
+  font-family: var(--font);
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin: 0 0 4px !important;
 }
 .story-card h3 {
-  order: 2;
-  flex: none !important;
-  font-family: var(--font) !important;
-  font-weight: 500 !important;
-  font-size: 1.45rem !important;
-  line-height: 1.25 !important;
-  letter-spacing: -0.005em;
-  margin: 0 0 16px !important;
-  padding: 0 !important;
+  font-family: var(--serif) !important;
   color: var(--ink) !important;
-}
-.story-card.feature h3 {
-  font-size: 1.7rem !important;
-}
-.story-card img {
-  order: 3;
-  flex: none !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  height: auto !important;
-  aspect-ratio: 16 / 10 !important;
-  object-fit: cover !important;
   margin: 0 !important;
-  border-radius: 10px !important;
+  padding: 0 !important;
 }
 .story-card .meta {
-  order: 4;
-  flex: none !important;
-  margin: 12px 0 0 !important;
-  font-size: 0.85rem !important;
+  font-size: .78rem !important;
   color: var(--muted) !important;
 }
 
-/* ===== Homepage: show only one article in Trending and in every category ===== */
-#trending-section .card-grid .story-card:nth-child(n+2),
-#category-sections .card-grid .story-card:nth-child(n+2) {
-  display: none !important;
+/* Big story in each section: picture first, then headline and summary */
+.story-card.feature {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 0 20px !important;
 }
-#trending-section .card-grid .story-card:first-child,
-#category-sections .card-grid .story-card:first-child {
-  grid-column: 1 / -1 !important;
+.story-card.feature img {
+  order: 1;
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 10 !important;
+  object-fit: cover !important;
+  border-radius: 10px !important;
+  margin: 0 0 14px !important;
 }
+.story-card.feature .kicker { order: 2; }
+.story-card.feature .cat { order: 3; }
+.story-card.feature h3 {
+  order: 4;
+  font-weight: 700 !important;
+  font-size: 1.5rem !important;
+  line-height: 1.22 !important;
+  margin: 0 0 8px !important;
+}
+.story-card.feature .excerpt {
+  order: 5;
+  display: block !important;
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  opacity: .85;
+  margin: 0 0 10px !important;
+}
+.story-card.feature .meta { order: 6; margin: 0 !important; }
+
+/* Smaller stories: headline on the left, small picture on the right */
+.story-card:not(.feature) {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 104px;
+  column-gap: 14px;
+  align-content: start;
+  padding: 16px 0 !important;
+}
+.story-card:not(.feature) img {
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  order: 0;
+  width: 104px !important;
+  height: 78px !important;
+  aspect-ratio: auto !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
+  margin: 0 !important;
+}
+.story-card:not(.feature) .kicker,
+.story-card:not(.feature) .cat,
+.story-card:not(.feature) h3,
+.story-card:not(.feature) .meta {
+  grid-column: 1;
+  order: 0;
+}
+.story-card:not(.feature) h3 {
+  font-weight: 700 !important;
+  font-size: 1.06rem !important;
+  line-height: 1.3 !important;
+  margin: 0 0 6px !important;
+}
+.story-card:not(.feature) .excerpt { display: none !important; }
+.story-card:not(.feature):not(:has(img)) { grid-template-columns: 1fr; }
