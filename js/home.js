@@ -8,7 +8,7 @@
   });
 })();
 
-/* Styles for the top story slideshow live here so this file is all you need to change */
+/* Styles for the top story slideshow and video live here so this file is all you need to change */
 (function () {
   var st = document.createElement("style");
   st.textContent = `
@@ -18,6 +18,15 @@
     .hero-grid .lead-story.lead-multi .overlay{pointer-events:none}
     .hero-grid .lead-story .lead-count{position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.62);color:#fff;font-size:.8rem;font-weight:700}
     .lead-count svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+    /* Top story with a video: player on top, headline and summary underneath */
+    .hero-grid .lead-story.lead-video .lead-player{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+    .lead-player video,.lead-player iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;background:#000;object-fit:contain}
+    .lead-player .yt-play{position:absolute;top:0;left:0;width:100%;height:100%;padding:0;border:0;background-color:#000;background-position:center;background-size:cover;background-repeat:no-repeat;cursor:pointer}
+    .lead-player .yt-play span{position:absolute;left:50%;top:50%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;background:rgba(0,0,0,.65);border:2px solid #fff}
+    .lead-player .yt-play span::after{content:"";position:absolute;left:26px;top:19px;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent}
+    .hero-grid .lead-story.lead-video .overlay{position:static !important;padding:16px 20px 22px !important;background:#000 !important;pointer-events:auto}
+    .hero-grid .lead-story.lead-video .overlay h1 a{color:#fff}
   `;
   document.head.appendChild(st);
 })();
@@ -114,6 +123,44 @@ function leadPictures(a) {
   return [a.image_url].concat(pictureList(a.images)).filter(isHttpsUrl).slice(0, 6);
 }
 
+/* ---- Video for the top story ----
+   A story with a video_url shows the video instead of the picture.
+   YouTube links show a thumbnail with a play button; other links play as a video file. */
+function youtubeId(url) {
+  const m = String(url || "").match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+function videoPlayerHtml(a) {
+  const url = String(a.video_url || "").trim();
+  if (!isHttpsUrl(url)) return "";
+  const yt = youtubeId(url);
+  if (yt) {
+    const thumb = isHttpsUrl(a.image_url) ? a.image_url : "https://i.ytimg.com/vi/" + yt + "/hqdefault.jpg";
+    return '<div class="lead-player">' +
+      '<button type="button" class="yt-play" data-yt="' + yt + '" aria-label="Play video" style="background-image:url(\'' + escapeHtml(thumb) + '\')"><span></span></button>' +
+      '</div>';
+  }
+  const src = url.indexOf("#") === -1 ? url + "#t=0.1" : url;
+  const poster = isHttpsUrl(a.image_url) ? ' poster="' + escapeHtml(a.image_url) + '"' : "";
+  return '<div class="lead-player">' +
+    '<video controls playsinline preload="metadata"' + poster + '><source src="' + escapeHtml(src) + '"></video>' +
+    '</div>';
+}
+/* Tapping the YouTube thumbnail swaps it for the real player and starts the video */
+function wireVideo(section) {
+  section.querySelectorAll(".yt-play").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-yt");
+      const frame = document.createElement("iframe");
+      frame.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&playsinline=1&rel=0";
+      frame.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      frame.allowFullscreen = true;
+      frame.title = "Video player";
+      btn.parentElement.replaceChild(frame, btn);
+    });
+  });
+}
+
 /* ---- "Analysis" label ----
    A story gets the bold "Analysis" label above its headline when
    "analysis" is typed in the Tags box in the newsroom. */
@@ -154,7 +201,7 @@ let searchQuery = "";
 
 /* The homepage only needs these fields (not the full story text) */
 const LIST_COLUMNS = "id,slug,title,excerpt,image_url,category,author,published_at,likes,featured";
-const CACHE_KEY = "dg_home_cache_v1";
+const CACHE_KEY = "dg_home_cache_v2";
 
 function readCache() {
   try {
@@ -193,8 +240,9 @@ function showPlaceholders() {
 }
 
 async function fetchStories() {
-  // Ask for the extra pictures and the tags too. If a column isn't there, ask without it.
+  // Ask for the video, the extra pictures and the tags too. If a column isn't there, ask without it.
   const sets = [
+    LIST_COLUMNS + ",images,tags,video_url",
     LIST_COLUMNS + ",images,tags",
     LIST_COLUMNS + ",images",
     LIST_COLUMNS,
@@ -207,7 +255,7 @@ async function fetchStories() {
       .order("published_at", { ascending: false })
       .limit(100);
     if (!res.error) return res;
-    if (!/images|tags|column/i.test(res.error.message || "")) return res;
+    if (!/images|tags|video_url|column/i.test(res.error.message || "")) return res;
   }
   return res;
 }
@@ -304,6 +352,20 @@ function wireSlides(section) {
   });
 }
 
+function secondaryHtml(list) {
+  return list.map((a) => `
+    <a class="secondary-item" href="article.html?slug=${encodeURIComponent(a.slug)}">
+      ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : `<div style="background:#eee;border-radius:4px"></div>`}
+      <div>
+        ${kickerHtml(a)}
+        <div class="cat">${escapeHtml(a.category)}</div>
+        <h3>${escapeHtml(a.title)}</h3>
+        <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
+      </div>
+    </a>
+  `).join("");
+}
+
 function renderHero(list) {
   const section = document.getElementById("hero-section");
   if (list.length === 0) {
@@ -312,6 +374,27 @@ function renderHero(list) {
   }
   const lead = list.find((a) => a.featured) || list[0];
   const secondary = list.filter((a) => a.id !== lead.id).slice(0, 4);
+
+  // If the top story has a video, show the video player in place of the picture
+  const player = videoPlayerHtml(lead);
+  if (player) {
+    section.innerHTML = `
+      <div class="hero-grid">
+        <div class="lead-story lead-video">
+          ${player}
+          <div class="overlay">
+            <span class="lead-tag">${escapeHtml(lead.category)}</span>
+            <h1><a href="article.html?slug=${encodeURIComponent(lead.slug)}">${escapeHtml(lead.title)}</a></h1>
+            <p>${escapeHtml(lead.excerpt || "")}</p>
+            <div class="lead-meta">${authorHtml(lead.author)} · ${formatWhen(lead.published_at)}</div>
+          </div>
+        </div>
+        <div class="secondary-list">${secondaryHtml(secondary)}</div>
+      </div>
+    `;
+    wireVideo(section);
+    return;
+  }
 
   // One picture shows as before. Several pictures become a slideshow the reader can swipe.
   const pics = leadPictures(lead);
@@ -335,19 +418,7 @@ function renderHero(list) {
           <div class="lead-meta">${authorHtml(lead.author)} · ${formatWhen(lead.published_at)}</div>
         </div>
       </a>
-      <div class="secondary-list">
-        ${secondary.map((a) => `
-          <a class="secondary-item" href="article.html?slug=${encodeURIComponent(a.slug)}">
-            ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : `<div style="background:#eee;border-radius:4px"></div>`}
-            <div>
-              ${kickerHtml(a)}
-              <div class="cat">${escapeHtml(a.category)}</div>
-              <h3>${escapeHtml(a.title)}</h3>
-              <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
-            </div>
-          </a>
-        `).join("")}
-      </div>
+      <div class="secondary-list">${secondaryHtml(secondary)}</div>
     </div>
   `;
   wireSlides(section);
