@@ -1,6 +1,10 @@
 /* Davidgistmedia homepage design. Loads after bbc.css.
-   Look: black date strip, red accents, serif headlines, sans labels.
+   Accent colour: deep navy. Change --section below to try another colour.
    On every story the order is: label, time, headline. */
+
+:root { --section: #12355b; }
+html[data-theme="dark"],
+body.dark-mode { --section: #5b8dc9; }
 
 /* ===== Top strip: date and sign in ===== */
 .util-bar {
@@ -18,9 +22,9 @@
   font-size: .82rem !important;
 }
 
-/* ===== Masthead: red line on top, big centered logo, thick rule below ===== */
+/* ===== Masthead: navy line on top, big serif logo, thick rule below ===== */
 .masthead {
-  border-top: 4px solid var(--red) !important;
+  border-top: 4px solid var(--section) !important;
   padding-top: 14px !important;
 }
 .masthead .topbar {
@@ -46,7 +50,7 @@
   .masthead .tagline { display: none !important; }
 }
 
-/* ===== Category tabs: small uppercase, red when active, stay at the top while scrolling ===== */
+/* ===== Category tabs: small uppercase, navy when active, stay at the top while scrolling ===== */
 #tabs {
   display: flex !important;
   overflow-x: auto;
@@ -81,8 +85,8 @@
   cursor: pointer;
 }
 #tabs button.active {
-  color: var(--red);
-  border-bottom-color: var(--red);
+  color: var(--section);
+  border-bottom-color: var(--section);
 }
 
 /* ===== Small touches ===== */
@@ -90,7 +94,7 @@
 .story-card img, .secondary-item img, .lead-story img { animation: dgFade .4s ease; }
 @keyframes dgFade { from { opacity: 0; } to { opacity: 1; } }
 .story-card:hover h3,
-.secondary-item:hover h3 { color: var(--red) !important; }
+.secondary-item:hover h3 { color: var(--section) !important; }
 
 /* The time always sits in its own place in the text, never on top of the headline */
 .story-card .meta,
@@ -148,8 +152,8 @@
   margin: 0 0 12px !important;
   padding: 6px 11px !important;
   border-radius: 3px !important;
-  background: var(--red) !important;
-  color: #fff !important;
+  background: #fff !important;
+  color: #12355b !important;
   font-family: var(--font) !important;
   font-size: .72rem !important;
   font-weight: 800 !important;
@@ -239,7 +243,7 @@
   font-weight: 800;
   letter-spacing: .06em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--section);
   margin: 0 0 3px;
 }
 #hero-section .secondary-item .meta { order: 3; margin: 0 0 6px !important; }
@@ -266,7 +270,7 @@
   margin: 0 0 6px !important;
 }
 
-/* ===== Section titles: white text on a red label, red line across ===== */
+/* ===== Section titles: white text on a navy label, navy line across ===== */
 #trending-section .cat-section,
 #category-sections .cat-section {
   border-top: 0 !important;
@@ -275,7 +279,7 @@
 }
 .cat-section::before { display: none !important; }
 .cat-head {
-  border-bottom: 2px solid var(--red) !important;
+  border-bottom: 2px solid var(--section) !important;
   margin: 0 0 4px !important;
   padding: 0 !important;
 }
@@ -283,7 +287,7 @@
   display: inline-block !important;
   margin: 0 !important;
   padding: 7px 14px !important;
-  background: var(--red);
+  background: var(--section);
   font-family: var(--font) !important;
   font-size: .85rem !important;
   font-weight: 800 !important;
@@ -329,7 +333,7 @@
   font-weight: 800;
   letter-spacing: .06em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--section);
   margin: 0 0 3px !important;
 }
 .story-card h3 {
@@ -408,22 +412,3 @@
 }
 .story-card:not(.feature) .excerpt { display: none !important; }
 .story-card:not(.feature):not(:has(img)) { grid-template-columns: 1fr; }
-
-/* ===== Trending: numbered 1, 2, 3 list with big red numbers ===== */
-#trending-section .card-grid { counter-reset: trend; }
-#trending-section .story-card:not(.feature) {
-  counter-increment: trend;
-  position: relative;
-  padding: 16px 0 16px 46px !important;
-}
-#trending-section .story-card:not(.feature)::before {
-  content: counter(trend);
-  position: absolute;
-  left: 0;
-  top: 12px;
-  font-family: var(--serif);
-  font-weight: 800;
-  font-size: 2.2rem;
-  line-height: 1;
-  color: var(--red);
-}
