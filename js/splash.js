@@ -6,7 +6,8 @@
     sessionStorage.setItem("dg_splash", "1");
   } catch (e) {}
 
-  var SECONDS = 4;           // change this number to make it shorter or longer
+  var MIN_SECONDS = 1.5;     // the splash always stays at least this long
+  var MAX_SECONDS = 4;       // and never longer than this
   var RED = "#C8102E";
   var esc = function (s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -76,9 +77,19 @@
     }
   }, 100);
 
-  // fade out after the chosen number of seconds
-  setTimeout(function () {
+  // close the splash once the homepage stories are on screen (after the minimum time),
+  // or after the maximum time, whichever comes first
+  var started = Date.now();
+  function close() {
     el.classList.add("out");
     setTimeout(function () { el.remove(); }, 600);
-  }, SECONDS * 1000);
+  }
+  var poll = setInterval(function () {
+    var elapsed = Date.now() - started;
+    var ready = !!document.querySelector("#hero-section .lead-story");
+    if ((ready && elapsed >= MIN_SECONDS * 1000) || elapsed >= MAX_SECONDS * 1000) {
+      clearInterval(poll);
+      close();
+    }
+  }, 150);
 })();
