@@ -178,16 +178,12 @@
       #search-btn { display: none; }
     }
 
-    /* Top advertisement strip: full width, stays in view while scrolling */
+    /* Top advertisement strip: full width, above the header, like BBC */
     .ad-top-bar {
-      position: -webkit-sticky;
-      position: sticky;
-      top: 0;
-      z-index: 900;
       width: 100%;
       background: #f4f4f5;
       border-bottom: 1px solid #e2e2e4;
-      padding: 4px 0 6px;
+      padding: 8px 0 10px;
       text-align: center;
     }
     html[data-theme="dark"] .ad-top-bar,
@@ -197,9 +193,8 @@
     }
     .ad-top-bar .ad-label {
       display: block;
-      margin-bottom: 3px;
-      font-size: 0.6rem;
-      line-height: 1;
+      margin-bottom: 5px;
+      font-size: 0.65rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--muted);
@@ -246,8 +241,7 @@
   <!-- Splash screen -->
   <script src="js/splash.js?v=6"></script>
 
-  <!-- Adsterra banner at the very top of the page: 320x50 on phones, 728x90 on computers.
-       It stays at the top of the screen while the reader scrolls. -->
+  <!-- Adsterra banner at the very top of the page: 320x50 on phones, 728x90 on computers -->
   <div class="ad-top-bar">
     <div class="ad-mobile">
       <span class="ad-label">Advertisement</span>
