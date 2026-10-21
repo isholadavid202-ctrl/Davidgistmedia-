@@ -183,6 +183,9 @@
       margin: 20px 0;
       text-align: center;
     }
+    .ad-slot.ad-top {
+      margin: 14px 0 18px;
+    }
     .ad-slot .ad-label {
       display: block;
       margin-bottom: 6px;
@@ -212,7 +215,7 @@
 <body>
 
   <!-- Splash screen -->
-  <script src="js/splash.js?v=5"></script>
+  <script src="js/splash.js?v=6"></script>
 
   <!-- Top Utility Bar: Date on left, "Sign in" on right pointing to profile.html -->
   <div class="util-bar">
@@ -283,10 +286,9 @@
   </header>
 
   <main class="wrap">
-    <section class="hero-section" id="hero-section"></section>
 
-    <!-- Adsterra banner 320x50 (phones only) -->
-    <div class="ad-slot ad-mobile">
+    <!-- Adsterra banner at the very top: 320x50 on phones, 728x90 on computers -->
+    <div class="ad-slot ad-top ad-mobile">
       <span class="ad-label">Advertisement</span>
       <div class="ad-box ad-small">
         <script>
@@ -304,8 +306,7 @@
       </div>
     </div>
 
-    <!-- Adsterra banner 728x90 (computers only) -->
-    <div class="ad-slot ad-desktop">
+    <div class="ad-slot ad-top ad-desktop">
       <span class="ad-label">Advertisement</span>
       <div class="ad-box ad-wide">
         <script>
@@ -322,6 +323,8 @@
         </script>
       </div>
     </div>
+
+    <section class="hero-section" id="hero-section"></section>
 
     <div id="live-banner"></div>
     <div id="trending-section"></div>
