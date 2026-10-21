@@ -56,6 +56,66 @@
     .drawer a:hover{color:var(--red)}
   </style>
 
+  <!-- Advertisement styling (same as the article page) -->
+  <style>
+    /* Top advertisement strip: full width, above the header */
+    .ad-top-bar {
+      width: 100%;
+      background: #f4f4f5;
+      border-bottom: 1px solid #e2e2e4;
+      padding: 8px 0 10px;
+      text-align: center;
+    }
+    html[data-theme="dark"] .ad-top-bar,
+    body.dark-mode .ad-top-bar {
+      background: #1a1a1a;
+      border-bottom-color: #2a2a2a;
+    }
+    .ad-top-bar .ad-label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .ad-top-bar .ad-box {
+      display: flex;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .ad-top-bar .ad-small { min-height: 50px; }
+    .ad-top-bar .ad-wide { min-height: 90px; }
+
+    /* Advertisement below the page content */
+    .ad-slot {
+      margin: 20px 0;
+      text-align: center;
+    }
+    .ad-slot .ad-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .ad-slot .ad-box {
+      display: flex;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .ad-slot .ad-box.ad-tall { min-height: 250px; }
+
+    /* The 320x50 banner is for phones, the 728x90 banner is for computers */
+    .ad-mobile { display: block; }
+    .ad-desktop { display: none; }
+    @media(min-width: 768px) {
+      .ad-mobile { display: none; }
+      .ad-desktop { display: block; }
+    }
+  </style>
+
   <!-- Author profile styling -->
   <style>
     .author-page{max-width:760px;padding:20px 16px 40px;margin:0 auto}
@@ -96,6 +156,44 @@
   </style>
 </head>
 <body>
+
+  <!-- Adsterra banner at the very top of the page: 320x50 on phones, 728x90 on computers -->
+  <div class="ad-top-bar">
+    <div class="ad-mobile">
+      <span class="ad-label">Advertisement</span>
+      <div class="ad-box ad-small">
+        <script>
+          if (window.innerWidth < 768) {
+            atOptions = {
+              'key' : '9977ebe385fd5bcc794d085739e547b1',
+              'format' : 'iframe',
+              'height' : 50,
+              'width' : 320,
+              'params' : {}
+            };
+            document.write('<scr' + 'ipt src="https://bauval.org/22/9977ebe385fd5bcc794d085739e547b1"></scr' + 'ipt>');
+          }
+        </script>
+      </div>
+    </div>
+    <div class="ad-desktop">
+      <span class="ad-label">Advertisement</span>
+      <div class="ad-box ad-wide">
+        <script>
+          if (window.innerWidth >= 768) {
+            atOptions = {
+              'key' : 'b1efa552ea21b90dc79455108f6238ef',
+              'format' : 'iframe',
+              'height' : 90,
+              'width' : 728,
+              'params' : {}
+            };
+            document.write('<scr' + 'ipt src="https://bauval.org/22/b1efa552ea21b90dc79455108f6238ef"></scr' + 'ipt>');
+          }
+        </script>
+      </div>
+    </div>
+  </div>
 
   <div class="util-bar">
     <div class="wrap"><span id="today"></span></div>
@@ -171,6 +269,25 @@
     <section class="author-stories" id="author-stories" aria-label="Stories by Ishola David"></section>
   </main>
 
+  <!-- Adsterra banner below the page content: 300x250 -->
+  <div class="wrap">
+    <div class="ad-slot">
+      <span class="ad-label">Advertisement</span>
+      <div class="ad-box ad-tall">
+        <script>
+          atOptions = {
+            'key' : '1de90f316aa8dede9349d9abffc48ea9',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script src="https://bauval.org/22/1de90f316aa8dede9349d9abffc48ea9"></script>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <div id="site-footer"></div>
   <script src="js/footer.js"></script>
@@ -202,12 +319,19 @@
       img.onerror = next;
       next();
 
-      /* Single clean verified badge */
-      document.getElementById("author-badge").innerHTML =
-        '<svg viewBox="0 0 24 24" role="img" aria-label="Verified" style="width:22px;height:22px;vertical-align:middle">' +
-        '<path fill="#ff5722" d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.79-4-4-4-.495 0-.965.084-1.4.238C14.55 2.475 13.18 1.6 11.6 1.6c-1.58 0-2.95.875-3.6 2.148-.435-.154-.905-.238-1.4-.238-2.21 0-4 1.79-4 4 0 .495.084.965.238 1.4C1.575 9.55.7 10.92.7 12.5c0 1.58.875 2.95 2.148 3.6-.154.435-.238.905-.238 1.4 0 2.21 1.79 4 4 4 .495 0 .965-.084 1.4-.238.65 1.273 2.02 2.148 3.6 2.148 1.58 0 2.95-.875 3.6-2.148.435.154.905.238 1.4.238 2.21 0 4-1.79 4-4 0-.495-.084-.965-.238-1.4 1.273-.65 2.148-2.02 2.148-3.6z"/>' +
-        '<path fill="#ffffff" d="M10.2 16.2l-3.5-3.5 1.4-1.4 2.1 2.1 5.3-5.3 1.4 1.4z"/>' +
-        '</svg>';
+      /* Verified badge: exact same seal the article page draws in js/article.js (owner = orange) */
+      (function () {
+        var size = 22, pts = [];
+        for (var k = 0; k < 48; k++) {
+          var a = (k / 48) * Math.PI * 2;
+          var r = 9.2 + 1.1 * Math.cos(8 * a);
+          pts.push((12 + r * Math.cos(a)).toFixed(2) + "," + (12 + r * Math.sin(a)).toFixed(2));
+        }
+        document.getElementById("author-badge").innerHTML =
+          '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" role="img" aria-label="Verified owner" style="display:inline-block;vertical-align:-3px"><title>Verified owner</title>' +
+          '<polygon points="' + pts.join(" ") + '" fill="#f97316"/>' +
+          '<path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      })();
 
       /* Menu Toggle */
       var menuBtn = document.getElementById("menu-btn");
