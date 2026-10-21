@@ -1,10 +1,8 @@
 /* Davidgistmedia homepage design. Loads after bbc.css.
-   Accent colour: deep navy. Change --section below to try another colour.
-   On every story the order is: label, time, headline. */
+   Accent colour follows your site red. To try another colour, change --section below.
+   On every story the order is: label and time on one line, then the headline. */
 
-:root { --section: #12355b; }
-html[data-theme="dark"],
-body.dark-mode { --section: #5b8dc9; }
+:root { --section: var(--red); }
 
 /* ===== Top strip: date and sign in ===== */
 .util-bar {
@@ -22,7 +20,7 @@ body.dark-mode { --section: #5b8dc9; }
   font-size: .82rem !important;
 }
 
-/* ===== Masthead: navy line on top, big serif logo, thick rule below ===== */
+/* ===== Masthead: red line on top, big serif logo, thick rule below ===== */
 .masthead {
   border-top: 4px solid var(--section) !important;
   padding-top: 14px !important;
@@ -50,7 +48,7 @@ body.dark-mode { --section: #5b8dc9; }
   .masthead .tagline { display: none !important; }
 }
 
-/* ===== Category tabs: small uppercase, navy when active, stay at the top while scrolling ===== */
+/* ===== Category tabs: small uppercase, red when active, stay at the top while scrolling ===== */
 #tabs {
   display: flex !important;
   overflow-x: auto;
@@ -96,13 +94,38 @@ body.dark-mode { --section: #5b8dc9; }
 .story-card:hover h3,
 .secondary-item:hover h3 { color: var(--section) !important; }
 
-/* The time always sits in its own place in the text, never on top of the headline */
+/* ===== Category label and time: always left-aligned, no stray bar ===== */
+.story-card .cat,
+.secondary-item .cat {
+  display: block !important;
+  position: static !important;
+  width: auto !important;
+  text-align: left !important;
+  justify-self: start !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-family: var(--font);
+  font-size: .72rem;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--section) !important;
+}
+.story-card .cat::before, .story-card .cat::after,
+.secondary-item .cat::before, .secondary-item .cat::after {
+  content: none !important;
+  display: none !important;
+}
 .story-card .meta,
 .secondary-item .meta {
   position: static !important;
   float: none !important;
   transform: none !important;
   display: block !important;
+  text-align: left !important;
+  justify-self: start !important;
   font-family: var(--font);
   font-size: .78rem !important;
   line-height: 1.3 !important;
@@ -152,8 +175,8 @@ body.dark-mode { --section: #5b8dc9; }
   margin: 0 0 12px !important;
   padding: 6px 11px !important;
   border-radius: 3px !important;
-  background: #fff !important;
-  color: #12355b !important;
+  background: var(--section) !important;
+  color: #fff !important;
   font-family: var(--font) !important;
   font-size: .72rem !important;
   font-weight: 800 !important;
@@ -203,7 +226,8 @@ body.dark-mode { --section: #5b8dc9; }
   }
 }
 
-/* ===== Latest list: label, time and headline on the left, thumbnail on the right ===== */
+/* ===== Latest list under the top story =====
+   Text on the left (label and time on one line, headline below), picture on the right */
 #hero-section .secondary-list { margin-top: 4px; }
 #hero-section .secondary-item {
   display: flex !important;
@@ -228,39 +252,35 @@ body.dark-mode { --section: #5b8dc9; }
   border-radius: 8px !important;
 }
 #hero-section .secondary-item > :last-child {
-  display: flex !important;
-  flex-direction: column;
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  align-items: center;
   flex: 1;
   min-width: 0;
   padding: 0 !important;
+  text-align: left !important;
 }
-#hero-section .secondary-item .kicker { order: 1; }
-#hero-section .secondary-item .cat {
-  order: 2;
-  display: block !important;
-  font-family: var(--font);
-  font-size: .7rem;
-  font-weight: 800;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--section);
-  margin: 0 0 3px;
-}
-#hero-section .secondary-item .meta { order: 3; margin: 0 0 6px !important; }
+#hero-section .secondary-item .kicker { grid-column: 1 / -1; grid-row: 1; }
+#hero-section .secondary-item .cat   { grid-column: 1; grid-row: 2; }
+#hero-section .secondary-item .meta  { grid-column: 2; grid-row: 2; margin: 0 0 0 10px !important; }
 #hero-section .secondary-item h3 {
-  order: 4;
+  grid-column: 1 / -1;
+  grid-row: 3;
   font-family: var(--serif) !important;
   font-weight: 700 !important;
   font-size: 1.06rem !important;
   line-height: 1.3 !important;
-  margin: 0 !important;
+  margin: 6px 0 0 !important;
   padding: 0 !important;
+  text-align: left !important;
   color: var(--ink) !important;
 }
 
 /* ===== "Analysis" label ===== */
 .kicker {
   display: block !important;
+  text-align: left !important;
   font-family: var(--font) !important;
   font-weight: 800 !important;
   font-size: .75rem !important;
@@ -270,7 +290,7 @@ body.dark-mode { --section: #5b8dc9; }
   margin: 0 0 6px !important;
 }
 
-/* ===== Section titles: white text on a navy label, navy line across ===== */
+/* ===== Section titles: white text on a red label, red line across ===== */
 #trending-section .cat-section,
 #category-sections .cat-section {
   border-top: 0 !important;
@@ -324,21 +344,13 @@ body.dark-mode { --section: #5b8dc9; }
   border-radius: 0 !important;
   box-shadow: none !important;
   overflow: visible !important;
+  text-align: left !important;
 }
 .story-card .body { display: contents !important; }
-.story-card .cat {
-  display: block !important;
-  font-family: var(--font);
-  font-size: .7rem;
-  font-weight: 800;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--section);
-  margin: 0 0 3px !important;
-}
 .story-card h3 {
   font-family: var(--serif) !important;
   color: var(--ink) !important;
+  text-align: left !important;
   margin: 0 !important;
   padding: 0 !important;
 }
@@ -347,10 +359,12 @@ body.dark-mode { --section: #5b8dc9; }
 .story-card.feature {
   display: flex !important;
   flex-direction: column !important;
+  align-items: flex-start !important;
   padding: 18px 0 20px !important;
 }
 .story-card.feature img {
   order: 1;
+  align-self: stretch;
   width: 100% !important;
   height: auto !important;
   aspect-ratio: 16 / 10 !important;
@@ -359,7 +373,7 @@ body.dark-mode { --section: #5b8dc9; }
   margin: 0 0 14px !important;
 }
 .story-card.feature .kicker { order: 2; }
-.story-card.feature .cat { order: 3; }
+.story-card.feature .cat { order: 3; margin: 0 0 3px !important; }
 .story-card.feature .meta { order: 4; margin: 0 0 8px !important; }
 .story-card.feature h3 {
   order: 5;
@@ -379,36 +393,38 @@ body.dark-mode { --section: #5b8dc9; }
   margin: 0 !important;
 }
 
-/* Smaller stories: label, time and headline on the left, small picture on the right */
+/* Smaller stories: label and time on one line, headline below, picture on the right */
 .story-card:not(.feature) {
   display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 104px;
-  column-gap: 14px;
+  grid-template-columns: auto minmax(0, 1fr) 104px;
+  column-gap: 0;
   align-content: start;
+  align-items: center;
   padding: 16px 0 !important;
 }
 .story-card:not(.feature) img {
-  grid-column: 2;
-  grid-row: 1 / span 4;
+  grid-column: 3;
+  grid-row: 1 / span 3;
+  align-self: start;
   order: 0;
   width: 104px !important;
   height: 78px !important;
   aspect-ratio: auto !important;
   object-fit: cover !important;
   border-radius: 8px !important;
-  margin: 0 !important;
+  margin: 0 0 0 14px !important;
 }
-.story-card:not(.feature) .kicker { grid-column: 1; grid-row: 1; order: 0; }
+.story-card:not(.feature) .kicker { grid-column: 1 / 3; grid-row: 1; order: 0; }
 .story-card:not(.feature) .cat    { grid-column: 1; grid-row: 2; order: 0; }
-.story-card:not(.feature) .meta   { grid-column: 1; grid-row: 3; order: 0; margin: 0 0 6px !important; }
+.story-card:not(.feature) .meta   { grid-column: 2; grid-row: 2; order: 0; margin: 0 0 0 10px !important; }
 .story-card:not(.feature) h3 {
-  grid-column: 1;
-  grid-row: 4;
+  grid-column: 1 / 3;
+  grid-row: 3;
   order: 0;
   font-weight: 700 !important;
   font-size: 1.06rem !important;
   line-height: 1.3 !important;
-  margin: 0 !important;
+  margin: 6px 0 0 !important;
 }
 .story-card:not(.feature) .excerpt { display: none !important; }
-.story-card:not(.feature):not(:has(img)) { grid-template-columns: 1fr; }
+.story-card:not(.feature):not(:has(img)) { grid-template-columns: auto minmax(0, 1fr); }
