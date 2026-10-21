@@ -1,17 +1,52 @@
-/* Homepage design. Loads after bbc.css.
-   Type scale: lead 28px, feature 24px, list 17px, summary 16px, labels 12px.
-   Headlines use the serif font, labels and times use the sans font.
+/* Davidgistmedia homepage design. Loads after bbc.css.
+   Look: black date strip, red accents, serif headlines, sans labels.
    On every story the order is: label, time, headline. */
 
-/* ===== Header ===== */
+/* ===== Top strip: date and sign in ===== */
+.util-bar {
+  background: #111 !important;
+  color: #cfcfcf !important;
+  border: 0 !important;
+}
+.util-bar #today {
+  font-size: .78rem;
+  letter-spacing: .03em;
+  color: #cfcfcf;
+}
+.util-bar .top-account-link {
+  color: #fff !important;
+  font-size: .82rem !important;
+}
+
+/* ===== Masthead: red line on top, big centered logo, thick rule below ===== */
+.masthead {
+  border-top: 4px solid var(--red) !important;
+  padding-top: 14px !important;
+}
 .masthead .topbar {
   border-bottom: 3px solid var(--ink) !important;
+  padding-bottom: 14px !important;
+}
+.topbar .brand-title {
+  font-family: var(--serif) !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.55rem, 7vw, 2.4rem) !important;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.masthead .tagline {
+  font-size: .72rem !important;
+  letter-spacing: .14em !important;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--muted) !important;
+  margin: 10px 0 6px !important;
 }
 @media (max-width: 819px) {
   .masthead .tagline { display: none !important; }
 }
 
-/* ===== Category tabs: stay at the top while scrolling ===== */
+/* ===== Category tabs: small uppercase, red when active, stay at the top while scrolling ===== */
 #tabs {
   display: flex !important;
   overflow-x: auto;
@@ -22,8 +57,9 @@
   z-index: 60;
   background: var(--paper, #fff);
   border-bottom: 1px solid var(--line);
-  padding: 0 8px;
-  margin: 0 0 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.06);
+  padding: 0 6px;
+  margin: 0 0 18px;
 }
 #tabs::-webkit-scrollbar { display: none; }
 #tabs button,
@@ -31,23 +67,30 @@
   flex: none;
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  padding: 0 14px;
+  min-height: 46px;
+  padding: 0 13px;
   font-family: var(--font);
-  font-weight: 700;
-  font-size: 1rem;
+  font-weight: 800;
+  font-size: .8rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
   color: var(--ink);
   background: none;
   border: 0;
   border-bottom: 3px solid transparent;
   cursor: pointer;
 }
-#tabs button.active { border-bottom-color: var(--red); }
+#tabs button.active {
+  color: var(--red);
+  border-bottom-color: var(--red);
+}
 
 /* ===== Small touches ===== */
 .story-card:active, .secondary-item:active, #tabs button:active { opacity: .85; }
 .story-card img, .secondary-item img, .lead-story img { animation: dgFade .4s ease; }
 @keyframes dgFade { from { opacity: 0; } to { opacity: 1; } }
+.story-card:hover h3,
+.secondary-item:hover h3 { color: var(--red) !important; }
 
 /* The time always sits in its own place in the text, never on top of the headline */
 .story-card .meta,
@@ -62,7 +105,7 @@
   color: var(--muted) !important;
 }
 
-/* ===== Lead story: shorter photo so headline, summary and the next stories are all visible ===== */
+/* ===== Top story ===== */
 .hero-grid .lead-story {
   position: relative !important;
   display: block !important;
@@ -96,28 +139,29 @@
   top: auto !important;
   display: block !important;
   margin: 0 !important;
-  padding: 120px 20px 22px !important;
-  background: linear-gradient(to top, rgba(0,0,0,.95) 0%, rgba(0,0,0,.75) 55%, rgba(0,0,0,0) 100%) !important;
+  padding: 130px 20px 22px !important;
+  background: linear-gradient(to top, rgba(0,0,0,.96) 0%, rgba(0,0,0,.75) 55%, rgba(0,0,0,0) 100%) !important;
   color: #fff !important;
 }
 .hero-grid .lead-story .lead-tag {
   display: inline-block !important;
   margin: 0 0 12px !important;
-  padding: 8px 14px !important;
-  border-radius: 999px !important;
-  background: #fff !important;
-  color: #111 !important;
+  padding: 6px 11px !important;
+  border-radius: 3px !important;
+  background: var(--red) !important;
+  color: #fff !important;
   font-family: var(--font) !important;
-  font-size: .85rem !important;
-  font-weight: 700 !important;
+  font-size: .72rem !important;
+  font-weight: 800 !important;
   line-height: 1 !important;
-  text-transform: capitalize !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
 }
 .hero-grid .lead-story h1 {
   font-family: var(--serif) !important;
-  font-weight: 700 !important;
-  font-size: clamp(1.45rem, 6.2vw, 1.75rem) !important;
-  line-height: 1.2 !important;
+  font-weight: 800 !important;
+  font-size: clamp(1.5rem, 6.4vw, 1.85rem) !important;
+  line-height: 1.18 !important;
   color: #fff !important;
   margin: 0 0 8px !important;
 }
@@ -138,12 +182,25 @@
   font-size: .78rem !important;
   margin: 0 !important;
 }
-@media (min-width: 820px) {
-  .hero-grid .lead-story img { aspect-ratio: 16 / 9 !important; }
+
+/* Computers: top story on the left, latest list on the right */
+@media (min-width: 900px) {
+  .hero-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr) !important;
+    gap: 28px !important;
+    align-items: start;
+  }
+  .hero-grid .lead-story img { aspect-ratio: 16 / 11 !important; }
+  .hero-grid .secondary-list {
+    border-left: 1px solid var(--line);
+    padding-left: 24px;
+    margin-top: 0 !important;
+  }
 }
 
-/* ===== Latest list under the lead story: text left, thumbnail right ===== */
-#hero-section .secondary-list { margin-top: 4px !important; }
+/* ===== Latest list: label, time and headline on the left, thumbnail on the right ===== */
+#hero-section .secondary-list { margin-top: 4px; }
 #hero-section .secondary-item {
   display: flex !important;
   flex-direction: row-reverse;
@@ -180,7 +237,7 @@
   font-family: var(--font);
   font-size: .7rem;
   font-weight: 800;
-  letter-spacing: .04em;
+  letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--red);
   margin: 0 0 3px;
@@ -202,39 +259,40 @@
   display: block !important;
   font-family: var(--font) !important;
   font-weight: 800 !important;
-  font-size: .8rem !important;
-  letter-spacing: .04em;
+  font-size: .75rem !important;
+  letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--red) !important;
+  color: var(--ink) !important;
   margin: 0 0 6px !important;
 }
 
-/* ===== Section headers: black bar and uppercase label ===== */
+/* ===== Section titles: white text on a red label, red line across ===== */
 #trending-section .cat-section,
 #category-sections .cat-section {
-  border-top: 1px solid var(--line) !important;
-  margin-top: 28px !important;
-  padding-top: 20px !important;
+  border-top: 0 !important;
+  margin-top: 38px !important;
+  padding-top: 0 !important;
 }
 .cat-section::before { display: none !important; }
+.cat-head {
+  border-bottom: 2px solid var(--red) !important;
+  margin: 0 0 4px !important;
+  padding: 0 !important;
+}
 .cat-head h2 {
-  display: flex !important;
-  align-items: center;
-  font-size: .95rem !important;
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 7px 14px !important;
+  background: var(--red);
+  font-family: var(--font) !important;
+  font-size: .85rem !important;
   font-weight: 800 !important;
-  letter-spacing: .02em;
+  letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--ink) !important;
+  color: #fff !important;
 }
-.cat-head h2::before {
-  content: "";
-  display: inline-block;
-  width: 6px;
-  height: 1.15em;
-  background: var(--ink);
-  margin-right: 10px;
-}
-.cat-head h2 a { color: var(--ink) !important; }
+.cat-head h2::before { display: none !important; }
+.cat-head h2 a { color: #fff !important; }
 .cat-head h2 a::after { display: none !important; }
 
 /* ===== Story cards ===== */
@@ -269,7 +327,7 @@
   font-family: var(--font);
   font-size: .7rem;
   font-weight: 800;
-  letter-spacing: .04em;
+  letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--red);
   margin: 0 0 3px !important;
@@ -285,7 +343,7 @@
 .story-card.feature {
   display: flex !important;
   flex-direction: column !important;
-  padding: 0 0 20px !important;
+  padding: 18px 0 20px !important;
 }
 .story-card.feature img {
   order: 1;
@@ -301,9 +359,9 @@
 .story-card.feature .meta { order: 4; margin: 0 0 8px !important; }
 .story-card.feature h3 {
   order: 5;
-  font-weight: 700 !important;
-  font-size: 1.5rem !important;
-  line-height: 1.22 !important;
+  font-weight: 800 !important;
+  font-size: 1.55rem !important;
+  line-height: 1.2 !important;
   margin: 0 0 8px !important;
 }
 .story-card.feature .excerpt {
@@ -350,3 +408,22 @@
 }
 .story-card:not(.feature) .excerpt { display: none !important; }
 .story-card:not(.feature):not(:has(img)) { grid-template-columns: 1fr; }
+
+/* ===== Trending: numbered 1, 2, 3 list with big red numbers ===== */
+#trending-section .card-grid { counter-reset: trend; }
+#trending-section .story-card:not(.feature) {
+  counter-increment: trend;
+  position: relative;
+  padding: 16px 0 16px 46px !important;
+}
+#trending-section .story-card:not(.feature)::before {
+  content: counter(trend);
+  position: absolute;
+  left: 0;
+  top: 12px;
+  font-family: var(--serif);
+  font-weight: 800;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--red);
+}
