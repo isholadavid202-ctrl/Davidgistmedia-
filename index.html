@@ -31,7 +31,7 @@
   <title>Davidgistmedia | Home</title>
   <link rel="stylesheet" href="styles.css?v=3">
   <link rel="stylesheet" href="bbc.css?v=16">
-  <link rel="stylesheet" href="cnn-style.css?v=10">
+  <link rel="stylesheet" href="cnn-style.css?v=13">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -178,7 +178,7 @@
       #search-btn { display: none; }
     }
 
-    /* Advertisement strip: full width, now sits under the header */
+    /* Top advertisement strip: full width, above the header */
     .ad-top-bar {
       width: 100%;
       background: #f4f4f5;
@@ -240,6 +240,44 @@
 
   <!-- Splash screen -->
   <script src="js/splash.js?v=6"></script>
+
+  <!-- Adsterra banner at the very top of the page: 320x50 on phones, 728x90 on computers -->
+  <div class="ad-top-bar">
+    <div class="ad-mobile">
+      <span class="ad-label">Advertisement</span>
+      <div class="ad-box ad-small">
+        <script>
+          if (window.innerWidth < 768) {
+            atOptions = {
+              'key' : '9977ebe385fd5bcc794d085739e547b1',
+              'format' : 'iframe',
+              'height' : 50,
+              'width' : 320,
+              'params' : {}
+            };
+            document.write('<scr' + 'ipt src="https://bauval.org/22/9977ebe385fd5bcc794d085739e547b1"></scr' + 'ipt>');
+          }
+        </script>
+      </div>
+    </div>
+    <div class="ad-desktop">
+      <span class="ad-label">Advertisement</span>
+      <div class="ad-box ad-wide">
+        <script>
+          if (window.innerWidth >= 768) {
+            atOptions = {
+              'key' : 'b1efa552ea21b90dc79455108f6238ef',
+              'format' : 'iframe',
+              'height' : 90,
+              'width' : 728,
+              'params' : {}
+            };
+            document.write('<scr' + 'ipt src="https://bauval.org/22/b1efa552ea21b90dc79455108f6238ef"></scr' + 'ipt>');
+          }
+        </script>
+      </div>
+    </div>
+  </div>
 
   <!-- Top Utility Bar: Date on left, "Sign in" on right pointing to profile.html -->
   <div class="util-bar">
@@ -317,44 +355,6 @@
       if (t && h) h.insertAdjacentElement("afterend", t);
     })();
   </script>
-
-  <!-- Adsterra banner under the header: 320x50 on phones, 728x90 on computers -->
-  <div class="ad-top-bar">
-    <div class="ad-mobile">
-      <span class="ad-label">Advertisement</span>
-      <div class="ad-box ad-small">
-        <script>
-          if (window.innerWidth < 768) {
-            atOptions = {
-              'key' : '9977ebe385fd5bcc794d085739e547b1',
-              'format' : 'iframe',
-              'height' : 50,
-              'width' : 320,
-              'params' : {}
-            };
-            document.write('<scr' + 'ipt src="https://bauval.org/22/9977ebe385fd5bcc794d085739e547b1"></scr' + 'ipt>');
-          }
-        </script>
-      </div>
-    </div>
-    <div class="ad-desktop">
-      <span class="ad-label">Advertisement</span>
-      <div class="ad-box ad-wide">
-        <script>
-          if (window.innerWidth >= 768) {
-            atOptions = {
-              'key' : 'b1efa552ea21b90dc79455108f6238ef',
-              'format' : 'iframe',
-              'height' : 90,
-              'width' : 728,
-              'params' : {}
-            };
-            document.write('<scr' + 'ipt src="https://bauval.org/22/b1efa552ea21b90dc79455108f6238ef"></scr' + 'ipt>');
-          }
-        </script>
-      </div>
-    </div>
-  </div>
 
   <main class="wrap">
     <section class="hero-section" id="hero-section"></section>
