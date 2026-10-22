@@ -5,7 +5,7 @@
   border-bottom: 3px solid var(--ink) !important;
 }
 
-/* ===== Lead story: tall photo card with a white tag, headline and summary over the photo ===== */
+/* ===== Lead story: tall photo card with a red tag, headline and summary over the photo ===== */
 .hero-grid .lead-story {
   position: relative !important;
   display: block !important;
@@ -46,16 +46,16 @@
 .hero-grid .lead-story .lead-tag {
   display: inline-block !important;
   margin: 0 0 14px !important;
-  padding: 9px 15px !important;
-  border-radius: 999px !important;
-  background: #fff !important;
-  color: #111 !important;
+  padding: 8px 14px !important;
+  border-radius: 4px !important;
+  background: var(--red) !important;
+  color: #fff !important;
   font-family: var(--font) !important;
-  font-size: 0.95rem !important;
-  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+  font-weight: 800 !important;
   line-height: 1 !important;
-  letter-spacing: 0 !important;
-  text-transform: capitalize !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
 }
 .hero-grid .lead-story h1 {
   font-family: var(--font) !important;
@@ -151,7 +151,7 @@
   margin: 0 0 10px !important;
 }
 
-/* ===== Sections: black bar and uppercase label ===== */
+/* ===== Sections: category names in red, like the article page ===== */
 #trending-section .cat-section,
 #category-sections .cat-section {
   border-top: 1px solid var(--line) !important;
@@ -164,22 +164,23 @@
 .cat-head h2 {
   display: flex !important;
   align-items: center;
-  font-size: 0.95rem !important;
+  font-family: var(--font) !important;
+  font-size: 1rem !important;
   font-weight: 800 !important;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink) !important;
+  color: var(--red) !important;
 }
 .cat-head h2::before {
   content: "";
   display: inline-block;
   width: 6px;
   height: 1.15em;
-  background: var(--ink);
+  background: var(--red);
   margin-right: 10px;
 }
 .cat-head h2 a {
-  color: var(--ink) !important;
+  color: var(--red) !important;
 }
 .cat-head h2 a::after {
   display: none !important;
@@ -256,12 +257,18 @@
   color: var(--muted) !important;
 }
 
-/* ===== Homepage: show only one article in Trending and in every category ===== */
+/* ===== Home tab: one story in Trending and in each category section ===== */
 #trending-section .card-grid .story-card:nth-child(n+2),
-#category-sections .card-grid .story-card:nth-child(n+2) {
+#category-sections .card-grid:not(.all) .story-card:nth-child(n+2) {
   display: none !important;
 }
 #trending-section .card-grid .story-card:first-child,
 #category-sections .card-grid .story-card:first-child {
   grid-column: 1 / -1 !important;
+}
+
+/* ===== Category page: every story in the category is shown ===== */
+body.cat-view #podcast-home,
+body.cat-view #video-home {
+  display: none !important;
 }
