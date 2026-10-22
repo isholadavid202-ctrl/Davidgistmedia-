@@ -3,326 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1b1464">
   <title>Account Center | Davidgistmedia</title>
-  <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=16">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
   <style>
-    :root {
-      --bg-dark: #121212;
-      --card-bg: #1e1e1e;
-      --border-color: #333333;
-      --accent-red: #bb1919;
-      --text-main: #f0f0f0;
-      --text-muted: #aaaaaa;
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%}
+    body{
+      font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:#fff;
+      background:linear-gradient(160deg,#1b1464 0%,#2d27a8 48%,#4a3fd1 100%) fixed;
+      -webkit-font-smoothing:antialiased;
     }
+    button{font:inherit}
 
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 0;
+    /* ===== Shared page frame ===== */
+    .page{
+      display:none;position:relative;overflow:hidden;min-height:100vh;
+      flex-direction:column;align-items:center;
+      padding:max(18px,env(safe-area-inset-top)) 22px max(32px,env(safe-area-inset-bottom));
     }
-
-    /* ===== Signed-in profile page (same as before) ===== */
-    .account-container {
-      display: none;
-      max-width: 520px;
-      margin: 30px auto;
-      padding: 0 16px;
+    .page::before,.page::after{
+      content:"";position:absolute;border-radius:50%;pointer-events:none;
+      background:radial-gradient(circle,rgba(255,255,255,.16),rgba(255,255,255,0) 70%);
     }
+    .page::before{width:340px;height:340px;top:-120px;right:-120px}
+    .page::after{width:300px;height:300px;bottom:-110px;left:-110px}
+    .top{width:100%;max-width:440px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+    .back{display:inline-flex;align-items:center;gap:6px;color:#fff;text-decoration:none;font-weight:600;font-size:.95rem;padding:8px 4px;min-height:44px}
+    .back svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+    .brand{font-family:Georgia,"Times New Roman",serif;font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
+    .brand span{color:#ff6b8d}
+    .box{width:100%;max-width:440px;position:relative;z-index:1;text-align:center}
+    h1{margin:10px 0 4px;font-size:1.75rem;font-weight:800;letter-spacing:-.01em;color:#fff}
+    .sub{margin:0 0 20px;font-size:.95rem;color:rgba(255,255,255,.78)}
 
-    .nav-back {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text-muted);
-      text-decoration: none;
-      margin-bottom: 20px;
-      font-size: 0.9rem;
-      font-weight: 600;
+    /* ===== Form pieces (used on both screens) ===== */
+    form{text-align:left;margin:0}
+    .af{position:relative;margin:0 0 14px}
+    .af label.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+    .lbl{display:block;margin:0 0 6px;font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.78)}
+    .ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;stroke:rgba(255,255,255,.85);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+    .af input,.af textarea{
+      width:100%;border:1px solid rgba(255,255,255,.18);border-radius:14px;
+      background:rgba(255,255,255,.13);color:#fff;font:inherit;font-size:16px;margin:0;
     }
-
-    .fb-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    .af input{height:54px;padding:0 48px}
+    .af textarea{min-height:104px;padding:14px 16px;resize:vertical;line-height:1.5}
+    .af input::placeholder,.af textarea::placeholder{color:rgba(255,255,255,.72)}
+    .af input:focus,.af textarea:focus{outline:none;border-color:#fff;background:rgba(255,255,255,.2);box-shadow:0 0 0 3px rgba(255,255,255,.18)}
+    .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:none;padding:0;cursor:pointer;display:grid;place-items:center}
+    .eye svg{width:22px;height:22px;stroke:rgba(255,255,255,.9);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .go{
+      width:100%;height:56px;border:1px solid rgba(255,255,255,.18);border-radius:16px;cursor:pointer;
+      background:linear-gradient(135deg,#0d0d3f,#1b1b80);color:#fff;
+      font-size:1.05rem;font-weight:800;letter-spacing:.02em;box-shadow:0 10px 24px rgba(8,8,60,.45);margin:0;
     }
+    .go:active{transform:translateY(1px)}
+    .go[disabled]{opacity:.65;cursor:default}
+    .am{min-height:22px;margin:14px 0 0;text-align:center;font-size:.92rem;font-weight:600}
+    .am.err{color:#ffd1d9}
+    .am.ok{color:#c8ffe2}
 
-    .profile-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border-color);
-      margin-bottom: 20px;
+    /* ===== Signed-out screen ===== */
+    .a-art{width:190px;max-width:55%;height:auto;margin:4px auto 0;display:block;animation:aFloat 5s ease-in-out infinite}
+    @keyframes aFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    @media (prefers-reduced-motion:reduce){.a-art{animation:none}}
+    .a-forgot{text-align:right;margin:-2px 0 16px}
+    .a-forgot button{background:none;border:0;color:rgba(255,255,255,.85);font-size:.88rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:6px 0;min-height:36px}
+    .a-swap{margin:18px 0 0;text-align:center;font-size:.92rem;color:rgba(255,255,255,.85)}
+    .a-swap button{background:none;border:0;padding:6px 4px;font-weight:800;color:#ff3d81;cursor:pointer;min-height:36px}
+
+    /* ===== Signed-in account screen ===== */
+    .avatar{position:relative;width:112px;height:112px;margin:14px auto 0}
+    .avatar img{width:112px;height:112px;border-radius:50%;object-fit:cover;border:4px solid #fff;background:rgba(255,255,255,.18);box-shadow:0 10px 28px rgba(8,8,60,.5)}
+    .cam{position:absolute;right:-2px;bottom:2px;width:38px;height:38px;border-radius:50%;background:#ff3d81;border:3px solid #2d27a8;display:grid;place-items:center;cursor:pointer}
+    .cam svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    #file-input{display:none}
+    .since{margin:-12px 0 20px;font-size:.8rem;color:rgba(255,255,255,.6)}
+    .card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:20px 18px 14px;margin:0 0 16px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+    .card .af:last-of-type{margin-bottom:16px}
+    .row{
+      display:flex;align-items:center;gap:14px;width:100%;min-height:58px;padding:0 16px;margin:0 0 10px;
+      border:1px solid rgba(255,255,255,.16);border-radius:16px;background:rgba(255,255,255,.1);
+      color:#fff;font-weight:700;font-size:1rem;cursor:pointer;text-align:left;
     }
-
-    .avatar-wrapper {
-      position: relative;
-      width: 72px;
-      height: 72px;
-      flex-shrink: 0;
-    }
-
-    .avatar-img {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--accent-red);
-      background: #2a2a2a;
-    }
-
-    .upload-badge {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      background: var(--accent-red);
-      color: #fff;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-    }
-
-    #file-input { display: none; }
-
-    .user-info h2 {
-      margin: 0;
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-
-    .user-info p {
-      margin: 4px 0 0;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
-
-    .menu-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .menu-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
-      background: #141414;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      color: var(--text-main);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-
-    .menu-item i {
-      width: 20px;
-      text-align: center;
-      color: var(--accent-red);
-    }
-
-    .form-group {
-      margin-top: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      font-weight: 700;
-    }
-
-    .form-control {
-      width: 100%;
-      background: #141414;
-      border: 1px solid var(--border-color);
-      color: #fff;
-      padding: 10px 12px;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      box-sizing: border-box;
-      outline: none;
-    }
-
-    .form-control:focus {
-      border-color: var(--accent-red);
-    }
-
-    .btn-save {
-      width: 100%;
-      background: var(--accent-red);
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-top: 15px;
-      cursor: pointer;
-    }
-
-    .btn-save:disabled {
-      opacity: 0.6;
-      cursor: default;
-    }
-
-    .logout-btn {
-      color: #ff4d4d !important;
-    }
-
-    .logout-btn i {
-      color: #ff4d4d !important;
-    }
-
-    .status-msg {
-      margin-top: 12px;
-      font-size: 0.85rem;
-      text-align: center;
-      font-weight: 600;
-    }
-
-    /* ===== Signed-out screen: "Welcome Back" sign in and create account ===== */
-    body.auth-mode {
-      background: linear-gradient(160deg, #1b1464 0%, #2d27a8 48%, #4a3fd1 100%) fixed !important;
-    }
-    #auth-screen {
-      display: none;
-      position: relative;
-      overflow: hidden;
-      min-height: 100vh;
-      flex-direction: column;
-      align-items: center;
-      padding: max(18px, env(safe-area-inset-top)) 22px max(28px, env(safe-area-inset-bottom));
-      color: #fff;
-      box-sizing: border-box;
-    }
-    #auth-screen *, #auth-screen *::before, #auth-screen *::after { box-sizing: border-box; }
-    #auth-screen::before, #auth-screen::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      background: radial-gradient(circle, rgba(255,255,255,.16), rgba(255,255,255,0) 70%);
-    }
-    #auth-screen::before { width: 340px; height: 340px; top: -120px; right: -120px; }
-    #auth-screen::after { width: 300px; height: 300px; bottom: -110px; left: -110px; }
-
-    #auth-screen .a-top {
-      width: 100%;
-      max-width: 420px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      z-index: 1;
-    }
-    #auth-screen .a-back {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: .95rem;
-      padding: 8px 4px;
-      min-height: 44px;
-    }
-    #auth-screen .a-back svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-    #auth-screen .a-brand { font-family: Georgia, "Times New Roman", serif; font-weight: 800; font-size: 1.15rem; letter-spacing: -.01em; }
-    #auth-screen .a-brand span { color: #ff6b8d; }
-
-    #auth-screen .a-box { width: 100%; max-width: 420px; position: relative; z-index: 1; text-align: center; }
-    #auth-screen .a-art { width: 190px; max-width: 55%; height: auto; margin: 4px auto 0; display: block; animation: aFloat 5s ease-in-out infinite; }
-    @keyframes aFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-    @media (prefers-reduced-motion: reduce) { #auth-screen .a-art { animation: none; } }
-
-    #auth-screen h1 { margin: 10px 0 4px; font-size: 1.75rem; font-weight: 800; letter-spacing: -.01em; color: #fff; }
-    #auth-screen .a-sub { margin: 0 0 20px; font-size: .95rem; color: rgba(255,255,255,.78); }
-
-    #auth-screen form { text-align: left; margin: 0; }
-    #auth-screen .af { position: relative; margin: 0 0 14px; }
-    #auth-screen .af label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-    #auth-screen .af .ico { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; stroke: rgba(255,255,255,.85); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
-    #auth-screen .af input {
-      width: 100%;
-      height: 54px;
-      padding: 0 48px;
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 14px;
-      background: rgba(255,255,255,.13);
-      color: #fff;
-      font: inherit;
-      font-size: 16px;
-      margin: 0;
-    }
-    #auth-screen .af input::placeholder { color: rgba(255,255,255,.72); }
-    #auth-screen .af input:focus { outline: none; border-color: #fff; background: rgba(255,255,255,.2); box-shadow: 0 0 0 3px rgba(255,255,255,.18); }
-    #auth-screen .a-eye { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; background: none; padding: 0; cursor: pointer; display: grid; place-items: center; }
-    #auth-screen .a-eye svg { width: 22px; height: 22px; stroke: rgba(255,255,255,.9); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-    #auth-screen .a-forgot { text-align: right; margin: -2px 0 16px; }
-    #auth-screen .a-forgot button {
-      background: none; border: 0; color: rgba(255,255,255,.85); font: inherit; font-size: .88rem;
-      cursor: pointer; text-decoration: underline; text-underline-offset: 3px; padding: 6px 0; min-height: 36px;
-    }
-    #auth-screen .a-hint { margin: -6px 0 14px; font-size: .8rem; color: rgba(255,255,255,.72); }
-
-    #auth-screen .a-go {
-      width: 100%;
-      height: 56px;
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 16px;
-      cursor: pointer;
-      background: linear-gradient(135deg, #0d0d3f, #1b1b80);
-      color: #fff;
-      font: inherit;
-      font-size: 1.05rem;
-      font-weight: 800;
-      letter-spacing: .02em;
-      box-shadow: 0 10px 24px rgba(8,8,60,.45);
-      margin: 0;
-    }
-    #auth-screen .a-go:active { transform: translateY(1px); }
-    #auth-screen .a-go[disabled] { opacity: .65; cursor: default; }
-
-    #auth-screen .am { min-height: 22px; margin: 14px 0 0; text-align: center; font-size: .92rem; font-weight: 600; }
-    #auth-screen .am.err { color: #ffd1d9; }
-    #auth-screen .am.ok { color: #c8ffe2; }
-
-    #auth-screen .a-swap { margin: 18px 0 0; text-align: center; font-size: .92rem; color: rgba(255,255,255,.85); }
-    #auth-screen .a-swap button { background: none; border: 0; padding: 6px 4px; font: inherit; font-weight: 800; color: #ff3d81; cursor: pointer; min-height: 36px; }
+    .row svg{width:22px;height:22px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .row .chev{margin-left:auto;width:18px;height:18px;opacity:.6}
+    .row:active{background:rgba(255,255,255,.18)}
+    .row.danger{color:#ffb3c4}
   </style>
 </head>
 <body>
 
   <!-- ===== Signed-out screen ===== -->
-  <div id="auth-screen">
-    <div class="a-top">
-      <a class="a-back" href="index.html" aria-label="Back to homepage">
+  <div class="page" id="auth-screen">
+    <div class="top">
+      <a class="back" href="index.html" aria-label="Back to homepage">
         <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg> Home
       </a>
-      <div class="a-brand">David<span>gistmedia</span></div>
+      <div class="brand">David<span>gistmedia</span></div>
     </div>
 
-    <main class="a-box">
+    <main class="box">
       <svg class="a-art" viewBox="0 0 220 170" role="img" aria-label="Sign in illustration">
         <rect x="70" y="14" width="136" height="88" rx="10" fill="#c9f2e6"/>
         <circle cx="138" cy="44" r="13" fill="#2bb59a"/>
@@ -345,54 +130,52 @@
       </svg>
 
       <h1 id="a-title">Welcome Back <span aria-hidden="true">&#128075;</span></h1>
-      <p class="a-sub" id="a-sub">Log in to comment, like stories and manage your profile.</p>
+      <p class="sub" id="a-sub">Log in to comment, like stories and manage your profile.</p>
 
-      <!-- Sign in form -->
       <form id="auth-login-form" novalidate>
         <div class="af">
-          <label for="login-email">Email</label>
+          <label class="sr" for="login-email">Email</label>
           <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
           <input type="email" id="login-email" placeholder="Email" autocomplete="username" inputmode="email" required>
         </div>
         <div class="af">
-          <label for="login-password">Password</label>
+          <label class="sr" for="login-password">Password</label>
           <svg class="ico" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
           <input type="password" id="login-password" placeholder="Password" autocomplete="current-password" required>
-          <button type="button" class="a-eye" data-eye="login-password" aria-label="Show password">
+          <button type="button" class="eye" data-eye="login-password" aria-label="Show password">
             <svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
         <div class="a-forgot"><button type="button" id="forgot-pw-link">Forgot password?</button></div>
-        <button type="submit" id="login-btn" class="a-go">Login</button>
+        <button type="submit" id="login-btn" class="go">Login</button>
         <p id="auth-status" class="am" role="status" aria-live="polite"></p>
       </form>
 
-      <!-- Create account form -->
       <form id="auth-signup-form" style="display:none;" novalidate>
         <div class="af">
-          <label for="signup-name">Full name</label>
+          <label class="sr" for="signup-name">Full name</label>
           <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
           <input type="text" id="signup-name" placeholder="Full name" maxlength="60" autocomplete="name" required>
         </div>
         <div class="af">
-          <label for="signup-email">Email</label>
+          <label class="sr" for="signup-email">Email</label>
           <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
           <input type="email" id="signup-email" placeholder="Email" autocomplete="email" inputmode="email" required>
         </div>
         <div class="af">
-          <label for="signup-password">Password</label>
+          <label class="sr" for="signup-password">Password</label>
           <svg class="ico" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
           <input type="password" id="signup-password" placeholder="Password (at least 8 characters)" autocomplete="new-password" required>
-          <button type="button" class="a-eye" data-eye="signup-password" aria-label="Show password">
+          <button type="button" class="eye" data-eye="signup-password" aria-label="Show password">
             <svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
         <div class="af">
-          <label for="signup-confirm">Confirm password</label>
+          <label class="sr" for="signup-confirm">Confirm password</label>
           <svg class="ico" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
           <input type="password" id="signup-confirm" placeholder="Confirm password" autocomplete="new-password" required>
         </div>
-        <button type="submit" id="signup-btn" class="a-go">Sign Up</button>
+        <button type="submit" id="signup-btn" class="go">Sign Up</button>
         <p id="signup-status" class="am" role="status" aria-live="polite"></p>
       </form>
 
@@ -401,47 +184,52 @@
     </main>
   </div>
 
-  <!-- ===== Signed-in account page ===== -->
-  <div class="account-container">
-    <a href="index.html" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
-
-    <div class="fb-card">
-      <div class="profile-header">
-        <div class="avatar-wrapper">
-          <img id="avatar-preview" class="avatar-img" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" alt="Avatar">
-          <label for="file-input" class="upload-badge" id="upload-badge">
-            <i class="fa-solid fa-camera"></i>
-          </label>
-          <input type="file" id="file-input" accept="image/*">
-        </div>
-        <div class="user-info">
-          <h2 id="profile-title-name">Account Center</h2>
-          <p id="profile-email">Manage your account</p>
-        </div>
-      </div>
-
-      <div id="logged-in-section">
-        <form id="profile-form">
-          <div class="form-group">
-            <label for="full-name">Display Name</label>
-            <input type="text" id="full-name" class="form-control" placeholder="Your full name" required>
-          </div>
-
-          <div class="form-group">
-            <label for="bio">Bio / About</label>
-            <textarea id="bio" class="form-control" rows="3" placeholder="Write a short summary..."></textarea>
-          </div>
-
-          <button type="submit" id="save-btn" class="btn-save">Save Profile Changes</button>
-          <p id="profile-status" class="status-msg"></p>
-        </form>
-
-        <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:15px;" class="menu-list">
-          <a href="#" id="reset-pw-btn" class="menu-item"><i class="fa-solid fa-key"></i> Change / Reset Password</a>
-          <button id="logout-btn" class="menu-item logout-btn" style="width:100%; border:none; text-align:left;"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
-        </div>
-      </div>
+  <!-- ===== Signed-in account screen ===== -->
+  <div class="page" id="account-screen">
+    <div class="top">
+      <a class="back" href="index.html" aria-label="Back to homepage">
+        <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg> Home
+      </a>
+      <div class="brand">David<span>gistmedia</span></div>
     </div>
+
+    <main class="box">
+      <div class="avatar">
+        <img id="avatar-preview" alt="Your profile photo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c9c9ff'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>">
+        <label for="file-input" class="cam" aria-label="Change profile photo">
+          <svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        </label>
+        <input type="file" id="file-input" accept="image/*">
+      </div>
+
+      <h1 id="profile-title-name" style="margin-top:16px">Account Center</h1>
+      <p class="sub" id="profile-email" style="margin-bottom:18px">Manage your account</p>
+      <p class="since" id="since"></p>
+
+      <form id="profile-form" class="card">
+        <div class="af">
+          <span class="lbl">Display name</span>
+          <svg class="ico" style="top:calc(50% + 12px)" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+          <input type="text" id="full-name" placeholder="Your full name" maxlength="60" autocomplete="name" required aria-label="Display name">
+        </div>
+        <div class="af">
+          <span class="lbl">Bio / About</span>
+          <textarea id="bio" placeholder="Write a short summary..." maxlength="300" aria-label="Bio"></textarea>
+        </div>
+        <button type="submit" id="save-btn" class="go">Save Profile Changes</button>
+        <p id="profile-status" class="am" role="status" aria-live="polite"></p>
+      </form>
+
+      <button type="button" id="reset-pw-btn" class="row">
+        <svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></svg>
+        Change / Reset Password
+        <svg class="chev" viewBox="0 0 24 24"><path d="M9 4l8 8-8 8"/></svg>
+      </button>
+      <button type="button" id="logout-btn" class="row danger">
+        <svg viewBox="0 0 24 24"><path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/></svg>
+        Log Out
+      </button>
+    </main>
   </div>
 
   <script>
@@ -449,7 +237,7 @@
     let currentUserId = null;
     let currentUserEmail = null;
 
-    /* Small helper: shows a message under a form (kind is "err" or "ok") */
+    /* Shows a message under a form (kind is "err" or "ok") */
     function say(el, text, kind) {
       el.textContent = text || "";
       el.className = "am" + (kind ? " " + kind : "");
@@ -473,13 +261,6 @@
       say(document.getElementById("signup-status"), "");
     }
 
-    function showAuthScreen() {
-      document.body.classList.add("auth-mode");
-      document.querySelector(".account-container").style.display = "none";
-      document.getElementById("auth-screen").style.display = "flex";
-      setAuthMode(location.hash === "#signup" ? "signup" : "login");
-    }
-
     async function initAccountPage() {
       let user = null;
       try {
@@ -488,20 +269,23 @@
       } catch (e) {}
 
       if (!user) {
-        // Not signed in: show the Welcome Back screen
-        showAuthScreen();
+        document.getElementById("account-screen").style.display = "none";
+        document.getElementById("auth-screen").style.display = "flex";
+        setAuthMode(location.hash === "#signup" ? "signup" : "login");
         return;
       }
 
-      // Signed in: show the profile page
-      document.body.classList.remove("auth-mode");
       document.getElementById("auth-screen").style.display = "none";
-      document.querySelector(".account-container").style.display = "block";
+      document.getElementById("account-screen").style.display = "flex";
       document.title = "Account Center | Davidgistmedia";
 
       currentUserId = user.id;
       currentUserEmail = user.email;
       document.getElementById("profile-email").textContent = user.email;
+      if (user.created_at) {
+        document.getElementById("since").textContent = "Member since " +
+          new Date(user.created_at).toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+      }
 
       const { data } = await supabaseClient
         .from("profiles")
@@ -513,9 +297,7 @@
         document.getElementById("full-name").value = data.full_name || "";
         document.getElementById("bio").value = data.bio || "";
         document.getElementById("profile-title-name").textContent = data.full_name || "Account Center";
-        if (data.avatar_url) {
-          document.getElementById("avatar-preview").src = data.avatar_url;
-        }
+        if (data.avatar_url) document.getElementById("avatar-preview").src = data.avatar_url;
       } else {
         document.getElementById("full-name").value = user.user_metadata?.full_name || user.email.split("@")[0];
       }
@@ -526,7 +308,7 @@
     document.getElementById("show-login").addEventListener("click", () => setAuthMode("login"));
 
     // Show / hide password
-    document.querySelectorAll(".a-eye").forEach((b) => {
+    document.querySelectorAll(".eye").forEach((b) => {
       b.addEventListener("click", () => {
         const input = document.getElementById(b.getAttribute("data-eye"));
         const show = input.type === "password";
@@ -535,7 +317,7 @@
       });
     });
 
-    // Login Form Event Handler
+    // Login
     document.getElementById("auth-login-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = document.getElementById("login-email").value.trim();
@@ -547,10 +329,9 @@
 
       btn.disabled = true;
       say(status, "Signing in...");
-
       const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
       btn.disabled = false;
+
       if (error) {
         say(status, /invalid login/i.test(error.message || "") ? "Wrong email or password." : error.message, "err");
       } else {
@@ -559,7 +340,7 @@
       }
     });
 
-    // Create Account Form Event Handler
+    // Create account
     document.getElementById("auth-signup-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const fullName = document.getElementById("signup-name").value.trim();
@@ -608,31 +389,27 @@
       }
 
       if (data && data.session) {
-        // Signed in straight away (email confirmation is switched off)
         say(status, "Account created! Taking you in...", "ok");
         window.location.reload();
         return;
       }
 
-      // Email confirmation is switched on: the reader must confirm first
       say(status, "Account created! We sent a confirmation link to " + email + ". Open it, then come back and log in.", "ok");
       document.getElementById("auth-signup-form").reset();
     });
 
-    // Image Upload Handler
+    // Profile photo: show the chosen picture right away
     document.getElementById("file-input").addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (file) {
         selectedFile = file;
         const reader = new FileReader();
-        reader.onload = (evt) => {
-          document.getElementById("avatar-preview").src = evt.target.result;
-        };
+        reader.onload = (evt) => { document.getElementById("avatar-preview").src = evt.target.result; };
         reader.readAsDataURL(file);
       }
     });
 
-    // Profile Save Handler
+    // Save profile
     document.getElementById("profile-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!currentUserId) return;
@@ -641,8 +418,7 @@
       const btn = document.getElementById("save-btn");
 
       btn.disabled = true;
-      status.textContent = "Saving...";
-      status.style.color = "#aaa";
+      say(status, "Saving...");
 
       let avatarUrl = document.getElementById("avatar-preview").src;
 
@@ -660,7 +436,6 @@
             .storage
             .from('avatars')
             .getPublicUrl(filePath);
-
           avatarUrl = publicUrlData.publicUrl;
         }
       }
@@ -679,16 +454,14 @@
       btn.disabled = false;
 
       if (error) {
-        status.textContent = "Error saving profile.";
-        status.style.color = "#ff4d4d";
+        say(status, "Error saving profile.", "err");
       } else {
-        status.textContent = "Profile updated successfully!";
-        status.style.color = "#4edf72";
+        say(status, "Profile updated successfully!", "ok");
         document.getElementById("profile-title-name").textContent = fullName;
       }
     });
 
-    // Forgot password (signed-out screen): uses the email typed above
+    // Forgot password (signed-out screen)
     document.getElementById("forgot-pw-link").addEventListener("click", async () => {
       const status = document.getElementById("auth-status");
       const email = document.getElementById("login-email").value.trim();
@@ -701,17 +474,18 @@
       else say(status, "Check your email for a link to reset your password.", "ok");
     });
 
-    // Change / Reset password (signed-in page): sends the reset link to your account email
-    document.getElementById("reset-pw-btn").addEventListener("click", async (e) => {
-      e.preventDefault();
+    // Change / Reset password (signed-in screen): emails a reset link to your account email
+    document.getElementById("reset-pw-btn").addEventListener("click", async () => {
       if (!currentUserEmail) return;
+      const status = document.getElementById("profile-status");
       const { error } = await supabaseClient.auth.resetPasswordForEmail(currentUserEmail, {
         redirectTo: window.location.origin + '/profile.html'
       });
-      alert(error ? error.message : "Password reset email sent to " + currentUserEmail + ".");
+      if (error) say(status, error.message, "err");
+      else say(status, "Password reset email sent to " + currentUserEmail + ".", "ok");
     });
 
-    // Log Out Handler
+    // Log out
     document.getElementById("logout-btn").addEventListener("click", async () => {
       await supabaseClient.auth.signOut();
       window.location.href = "index.html";
