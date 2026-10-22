@@ -1,4 +1,4 @@
-/* Year (footer) and today's date (top strip). Safe if either is missing. */
+/* Davidgistmedia - HOME.JS v16 - CNN Exact + Optimized Images + Fast Load */
 (function () {
   var y = document.getElementById("year");
   if (y) y.textContent = new Date().getFullYear();
@@ -8,7 +8,6 @@
   });
 })();
 
-/* Styles for the top story slideshow and video live here so this file is all you need to change */
 (function () {
   var st = document.createElement("style");
   st.textContent = `
@@ -18,35 +17,40 @@
     .hero-grid .lead-story.lead-multi .overlay{pointer-events:none}
     .hero-grid .lead-story .lead-count{position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.62);color:#fff;font-size:.8rem;font-weight:700}
     .lead-count svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-
-    /* Top story with a video: player on top, headline and summary underneath */
     .hero-grid .lead-story.lead-video .lead-player{position:relative;width:100%;aspect-ratio:16/9;background:#000}
     .lead-player video,.lead-player iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;background:#000;object-fit:contain}
     .lead-player .yt-play{position:absolute;top:0;left:0;width:100%;height:100%;padding:0;border:0;background-color:#000;background-position:center;background-size:cover;background-repeat:no-repeat;cursor:pointer}
     .lead-player .yt-play span{position:absolute;left:50%;top:50%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;background:rgba(0,0,0,.65);border:2px solid #fff}
     .lead-player .yt-play span::after{content:"";position:absolute;left:26px;top:19px;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent}
     .hero-grid .lead-story.lead-video .overlay{position:static !important;padding:16px 20px 22px !important;background:#000 !important;pointer-events:auto}
-    .hero-grid .lead-story.lead-video .overlay h1 a{color:#fff}
   `;
   document.head.appendChild(st);
 })();
 
-/* Date and time of upload, shown in Nigeria time (for example: 10 Oct 2026, 8:15 PM) */
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function getOptimizedImage(url, w=650){
+  if(!url) return '';
+  try{
+    if(url.includes('unsplash.com')){
+      return url.split('?')[0] + `?w=${w}&q=75&auto=format&fit=crop&ar=16:9`;
+    }
+    if(url.includes('supabase.co')){
+      return url + (url.includes('?') ? '&' : '?') + `width=${w}&quality=75`;
+    }
+  }catch(e){}
+  return url;
+}
 function formatWhen(d) {
   try {
     const t = new Date(d);
     if (isNaN(t.getTime())) return "";
     const day = t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
-    const time = t.toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Africa/Lagos" })
-      .replace(/am|pm/i, (m) => m.toUpperCase());
+    const time = t.toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Africa/Lagos" }).replace(/am|pm/i, (m) => m.toUpperCase());
     return day + ", " + time;
-  } catch (e) {
-    return "";
-  }
+  } catch (e) { return ""; }
 }
-
-/* Short time like the BBC: "39 mins ago", "7 hrs ago", "2 days ago".
-   Stories older than a week show the date (for example: 10 Oct 2026). */
 function timeAgo(d) {
   try {
     const t = new Date(d);
@@ -61,236 +65,80 @@ function timeAgo(d) {
     const days = Math.floor(hrs / 24);
     if (days < 7) return days + (days === 1 ? " day" : " days") + " ago";
     return t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
-  } catch (e) {
-    return "";
-  }
+  } catch (e) { return ""; }
 }
-
-/* ---- Verification badges (data-driven) ---- */
 const DGB = (() => {
-  const map = {};
-  let loaded = null;
+  const map = {}; let loaded = null;
   const key = (n) => String(n || "").trim().toLowerCase();
-  const esc = (s) => String(s == null ? "" : s)
-    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const esc = (s) => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   function load() {
     if (loaded) return loaded;
     loaded = (async () => {
-      try {
-        const { data } = await supabaseClient.from("verified_authors").select("name,title,kind");
-        (data || []).forEach((r) => { map[key(r.name)] = r; });
-      } catch (e) {}
+      try { const { data } = await supabaseClient.from("verified_authors").select("name,title,kind"); (data || []).forEach((r) => { map[key(r.name)] = r; }); } catch (e) {}
     })();
     return loaded;
   }
   function get(name) { return map[key(name)] || null; }
   function svg(b, size) {
     const color = b.kind === "owner" ? "#f97316" : "#1d9bf0";
-    const pts = [];
-    for (let i = 0; i < 48; i++) {
-      const a = (i / 48) * Math.PI * 2;
-      const r = 9.2 + 1.1 * Math.cos(8 * a);
-      pts.push((12 + r * Math.cos(a)).toFixed(2) + "," + (12 + r * Math.sin(a)).toFixed(2));
-    }
+    const pts = []; for (let i = 0; i < 48; i++) { const a = (i / 48) * Math.PI * 2; const r = 9.2 + 1.1 * Math.cos(8 * a); pts.push((12 + r * Math.cos(a)).toFixed(2) + "," + (12 + r * Math.sin(a)).toFixed(2)); }
     const t = esc(b.title);
-    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" role="img" aria-label="' + t +
-      '" style="display:inline-block;vertical-align:-3px;margin-left:5px"><title>' + t + '</title>' +
-      '<polygon points="' + pts.join(" ") + '" fill="' + color + '"/>' +
-      '<path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    return '<svg viewBox="0 0 24 24" width="' + size + '" height="' + size + '" role="img" aria-label="' + t + '" style="display:inline-block;vertical-align:-3px;margin-left:5px"><title>' + t + '</title><polygon points="' + pts.join(" ") + '" fill="' + color + '"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   }
   return { load, get, svg };
 })();
-
 function authorHtml(name) {
   const n = name || "Davidgistmedia";
   const b = DGB.get(n);
   return escapeHtml(n) + (b ? DGB.svg(b, 16) : "");
 }
-
-/* ---- Pictures for the top story ---- */
-function isHttpsUrl(u) {
-  return /^https:\/\//i.test(String(u || ""));
-}
-function pictureList(v) {
-  let list = v;
-  if (typeof list === "string") {
-    try { list = JSON.parse(list); } catch (e) { list = []; }
-  }
-  return Array.isArray(list) ? list.filter(isHttpsUrl) : [];
-}
-/* The main picture first, then the extra ones (up to 6 in the slideshow) */
-function leadPictures(a) {
-  return [a.image_url].concat(pictureList(a.images)).filter(isHttpsUrl).slice(0, 6);
-}
-
-/* ---- Video for the top story ----
-   A story with a video_url shows the video instead of the picture.
-   YouTube links show a thumbnail with a play button; other links play as a video file. */
-function youtubeId(url) {
-  const m = String(url || "").match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/);
-  return m ? m[1] : null;
-}
+function isHttpsUrl(u) { return /^https:\/\//i.test(String(u || "")); }
+function pictureList(v) { let list = v; if (typeof list === "string") { try { list = JSON.parse(list); } catch (e) { list = []; } } return Array.isArray(list) ? list.filter(isHttpsUrl) : []; }
+function leadPictures(a) { return [a.image_url].concat(pictureList(a.images)).filter(isHttpsUrl).slice(0, 6); }
+function youtubeId(url) { const m = String(url || "").match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/); return m ? m[1] : null; }
 function videoPlayerHtml(a) {
-  const url = String(a.video_url || "").trim();
-  if (!isHttpsUrl(url)) return "";
+  const url = String(a.video_url || "").trim(); if (!isHttpsUrl(url)) return "";
   const yt = youtubeId(url);
-  if (yt) {
-    const thumb = isHttpsUrl(a.image_url) ? a.image_url : "https://i.ytimg.com/vi/" + yt + "/hqdefault.jpg";
-    return '<div class="lead-player">' +
-      '<button type="button" class="yt-play" data-yt="' + yt + '" aria-label="Play video" style="background-image:url(\'' + escapeHtml(thumb) + '\')"><span></span></button>' +
-      '</div>';
-  }
-  const src = url.indexOf("#") === -1 ? url + "#t=0.1" : url;
-  const poster = isHttpsUrl(a.image_url) ? ' poster="' + escapeHtml(a.image_url) + '"' : "";
-  return '<div class="lead-player">' +
-    '<video controls playsinline preload="metadata"' + poster + '><source src="' + escapeHtml(src) + '"></video>' +
-    '</div>';
+  if (yt) { const thumb = isHttpsUrl(a.image_url) ? getOptimizedImage(a.image_url, 800) : "https://i.ytimg.com/vi/" + yt + "/hqdefault.jpg"; return '<div class="lead-player"><button type="button" class="yt-play" data-yt="' + yt + '" aria-label="Play video" style="background-image:url(\'' + escapeHtml(thumb) + '\')"><span></span></button></div>'; }
+  const src = url.indexOf("#") === -1 ? url + "#t=0.1" : url; const poster = isHttpsUrl(a.image_url) ? ' poster="' + escapeHtml(getOptimizedImage(a.image_url, 800)) + '"' : "";
+  return '<div class="lead-player"><video controls playsinline preload="metadata"' + poster + '><source src="' + escapeHtml(src) + '"></video></div>';
 }
-/* Tapping the YouTube thumbnail swaps it for the real player and starts the video */
 function wireVideo(section) {
   section.querySelectorAll(".yt-play").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const id = btn.getAttribute("data-yt");
-      const frame = document.createElement("iframe");
+      const id = btn.getAttribute("data-yt"); const frame = document.createElement("iframe");
       frame.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&playsinline=1&rel=0";
-      frame.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-      frame.allowFullscreen = true;
-      frame.title = "Video player";
+      frame.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen"; frame.allowFullscreen = true; frame.title = "Video player";
       btn.parentElement.replaceChild(frame, btn);
     });
   });
 }
-
-/* ---- "Analysis" label ----
-   A story gets the bold "Analysis" label above its headline when
-   "analysis" is typed in the Tags box in the newsroom. */
-function tagList(a) {
-  let t = a.tags;
-  if (typeof t === "string") {
-    try {
-      const parsed = JSON.parse(t);
-      if (Array.isArray(parsed)) t = parsed;
-    } catch (e) {}
-  }
-  if (typeof t === "string") t = t.split(",");
-  return Array.isArray(t) ? t.map((x) => String(x).trim().toLowerCase()) : [];
-}
-function kickerHtml(a) {
-  return tagList(a).indexOf("analysis") > -1 ? '<div class="kicker">Analysis</div>' : "";
-}
-
-const CATEGORIES = [
-  "nigeria",
-  "africa",
-  "politics",
-  "entertainment",
-  "sports",
-  "business",
-  "technology",
-  "science",
-  "education",
-  "fashion",
-  "europe",
-  "world",
-  "local",
-];
-let allArticles = [];
-let commentCounts = {};
-let activeCategory = "all";
-let searchQuery = "";
-
-/* The homepage only needs these fields (not the full story text) */
+function tagList(a) { let t = a.tags; if (typeof t === "string") { try { const parsed = JSON.parse(t); if (Array.isArray(parsed)) t = parsed; } catch (e) {} } if (typeof t === "string") t = t.split(","); return Array.isArray(t) ? t.map((x) => String(x).trim().toLowerCase()) : []; }
+function kickerHtml(a) { return tagList(a).indexOf("analysis") > -1 ? '<div class="kicker">Analysis</div>' : ""; }
+const CATEGORIES = ["nigeria","africa","politics","entertainment","sports","business","technology","science","education","fashion","europe","world","local"];
+let allArticles = []; let commentCounts = {}; let activeCategory = "all"; let searchQuery = "";
 const LIST_COLUMNS = "id,slug,title,excerpt,image_url,category,author,published_at,likes,featured";
 const CACHE_KEY = "dg_home_cache_v2";
-
-function readCache() {
-  try {
-    const c = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
-    return c && Array.isArray(c.articles) ? c.articles : null;
-  } catch {
-    return null;
-  }
-}
-function writeCache(list) {
-  try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), articles: list }));
-  } catch {}
-}
-
-/* ---- Comment counts ---- */
-async function loadCommentCounts() {
-  try {
-    const { data } = await supabaseClient.from("comments").select("article_id");
-    commentCounts = {};
-    (data || []).forEach((c) => {
-      commentCounts[c.article_id] = (commentCounts[c.article_id] || 0) + 1;
-    });
-  } catch (e) {}
-}
-
-/* Grey placeholder rows, shown only when the page arrives with no stories in it */
+function readCache() { try { const c = JSON.parse(localStorage.getItem(CACHE_KEY) || "null"); return c && Array.isArray(c.articles) ? c.articles : null; } catch { return null; } }
+function writeCache(list) { try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), articles: list })); } catch {} }
+async function loadCommentCounts() { try { const { data } = await supabaseClient.from("comments").select("article_id"); commentCounts = {}; (data || []).forEach((c) => { commentCounts[c.article_id] = (commentCounts[c.article_id] || 0) + 1; }); } catch (e) {} }
 function showPlaceholders() {
   const bar = (w, mb) => `<div style="height:14px;background:var(--line);width:${w};margin-bottom:${mb}px"></div>`;
-  const row = `
-    <div style="display:grid;grid-template-columns:38% 1fr;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)">
-      <div style="aspect-ratio:16/9;background:var(--line)"></div>
-      <div style="padding-top:4px">${bar("100%", 10)}${bar("80%", 10)}${bar("55%", 0)}</div>
-    </div>`;
+  const row = `<div style="display:grid;grid-template-columns:38% 1fr;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)"><div style="aspect-ratio:16/9;background:var(--line)"></div><div style="padding-top:4px">${bar("100%", 10)}${bar("80%", 10)}${bar("55%", 0)}</div></div>`;
   document.getElementById("hero-section").innerHTML = row.repeat(5);
 }
-
 async function fetchStories() {
-  // Ask for the video, the extra pictures and the tags too. If a column isn't there, ask without it.
-  const sets = [
-    LIST_COLUMNS + ",images,tags,video_url",
-    LIST_COLUMNS + ",images,tags",
-    LIST_COLUMNS + ",images",
-    LIST_COLUMNS,
-  ];
-  let res = null;
-  for (let i = 0; i < sets.length; i++) {
-    res = await supabaseClient
-      .from("articles")
-      .select(sets[i])
-      .order("published_at", { ascending: false })
-      .limit(100);
-    if (!res.error) return res;
-    if (!/images|tags|video_url|column/i.test(res.error.message || "")) return res;
-  }
-  return res;
+  const sets = [LIST_COLUMNS + ",images,tags,video_url", LIST_COLUMNS + ",images,tags", LIST_COLUMNS + ",images", LIST_COLUMNS];
+  let res = null; for (let i = 0; i < sets.length; i++) { res = await supabaseClient.from("articles").select(sets[i]).order("published_at", { ascending: false }).limit(100); if (!res.error) return res; if (!/images|tags|video_url|column/i.test(res.error.message || "")) return res; } return res;
 }
-
 async function loadArticles() {
-  // 1. If we have stories saved from the last visit, show them instantly
   const cached = readCache();
-  if (cached && cached.length) {
-    allArticles = cached;
-    renderPage();
-  } else if (!document.getElementById("hero-section").children.length) {
-    // Nothing from the server either, so show grey placeholders
-    showPlaceholders();
-  }
-
-  // 2. Ask for fresh stories (headline fields only, newest 100)
+  if (cached && cached.length) { allArticles = cached; renderPage(); } else if (!document.getElementById("hero-section").children.length) { showPlaceholders(); }
   const { data, error } = await fetchStories();
-
-  if (error) {
-    if (!cached || !cached.length) {
-      document.getElementById("hero-section").innerHTML =
-        `<div class="empty-state">Couldn't load stories right now (${escapeHtml(error.message)}). Check that config.js has your Supabase URL and key set.</div>`;
-    }
-    return;
-  }
-
-  // 3. Show the fresh stories, save them for next time, then fill in counts and badges
-  const fresh = data || [];
-  const changed = JSON.stringify(fresh) !== JSON.stringify(cached || []);
-  allArticles = fresh;
-  writeCache(fresh);
-  if (changed || !cached) renderPage();
-  Promise.all([DGB.load(), loadCommentCounts()]).then(renderPage);
+  if (error) { if (!cached || !cached.length) { document.getElementById("hero-section").innerHTML = `<div class="empty-state">Couldn't load stories right now (${escapeHtml(error.message)}).</div>`; } return; }
+  const fresh = data || []; const changed = JSON.stringify(fresh) !== JSON.stringify(cached || []);
+  allArticles = fresh; writeCache(fresh); if (changed || !cached) renderPage(); Promise.all([DGB.load(), loadCommentCounts()]).then(renderPage);
 }
-
 function getFiltered() {
   const q = searchQuery.trim().toLowerCase();
   return allArticles.filter((a) => {
@@ -299,208 +147,55 @@ function getFiltered() {
     return matchesCat && matchesQuery;
   });
 }
-
-function renderPage() {
-  const filtered = getFiltered();
-  renderTrending();
-  renderHero(filtered);
-  renderCategorySections(filtered);
-}
-
+function renderPage() { const filtered = getFiltered(); renderTrending(); renderHero(filtered); renderCategorySections(filtered); }
 function renderTrending() {
-  const container = document.getElementById("trending-section");
-  if (!container) return;
+  const container = document.getElementById("trending-section"); if (!container) return;
   const top = [...allArticles].sort((a, b) => (b.likes || 0) - (a.likes || 0)).slice(0, 5);
   const hasEngagement = top.some((a) => (a.likes || 0) > 0);
-
-  if (top.length === 0 || !hasEngagement) {
-    container.innerHTML = "";
-    return;
-  }
-
-  container.innerHTML = `
-    <section class="cat-section">
-      <div class="cat-head">
-        <div class="left"><span class="bar"></span><h2>Trending</h2></div>
-      </div>
-      <div class="card-grid">
-        ${top.map((a) => `
-          <a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">
-            ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : ""}
-            <div class="body">
-              ${kickerHtml(a)}
-              <div class="cat">${escapeHtml(a.category)}</div>
-              <h3>${escapeHtml(a.title)}</h3>
-              <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
-            </div>
-          </a>
-        `).join("")}
-      </div>
-    </section>
-  `;
+  if (top.length === 0 || !hasEngagement) { container.innerHTML = ""; return; }
+  container.innerHTML = `<section class="cat-section"><div class="cat-head"><div class="left"><span class="bar"></span><h2>Trending</h2></div></div><div class="card-grid">${top.map((a) => `<a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">${a.image_url ? `<img src="${escapeHtml(getOptimizedImage(a.image_url, 400))}" alt="" loading="lazy">` : ""}<div class="body">${kickerHtml(a)}<div class="cat">${escapeHtml(a.category)}</div><h3>${escapeHtml(a.title)}</h3><div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div></div></a>`).join("")}</div></section>`;
 }
-
-/* Keeps the "1/4" counter in step while the reader swipes through the pictures */
 function wireSlides(section) {
   section.querySelectorAll(".lead-slides").forEach((slides) => {
-    const counter = slides.parentElement.querySelector(".lead-count span");
-    if (!counter) return;
-    slides.addEventListener("scroll", () => {
-      const w = slides.clientWidth || 1;
-      counter.textContent = String(Math.round(slides.scrollLeft / w) + 1);
-    }, { passive: true });
+    const counter = slides.parentElement.querySelector(".lead-count span"); if (!counter) return;
+    slides.addEventListener("scroll", () => { const w = slides.clientWidth || 1; counter.textContent = String(Math.round(slides.scrollLeft / w) + 1); }, { passive: true });
   });
 }
-
 function secondaryHtml(list) {
-  return list.map((a) => `
-    <a class="secondary-item" href="article.html?slug=${encodeURIComponent(a.slug)}">
-      ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : `<div style="background:#eee;border-radius:4px"></div>`}
-      <div>
-        ${kickerHtml(a)}
-        <div class="cat">${escapeHtml(a.category)}</div>
-        <h3>${escapeHtml(a.title)}</h3>
-        <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
-      </div>
-    </a>
-  `).join("");
+  return list.map((a) => `<a class="secondary-item" href="article.html?slug=${encodeURIComponent(a.slug)}">${a.image_url ? `<img src="${escapeHtml(getOptimizedImage(a.image_url, 200))}" alt="" loading="lazy">` : `<div style="background:#eee;border-radius:4px"></div>`}<div>${kickerHtml(a)}<div class="cat">${escapeHtml(a.category)}</div><h3>${escapeHtml(a.title)}</h3><div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div></div></a>`).join("");
 }
-
 function renderHero(list) {
   const section = document.getElementById("hero-section");
-  if (list.length === 0) {
-    section.innerHTML = `<div class="empty-state">No stories yet${searchQuery ? " matching your search" : ""}. Post your first story from the <a href="admin.html" style="color:var(--red);font-weight:700">newsroom login</a>.</div>`;
-    return;
-  }
+  if (list.length === 0) { section.innerHTML = `<div class="empty-state">No stories yet. Post your first story from <a href="admin.html" style="color:var(--red);font-weight:700">newsroom</a>.</div>`; return; }
   const lead = list.find((a) => a.featured) || list[0];
   const secondary = list.filter((a) => a.id !== lead.id).slice(0, 4);
-
-  // If the top story has a video, show the video player in place of the picture
   const player = videoPlayerHtml(lead);
   if (player) {
-    section.innerHTML = `
-      <div class="hero-grid">
-        <div class="lead-story lead-video">
-          ${player}
-          <div class="overlay">
-            <span class="lead-tag">${escapeHtml(lead.category)}</span>
-            <h1><a href="article.html?slug=${encodeURIComponent(lead.slug)}">${escapeHtml(lead.title)}</a></h1>
-            <p>${escapeHtml(lead.excerpt || "")}</p>
-            <div class="lead-meta">${authorHtml(lead.author)} · ${formatWhen(lead.published_at)}</div>
-          </div>
-        </div>
-        <div class="secondary-list">${secondaryHtml(secondary)}</div>
-      </div>
-    `;
-    wireVideo(section);
-    return;
+    section.innerHTML = `<div class="hero-grid"><div class="lead-story lead-video">${player}<div class="overlay"><span class="lead-tag">${escapeHtml(lead.category)}</span><h1><a href="article.html?slug=${encodeURIComponent(lead.slug)}">${escapeHtml(lead.title)}</a></h1><p>${escapeHtml(lead.excerpt || "")}</p><div class="lead-meta">${authorHtml(lead.author)} · ${formatWhen(lead.published_at)}</div></div></div><div class="secondary-list">${secondaryHtml(secondary)}</div></div>`;
+    wireVideo(section); return;
   }
-
-  // One picture shows as before. Several pictures become a slideshow the reader can swipe.
-  const pics = leadPictures(lead);
-  const multi = pics.length > 1;
+  const pics = leadPictures(lead); const multi = pics.length > 1;
   const camera = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>';
-  const leadMedia = multi
-    ? `<div class="lead-slides">${pics.map((u, i) =>
-        `<img src="${escapeHtml(u)}" alt="" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`
-      ).join("")}</div>
-      <div class="lead-count" aria-hidden="true">${camera}<span>1</span>/${pics.length}</div>`
-    : (lead.image_url ? `<img src="${escapeHtml(lead.image_url)}" alt="" fetchpriority="high" decoding="async">` : "");
-
-  section.innerHTML = `
-    <div class="hero-grid">
-      <a class="lead-story${multi ? " lead-multi" : ""}" href="article.html?slug=${encodeURIComponent(lead.slug)}">
-        ${leadMedia}
-        <div class="overlay">
-          <span class="lead-tag">${escapeHtml(lead.category)}</span>
-          <h1>${escapeHtml(lead.title)}</h1>
-          <p>${escapeHtml(lead.excerpt || "")}</p>
-          <div class="lead-meta">${authorHtml(lead.author)} · ${formatWhen(lead.published_at)}</div>
-        </div>
-      </a>
-      <div class="secondary-list">${secondaryHtml(secondary)}</div>
-    </div>
-  `;
+  const leadMedia = multi ? `<div class="lead-slides">${pics.map((u, i) => `<img src="${escapeHtml(getOptimizedImage(u, 800))}" alt="" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>`).join("")}</div><div class="lead-count" aria-hidden="true">${camera}<span>1</span>/${pics.length}</div>` : (lead.image_url ? `<img src="${escapeHtml(getOptimizedImage(lead.image_url, 800))}" alt="" fetchpriority="high">` : "");
+  section.innerHTML = `<div class="hero-grid"><a class="lead-story${multi ? " lead-multi" : ""}" href="article.html?slug=${encodeURIComponent(lead.slug)}">${leadMedia}<div class="overlay"><span class="lead-tag">${escapeHtml(lead.category)}</span><h1>${escapeHtml(lead.title)}</h1><p>${escapeHtml(lead.excerpt || "")}</p><div class="lead-meta">${authorHtml(lead.author)} · ${formatWhen(lead.published_at)}</div></div></a><div class="secondary-list">${secondaryHtml(secondary)}</div></div>`;
   wireSlides(section);
 }
-
-function storyRow(a) {
-  return `
-    <a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">
-      ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : ""}
-      <div class="body">
-        ${kickerHtml(a)}
-        <div class="cat">${escapeHtml(a.category)}</div>
-        <h3>${escapeHtml(a.title)}</h3>
-        <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
-      </div>
-    </a>`;
-}
-
-function storyFeature(a) {
-  return `
-    <a class="story-card feature" href="article.html?slug=${encodeURIComponent(a.slug)}">
-      ${a.image_url ? `<img src="${escapeHtml(a.image_url)}" alt="" loading="lazy" decoding="async">` : ""}
-      <div class="body">
-        ${kickerHtml(a)}
-        <div class="cat">${escapeHtml(a.category)}</div>
-        <h3>${escapeHtml(a.title)}</h3>
-        ${a.excerpt ? `<p class="excerpt">${escapeHtml(a.excerpt)}</p>` : ""}
-        <div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div>
-      </div>
-    </a>`;
-}
-
+function storyRow(a) { return `<a class="story-card" href="article.html?slug=${encodeURIComponent(a.slug)}">${a.image_url ? `<img src="${escapeHtml(getOptimizedImage(a.image_url, 500))}" alt="" loading="lazy">` : ""}<div class="body">${kickerHtml(a)}<div class="cat">${escapeHtml(a.category)}</div><h3>${escapeHtml(a.title)}</h3><div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div></div></a>`; }
+function storyFeature(a) { return `<a class="story-card feature" href="article.html?slug=${encodeURIComponent(a.slug)}">${a.image_url ? `<img src="${escapeHtml(getOptimizedImage(a.image_url, 700))}" alt="" loading="lazy">` : ""}<div class="body">${kickerHtml(a)}<div class="cat">${escapeHtml(a.category)}</div><h3>${escapeHtml(a.title)}</h3>${a.excerpt ? `<p class="excerpt">${escapeHtml(a.excerpt)}</p>` : ""}<div class="meta" title="${formatWhen(a.published_at)}">${timeAgo(a.published_at)}</div></div></a>`; }
 function renderCategorySections(list) {
   const container = document.getElementById("category-sections");
   const cats = activeCategory === "all" ? CATEGORIES : [activeCategory];
-
   container.innerHTML = cats.map((cat) => {
     const items = list.filter((a) => a.category === cat).slice(0, 6);
-    return `
-      <section class="cat-section">
-        <div class="cat-head">
-          <div class="left"><span class="bar"></span><h2><a href="#${cat}">${escapeHtml(cat)}</a></h2></div>
-        </div>
-        ${items.length === 0
-          ? `<div class="empty-state">No ${escapeHtml(cat)} stories yet.</div>`
-          : `<div class="card-grid">${storyFeature(items[0])}${items.slice(1).map(storyRow).join("")}</div>`}
-      </section>
-    `;
+    return `<section class="cat-section"><div class="cat-head"><div class="left"><span class="bar"></span><h2><a href="#${cat}">${escapeHtml(cat)}</a></h2></div></div>${items.length === 0 ? `<div class="empty-state">No ${escapeHtml(cat)} stories yet.</div>` : `<div class="card-grid">${storyFeature(items[0])}${items.slice(1).map(storyRow).join("")}</div>`}</section>`;
   }).join("");
 }
-
 document.getElementById("tabs").addEventListener("click", (e) => {
-  const btn = e.target.closest("button[data-cat]");
-  if (!btn) return;
-  document.querySelectorAll("#tabs button").forEach((b) => b.classList.remove("active"));
-  btn.classList.add("active");
-  activeCategory = btn.dataset.cat;
-  renderPage();
+  const btn = e.target.closest("button[data-cat]"); if (!btn) return;
+  document.querySelectorAll("#tabs button").forEach((b) => b.classList.remove("active")); btn.classList.add("active"); activeCategory = btn.dataset.cat; renderPage();
 });
-
-document.getElementById("search-form").addEventListener("submit", (e) => {
-  e.preventDefault();
-  searchQuery = document.getElementById("search-input").value;
-  renderPage();
-});
-document.getElementById("search-input").addEventListener("input", (e) => {
-  searchQuery = e.target.value;
-  renderPage();
-});
-
-// Open the category from the link (for example index.html#nigeria)
-(function () {
-  const cat = window.location.hash.replace("#", "");
-  if (!cat) return;
-  const btn = document.querySelector('#tabs button[data-cat="' + cat + '"]');
-  if (!btn) return;
-  document.querySelectorAll("#tabs button").forEach((b) => b.classList.remove("active"));
-  btn.classList.add("active");
-  activeCategory = cat;
-})();
-
-// When a footer or section link (for example #sports) is tapped on the homepage, open that section
+document.getElementById("search-form").addEventListener("submit", (e) => { e.preventDefault(); searchQuery = document.getElementById("search-input").value; renderPage(); });
+document.getElementById("search-input").addEventListener("input", (e) => { searchQuery = e.target.value; renderPage(); });
+(function () { const cat = window.location.hash.replace("#", ""); if (!cat) return; const btn = document.querySelector('#tabs button[data-cat="' + cat + '"]'); if (!btn) return; document.querySelectorAll("#tabs button").forEach((b) => b.classList.remove("active")); btn.classList.add("active"); activeCategory = cat; })();
 window.addEventListener("hashchange", function () { location.reload(); });
-
 loadArticles();
