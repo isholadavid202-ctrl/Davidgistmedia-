@@ -3,97 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#1b1464">
+  <meta name="theme-color" content="#0d0d0d">
   <title>Account Center | Davidgistmedia</title>
+  <!-- Uses the same night-mode choice as the rest of the site -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("dg_theme") || localStorage.getItem("theme");
+        if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      } catch (e) {}
+    })();
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
   <style>
+    :root{
+      --page:#f3f2ee; --paper:#faf9f6; --field:#ffffff;
+      --ink:#1f2023; --muted:#5a5c63; --line:#dad8d2;
+      --red:#bb1919; --red-dark:#9a1212;
+      --err:#b00020; --ok:#1a7f37;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+    }
+    html[data-theme="dark"]{
+      --page:#141416; --paper:#1c1c1f; --field:#242427;
+      --ink:#e4e4e1; --muted:#a4a4a1; --line:#2e2e32;
+      --red:#e0304a; --red-dark:#c0263c;
+      --err:#ff8a9a; --ok:#4edf72;
+      --shadow:0 6px 20px rgba(0,0,0,.4);
+      color-scheme:dark;
+    }
+
     *{box-sizing:border-box}
     html,body{margin:0;min-height:100%}
     body{
       font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-      color:#fff;
-      background:linear-gradient(160deg,#1b1464 0%,#2d27a8 48%,#4a3fd1 100%) fixed;
+      background:var(--page);color:var(--ink);
+      border-top:4px solid var(--red);
       -webkit-font-smoothing:antialiased;
     }
     button{font:inherit}
 
-    /* ===== Shared page frame ===== */
+    /* ===== Page frame ===== */
     .page{
-      display:none;position:relative;overflow:hidden;min-height:100vh;
-      flex-direction:column;align-items:center;
-      padding:max(18px,env(safe-area-inset-top)) 22px max(32px,env(safe-area-inset-bottom));
+      display:none;min-height:100vh;flex-direction:column;align-items:center;
+      padding:10px 22px max(32px,env(safe-area-inset-bottom));
     }
-    .page::before,.page::after{
-      content:"";position:absolute;border-radius:50%;pointer-events:none;
-      background:radial-gradient(circle,rgba(255,255,255,.16),rgba(255,255,255,0) 70%);
+    .top{
+      width:100%;max-width:440px;display:flex;align-items:center;justify-content:space-between;
+      border-bottom:3px solid var(--ink);padding-bottom:6px;margin-bottom:14px;
     }
-    .page::before{width:340px;height:340px;top:-120px;right:-120px}
-    .page::after{width:300px;height:300px;bottom:-110px;left:-110px}
-    .top{width:100%;max-width:440px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
-    .back{display:inline-flex;align-items:center;gap:6px;color:#fff;text-decoration:none;font-weight:600;font-size:.95rem;padding:8px 4px;min-height:44px}
+    .back{display:inline-flex;align-items:center;gap:6px;color:var(--ink);text-decoration:none;font-weight:700;font-size:.95rem;padding:8px 4px;min-height:44px}
     .back svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-    .brand{font-family:Georgia,"Times New Roman",serif;font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
-    .brand span{color:#ff6b8d}
-    .box{width:100%;max-width:440px;position:relative;z-index:1;text-align:center}
-    h1{margin:10px 0 4px;font-size:1.75rem;font-weight:800;letter-spacing:-.01em;color:#fff}
-    .sub{margin:0 0 20px;font-size:.95rem;color:rgba(255,255,255,.78)}
+    .brand{font-family:Georgia,"Times New Roman",serif;font-weight:800;font-size:1.3rem;letter-spacing:-.02em;color:var(--ink)}
+    .brand span{color:var(--red)}
+    .box{width:100%;max-width:440px;text-align:center}
+    h1{margin:10px 0 4px;font-family:Georgia,"Times New Roman",serif;font-size:1.85rem;font-weight:800;letter-spacing:-.01em;color:var(--ink)}
+    .sub{margin:0 0 20px;font-size:.95rem;color:var(--muted)}
 
-    /* ===== Form pieces (used on both screens) ===== */
+    /* ===== Form pieces (both screens) ===== */
     form{text-align:left;margin:0}
     .af{position:relative;margin:0 0 14px}
     .af label.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-    .lbl{display:block;margin:0 0 6px;font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.78)}
-    .ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;stroke:rgba(255,255,255,.85);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+    .lbl{display:block;margin:0 0 6px;font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
     .af input,.af textarea{
-      width:100%;border:1px solid rgba(255,255,255,.18);border-radius:14px;
-      background:rgba(255,255,255,.13);color:#fff;font:inherit;font-size:16px;margin:0;
+      width:100%;border:1px solid var(--line);border-radius:12px;
+      background:var(--field);color:var(--ink);font:inherit;font-size:16px;margin:0;
     }
     .af input{height:54px;padding:0 48px}
     .af textarea{min-height:104px;padding:14px 16px;resize:vertical;line-height:1.5}
-    .af input::placeholder,.af textarea::placeholder{color:rgba(255,255,255,.72)}
-    .af input:focus,.af textarea:focus{outline:none;border-color:#fff;background:rgba(255,255,255,.2);box-shadow:0 0 0 3px rgba(255,255,255,.18)}
+    .af input::placeholder,.af textarea::placeholder{color:var(--muted);opacity:.85}
+    .af input:focus,.af textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(187,25,25,.18)}
     .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:none;padding:0;cursor:pointer;display:grid;place-items:center}
-    .eye svg{width:22px;height:22px;stroke:rgba(255,255,255,.9);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .eye svg{width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
     .go{
-      width:100%;height:56px;border:1px solid rgba(255,255,255,.18);border-radius:16px;cursor:pointer;
-      background:linear-gradient(135deg,#0d0d3f,#1b1b80);color:#fff;
-      font-size:1.05rem;font-weight:800;letter-spacing:.02em;box-shadow:0 10px 24px rgba(8,8,60,.45);margin:0;
+      width:100%;height:56px;border:0;border-radius:12px;cursor:pointer;
+      background:var(--red);color:#fff;
+      font-size:1.05rem;font-weight:800;letter-spacing:.02em;
+      box-shadow:0 8px 18px rgba(187,25,25,.28);margin:0;
     }
-    .go:active{transform:translateY(1px)}
+    .go:active{background:var(--red-dark);transform:translateY(1px)}
     .go[disabled]{opacity:.65;cursor:default}
-    .am{min-height:22px;margin:14px 0 0;text-align:center;font-size:.92rem;font-weight:600}
-    .am.err{color:#ffd1d9}
-    .am.ok{color:#c8ffe2}
+    .am{min-height:22px;margin:14px 0 0;text-align:center;font-size:.92rem;font-weight:600;color:var(--muted)}
+    .am.err{color:var(--err)}
+    .am.ok{color:var(--ok)}
 
     /* ===== Signed-out screen ===== */
-    .a-art{width:190px;max-width:55%;height:auto;margin:4px auto 0;display:block;animation:aFloat 5s ease-in-out infinite}
+    .a-art{width:180px;max-width:52%;height:auto;margin:2px auto 0;display:block;animation:aFloat 5s ease-in-out infinite}
     @keyframes aFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
     @media (prefers-reduced-motion:reduce){.a-art{animation:none}}
     .a-forgot{text-align:right;margin:-2px 0 16px}
-    .a-forgot button{background:none;border:0;color:rgba(255,255,255,.85);font-size:.88rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:6px 0;min-height:36px}
-    .a-swap{margin:18px 0 0;text-align:center;font-size:.92rem;color:rgba(255,255,255,.85)}
-    .a-swap button{background:none;border:0;padding:6px 4px;font-weight:800;color:#ff3d81;cursor:pointer;min-height:36px}
+    .a-forgot button{background:none;border:0;color:var(--muted);font-size:.88rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:6px 0;min-height:36px}
+    .a-swap{margin:18px 0 0;text-align:center;font-size:.92rem;color:var(--muted)}
+    .a-swap button{background:none;border:0;padding:6px 4px;font-weight:800;color:var(--red);cursor:pointer;min-height:36px}
 
     /* ===== Signed-in account screen ===== */
     .avatar{position:relative;width:112px;height:112px;margin:14px auto 0}
-    .avatar img{width:112px;height:112px;border-radius:50%;object-fit:cover;border:4px solid #fff;background:rgba(255,255,255,.18);box-shadow:0 10px 28px rgba(8,8,60,.5)}
-    .cam{position:absolute;right:-2px;bottom:2px;width:38px;height:38px;border-radius:50%;background:#ff3d81;border:3px solid #2d27a8;display:grid;place-items:center;cursor:pointer}
+    .avatar img{width:112px;height:112px;border-radius:50%;object-fit:cover;border:4px solid var(--page);background:var(--line);box-shadow:0 0 0 3px var(--red)}
+    .cam{position:absolute;right:-2px;bottom:2px;width:38px;height:38px;border-radius:50%;background:var(--red);border:3px solid var(--page);display:grid;place-items:center;cursor:pointer}
     .cam svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
     #file-input{display:none}
-    .since{margin:-12px 0 20px;font-size:.8rem;color:rgba(255,255,255,.6)}
-    .card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:20px 18px 14px;margin:0 0 16px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+    .since{margin:-12px 0 20px;font-size:.8rem;color:var(--muted)}
+    .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px 18px 14px;margin:0 0 16px;box-shadow:var(--shadow)}
     .card .af:last-of-type{margin-bottom:16px}
     .row{
       display:flex;align-items:center;gap:14px;width:100%;min-height:58px;padding:0 16px;margin:0 0 10px;
-      border:1px solid rgba(255,255,255,.16);border-radius:16px;background:rgba(255,255,255,.1);
-      color:#fff;font-weight:700;font-size:1rem;cursor:pointer;text-align:left;
+      border:1px solid var(--line);border-radius:12px;background:var(--paper);
+      color:var(--ink);font-weight:700;font-size:1rem;cursor:pointer;text-align:left;
     }
-    .row svg{width:22px;height:22px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .row .chev{margin-left:auto;width:18px;height:18px;opacity:.6}
-    .row:active{background:rgba(255,255,255,.18)}
-    .row.danger{color:#ffb3c4}
+    .row svg{width:22px;height:22px;flex:none;stroke:var(--red);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .row .chev{margin-left:auto;width:18px;height:18px;stroke:var(--muted)}
+    .row:active{background:var(--line)}
+    .row.danger{color:var(--red)}
   </style>
 </head>
 <body>
@@ -109,23 +131,23 @@
 
     <main class="box">
       <svg class="a-art" viewBox="0 0 220 170" role="img" aria-label="Sign in illustration">
-        <rect x="70" y="14" width="136" height="88" rx="10" fill="#c9f2e6"/>
-        <circle cx="138" cy="44" r="13" fill="#2bb59a"/>
-        <circle cx="138" cy="40" r="5" fill="#d8fff4"/>
-        <path d="M128 52c2-6 18-6 20 0v2h-20z" fill="#d8fff4"/>
-        <circle cx="116" cy="76" r="3.5" fill="#2bb59a"/><circle cx="128" cy="76" r="3.5" fill="#2bb59a"/>
-        <circle cx="140" cy="76" r="3.5" fill="#2bb59a"/><circle cx="152" cy="76" r="3.5" fill="#2bb59a"/>
-        <circle cx="164" cy="76" r="3.5" fill="#2bb59a"/>
-        <circle cx="82" cy="24" r="2.5" fill="#ffd166"/><circle cx="198" cy="110" r="2.5" fill="#ffd166"/>
-        <path d="M52 40c-14 6-20 30-14 52l30 4c6-22 4-46-16-56z" fill="#5b4a4a"/>
+        <rect x="70" y="14" width="136" height="88" rx="10" fill="#f1d6d6"/>
+        <circle cx="138" cy="44" r="13" fill="#bb1919"/>
+        <circle cx="138" cy="40" r="5" fill="#fff"/>
+        <path d="M128 52c2-6 18-6 20 0v2h-20z" fill="#fff"/>
+        <circle cx="116" cy="76" r="3.5" fill="#bb1919"/><circle cx="128" cy="76" r="3.5" fill="#bb1919"/>
+        <circle cx="140" cy="76" r="3.5" fill="#bb1919"/><circle cx="152" cy="76" r="3.5" fill="#bb1919"/>
+        <circle cx="164" cy="76" r="3.5" fill="#bb1919"/>
+        <circle cx="82" cy="24" r="2.5" fill="#f0b429"/><circle cx="198" cy="110" r="2.5" fill="#f0b429"/>
+        <path d="M52 40c-14 6-20 30-14 52l30 4c6-22 4-46-16-56z" fill="#6b4f4f"/>
         <circle cx="56" cy="58" r="15" fill="#f4c7a1"/>
-        <path d="M42 56c2-14 24-16 28-2-8-2-18 0-28 2z" fill="#5b4a4a"/>
-        <path d="M34 168l6-62c0-14 10-22 22-22s22 8 22 22l4 62z" fill="#ffc83d"/>
+        <path d="M42 56c2-14 24-16 28-2-8-2-18 0-28 2z" fill="#6b4f4f"/>
+        <path d="M34 168l6-62c0-14 10-22 22-22s22 8 22 22l4 62z" fill="#bb1919"/>
         <path d="M82 104l34-26" stroke="#f4c7a1" stroke-width="10" stroke-linecap="round" fill="none"/>
         <g transform="translate(170 120) rotate(35)">
-          <rect x="-8" y="-18" width="16" height="34" rx="8" fill="#ff7a59"/>
-          <circle cx="0" cy="-6" r="4" fill="#fff"/>
-          <path d="M-8 8l-8 10 8-2zM8 8l8 10-8-2z" fill="#ffc83d"/>
+          <rect x="-8" y="-18" width="16" height="34" rx="8" fill="#fff" stroke="#bb1919" stroke-width="2"/>
+          <circle cx="0" cy="-6" r="4" fill="#bb1919"/>
+          <path d="M-8 8l-8 10 8-2zM8 8l8 10-8-2z" fill="#bb1919"/>
         </g>
       </svg>
 
@@ -195,7 +217,7 @@
 
     <main class="box">
       <div class="avatar">
-        <img id="avatar-preview" alt="Your profile photo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c9c9ff'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>">
+        <img id="avatar-preview" alt="Your profile photo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23999'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>">
         <label for="file-input" class="cam" aria-label="Change profile photo">
           <svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
         </label>
