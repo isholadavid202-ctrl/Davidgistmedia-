@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Account Center | Davidgistmedia</title>
   <link rel="stylesheet" href="styles.css?v=3">
   <link rel="stylesheet" href="bbc.css?v=16">
@@ -28,7 +28,9 @@
       padding: 0;
     }
 
+    /* ===== Signed-in profile page (same as before) ===== */
     .account-container {
+      display: none;
       max-width: 520px;
       margin: 30px auto;
       padding: 0 16px;
@@ -197,40 +199,209 @@
       font-weight: 600;
     }
 
-    .auth-links {
-      margin-top: 15px;
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--text-muted);
+    /* ===== Signed-out screen: "Welcome Back" sign in and create account ===== */
+    body.auth-mode {
+      background: linear-gradient(160deg, #1b1464 0%, #2d27a8 48%, #4a3fd1 100%) fixed !important;
     }
+    #auth-screen {
+      display: none;
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+      flex-direction: column;
+      align-items: center;
+      padding: max(18px, env(safe-area-inset-top)) 22px max(28px, env(safe-area-inset-bottom));
+      color: #fff;
+      box-sizing: border-box;
+    }
+    #auth-screen *, #auth-screen *::before, #auth-screen *::after { box-sizing: border-box; }
+    #auth-screen::before, #auth-screen::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(255,255,255,.16), rgba(255,255,255,0) 70%);
+    }
+    #auth-screen::before { width: 340px; height: 340px; top: -120px; right: -120px; }
+    #auth-screen::after { width: 300px; height: 300px; bottom: -110px; left: -110px; }
 
-    .auth-links a {
-      color: var(--text-muted);
+    #auth-screen .a-top {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+    #auth-screen .a-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
       text-decoration: none;
+      font-weight: 600;
+      font-size: .95rem;
+      padding: 8px 4px;
+      min-height: 44px;
     }
+    #auth-screen .a-back svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    #auth-screen .a-brand { font-family: Georgia, "Times New Roman", serif; font-weight: 800; font-size: 1.15rem; letter-spacing: -.01em; }
+    #auth-screen .a-brand span { color: #ff6b8d; }
 
-    .auth-links .switch-link {
-      color: #ff6b7d;
-      font-weight: 700;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
+    #auth-screen .a-box { width: 100%; max-width: 420px; position: relative; z-index: 1; text-align: center; }
+    #auth-screen .a-art { width: 190px; max-width: 55%; height: auto; margin: 4px auto 0; display: block; animation: aFloat 5s ease-in-out infinite; }
+    @keyframes aFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @media (prefers-reduced-motion: reduce) { #auth-screen .a-art { animation: none; } }
 
-    .auth-links .switch-row {
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border-color);
-    }
+    #auth-screen h1 { margin: 10px 0 4px; font-size: 1.75rem; font-weight: 800; letter-spacing: -.01em; color: #fff; }
+    #auth-screen .a-sub { margin: 0 0 20px; font-size: .95rem; color: rgba(255,255,255,.78); }
 
-    .hint {
-      margin: 6px 0 0;
-      font-size: 0.78rem;
-      color: var(--text-muted);
+    #auth-screen form { text-align: left; margin: 0; }
+    #auth-screen .af { position: relative; margin: 0 0 14px; }
+    #auth-screen .af label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    #auth-screen .af .ico { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; stroke: rgba(255,255,255,.85); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+    #auth-screen .af input {
+      width: 100%;
+      height: 54px;
+      padding: 0 48px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 14px;
+      background: rgba(255,255,255,.13);
+      color: #fff;
+      font: inherit;
+      font-size: 16px;
+      margin: 0;
     }
+    #auth-screen .af input::placeholder { color: rgba(255,255,255,.72); }
+    #auth-screen .af input:focus { outline: none; border-color: #fff; background: rgba(255,255,255,.2); box-shadow: 0 0 0 3px rgba(255,255,255,.18); }
+    #auth-screen .a-eye { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; background: none; padding: 0; cursor: pointer; display: grid; place-items: center; }
+    #auth-screen .a-eye svg { width: 22px; height: 22px; stroke: rgba(255,255,255,.9); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    #auth-screen .a-forgot { text-align: right; margin: -2px 0 16px; }
+    #auth-screen .a-forgot button {
+      background: none; border: 0; color: rgba(255,255,255,.85); font: inherit; font-size: .88rem;
+      cursor: pointer; text-decoration: underline; text-underline-offset: 3px; padding: 6px 0; min-height: 36px;
+    }
+    #auth-screen .a-hint { margin: -6px 0 14px; font-size: .8rem; color: rgba(255,255,255,.72); }
+
+    #auth-screen .a-go {
+      width: 100%;
+      height: 56px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 16px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #0d0d3f, #1b1b80);
+      color: #fff;
+      font: inherit;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: .02em;
+      box-shadow: 0 10px 24px rgba(8,8,60,.45);
+      margin: 0;
+    }
+    #auth-screen .a-go:active { transform: translateY(1px); }
+    #auth-screen .a-go[disabled] { opacity: .65; cursor: default; }
+
+    #auth-screen .am { min-height: 22px; margin: 14px 0 0; text-align: center; font-size: .92rem; font-weight: 600; }
+    #auth-screen .am.err { color: #ffd1d9; }
+    #auth-screen .am.ok { color: #c8ffe2; }
+
+    #auth-screen .a-swap { margin: 18px 0 0; text-align: center; font-size: .92rem; color: rgba(255,255,255,.85); }
+    #auth-screen .a-swap button { background: none; border: 0; padding: 6px 4px; font: inherit; font-weight: 800; color: #ff3d81; cursor: pointer; min-height: 36px; }
   </style>
 </head>
 <body>
 
+  <!-- ===== Signed-out screen ===== -->
+  <div id="auth-screen">
+    <div class="a-top">
+      <a class="a-back" href="index.html" aria-label="Back to homepage">
+        <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg> Home
+      </a>
+      <div class="a-brand">David<span>gistmedia</span></div>
+    </div>
+
+    <main class="a-box">
+      <svg class="a-art" viewBox="0 0 220 170" role="img" aria-label="Sign in illustration">
+        <rect x="70" y="14" width="136" height="88" rx="10" fill="#c9f2e6"/>
+        <circle cx="138" cy="44" r="13" fill="#2bb59a"/>
+        <circle cx="138" cy="40" r="5" fill="#d8fff4"/>
+        <path d="M128 52c2-6 18-6 20 0v2h-20z" fill="#d8fff4"/>
+        <circle cx="116" cy="76" r="3.5" fill="#2bb59a"/><circle cx="128" cy="76" r="3.5" fill="#2bb59a"/>
+        <circle cx="140" cy="76" r="3.5" fill="#2bb59a"/><circle cx="152" cy="76" r="3.5" fill="#2bb59a"/>
+        <circle cx="164" cy="76" r="3.5" fill="#2bb59a"/>
+        <circle cx="82" cy="24" r="2.5" fill="#ffd166"/><circle cx="198" cy="110" r="2.5" fill="#ffd166"/>
+        <path d="M52 40c-14 6-20 30-14 52l30 4c6-22 4-46-16-56z" fill="#5b4a4a"/>
+        <circle cx="56" cy="58" r="15" fill="#f4c7a1"/>
+        <path d="M42 56c2-14 24-16 28-2-8-2-18 0-28 2z" fill="#5b4a4a"/>
+        <path d="M34 168l6-62c0-14 10-22 22-22s22 8 22 22l4 62z" fill="#ffc83d"/>
+        <path d="M82 104l34-26" stroke="#f4c7a1" stroke-width="10" stroke-linecap="round" fill="none"/>
+        <g transform="translate(170 120) rotate(35)">
+          <rect x="-8" y="-18" width="16" height="34" rx="8" fill="#ff7a59"/>
+          <circle cx="0" cy="-6" r="4" fill="#fff"/>
+          <path d="M-8 8l-8 10 8-2zM8 8l8 10-8-2z" fill="#ffc83d"/>
+        </g>
+      </svg>
+
+      <h1 id="a-title">Welcome Back <span aria-hidden="true">&#128075;</span></h1>
+      <p class="a-sub" id="a-sub">Log in to comment, like stories and manage your profile.</p>
+
+      <!-- Sign in form -->
+      <form id="auth-login-form" novalidate>
+        <div class="af">
+          <label for="login-email">Email</label>
+          <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          <input type="email" id="login-email" placeholder="Email" autocomplete="username" inputmode="email" required>
+        </div>
+        <div class="af">
+          <label for="login-password">Password</label>
+          <svg class="ico" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
+          <input type="password" id="login-password" placeholder="Password" autocomplete="current-password" required>
+          <button type="button" class="a-eye" data-eye="login-password" aria-label="Show password">
+            <svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="a-forgot"><button type="button" id="forgot-pw-link">Forgot password?</button></div>
+        <button type="submit" id="login-btn" class="a-go">Login</button>
+        <p id="auth-status" class="am" role="status" aria-live="polite"></p>
+      </form>
+
+      <!-- Create account form -->
+      <form id="auth-signup-form" style="display:none;" novalidate>
+        <div class="af">
+          <label for="signup-name">Full name</label>
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+          <input type="text" id="signup-name" placeholder="Full name" maxlength="60" autocomplete="name" required>
+        </div>
+        <div class="af">
+          <label for="signup-email">Email</label>
+          <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          <input type="email" id="signup-email" placeholder="Email" autocomplete="email" inputmode="email" required>
+        </div>
+        <div class="af">
+          <label for="signup-password">Password</label>
+          <svg class="ico" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
+          <input type="password" id="signup-password" placeholder="Password (at least 8 characters)" autocomplete="new-password" required>
+          <button type="button" class="a-eye" data-eye="signup-password" aria-label="Show password">
+            <svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="af">
+          <label for="signup-confirm">Confirm password</label>
+          <svg class="ico" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
+          <input type="password" id="signup-confirm" placeholder="Confirm password" autocomplete="new-password" required>
+        </div>
+        <button type="submit" id="signup-btn" class="a-go">Sign Up</button>
+        <p id="signup-status" class="am" role="status" aria-live="polite"></p>
+      </form>
+
+      <p class="a-swap" id="swap-to-signup">Don&rsquo;t have an account? <button type="button" id="show-signup">Sign Up</button></p>
+      <p class="a-swap" id="swap-to-login" style="display:none;">Already have an account? <button type="button" id="show-login">Login</button></p>
+    </main>
+  </div>
+
+  <!-- ===== Signed-in account page ===== -->
   <div class="account-container">
     <a href="index.html" class="nav-back"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
 
@@ -245,12 +416,11 @@
         </div>
         <div class="user-info">
           <h2 id="profile-title-name">Account Center</h2>
-          <p id="profile-email">Sign in or manage account</p>
+          <p id="profile-email">Manage your account</p>
         </div>
       </div>
 
-      <!-- Section shown when user is LOGGED IN -->
-      <div id="logged-in-section" style="display:none;">
+      <div id="logged-in-section">
         <form id="profile-form">
           <div class="form-group">
             <label for="full-name">Display Name</label>
@@ -271,101 +441,66 @@
           <button id="logout-btn" class="menu-item logout-btn" style="width:100%; border:none; text-align:left;"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
         </div>
       </div>
-
-      <!-- Section shown when user is LOGGED OUT -->
-      <div id="logged-out-section" style="display:none;">
-
-        <!-- Sign in form -->
-        <form id="auth-login-form">
-          <div class="form-group">
-            <label for="login-email">Email Address</label>
-            <input type="email" id="login-email" class="form-control" placeholder="name@example.com" autocomplete="email" required>
-          </div>
-          <div class="form-group">
-            <label for="login-password">Password</label>
-            <input type="password" id="login-password" class="form-control" placeholder="••••••••" autocomplete="current-password" required>
-          </div>
-          <button type="submit" id="login-btn" class="btn-save">Sign In</button>
-          <p id="auth-status" class="status-msg"></p>
-        </form>
-
-        <!-- Create account form -->
-        <form id="auth-signup-form" style="display:none;">
-          <div class="form-group">
-            <label for="signup-name">Full Name</label>
-            <input type="text" id="signup-name" class="form-control" placeholder="Your full name" maxlength="60" autocomplete="name" required>
-          </div>
-          <div class="form-group">
-            <label for="signup-email">Email Address</label>
-            <input type="email" id="signup-email" class="form-control" placeholder="name@example.com" autocomplete="email" required>
-          </div>
-          <div class="form-group">
-            <label for="signup-password">Password</label>
-            <input type="password" id="signup-password" class="form-control" placeholder="At least 8 characters" autocomplete="new-password" required>
-            <p class="hint">Use at least 8 characters.</p>
-          </div>
-          <div class="form-group">
-            <label for="signup-confirm">Confirm Password</label>
-            <input type="password" id="signup-confirm" class="form-control" placeholder="Type the password again" autocomplete="new-password" required>
-          </div>
-          <button type="submit" id="signup-btn" class="btn-save">Create Account</button>
-          <p id="signup-status" class="status-msg"></p>
-        </form>
-
-        <!-- Links under the sign in form -->
-        <div id="login-links" class="auth-links">
-          <a href="#" id="forgot-pw-link">Forgot Password?</a>
-          <div class="switch-row">
-            New here? <a href="#" id="show-signup" class="switch-link">Create an account</a>
-          </div>
-        </div>
-
-        <!-- Link under the create account form -->
-        <div id="signup-links" class="auth-links" style="display:none;">
-          Already have an account? <a href="#" id="show-login" class="switch-link">Sign in</a>
-        </div>
-      </div>
-
     </div>
   </div>
 
   <script>
     let selectedFile = null;
     let currentUserId = null;
+    let currentUserEmail = null;
 
-    /* Switches the logged-out card between "Sign In" and "Create Account" */
+    /* Small helper: shows a message under a form (kind is "err" or "ok") */
+    function say(el, text, kind) {
+      el.textContent = text || "";
+      el.className = "am" + (kind ? " " + kind : "");
+    }
+
+    /* Switches the signed-out screen between "Welcome Back" and "Create Account" */
     function setAuthMode(mode) {
       const creating = mode === "signup";
       document.getElementById("auth-login-form").style.display = creating ? "none" : "block";
       document.getElementById("auth-signup-form").style.display = creating ? "block" : "none";
-      document.getElementById("login-links").style.display = creating ? "none" : "block";
-      document.getElementById("signup-links").style.display = creating ? "block" : "none";
-      document.getElementById("profile-title-name").textContent = creating ? "Create Account" : "Sign In";
-      document.getElementById("profile-email").textContent = creating
-        ? "Join Davidgistmedia"
-        : "Welcome back to Davidgistmedia";
-      document.getElementById("auth-status").textContent = "";
-      document.getElementById("signup-status").textContent = "";
+      document.getElementById("swap-to-signup").style.display = creating ? "none" : "block";
+      document.getElementById("swap-to-login").style.display = creating ? "block" : "none";
+      document.getElementById("a-title").innerHTML = creating
+        ? "Create Account"
+        : 'Welcome Back <span aria-hidden="true">&#128075;</span>';
+      document.getElementById("a-sub").textContent = creating
+        ? "Join Davidgistmedia to comment and like stories."
+        : "Log in to comment, like stories and manage your profile.";
+      document.title = (creating ? "Create account" : "Sign in") + " | Davidgistmedia";
+      say(document.getElementById("auth-status"), "");
+      say(document.getElementById("signup-status"), "");
+    }
+
+    function showAuthScreen() {
+      document.body.classList.add("auth-mode");
+      document.querySelector(".account-container").style.display = "none";
+      document.getElementById("auth-screen").style.display = "flex";
+      setAuthMode(location.hash === "#signup" ? "signup" : "login");
     }
 
     async function initAccountPage() {
-      const { data: { user } } = await supabaseClient.auth.getUser();
+      let user = null;
+      try {
+        const res = await supabaseClient.auth.getUser();
+        user = res && res.data ? res.data.user : null;
+      } catch (e) {}
 
       if (!user) {
-        // User is not logged in: show login form
-        document.getElementById("logged-in-section").style.display = "none";
-        document.getElementById("logged-out-section").style.display = "block";
-        document.getElementById("upload-badge").style.display = "none";
-        setAuthMode("login");
+        // Not signed in: show the Welcome Back screen
+        showAuthScreen();
         return;
       }
 
-      // User IS logged in: show profile editing options
-      document.getElementById("logged-out-section").style.display = "none";
-      document.getElementById("logged-in-section").style.display = "block";
-      document.getElementById("upload-badge").style.display = "flex";
+      // Signed in: show the profile page
+      document.body.classList.remove("auth-mode");
+      document.getElementById("auth-screen").style.display = "none";
+      document.querySelector(".account-container").style.display = "block";
+      document.title = "Account Center | Davidgistmedia";
 
       currentUserId = user.id;
+      currentUserEmail = user.email;
       document.getElementById("profile-email").textContent = user.email;
 
       const { data } = await supabaseClient
@@ -386,14 +521,18 @@
       }
     }
 
-    // Switch between Sign In and Create Account
-    document.getElementById("show-signup").addEventListener("click", (e) => {
-      e.preventDefault();
-      setAuthMode("signup");
-    });
-    document.getElementById("show-login").addEventListener("click", (e) => {
-      e.preventDefault();
-      setAuthMode("login");
+    // Switch between Login and Sign Up
+    document.getElementById("show-signup").addEventListener("click", () => setAuthMode("signup"));
+    document.getElementById("show-login").addEventListener("click", () => setAuthMode("login"));
+
+    // Show / hide password
+    document.querySelectorAll(".a-eye").forEach((b) => {
+      b.addEventListener("click", () => {
+        const input = document.getElementById(b.getAttribute("data-eye"));
+        const show = input.type === "password";
+        input.type = show ? "text" : "password";
+        b.setAttribute("aria-label", show ? "Hide password" : "Show password");
+      });
     });
 
     // Login Form Event Handler
@@ -404,19 +543,18 @@
       const status = document.getElementById("auth-status");
       const btn = document.getElementById("login-btn");
 
+      if (!email || !password) { say(status, "Please enter your email and password.", "err"); return; }
+
       btn.disabled = true;
-      status.textContent = "Signing in...";
-      status.style.color = "#aaa";
+      say(status, "Signing in...");
 
       const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
       btn.disabled = false;
       if (error) {
-        status.textContent = error.message;
-        status.style.color = "#ff4d4d";
+        say(status, /invalid login/i.test(error.message || "") ? "Wrong email or password." : error.message, "err");
       } else {
-        status.textContent = "Success! Reloading...";
-        status.style.color = "#4edf72";
+        say(status, "Success! Opening your account...", "ok");
         window.location.reload();
       }
     });
@@ -431,18 +569,15 @@
       const status = document.getElementById("signup-status");
       const btn = document.getElementById("signup-btn");
 
-      function fail(text) {
-        status.textContent = text;
-        status.style.color = "#ff4d4d";
-      }
+      function fail(text) { say(status, text, "err"); }
 
       if (!fullName) { fail("Please enter your full name."); return; }
+      if (!email) { fail("Please enter your email."); return; }
       if (password.length < 8) { fail("Your password must be at least 8 characters."); return; }
       if (password !== confirm) { fail("The two passwords don't match."); return; }
 
       btn.disabled = true;
-      status.textContent = "Creating your account...";
-      status.style.color = "#aaa";
+      say(status, "Creating your account...");
 
       const { data, error } = await supabaseClient.auth.signUp({
         email,
@@ -457,7 +592,7 @@
 
       if (error) {
         if (/already registered|already exists/i.test(error.message || "")) {
-          fail("An account with this email already exists. Please sign in.");
+          fail("An account with this email already exists. Please log in.");
         } else if (/rate limit|too many/i.test(error.message || "") || error.status === 429) {
           fail("Too many attempts. Please wait a little while and try again.");
         } else {
@@ -468,21 +603,19 @@
 
       // Supabase returns an empty identities list when the email is already registered
       if (data && data.user && data.user.identities && data.user.identities.length === 0) {
-        fail("An account with this email already exists. Please sign in.");
+        fail("An account with this email already exists. Please log in.");
         return;
       }
 
       if (data && data.session) {
         // Signed in straight away (email confirmation is switched off)
-        status.textContent = "Account created! Taking you in...";
-        status.style.color = "#4edf72";
+        say(status, "Account created! Taking you in...", "ok");
         window.location.reload();
         return;
       }
 
       // Email confirmation is switched on: the reader must confirm first
-      status.textContent = "Account created! We sent a confirmation link to " + email + ". Open it, then come back and sign in.";
-      status.style.color = "#4edf72";
+      say(status, "Account created! We sent a confirmation link to " + email + ". Open it, then come back and log in.", "ok");
       document.getElementById("auth-signup-form").reset();
     });
 
@@ -527,7 +660,7 @@
             .storage
             .from('avatars')
             .getPublicUrl(filePath);
-            
+
           avatarUrl = publicUrlData.publicUrl;
         }
       }
@@ -555,16 +688,27 @@
       }
     });
 
-    // Reset Password Handler
-    document.getElementById("forgot-pw-link").addEventListener("click", async (e) => {
+    // Forgot password (signed-out screen): uses the email typed above
+    document.getElementById("forgot-pw-link").addEventListener("click", async () => {
+      const status = document.getElementById("auth-status");
+      const email = document.getElementById("login-email").value.trim();
+      if (!email) { say(status, "Type your email above first, then tap Forgot password.", "err"); return; }
+      say(status, "Sending...");
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/profile.html'
+      });
+      if (error) say(status, error.message, "err");
+      else say(status, "Check your email for a link to reset your password.", "ok");
+    });
+
+    // Change / Reset password (signed-in page): sends the reset link to your account email
+    document.getElementById("reset-pw-btn").addEventListener("click", async (e) => {
       e.preventDefault();
-      const email = prompt("Please enter your email to reset your password:");
-      if (email) {
-        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin + '/profile.html'
-        });
-        alert(error ? error.message : "Password reset email sent!");
-      }
+      if (!currentUserEmail) return;
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(currentUserEmail, {
+        redirectTo: window.location.origin + '/profile.html'
+      });
+      alert(error ? error.message : "Password reset email sent to " + currentUserEmail + ".");
     });
 
     // Log Out Handler
