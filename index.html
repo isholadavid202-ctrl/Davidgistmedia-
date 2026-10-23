@@ -33,7 +33,7 @@
   <link rel="stylesheet" href="bbc.css?v=16">
   <link rel="stylesheet" href="cnn-style.css?v=17">
   <link rel="stylesheet" href="comfort.css?v=1">
-  <link rel="stylesheet" href="desktop.css?v=3" media="(min-width: 1024px)">
+  <link rel="stylesheet" href="desktop.css?v=4" media="(min-width: 900px)">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -367,8 +367,12 @@
       var theme = document.getElementById("theme-toggle-btn");
       var link = document.getElementById("top-account-link");
       var utilWrap = document.querySelector(".util-bar .wrap");
-      var mq = window.matchMedia("(min-width: 1024px)");
-      var KEEP = 8; /* how many tabs stay in the row; the rest go under "More" */
+      var mq = window.matchMedia("(min-width: 900px)");
+      /* how many tabs stay in the row; the rest go under "More" */
+      function keepCount() {
+        var w = window.innerWidth;
+        return w >= 1280 ? 8 : (w >= 1100 ? 5 : 4);
+      }
 
       var all = [].slice.call(t.children);
       var more = document.createElement("div");
@@ -381,7 +385,7 @@
       function layout() {
         var desk = mq.matches;
         all.forEach(function (el, i) {
-          if (desk && i >= KEEP) panel.appendChild(el);
+          if (desk && i >= keepCount()) panel.appendChild(el);
           else t.insertBefore(el, more);
         });
         if (desk) {
@@ -409,6 +413,10 @@
       });
 
       layout();
+      var lastW = window.innerWidth;
+      window.addEventListener("resize", function () {
+        if (window.innerWidth !== lastW) { lastW = window.innerWidth; layout(); }
+      });
       if (mq.addEventListener) mq.addEventListener("change", layout);
       else if (mq.addListener) mq.addListener(layout);
     })();
@@ -454,7 +462,7 @@
   <script src="js/live-banner.js?v=1"></script>
   <script src="js/home.js?v=10"></script>
   <script src="js/category-view.js?v=2"></script>
-  <script src="js/desktop-home.js?v=2"></script>
+  <script src="js/desktop-home.js?v=3"></script>
   <script src="js/live-audio-home.js?v=2"></script>
   <script src="js/podcast-home.js"></script>
   <script src="js/video-home.js?v=1"></script>
