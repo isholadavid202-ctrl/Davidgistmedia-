@@ -1,4 +1,4 @@
-/* DESKTOP LAYOUT: screens 1024px wide and bigger, modelled on CNN's homepage.
+/* DESKTOP LAYOUT: screens 900px wide and bigger, modelled on CNN's homepage.
    Loads after cnn-style.css and comfort.css, and only on computer-sized screens. */
 
 /* ===== White background, like CNN ===== */
@@ -58,7 +58,8 @@ html:not([data-theme="dark"]) body { background-color: #fff !important; }
 }
 .topbar #tabs > button:hover,
 .topbar #tabs > a:hover { color: var(--ink); }
-.topbar #tabs > button.active { color: var(--ink); font-weight: 700; border-bottom-color: var(--red); }
+.topbar #tabs > button.active,
+.topbar #tabs > a.active { color: var(--ink); font-weight: 700; border-bottom-color: var(--red); }
 
 /* "More" dropdown */
 #tabs .tabs-more { display: block; position: relative; }
@@ -284,3 +285,18 @@ html:not([data-theme="dark"]) body { background-color: #fff !important; }
   color: var(--muted);
 }
 .d-ad .d-adbox { position: relative; overflow: hidden; margin: 0 auto; max-width: 100%; }
+
+/* ===== Narrower computer screens (900px to 1199px) ===== */
+@media (max-width: 1199px) {
+  .wrap { padding-left: 16px; padding-right: 16px; }
+  .masthead .topbar { gap: 12px; }
+  .topbar .brand-title { font-size: 1.5rem !important; }
+  .topbar #tabs > button,
+  .topbar #tabs > a,
+  #tabs .more-btn { padding: 0 8px; font-size: .85rem; }
+  .top-extra { padding: 8px 6px; font-size: .85rem; }
+  .acct .top-account-link { padding: 8px 10px; }
+  #topic-strip.topic-strip { padding-left: 16px; padding-right: 16px; }
+  .d-top, .d-band { column-gap: 20px; }
+  .d-lead h1 { font-size: 1.8rem; }
+}
