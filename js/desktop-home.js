@@ -1,7 +1,8 @@
 /* CNN-style computer layout. Load AFTER category-view.js.
-   v2: adds advertisement slots in the open spaces of the layout. */
+   Computers: top row gets Watch, Listen, search and Sign in; the home page is drawn like CNN's.
+   v3: starts at 900px and has advertisement slots in the open spaces. */
 (function () {
-  var mq = window.matchMedia("(min-width: 1024px)");
+  var mq = window.matchMedia("(min-width: 900px)");
   var baseHero = renderHero, baseTrending = renderTrending, baseSections = renderCategorySections;
 
   /* ===== ADVERTISEMENT SLOTS =====
@@ -9,11 +10,11 @@
      Later you can paste a separate key for each slot. Set key to "" to turn a slot off. */
   var KEY = "1de90f316aa8dede9349d9abffc48ea9";
   var ADS = {
-    l1: { key: KEY, w: 300, h: 250 },
-    l2: { key: KEY, w: 300, h: 250 },
-    r1: { key: KEY, w: 300, h: 250 },
-    r2: { key: KEY, w: 300, h: 250 },
-    b3: { key: KEY, w: 300, h: 250 }
+    l1: { key: KEY, w: 300, h: 250 },   /* left column, under the picture story */
+    l2: { key: KEY, w: 300, h: 250 },   /* left column, bottom                  */
+    r1: { key: KEY, w: 300, h: 250 },   /* right column, under the first story  */
+    r2: { key: KEY, w: 300, h: 250 },   /* right column, bottom                 */
+    b3: { key: KEY, w: 300, h: 250 }    /* third column of the lower band, top  */
   };
   var lastHtml = "";
 
@@ -91,6 +92,7 @@
   function vid(a) { return /^https:\/\//i.test(String(a.video_url || "")) ? '<span class="d-vid"></span>' : ""; }
   function img(a) { return a.image_url ? '<img src="' + esc(a.image_url) + '" alt="" loading="lazy" decoding="async">' : ""; }
 
+  /* Bold label above a headline: Breaking News / Live Updates (red) or Analysis, from the story's tags */
   function labelText(a) {
     var t = tagList(a);
     if (t.indexOf("breaking") > -1) return ["Breaking News", true];
@@ -103,6 +105,7 @@
     return l ? '<span class="d-lab' + (l[1] ? " red" : "") + '">' + l[0] + "</span>" : "";
   }
 
+  /* Story pieces */
   function tText(a, cls) {
     return '<a class="d-item ' + (cls || "") + '" href="' + href(a) + '">' + label(a) + "<h3>" + esc(a.title) + "</h3>" +
       (!cls && a.excerpt ? "<p>" + esc(a.excerpt) + "</p>" : "") + vid(a) + "</a>";
@@ -150,12 +153,14 @@
       return k[0] || null;
     }
 
+    /* Top section: three columns */
     var L = take(3);
     var C = take(2);
     var cat1 = topCat();
     var S = cat1 ? take(3, cat1) : [];
     var R1 = take(1)[0], R2 = take(1)[0], R3 = take(4);
 
+    /* LEFT: story, picture story, AD, story, AD */
     var left = '<div class="d-left">' + L.map(function (a, i) {
       return (i === 1 ? tImg(a) + adSlot("l1") : tText(a));
     }).join("") + adSlot("l2") + "</div>";
@@ -164,9 +169,11 @@
       '<div class="d-two">' + C.map(function (a) { return tText(a, "sm"); }).join("") + "</div>" +
       (S.length ? '<section class="d-sec">' + head(cat1) + '<div class="d-three">' + S.map(tImg).join("") + "</div></section>" : "") + "</div>";
 
+    /* RIGHT: picture story, AD, bold story, small rows, AD */
     var right = '<div class="d-right">' + (R1 ? tImg(R1) : "") + adSlot("r1") + (R2 ? tText(R2, "bold") : "") +
       '<div class="d-rows">' + R3.map(tRow).join("") + "</div>" + adSlot("r2") + "</div>";
 
+    /* Band of three sections */
     var A1 = take(1)[0], A2 = take(3);
     var cat2 = topCat(); var B1 = cat2 ? take(1, cat2)[0] : null;
     var cat3 = topCat(); var B2 = cat3 ? take(3, cat3) : [];
@@ -175,9 +182,11 @@
     var col1 = (A1 || A2.length) ? '<section class="d-sec">' + head("More top stories") + (A1 ? tImg(A1) : "") + A2.map(function (a) { return tText(a, "sm"); }).join("") + "</section>" : "";
     var col2 = B1 ? '<section class="d-sec">' + head(cat2) + overlay(B1) +
       (B2.length ? head(cat3) + '<div class="d-three">' + B2.map(tImg).join("") + "</div>" : "") + "</section>" : "";
+    /* THIRD COLUMN: AD sits on top, like the grey box above Health */
     var col3 = D1 ? '<section class="d-sec">' + adSlot("b3") + head(cat4) + tImg(D1) + D2.map(function (a) { return tText(a, "sm"); }).join("") + "</section>" : "";
     var band = (col1 || col2 || col3) ? '<div class="d-band">' + col1 + col2 + col3 + "</div>" : "";
 
+    /* Any stories left over: one row per category */
     var more = CATEGORIES.map(function (c) {
       var g = take(3, c);
       return g.length ? '<section class="d-sec d-wide">' + head(c) + '<div class="d-three">' + g.map(tImg).join("") + "</div></section>" : "";
@@ -192,6 +201,7 @@
     document.body.classList.remove("cat-view");
     var section = document.getElementById("hero-section");
     var html = home(list);
+    /* Same content as before: keep what is on screen, so the ads are not reloaded */
     if (html === lastHtml && section.querySelector(".d-home")) return;
     lastHtml = html;
     section.innerHTML = html;
