@@ -300,3 +300,36 @@ html:not([data-theme="dark"]) body { background-color: #fff !important; }
   .d-top, .d-band { column-gap: 20px; }
   .d-lead h1 { font-size: 1.8rem; }
 }
+
+/* ===== Fixes: header spacing, Sign in and search box ===== */
+.masthead .topbar { flex-wrap: nowrap !important; }
+.masthead .topbar .icons { flex: 0 0 auto !important; }
+.masthead .topbar .acct {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  justify-content: flex-end;
+  gap: 4px;
+  white-space: nowrap;
+}
+.masthead .topbar .acct > * { flex: 0 0 auto; }
+.masthead .topbar #tabs { min-width: 0; overflow: visible; }
+.masthead .topbar #tabs > button,
+.masthead .topbar #tabs > a,
+.masthead .topbar #tabs .more-btn {
+  width: auto !important;
+  height: auto !important;
+  min-height: 62px;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.masthead .topbar .top-extra svg { width: 18px; height: 18px; }
+.masthead .topbar .acct .top-account-link {
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.masthead .search-row.is-closed,
+.masthead .tagline { display: none !important; }
