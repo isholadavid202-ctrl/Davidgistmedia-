@@ -31,8 +31,9 @@
   <title>Davidgistmedia | Home</title>
   <link rel="stylesheet" href="styles.css?v=3">
   <link rel="stylesheet" href="bbc.css?v=16">
-  <link rel="stylesheet" href="cnn-style.css?v=16">
+  <link rel="stylesheet" href="cnn-style.css?v=17">
   <link rel="stylesheet" href="comfort.css?v=1">
+  <link rel="stylesheet" href="desktop.css?v=1" media="(min-width: 1024px)">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -178,6 +179,10 @@
       .search-row.is-closed { display: flex; }
       #search-btn { display: none; }
     }
+
+    /* Hidden on phones; the computer layout (desktop.css) shows them */
+    .tabs-more { display: none; }
+    .topic-strip { display: none; }
 
     /* Top advertisement strip: full width, above the header */
     .ad-top-bar {
@@ -348,14 +353,69 @@
     </nav>
   </header>
 
-  <!-- Moves the tabs out of the header so they stay at the top while scrolling -->
+  <!-- Places the tabs and the Sign in link.
+       Phones: tabs sit under the header and stay at the top while scrolling.
+       Computers: tabs sit in the top row, with a "More" dropdown, and Sign in sits at the right. -->
   <script>
     (function () {
       var t = document.getElementById("tabs");
       var h = document.querySelector("header.masthead");
-      if (t && h) h.insertAdjacentElement("afterend", t);
+      if (!t || !h) return;
+      var bar = h.querySelector(".topbar");
+      var brand = bar.querySelector(".brand-title");
+      var acct = bar.querySelector(".acct");
+      var theme = document.getElementById("theme-toggle-btn");
+      var link = document.getElementById("top-account-link");
+      var utilWrap = document.querySelector(".util-bar .wrap");
+      var mq = window.matchMedia("(min-width: 1024px)");
+      var KEEP = 8; /* how many tabs stay in the row; the rest go under "More" */
+
+      var all = [].slice.call(t.children);
+      var more = document.createElement("div");
+      more.className = "tabs-more";
+      more.innerHTML = '<button type="button" class="more-btn" aria-expanded="false">More &#9662;</button><div class="more-panel"></div>';
+      t.appendChild(more);
+      var panel = more.querySelector(".more-panel");
+      var btn = more.querySelector(".more-btn");
+
+      function layout() {
+        var desk = mq.matches;
+        all.forEach(function (el, i) {
+          if (desk && i >= KEEP) panel.appendChild(el);
+          else t.insertBefore(el, more);
+        });
+        if (desk) {
+          brand.insertAdjacentElement("afterend", t);
+          if (link) acct.insertBefore(link, theme);
+        } else {
+          h.insertAdjacentElement("afterend", t);
+          if (link && utilWrap) utilWrap.appendChild(link);
+        }
+        more.classList.remove("open");
+        btn.setAttribute("aria-expanded", "false");
+      }
+
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var open = more.classList.toggle("open");
+        btn.setAttribute("aria-expanded", open);
+      });
+      panel.addEventListener("click", function () { more.classList.remove("open"); });
+      document.addEventListener("click", function (e) {
+        if (!more.contains(e.target)) {
+          more.classList.remove("open");
+          btn.setAttribute("aria-expanded", "false");
+        }
+      });
+
+      layout();
+      if (mq.addEventListener) mq.addEventListener("change", layout);
+      else if (mq.addListener) mq.addListener(layout);
     })();
   </script>
+
+  <!-- Latest headlines strip (computers only, filled in below) -->
+  <div class="topic-strip" id="topic-strip"></div>
 
   <main class="wrap">
     <section class="hero-section" id="hero-section"></section>
@@ -393,11 +453,33 @@
   <script src="js/supabase-client.js"></script>
   <script src="js/live-banner.js?v=1"></script>
   <script src="js/home.js?v=10"></script>
-  <script src="js/category-view.js?v=1"></script>
+  <script src="js/category-view.js?v=2"></script>
   <script src="js/live-audio-home.js?v=2"></script>
   <script src="js/podcast-home.js"></script>
   <script src="js/video-home.js?v=1"></script>
   <script src="js/install-banner.js?v=1"></script>
+
+  <!-- Fills the latest headlines strip each time the homepage is drawn -->
+  <script>
+    (function () {
+      if (typeof renderPage !== "function") return;
+      var base = renderPage;
+      function esc(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      function strip() {
+        var box = document.getElementById("topic-strip");
+        if (!box) return;
+        if (activeCategory !== "all" || !allArticles.length) { box.innerHTML = ""; return; }
+        box.innerHTML = allArticles.slice(0, 8).map(function (a) {
+          return '<a href="article.html?slug=' + encodeURIComponent(a.slug) + '">' + esc(a.title) + "</a>";
+        }).join("");
+      }
+      renderPage = function () { base(); strip(); };
+      if (allArticles.length) strip();
+    })();
+  </script>
 
   <script>
     (function () {
