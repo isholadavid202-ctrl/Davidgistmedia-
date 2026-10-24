@@ -262,7 +262,37 @@ html:not([data-theme="dark"]) body { background-color: #fff !important; }
 .d-ovl .d-leadimg img { aspect-ratio: 3 / 4; }
 .d-wide { margin-top: 20px; }
 
-/* ===== Category page: stories in three columns ===== */
+/* ===== Category page: three columns, like CNN's section pages ===== */
+.d-cathead {
+  margin: 0 0 22px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 1.7rem;
+  font-weight: 800;
+  text-transform: capitalize;
+  color: var(--ink);
+}
+.d-cat3 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1fr);
+  column-gap: 30px;
+  align-items: start;
+}
+.d-item.ct { margin: 0 0 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+.d-item.ct h3 { font-size: .98rem; font-weight: 400; line-height: 1.35; color: var(--ink); }
+.d-cat .d-left .d-item:first-child { padding-bottom: 6px; }
+.d-cat .d-mid .d-ovl { margin-bottom: 22px; }
+.d-cat .d-mid .d-ovl .d-leadimg img { aspect-ratio: 2 / 3; }
+.d-capx {
+  display: block;
+  margin-top: 6px;
+  color: #e6e6e6;
+  font-size: .85rem;
+  line-height: 1.35;
+}
+.d-cat .d-right .d-head + .d-row { border-top: 0; padding-top: 0; }
+
+/* Old category page (phones and old layout) */
 .cnn-sec { display: block; }
 .cnn-sec > .cnn-main { grid-column: auto; }
 .cnn-all {
@@ -297,7 +327,7 @@ html:not([data-theme="dark"]) body { background-color: #fff !important; }
   .top-extra { padding: 8px 6px; font-size: .85rem; }
   .acct .top-account-link { padding: 8px 10px; }
   #topic-strip.topic-strip { padding-left: 16px; padding-right: 16px; }
-  .d-top, .d-band { column-gap: 20px; }
+  .d-top, .d-band, .d-cat3 { column-gap: 20px; }
   .d-lead h1 { font-size: 1.8rem; }
 }
 
