@@ -363,3 +363,37 @@ html:not([data-theme="dark"]) body { background-color: #fff !important; }
 }
 .masthead .search-row.is-closed,
 .masthead .tagline { display: none !important; }
+
+/* ===== Remove the "text box" look from Watch, Listen, More and the tabs ===== */
+.masthead .topbar .top-extra,
+.masthead .topbar #tabs .more-btn {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  text-decoration: none;
+}
+.masthead .topbar #tabs > button,
+.masthead .topbar #tabs > a {
+  background: transparent !important;
+  border-style: solid !important;
+  border-width: 0 0 3px 0 !important;
+  border-color: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  text-decoration: none;
+}
+.masthead .topbar #tabs > button.active,
+.masthead .topbar #tabs > a.active {
+  border-bottom-color: var(--red) !important;
+}
+.masthead .topbar .top-extra:focus:not(:focus-visible),
+.masthead .topbar #tabs > button:focus:not(:focus-visible),
+.masthead .topbar #tabs > a:focus:not(:focus-visible),
+.masthead .topbar #tabs .more-btn:focus:not(:focus-visible) {
+  outline: none;
+}
