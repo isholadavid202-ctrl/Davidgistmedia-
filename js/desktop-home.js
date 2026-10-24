@@ -1,6 +1,7 @@
 /* CNN-style computer layout. Load AFTER category-view.js.
-   Computers: top row gets Watch, Listen, search and Sign in; the home page is drawn like CNN's.
-   v3: starts at 900px and has advertisement slots in the open spaces. */
+   Computers: top row gets Watch, Listen, search and Sign in;
+   the home page AND every category page are drawn like CNN's.
+   v4: category pages in three columns. */
 (function () {
   var mq = window.matchMedia("(min-width: 900px)");
   var baseHero = renderHero, baseTrending = renderTrending, baseSections = renderCategorySections;
@@ -10,11 +11,11 @@
      Later you can paste a separate key for each slot. Set key to "" to turn a slot off. */
   var KEY = "1de90f316aa8dede9349d9abffc48ea9";
   var ADS = {
-    l1: { key: KEY, w: 300, h: 250 },   /* left column, under the picture story */
-    l2: { key: KEY, w: 300, h: 250 },   /* left column, bottom                  */
-    r1: { key: KEY, w: 300, h: 250 },   /* right column, under the first story  */
-    r2: { key: KEY, w: 300, h: 250 },   /* right column, bottom                 */
-    b3: { key: KEY, w: 300, h: 250 }    /* third column of the lower band, top  */
+    l1: { key: KEY, w: 300, h: 250 },   /* home: left column, under the picture story */
+    l2: { key: KEY, w: 300, h: 250 },   /* home + category: left column, bottom       */
+    r1: { key: KEY, w: 300, h: 250 },   /* home: right column, under the first story  */
+    r2: { key: KEY, w: 300, h: 250 },   /* home + category: right column, bottom      */
+    b3: { key: KEY, w: 300, h: 250 }    /* home: third column of the lower band, top  */
   };
   var lastHtml = "";
 
@@ -130,6 +131,13 @@
     return '<a class="d-ovl" href="' + href(a) + '"><span class="d-leadimg">' + img(a) +
       '<span class="d-cap"><span class="d-bar"></span><span class="d-capt">' + esc(a.title) + "</span></span></span></a>";
   }
+  /* Category page: big photo story with the headline and a short summary on the picture */
+  function catLead(a) {
+    if (!a.image_url) return tText(a, "bold");
+    return '<a class="d-ovl" href="' + href(a) + '"><span class="d-leadimg">' + img(a) + (vid(a) ? '<span class="d-play"></span>' : "") +
+      '<span class="d-cap"><span class="d-bar"></span><span class="d-capt">' + esc(a.title) + "</span>" +
+      (a.excerpt ? '<span class="d-capx">' + esc(a.excerpt) + "</span>" : "") + "</span></span></a>";
+  }
 
   /* ===== The home page, arranged like CNN ===== */
   function home(list) {
@@ -195,12 +203,33 @@
     return '<div class="d-home"><div class="d-top">' + left + center + right + "</div>" + band + more + "</div>";
   }
 
+  /* ===== A category page, arranged like CNN's section pages ===== */
+  function catPage(list) {
+    var lead0 = list.find(function (a) { return a.featured; }) || list[0];
+    var rest = list.filter(function (a) { return a.id !== lead0.id; });
+    var n = rest.length;
+    var a = Math.ceil(n * 0.4), b = Math.ceil(n * 0.28);
+    var L = rest.slice(0, a), M = rest.slice(a, a + b), R = rest.slice(a + b);
+
+    var left = '<div class="d-left">' + L.map(function (s, i) {
+      return i === 0 ? tImg(s) : tText(s, "ct");
+    }).join("") + adSlot("l2") + "</div>";
+
+    var mid = '<div class="d-mid">' + catLead(lead0) + M.map(function (s) { return tText(s, "ct"); }).join("") + "</div>";
+
+    var right = '<div class="d-right">' + (R.length ? head("Latest") + R.map(tRow).join("") : "") + adSlot("r2") + "</div>";
+
+    return '<div class="d-home d-cat"><h1 class="d-cathead">' + esc(activeCategory) + '</h1><div class="d-cat3">' +
+      left + mid + right + "</div></div>";
+  }
+
   /* ===== Switch between the computer layout and the phone layout ===== */
   renderHero = function (list) {
-    if (!mq.matches || activeCategory !== "all" || !list.length) { lastHtml = ""; baseHero(list); return; }
-    document.body.classList.remove("cat-view");
+    if (!mq.matches || !list.length) { lastHtml = ""; baseHero(list); return; }
+    var isHome = activeCategory === "all";
+    document.body.classList.toggle("cat-view", !isHome);
     var section = document.getElementById("hero-section");
-    var html = home(list);
+    var html = isHome ? home(list) : catPage(list);
     /* Same content as before: keep what is on screen, so the ads are not reloaded */
     if (html === lastHtml && section.querySelector(".d-home")) return;
     lastHtml = html;
@@ -208,7 +237,7 @@
     mountAds(section);
   };
   renderTrending = function () {
-    if (mq.matches && activeCategory === "all") {
+    if (mq.matches) {
       var t = document.getElementById("trending-section");
       if (t) t.innerHTML = "";
       return;
@@ -216,7 +245,7 @@
     baseTrending();
   };
   renderCategorySections = function (list) {
-    if (mq.matches && activeCategory === "all" && list.length) {
+    if (mq.matches && list.length) {
       document.getElementById("category-sections").innerHTML = "";
       return;
     }
@@ -225,6 +254,7 @@
 
   function onChange() {
     header();
+    lastHtml = "";
     if (typeof renderPage === "function" && allArticles.length) renderPage();
   }
   header();
