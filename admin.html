@@ -71,6 +71,9 @@
           <!-- Pictures and video are added here by js/media-upload.js -->
           <div id="media-box"></div>
 
+          <label for="image-caption">Photo caption (shown on a blue bar under the main picture, optional)</label>
+          <input id="image-caption" maxlength="120" placeholder="e.g. Ladbone Bonuola">
+
           <label for="tags">Tags (comma-separated, optional)</label>
           <input id="tags" placeholder="e.g. music, tour, celebrity">
           <label for="excerpt">Excerpt (short summary shown on the homepage)</label>
@@ -159,6 +162,61 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
+
+  <!-- Photo caption: adds the caption to the story when it is published or edited -->
+  <script>
+    (function () {
+      var sb = typeof supabaseClient !== "undefined" ? supabaseClient : null;
+      var cap = document.getElementById("image-caption");
+      if (!sb || !cap) return;
+
+      function withCaption(v) {
+        function one(row) {
+          if (row && typeof row === "object" && "title" in row) {
+            var copy = Object.assign({}, row);
+            copy.image_caption = cap.value.trim() || null;
+            return copy;
+          }
+          return row;
+        }
+        return Array.isArray(v) ? v.map(one) : one(v);
+      }
+
+      var origFrom = sb.from.bind(sb);
+      sb.from = function (table) {
+        var q = origFrom(table);
+        if (table !== "articles") return q;
+        var oi = q.insert.bind(q), ou = q.update.bind(q);
+        q.insert = function (v, o) { return oi(withCaption(v), o); };
+        q.update = function (v, o) { return ou(withCaption(v), o); };
+        return q;
+      };
+
+      /* When a story is opened for editing, fill the caption box with its saved caption */
+      var lastId = "";
+      setInterval(async function () {
+        var idEl = document.getElementById("article-id");
+        if (!idEl) return;
+        var id = idEl.value || "";
+        if (id === lastId) return;
+        lastId = id;
+        if (!id) { cap.value = ""; return; }
+        try {
+          var r = await origFrom("articles").select("image_caption").eq("id", id).maybeSingle();
+          if (r && r.data) cap.value = r.data.image_caption || "";
+        } catch (e) {}
+      }, 600);
+
+      /* After publishing a new story, clear the caption box */
+      var form = document.getElementById("article-form");
+      if (form) form.addEventListener("submit", function () {
+        setTimeout(function () {
+          if (!document.getElementById("title").value.trim()) cap.value = "";
+        }, 2500);
+      });
+    })();
+  </script>
+
   <script src="js/media-upload.js?v=1"></script>
   <script src="js/admin.js?v=2"></script>
 
