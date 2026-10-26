@@ -22,7 +22,13 @@ var escapeHtml = window.escapeHtml || function (str) {
     ".comment-as a{text-decoration:underline;text-underline-offset:3px}" +
     ".story-photo{margin:22px 0}" +
     ".story-photo img{display:block;width:100%;height:auto;border-radius:8px}" +
-    ".story-video{display:block;width:100%;border-radius:8px;background:#000;margin:0 0 20px}";
+    ".story-video{display:block;width:100%;border-radius:8px;background:#000;margin:0 0 20px}" +
+    /* Main story picture with the blue caption bar under it */
+    ".hero-fig{margin:0 0 20px}" +
+    ".hero-fig .hero-img{display:block;width:100%;margin:0 !important}" +
+    ".hero-fig.has-cap .hero-img{border-bottom-left-radius:0 !important;border-bottom-right-radius:0 !important}" +
+    ".photo-cap{display:block;box-sizing:border-box;margin:0;padding:14px 20px;background:#00aeef;color:#fff;font-size:1.05rem;font-weight:700;line-height:1.3;border-radius:0 0 8px 8px}" +
+    "@media(max-width:520px){.photo-cap{padding:12px 16px;font-size:1rem}}";
   document.head.appendChild(st);
 })();
 
@@ -172,6 +178,15 @@ function bodyWithPictures(paragraphs, pictures) {
   });
   while (next < pictures.length) out.push(figureHtml(pictures[next++]));
   return out.join("");
+}
+
+/* The main story picture, with a blue caption bar under it when the story has a caption */
+function heroHtml(data) {
+  const cap = String(data.image_caption || "").trim();
+  return `<figure class="hero-fig${cap ? " has-cap" : ""}">` +
+    `<img class="hero-img" src="${escapeHtml(data.image_url)}" alt="${escapeHtml(cap)}">` +
+    (cap ? `<figcaption class="photo-cap">${escapeHtml(cap)}</figcaption>` : "") +
+    `</figure>`;
 }
 
 /* ---- Share row: Facebook, X, email, Telegram, WhatsApp ---- */
@@ -339,7 +354,7 @@ async function loadArticle() {
     </div>
     ${videoBlock
       ? videoBlock
-      : (data.image_url ? `<img class="hero-img" src="${escapeHtml(data.image_url)}" alt="">` : "")}
+      : (data.image_url ? heroHtml(data) : "")}
     ${shareRowHtml(data)}
     <div class="article-body">${paragraphs}</div>
     <div id="related-section"></div>
