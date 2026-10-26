@@ -23,12 +23,13 @@ var escapeHtml = window.escapeHtml || function (str) {
     ".story-photo{margin:22px 0}" +
     ".story-photo img{display:block;width:100%;height:auto;border-radius:8px}" +
     ".story-video{display:block;width:100%;border-radius:8px;background:#000;margin:0 0 20px}" +
-    /* Main story picture with the red caption bar under it */
-    ".hero-fig{margin:0 0 20px}" +
-    ".hero-fig .hero-img{display:block;width:100%;margin:0 !important}" +
-    ".hero-fig.has-cap .hero-img{border-bottom-left-radius:0 !important;border-bottom-right-radius:0 !important}" +
-    ".photo-cap{display:block;box-sizing:border-box;margin:0;padding:14px 20px;background:var(--red,#bb1919);color:#fff;font-size:1.05rem;font-weight:700;line-height:1.3;border-radius:0 0 8px 8px}" +
-    "@media(max-width:520px){.photo-cap{padding:12px 16px;font-size:1rem}}";
+    /* Main story picture with a clean caption under it */
+    ".hero-fig{margin:0 0 22px}" +
+    ".hero-fig .hero-img{display:block;width:100% !important;height:auto !important;max-height:none !important;aspect-ratio:auto !important;object-fit:cover !important;background:transparent !important;margin:0 !important;border-radius:8px}" +
+    ".photo-cap{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;margin:12px 0 0;padding:2px 0 2px 12px;border-left:3px solid var(--red,#bb1919);font-size:.9rem;line-height:1.45;color:var(--ink)}" +
+    ".photo-cap .cap-label{font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--red,#bb1919)}" +
+    ".photo-cap .cap-text{font-weight:500}" +
+    "@media(max-width:520px){.photo-cap{font-size:.86rem;margin-top:10px}}";
   document.head.appendChild(st);
 })();
 
@@ -180,12 +181,20 @@ function bodyWithPictures(paragraphs, pictures) {
   return out.join("");
 }
 
-/* The main story picture, with a red caption bar under it when the story has a caption */
+/* The main story picture, with a clean caption under it when the story has one.
+   A caption such as "Source: The Guardian" shows "SOURCE" as a small red label. */
 function heroHtml(data) {
   const cap = String(data.image_caption || "").trim();
-  return `<figure class="hero-fig${cap ? " has-cap" : ""}">` +
+  let capHtml = "";
+  if (cap) {
+    const m = cap.match(/^(source|photo|photos|credit|image|picture|courtesy|via)\s*:\s*(.+)$/i);
+    capHtml = m
+      ? `<span class="cap-label">${escapeHtml(m[1])}</span><span class="cap-text">${escapeHtml(m[2])}</span>`
+      : `<span class="cap-text">${escapeHtml(cap)}</span>`;
+  }
+  return `<figure class="hero-fig">` +
     `<img class="hero-img" src="${escapeHtml(data.image_url)}" alt="${escapeHtml(cap)}">` +
-    (cap ? `<figcaption class="photo-cap">${escapeHtml(cap)}</figcaption>` : "") +
+    (cap ? `<figcaption class="photo-cap">${capHtml}</figcaption>` : "") +
     `</figure>`;
 }
 
