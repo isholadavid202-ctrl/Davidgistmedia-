@@ -290,6 +290,68 @@
       .wa-box { margin: 24px 0; padding: 18px; }
       .wa-btn { width: 100%; }
     }
+
+    /* ===== Telegram Channel box ===== */
+    .tg-box {
+      box-sizing: border-box;
+      max-width: 720px;
+      margin: 32px auto;
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      background: var(--paper, #ffffff);
+      border: 1px solid var(--line, #e2e2e4);
+      border-left: 5px solid #229ed9;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .tg-icon {
+      flex: 0 0 52px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #229ed9;
+      display: grid;
+      place-items: center;
+    }
+    .tg-icon svg { width: 30px; height: 30px; fill: #ffffff; stroke: none; }
+    .tg-text { flex: 1 1 220px; min-width: 0; }
+    .tg-text h3 {
+      margin: 0 0 4px;
+      font-size: 1.15rem;
+      line-height: 1.25;
+      font-weight: 800;
+      color: var(--ink, #111111);
+    }
+    .tg-text p {
+      margin: 0;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      color: var(--muted, #666666);
+    }
+    .tg-btn {
+      box-sizing: border-box;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      background: #1c7fb5;
+      color: #ffffff !important;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none !important;
+      border-radius: 999px;
+      transition: background 0.2s;
+    }
+    .tg-btn:hover { background: #2391cc; }
+    @media (max-width: 520px) {
+      .tg-box { margin: 24px 0; padding: 18px; }
+      .tg-btn { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -380,7 +442,7 @@
     <div class="empty-state">Loading story…</div>
   </main>
 
-  <!-- ===== WhatsApp Channel box (under the story) ===== -->
+  <!-- ===== WhatsApp Channel box + Telegram Channel box (under the story) ===== -->
   <div class="wrap">
     <div class="wa-box">
       <div class="wa-icon" aria-hidden="true">
@@ -391,6 +453,20 @@
         <p>Get breaking news, entertainment and Nigeria updates from Davidgistmedia straight to your phone.</p>
       </div>
       <a class="wa-btn" href="https://whatsapp.com/channel/0029Vb8oG8j84OmHMlgJfw20" target="_blank" rel="noopener noreferrer">
+        Join Channel
+      </a>
+    </div>
+
+    <!-- ===== Telegram Channel box ===== -->
+    <div class="tg-box">
+      <div class="tg-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </div>
+      <div class="tg-text">
+        <h3>Join Our Telegram Channel</h3>
+        <p>Get breaking news, entertainment and Nigeria updates from Davidgistmedia straight to your phone.</p>
+      </div>
+      <a class="tg-btn" href="https://t.me/davidgistmediaent" target="_blank" rel="noopener noreferrer">
         Join Channel
       </a>
     </div>
