@@ -243,7 +243,7 @@
   </style>
 
   <!-- NEW 1 of 3: homepage feed styles. Only affects .dg-feed.
-       Top story = big card. Trending = big pictures. Other stories = rows,
+       Top story = swipeable big card. Trending = big pictures. Other stories = rows,
        with a big picture every 5th story. -->
   <style>
     .dg-feed { padding: 20px 0 0; }
@@ -284,18 +284,20 @@
       left: 0; right: 0; bottom: 0;
       z-index: 2;
       padding: 26px 24px 28px;
+      pointer-events: none;
     }
     .dg-card__badge {
       display: inline-block;
       background: #c8102e;
       color: #fff;
       font-weight: 800;
-      font-size: 16px;
-      letter-spacing: 1px;
+      font-size: 12px;
+      line-height: 1.2;
+      letter-spacing: .8px;
       text-transform: uppercase;
-      padding: 8px 18px;
-      border-radius: 6px;
-      margin-bottom: 18px;
+      padding: 7px 14px;
+      border-radius: 5px;
+      margin-bottom: 14px;
     }
     .dg-card__title {
       margin: 0 0 20px;
@@ -322,6 +324,7 @@
       color: #fff;
       font-size: 14px;
       font-weight: 700;
+      pointer-events: none;
     }
     .dg-card__count svg {
       width: 16px;
@@ -331,6 +334,27 @@
       stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
+    }
+
+    /* swipeable pictures inside the top card */
+    .dg-slides {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .dg-slides::-webkit-scrollbar { display: none; }
+    .dg-slides img {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      scroll-snap-align: start;
     }
 
     /* ---------- Section heading (Trending) ---------- */
@@ -703,7 +727,8 @@
   </script>
 
   <!-- NEW 3 of 3: draws the feed using your own home.js functions.
-       Top story = big card. Trending = most liked stories as big pictures.
+       Top story = big card you can swipe through its pictures.
+       Trending = most liked stories as big pictures.
        Then every other story: rows, with a big picture every 5th story. No comments. -->
   <script>
     (function () {
@@ -719,20 +744,41 @@
         return 'href="article.html?slug=' + encodeURIComponent(a.slug) + '"';
       }
 
-      /* the very first story: big card with text on the picture */
+      /* the very first story: big card with text on the picture.
+         With more than one picture, they can be swiped left and right. */
       function leadCard(a) {
         var pics = leadPictures(a);
-        var count = pics.length > 1
-          ? '<div class="dg-card__count" aria-hidden="true">' + camera + "1/" + pics.length + "</div>"
-          : "";
-        return '<a class="dg-card" ' + link(a) + ">" +
-          (a.image_url ? '<img class="dg-card__img" src="' + escapeHtml(getOptimizedImage(a.image_url, 800)) + '" alt="" fetchpriority="high">' : "") +
-          count +
+        var multi = pics.length > 1;
+        var media;
+        if (multi) {
+          media = '<div class="dg-slides">' + pics.map(function (u, i) {
+            return '<img src="' + escapeHtml(getOptimizedImage(u, 800)) + '" alt="" draggable="false" ' +
+                   (i === 0 ? 'fetchpriority="high"' : 'loading="lazy"') + ">";
+          }).join("") + "</div>" +
+          '<div class="dg-card__count" aria-hidden="true">' + camera + "<span>1</span>/" + pics.length + "</div>";
+        } else {
+          media = a.image_url
+            ? '<img class="dg-card__img" src="' + escapeHtml(getOptimizedImage(a.image_url, 800)) + '" alt="" fetchpriority="high">'
+            : "";
+        }
+        return '<a class="dg-card" ' + link(a) + ">" + media +
           '<div class="dg-card__content">' +
             '<span class="dg-card__badge">' + escapeHtml(a.category) + "</span>" +
             '<h2 class="dg-card__title">' + escapeHtml(a.title) + "</h2>" +
             '<div class="dg-card__meta">' + authorHtml(a.author) + " · " + formatWhen(a.published_at) + "</div>" +
           "</div></a>";
+      }
+
+      /* updates the "1/2" number while swiping */
+      function wireSlides(box) {
+        box.querySelectorAll(".dg-slides").forEach(function (slides) {
+          var counter = slides.parentElement.querySelector(".dg-card__count span");
+          if (!counter) return;
+          slides.addEventListener("scroll", function () {
+            var w = slides.clientWidth || 1;
+            counter.textContent = String(Math.round(slides.scrollLeft / w) + 1);
+          }, { passive: true });
+        });
       }
 
       /* big picture story: full-width picture, headline below */
@@ -794,6 +840,7 @@
         }
 
         box.innerHTML = html;
+        wireSlides(box);
         document.body.classList.add("dg-on");
       }
 
