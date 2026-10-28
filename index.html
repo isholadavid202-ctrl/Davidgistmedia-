@@ -242,15 +242,12 @@
     }
   </style>
 
-  <!-- NEW 1 of 3: homepage article cards (big image, rounded corners, red badge,
-       white title, author and date, dark gradient). Only affects .dg-feed. -->
+  <!-- NEW 1 of 3: homepage feed styles. Only affects .dg-feed.
+       Top story = big image card. Every other story = row with thumbnail on the left. -->
   <style>
-    .dg-feed {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      padding: 20px 0;
-    }
+    .dg-feed { padding: 20px 0 0; }
+
+    /* ---------- Top story: big card ---------- */
     .dg-card {
       position: relative;
       display: block;
@@ -311,23 +308,93 @@
       font-size: 15px;
       color: rgba(255,255,255,.8);
     }
-    /* comments never show on homepage cards */
+    .dg-card__count {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(15,23,42,.8);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .dg-card__count svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ---------- Other stories: thumbnail left, headline right ---------- */
+    .dg-list { margin-top: 8px; }
+    .dg-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line, #e2e2e4);
+      text-decoration: none;
+    }
+    .dg-row__img,
+    .dg-row__ph {
+      flex: 0 0 36%;
+      width: 36%;
+      aspect-ratio: 4 / 3;
+      border-radius: 6px;
+      object-fit: cover;
+      background: var(--line, #e2e2e4);
+    }
+    .dg-row__body { flex: 1; min-width: 0; }
+    .dg-row__title {
+      margin: 0 0 10px;
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: var(--ink, #111);
+    }
+    .dg-row__tag {
+      display: inline-block;
+      background: #c8102e;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 3px;
+      margin-right: 6px;
+      vertical-align: 2px;
+    }
+    .dg-row__meta {
+      font-size: 13px;
+      color: var(--muted, #6b6b6b);
+    }
+
+    /* comments never show on homepage stories */
     .dg-feed [class*="comment"] { display: none !important; }
 
     /* when the new feed is on, hide the old story lists (not the header or menu) */
     body.dg-on #hero-section,
     body.dg-on #category-sections { display: none !important; }
 
-    /* computers: cards sit in a grid instead of one long column */
+    /* computers */
     @media (min-width: 900px) {
-      .dg-feed {
+      .dg-card { aspect-ratio: 16 / 8; }
+      .dg-card__title { font-size: 34px; max-width: 760px; }
+      .dg-list {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 32px;
       }
-      .dg-card { aspect-ratio: 4 / 5; }
-      .dg-card__title { font-size: 24px; }
-      .dg-card__badge { font-size: 13px; padding: 6px 14px; }
+      .dg-row__title { font-size: 18px; }
     }
   </style>
 </head>
@@ -517,7 +584,7 @@
   <main class="wrap">
     <section class="hero-section" id="hero-section"></section>
 
-    <!-- NEW 2 of 3: the new card feed goes here -->
+    <!-- NEW 2 of 3: the new feed goes here (big top story, then rows) -->
     <div class="dg-feed" id="dg-feed"></div>
 
     <div id="live-banner"></div>
@@ -582,21 +649,42 @@
     })();
   </script>
 
-  <!-- NEW 3 of 3: draws the article cards using your own home.js functions -->
+  <!-- NEW 3 of 3: draws the feed using your own home.js functions.
+       First story = big card. All other stories = thumbnail left, headline right. No comments. -->
   <script>
     (function () {
       if (typeof renderPage !== "function") return;
       var base = renderPage;
 
-      /* small camera pill (like "1/2" in your screenshot) for stories with more than one picture */
-      var st = document.createElement("style");
-      st.textContent =
-        ".dg-card__count{position:absolute;top:14px;right:14px;z-index:2;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:rgba(15,23,42,.8);color:#fff;font-size:14px;font-weight:700}" +
-        ".dg-card__count svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}";
-      document.head.appendChild(st);
       var camera = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>';
 
-      function cards() {
+      function leadCard(a) {
+        var pics = leadPictures(a);
+        var count = pics.length > 1
+          ? '<div class="dg-card__count" aria-hidden="true">' + camera + "1/" + pics.length + "</div>"
+          : "";
+        return '<a class="dg-card" href="article.html?slug=' + encodeURIComponent(a.slug) + '">' +
+          (a.image_url ? '<img class="dg-card__img" src="' + escapeHtml(getOptimizedImage(a.image_url, 800)) + '" alt="" fetchpriority="high">' : "") +
+          count +
+          '<div class="dg-card__content">' +
+            '<span class="dg-card__badge">' + escapeHtml(a.category) + "</span>" +
+            '<h2 class="dg-card__title">' + escapeHtml(a.title) + "</h2>" +
+            '<div class="dg-card__meta">' + authorHtml(a.author) + " · " + formatWhen(a.published_at) + "</div>" +
+          "</div></a>";
+      }
+
+      function row(a) {
+        return '<a class="dg-row" href="article.html?slug=' + encodeURIComponent(a.slug) + '">' +
+          (a.image_url
+            ? '<img class="dg-row__img" src="' + escapeHtml(getOptimizedImage(a.image_url, 400)) + '" alt="" loading="lazy">'
+            : '<div class="dg-row__ph"></div>') +
+          '<div class="dg-row__body">' +
+            '<h3 class="dg-row__title"><span class="dg-row__tag">' + escapeHtml(a.category) + "</span>" + escapeHtml(a.title) + "</h3>" +
+            '<div class="dg-row__meta">' + authorHtml(a.author) + " · " + formatWhen(a.published_at) + "</div>" +
+          "</div></a>";
+      }
+
+      function feed() {
         var box = document.getElementById("dg-feed");
         if (!box) return;
 
@@ -607,26 +695,16 @@
           return;
         }
 
-        box.innerHTML = list.slice(0, 40).map(function (a) {
-          var pics = leadPictures(a);
-          var count = pics.length > 1
-            ? '<div class="dg-card__count" aria-hidden="true">' + camera + "1/" + pics.length + "</div>"
-            : "";
-          return '<a class="dg-card" href="article.html?slug=' + encodeURIComponent(a.slug) + '">' +
-            (a.image_url ? '<img class="dg-card__img" src="' + escapeHtml(getOptimizedImage(a.image_url, 800)) + '" alt="" loading="lazy">' : "") +
-            count +
-            '<div class="dg-card__content">' +
-              '<span class="dg-card__badge">' + escapeHtml(a.category) + "</span>" +
-              '<h2 class="dg-card__title">' + escapeHtml(a.title) + "</h2>" +
-              '<div class="dg-card__meta">' + authorHtml(a.author) + " · " + formatWhen(a.published_at) + "</div>" +
-            "</div></a>";
-        }).join("");
+        var lead = list.find(function (a) { return a.featured; }) || list[0];
+        var rest = list.filter(function (a) { return a.id !== lead.id; }).slice(0, 40);
 
+        box.innerHTML = leadCard(lead) +
+          (rest.length ? '<div class="dg-list">' + rest.map(row).join("") + "</div>" : "");
         document.body.classList.add("dg-on");
       }
 
-      renderPage = function () { base(); cards(); };
-      if (typeof allArticles !== "undefined" && allArticles.length) cards();
+      renderPage = function () { base(); feed(); };
+      if (typeof allArticles !== "undefined" && allArticles.length) feed();
     })();
   </script>
 
