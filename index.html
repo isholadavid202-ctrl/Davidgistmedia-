@@ -33,7 +33,7 @@
   <link rel="stylesheet" href="bbc.css?v=16">
   <link rel="stylesheet" href="cnn-style.css?v=17">
   <link rel="stylesheet" href="comfort.css?v=1">
-  <link rel="stylesheet" href="desktop.css?v=7" media="(min-width: 900px)">
+  <link rel="stylesheet" href="desktop.css?v=8" media="(min-width: 900px)">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -243,8 +243,9 @@
   </style>
 
   <!-- NEW 1 of 3: homepage feed styles. Only affects .dg-feed.
-       Top story = swipeable big card. Trending = big pictures. Other stories = rows,
-       with a big picture every 5th story. -->
+       Phones: top story = swipeable big card, Trending = big pictures, other stories = rows,
+       with a big picture every 5th story.
+       Computers (900px and wider): compact BBC / CNN style layout. -->
   <style>
     .dg-feed { padding: 20px 0 0; }
 
@@ -454,24 +455,97 @@
     body.dg-on #trending-section,
     body.dg-on #category-sections { display: none !important; }
 
-    /* computers */
+    /* computers and "desktop site" view only (phones are not affected):
+       compact, like BBC / CNN. Lead story on the left, Trending as a small list on the right,
+       then every other story in three tidy columns. */
     @media (min-width: 900px) {
-      .dg-card { aspect-ratio: 16 / 8; }
-      .dg-card__title { font-size: 34px; max-width: 760px; }
-      .dg-trend__grid {
+      .dg-feed {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        column-gap: 24px;
-      }
-      .dg-trend__grid .dg-big { border-bottom: 0; }
-      .dg-list {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
         column-gap: 32px;
+        align-items: start;
+        padding-top: 16px;
       }
-      .dg-list .dg-big { grid-column: 1 / -1; }
-      .dg-big__title { font-size: 26px; }
-      .dg-row__title { font-size: 18px; }
+
+      /* lead story */
+      .dg-card {
+        grid-column: 1;
+        grid-row: 1;
+        aspect-ratio: 16 / 10;
+        border-radius: 12px;
+      }
+      .dg-card__content { padding: 20px 22px 22px; }
+      .dg-card__badge {
+        font-size: 11px;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+      }
+      .dg-card__title {
+        font-size: 26px;
+        line-height: 1.2;
+        margin-bottom: 12px;
+        max-width: none;
+      }
+      .dg-card__meta { font-size: 13px; }
+      .dg-card__count {
+        top: 12px;
+        right: 12px;
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+      /* no Trending stories yet: lead story uses the full width, but stays short */
+      .dg-feed--solo .dg-card { grid-column: 1 / -1; aspect-ratio: 21 / 9; }
+
+      /* Trending: small list on the right */
+      .dg-trend { grid-column: 2; grid-row: 1; }
+      .dg-sec-head { margin: 0 0 2px; }
+      .dg-sec-head .dg-bar { height: 20px; }
+      .dg-sec-head h2 { font-size: 18px; }
+      .dg-trend__grid { display: block; }
+
+      /* small picture on the left, headline and details on the right */
+      .dg-trend .dg-big,
+      .dg-list .dg-big {
+        display: grid;
+        grid-template-columns: 38% 1fr;
+        grid-template-rows: auto 1fr;
+        column-gap: 14px;
+        align-items: start;
+        padding: 14px 0;
+      }
+      .dg-trend .dg-big__img,
+      .dg-trend .dg-big__ph,
+      .dg-list .dg-big__img,
+      .dg-list .dg-big__ph {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        aspect-ratio: 4 / 3;
+        border-radius: 6px;
+      }
+      .dg-trend .dg-big__title,
+      .dg-list .dg-big__title {
+        grid-column: 2;
+        grid-row: 1;
+        margin: 0 0 6px;
+        font-size: 16px;
+        line-height: 1.25;
+      }
+      .dg-trend .dg-big .dg-row__meta,
+      .dg-list .dg-big .dg-row__meta {
+        grid-column: 2;
+        grid-row: 2;
+      }
+
+      /* everything else: three columns */
+      .dg-list {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        column-gap: 32px;
+        margin-top: 8px;
+      }
+      .dg-row__title { font-size: 16px; margin-bottom: 6px; }
+      .dg-row__meta { font-size: 12px; }
     }
   </style>
 </head>
@@ -690,7 +764,7 @@
   </main>
 
   <div id="site-footer"></div>
-  <script src="js/footer.js?v=2"></script>
+  <script src="js/footer.js?v=3"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
@@ -699,6 +773,7 @@
   <script src="js/home.js?v=10"></script>
   <script src="js/category-view.js?v=2"></script>
   <script src="js/desktop-home.js?v=3"></script>
+  <script src="js/header-fit.js?v=1"></script>
   <script src="js/live-audio-home.js?v=2"></script>
   <script src="js/podcast-home.js"></script>
   <script src="js/video-home.js?v=1"></script>
@@ -839,6 +914,7 @@
                   "</div>";
         }
 
+        box.className = "dg-feed" + (trending.length ? "" : " dg-feed--solo");
         box.innerHTML = html;
         wireSlides(box);
         document.body.classList.add("dg-on");
