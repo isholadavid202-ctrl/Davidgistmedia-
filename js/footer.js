@@ -10,6 +10,7 @@
     { name: "Facebook",  icon: "fa-facebook-f",   url: "https://www.facebook.com/YOUR_PAGE" },
     { name: "Instagram", icon: "fa-instagram",    url: "https://www.instagram.com/davidgistmediang/" },
     { name: "TikTok",    icon: "fa-tiktok",       url: "https://www.tiktok.com/@davidgistmediang" },
+    { name: "Telegram",  icon: "fa-telegram",     url: "https://t.me/davidgistmediaent" },
     { name: "LinkedIn",  icon: "fa-linkedin-in",  url: "https://www.linkedin.com/company/YOUR_PAGE" },
     { name: "YouTube",   icon: "fa-youtube",      url: "https://www.youtube.com/@davidgistmediang" }
   ];
