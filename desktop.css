@@ -397,3 +397,32 @@ html:not([data-theme="dark"]) body { background-color: #fff !important; }
 .masthead .topbar #tabs .more-btn:focus:not(:focus-visible) {
   outline: none;
 }
+
+/* ===== Fix: Watch, Listen, search and Sign in get room and never run into the tabs ===== */
+.masthead .topbar .acct { gap: 8px; }
+.masthead .topbar .acct .top-extra {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.masthead .topbar .acct .top-extra svg,
+.masthead .topbar .acct .d-dot { flex: 0 0 auto; }
+/* a long name on the Sign in button is shortened with "..." instead of pushing everything */
+.masthead .topbar .acct .top-account-link {
+  max-width: 170px;
+  overflow: hidden;
+}
+.masthead .topbar .acct .top-account-link span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* tabs keep their size; js/header-fit.js moves extra ones into "More" when space is short */
+.masthead .topbar #tabs > button,
+.masthead .topbar #tabs > a,
+.masthead .topbar #tabs .tabs-more { flex: 0 0 auto; }
+@media (max-width: 1199px) {
+  .masthead .topbar .acct .top-extra { padding: 8px 8px; }
+}
