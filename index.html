@@ -242,10 +242,10 @@
     }
   </style>
 
-  <!-- NEW 1 of 3: homepage feed styles. Only affects .dg-feed.
+  <!-- NEW 1 of 3: homepage feed styles. Only affects .dg-feed and .dg-desk.
        Phones: top story = swipeable big card, Trending = big pictures, other stories = rows,
        with a big picture every 5th story.
-       Computers (900px and wider): compact BBC / CNN style layout. -->
+       Computers (900px and wider): CNN style body. -->
   <style>
     .dg-feed { padding: 20px 0 0; }
 
@@ -455,97 +455,258 @@
     body.dg-on #trending-section,
     body.dg-on #category-sections { display: none !important; }
 
-    /* computers and "desktop site" view only (phones are not affected):
-       compact, like BBC / CNN. Lead story on the left, Trending as a small list on the right,
-       then every other story in three tidy columns. */
+    /* ======================================================================
+       COMPUTERS and "desktop site" view only (900px and wider): CNN style body.
+       Phones never see this: .dg-desk is hidden below 900px.
+       ====================================================================== */
+    .dg-desk { display: none; }
+
     @media (min-width: 900px) {
-      .dg-feed {
-        display: grid;
-        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-        column-gap: 32px;
-        align-items: start;
-        padding-top: 16px;
+      .dg-feed { display: none !important; }
+      .dg-desk { display: block; padding-top: 22px; }
+      .dg-desk a { text-decoration: none; color: var(--ink, #111); }
+      .dg-desk h1, .dg-desk h2, .dg-desk h3 { margin: 0; }
+
+      /* category page title (when a tab other than Home is chosen) */
+      .dg-desk .dgd-pagehead {
+        margin: 0 0 22px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--line, #dcdcdc);
+        font-size: 28px;
+        font-weight: 800;
+        text-transform: capitalize;
+        color: var(--ink, #111);
       }
 
-      /* lead story */
-      .dg-card {
-        grid-column: 1;
-        grid-row: 1;
+      /* ---------- section titles: black bar + capital letters ---------- */
+      .dgd-head {
+        display: flex;
+        align-items: center;
+        margin: 0 0 16px;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        color: var(--ink, #111);
+      }
+      .dgd-head::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 1.15em;
+        margin-right: 9px;
+        background: var(--ink, #111);
+      }
+
+      /* ---------- story blocks ---------- */
+      .dgd-item { display: block; margin: 0 0 22px; }
+      .dgd-ph { display: block; margin: 0 0 10px; }
+      .dgd-ph img,
+      .dgd-noimg {
+        display: block;
+        width: 100%;
         aspect-ratio: 16 / 10;
-        border-radius: 12px;
+        object-fit: cover;
+        border-radius: 4px;
+        background: var(--line, #dcdcdc);
       }
-      .dg-card__content { padding: 20px 22px 22px; }
-      .dg-card__badge {
+      .dgd-kick {
+        display: block;
+        margin: 0 0 4px;
         font-size: 11px;
-        padding: 5px 10px;
-        margin-bottom: 10px;
+        font-weight: 800;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        color: #c8102e;
       }
-      .dg-card__title {
-        font-size: 26px;
-        line-height: 1.2;
-        margin-bottom: 12px;
-        max-width: none;
+      .dgd-t {
+        display: block;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.28;
+        color: var(--ink, #111);
       }
-      .dg-card__meta { font-size: 13px; }
-      .dg-card__count {
-        top: 12px;
-        right: 12px;
+      .dgd-meta {
+        display: block;
+        margin-top: 6px;
         font-size: 12px;
-        padding: 5px 10px;
+        color: var(--muted, #6b6b6b);
       }
-      /* no Trending stories yet: lead story uses the full width, but stays short */
-      .dg-feed--solo .dg-card { grid-column: 1 / -1; aspect-ratio: 21 / 9; }
+      .dgd-item:hover .dgd-t,
+      .dgd-row:hover .dgd-t,
+      .dgd-text:hover,
+      .dgd-mini a:hover span { text-decoration: underline; }
 
-      /* Trending: small list on the right */
-      .dg-trend { grid-column: 2; grid-row: 1; }
-      .dg-sec-head { margin: 0 0 2px; }
-      .dg-sec-head .dg-bar { height: 20px; }
-      .dg-sec-head h2 { font-size: 18px; }
-      .dg-trend__grid { display: block; }
+      /* headline only, with a thin line above */
+      .dgd-text {
+        display: block;
+        padding: 12px 0;
+        border-top: 1px solid var(--line, #dcdcdc);
+        font-size: 15px;
+        line-height: 1.4;
+        color: var(--ink, #111);
+      }
 
-      /* small picture on the left, headline and details on the right */
-      .dg-trend .dg-big,
-      .dg-list .dg-big {
-        display: grid;
-        grid-template-columns: 38% 1fr;
-        grid-template-rows: auto 1fr;
-        column-gap: 14px;
-        align-items: start;
+      /* small picture on the left, headline on the right */
+      .dgd-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
         padding: 14px 0;
+        border-top: 1px solid var(--line, #dcdcdc);
       }
-      .dg-trend .dg-big__img,
-      .dg-trend .dg-big__ph,
-      .dg-list .dg-big__img,
-      .dg-list .dg-big__ph {
-        grid-column: 1;
-        grid-row: 1 / span 2;
+      .dgd-head + .dgd-row { border-top: 0; padding-top: 0; }
+      .dgd-th { flex: 0 0 92px; }
+      .dgd-th img,
+      .dgd-th .dgd-noimg {
+        display: block;
+        width: 100%;
         aspect-ratio: 4 / 3;
-        border-radius: 6px;
+        object-fit: cover;
+        border-radius: 3px;
+        background: var(--line, #dcdcdc);
       }
-      .dg-trend .dg-big__title,
-      .dg-list .dg-big__title {
-        grid-column: 2;
-        grid-row: 1;
-        margin: 0 0 6px;
-        font-size: 16px;
-        line-height: 1.25;
-      }
-      .dg-trend .dg-big .dg-row__meta,
-      .dg-list .dg-big .dg-row__meta {
-        grid-column: 2;
-        grid-row: 2;
-      }
+      .dgd-row .dgd-t { font-size: 15px; font-weight: 600; line-height: 1.32; }
+      .dgd-body { flex: 1; min-width: 0; }
 
-      /* everything else: three columns */
-      .dg-list {
-        grid-column: 1 / -1;
+      /* ---------- top: three columns ---------- */
+      .dgd-top {
+        display: grid;
+        column-gap: 30px;
+        align-items: start;
+      }
+      .dgd-col { min-width: 0; }
+
+      /* middle: big headline above the picture */
+      .dgd-lead { display: block; text-align: center; margin: 0 0 22px; }
+      .dgd-lead h2 {
+        margin: 0 0 18px;
+        font-size: clamp(30px, 3vw, 44px);
+        font-weight: 800;
+        line-height: 1.1;
+        color: var(--ink, #111);
+      }
+      .dgd-lead .dgd-ph { margin: 0; }
+      .dgd-lead .dgd-ph img,
+      .dgd-lead .dgd-noimg { aspect-ratio: 16 / 11; }
+      .dgd-lead .dgd-by { margin-top: 10px; }
+      .dgd-lead .dgd-deck + .dgd-by { margin-top: 0; }
+      .dgd-deck {
+        display: block;
+        margin: 14px 0 4px;
+        text-align: left;
+        font-size: 17px;
+        line-height: 1.45;
+        color: var(--ink, #111);
+      }
+      .dgd-by {
+        display: block;
+        text-align: left;
+        font-size: 12px;
+        color: var(--muted, #6b6b6b);
+      }
+      .dgd-mini {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        column-gap: 32px;
-        margin-top: 8px;
+        gap: 14px;
+        margin: 18px 0 0;
+        padding-top: 16px;
+        border-top: 1px solid var(--line, #dcdcdc);
       }
-      .dg-row__title { font-size: 16px; margin-bottom: 6px; }
-      .dg-row__meta { font-size: 12px; }
+      .dgd-mini a { display: block; }
+      .dgd-mini img,
+      .dgd-mini .dgd-noimg { aspect-ratio: 16 / 10; border-radius: 3px; margin-bottom: 8px; display: block; width: 100%; object-fit: cover; background: var(--line, #dcdcdc); }
+      .dgd-mini span { display: block; font-size: 14px; font-weight: 600; line-height: 1.3; color: var(--ink, #111); }
+
+      /* ---------- spotlight: big picture with words on it + small stories ---------- */
+      .dgd-spot {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        column-gap: 30px;
+        align-items: start;
+        margin-top: 44px;
+      }
+      .dgd-ovl {
+        position: relative;
+        display: block;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        border-radius: 6px;
+        background: #111;
+      }
+      .dgd-ovl img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+      .dgd-ovl::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,.88) 0%, rgba(0,0,0,.55) 30%, rgba(0,0,0,0) 62%);
+      }
+      .dgd-cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 22px 26px 24px; }
+      .dgd-cap, .dgd-cap * { color: #fff !important; }
+      .dgd-badge {
+        display: inline-block;
+        margin: 0 0 10px;
+        padding: 5px 10px;
+        border-radius: 4px;
+        background: #c8102e;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+      }
+      .dgd-cap h3 { font-size: 28px; font-weight: 800; line-height: 1.18; margin: 0 0 8px; }
+      .dgd-cap .dgd-by { color: rgba(255,255,255,.8) !important; }
+
+      /* ---------- category sections: three across ---------- */
+      .dgd-band {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        column-gap: 30px;
+        row-gap: 10px;
+        align-items: start;
+        margin-top: 44px;
+      }
+      .dgd-sec { min-width: 0; }
+      .dgd-spot > div + div .dgd-row:first-child { border-top: 0; padding-top: 0; }
+
+      /* ---------- Top Picks: three tall cards ---------- */
+      .dgd-picks { margin-top: 48px; }
+      .dgd-picks h2 { margin: 0 0 16px; font-size: 26px; font-weight: 800; color: var(--ink, #111); }
+      .dgd-picks__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+      .dgd-pick {
+        position: relative;
+        display: block;
+        aspect-ratio: 3 / 4;
+        overflow: hidden;
+        border-radius: 8px;
+        background: #111;
+      }
+      .dgd-pick img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+      .dgd-pick::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.55) 32%, rgba(0,0,0,0) 62%);
+      }
+      .dgd-pick .dgd-cap h3 { font-size: 21px; margin: 0; }
+
+      /* ---------- everything else ---------- */
+      .dgd-more { margin-top: 48px; }
+      .dgd-more__list {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        column-gap: 30px;
+      }
+    }
+
+    /* narrower computer screens */
+    @media (min-width: 900px) and (max-width: 1199px) {
+      .dgd-top, .dgd-spot, .dgd-band { column-gap: 20px; }
+      .dgd-more__list { column-gap: 20px; }
+      .dgd-lead h2 { font-size: 30px; }
+      .dgd-t { font-size: 16px; }
+      .dgd-cap h3 { font-size: 22px; }
+      .dgd-th { flex-basis: 78px; }
     }
   </style>
 </head>
@@ -735,8 +896,10 @@
   <main class="wrap">
     <section class="hero-section" id="hero-section"></section>
 
-    <!-- NEW 2 of 3: the new feed goes here (top story, Trending, then all stories) -->
+    <!-- NEW 2 of 3: the new feed goes here.
+         dg-feed = the phone version. dg-desk = the computer (CNN style) version. -->
     <div class="dg-feed" id="dg-feed"></div>
+    <div class="dg-desk" id="dg-desk"></div>
 
     <div id="live-banner"></div>
     <div id="trending-section"></div>
@@ -802,9 +965,8 @@
   </script>
 
   <!-- NEW 3 of 3: draws the feed using your own home.js functions.
-       Top story = big card you can swipe through its pictures.
-       Trending = most liked stories as big pictures.
-       Then every other story: rows, with a big picture every 5th story. No comments. -->
+       Phones: swipeable top card, Trending, rows, a big picture every 5th story.
+       Computers (900px and wider): CNN style body. No comments anywhere. -->
   <script>
     (function () {
       if (typeof renderPage !== "function") return;
@@ -878,14 +1040,167 @@
           "</div></a>";
       }
 
+      /* ====================================================================
+         COMPUTER VERSION (shown only on screens 900px and wider, see the CSS).
+         CNN style: three columns on top, a spotlight story, category sections,
+         Top Picks, then everything else.
+         ==================================================================== */
+      function dImg(a, w) {
+        return a.image_url
+          ? '<img src="' + escapeHtml(getOptimizedImage(a.image_url, w)) + '" alt="" loading="lazy">'
+          : '<span class="dgd-noimg"></span>';
+      }
+      function ago(a) { return timeAgo(a.published_at); }
+
+      /* picture, small red label, headline, time */
+      function dPic(a) {
+        return '<a class="dgd-item" ' + link(a) + '>' +
+          '<span class="dgd-ph">' + dImg(a, 600) + '</span>' +
+          '<span class="dgd-kick">' + escapeHtml(a.category) + '</span>' +
+          '<h3 class="dgd-t">' + escapeHtml(a.title) + '</h3>' +
+          '<span class="dgd-meta">' + ago(a) + '</span></a>';
+      }
+      /* headline only */
+      function dText(a) {
+        return '<a class="dgd-text" ' + link(a) + '>' + escapeHtml(a.title) + '</a>';
+      }
+      /* small picture left, headline right */
+      function dRow(a) {
+        return '<a class="dgd-row" ' + link(a) + '>' +
+          '<span class="dgd-th">' + dImg(a, 300) + '</span>' +
+          '<span class="dgd-body"><h3 class="dgd-t">' + escapeHtml(a.title) + '</h3>' +
+          '<span class="dgd-meta">' + ago(a) + '</span></span></a>';
+      }
+      /* three small pictures in a row */
+      function dMini(list) {
+        return '<div class="dgd-mini">' + list.map(function (a) {
+          return '<a ' + link(a) + '>' + dImg(a, 300) + '<span>' + escapeHtml(a.title) + '</span></a>';
+        }).join("") + '</div>';
+      }
+      /* picture with the words on it */
+      function dOverlay(a) {
+        return '<a class="dgd-ovl" ' + link(a) + '>' +
+          (a.image_url ? '<img src="' + escapeHtml(getOptimizedImage(a.image_url, 1000)) + '" alt="" loading="lazy">' : '') +
+          '<div class="dgd-cap"><span class="dgd-badge">' + escapeHtml(a.category) + '</span>' +
+          '<h3>' + escapeHtml(a.title) + '</h3>' +
+          '<span class="dgd-by">' + authorHtml(a.author) + ' · ' + formatWhen(a.published_at) + '</span></div></a>';
+      }
+      /* tall card */
+      function dPick(a) {
+        return '<a class="dgd-pick" ' + link(a) + '>' +
+          (a.image_url ? '<img src="' + escapeHtml(getOptimizedImage(a.image_url, 700)) + '" alt="" loading="lazy">' : '') +
+          '<div class="dgd-cap"><span class="dgd-badge">' + escapeHtml(a.category) + '</span>' +
+          '<h3>' + escapeHtml(a.title) + '</h3></div></a>';
+      }
+      function dSection(c, items) {
+        return '<section class="dgd-sec"><div class="dgd-head">' + escapeHtml(c) + '</div>' +
+          dPic(items[0]) + items.slice(1).map(dRow).join("") + '</section>';
+      }
+      function chunk(arr, n) {
+        var out = [];
+        for (var i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n));
+        return out;
+      }
+
+      function deskFeed(list, lead, isHome, catName) {
+        var pool = list.filter(function (a) { return a.id !== lead.id; });
+        function take(n) { return pool.splice(0, n); }
+
+        /* Trending = most liked stories */
+        var trend = pool
+          .filter(function (a) { return (a.likes || 0) > 0; })
+          .sort(function (a, b) { return (b.likes || 0) - (a.likes || 0); })
+          .slice(0, 4);
+        pool = pool.filter(function (a) { return trend.indexOf(a) === -1; });
+
+        var leftPics = take(3), leftText = take(2);
+        var midText = take(3), midMini = take(3);
+        var rightFeature = take(1);
+        var rightRows = trend.length ? trend : take(4);
+
+        /* left column */
+        var left = leftPics.map(dPic).join("") + leftText.map(dText).join("");
+
+        /* middle column */
+        var mid = '<a class="dgd-lead" ' + link(lead) + '>' +
+          '<h2>' + escapeHtml(lead.title) + '</h2>' +
+          '<span class="dgd-ph">' + dImg(lead, 1000) + '</span>' +
+          (lead.excerpt ? '<span class="dgd-deck">' + escapeHtml(lead.excerpt) + '</span>' : '') +
+          '<span class="dgd-by">' + authorHtml(lead.author) + ' · ' + formatWhen(lead.published_at) + '</span></a>' +
+          midText.map(dText).join("") +
+          (midMini.length ? dMini(midMini) : "");
+
+        /* right column */
+        var right = rightFeature.map(dPic).join("");
+        if (rightRows.length) {
+          right += '<div class="dgd-head" style="margin-top:6px">' + (trend.length ? "Trending" : "Latest") + '</div>' +
+                   rightRows.map(dRow).join("");
+        }
+
+        /* only keep the columns that have something in them */
+        var cols = [], widths = [];
+        if (left) { cols.push(left); widths.push("minmax(0,1fr)"); }
+        cols.push(mid); widths.push("minmax(0,2.1fr)");
+        if (right) { cols.push(right); widths.push("minmax(0,1fr)"); }
+        var html = (catName ? '<h1 class="dgd-pagehead">' + escapeHtml(catName) + '</h1>' : "") +
+          '<div class="dgd-top" style="grid-template-columns:' + widths.join(" ") + '">' +
+          cols.map(function (c) { return '<div class="dgd-col">' + c + '</div>'; }).join("") + '</div>';
+
+        if (isHome) {
+          /* spotlight: big picture + small stories */
+          if (pool.length >= 3) {
+            var spot = take(1)[0], side = take(Math.min(4, pool.length));
+            html += '<div class="dgd-spot"><div>' + dOverlay(spot) + '</div><div>' + side.map(dRow).join("") + '</div></div>';
+          }
+
+          /* Top Picks: three tall cards (chosen before the category sections use up the stories) */
+          var picks = take(3);
+
+          /* category sections: one story with a picture, then up to two small ones */
+          var order = [], groups = {};
+          pool.forEach(function (a) {
+            var c = a.category || "news";
+            if (!groups[c]) { groups[c] = []; order.push(c); }
+            groups[c].push(a);
+          });
+          var sections = order.slice(0, 12).map(function (c) {
+            var items = groups[c].slice(0, 3);
+            pool = pool.filter(function (a) { return items.indexOf(a) === -1; });
+            return { c: c, items: items };
+          });
+          var bands = chunk(sections, 3);
+          bands.forEach(function (band, i) {
+            html += '<div class="dgd-band">' + band.map(function (s) { return dSection(s.c, s.items); }).join("") + '</div>';
+            if (i === 0 && picks.length === 3) {
+              html += '<section class="dgd-picks"><h2>Top Picks</h2><div class="dgd-picks__grid">' + picks.map(dPick).join("") + '</div></section>';
+              picks = [];
+            }
+          });
+          if (picks.length === 3) {
+            html += '<section class="dgd-picks"><h2>Top Picks</h2><div class="dgd-picks__grid">' + picks.map(dPick).join("") + '</div></section>';
+          } else if (picks.length) {
+            pool = picks.concat(pool);
+          }
+        }
+
+        /* everything left over */
+        if (pool.length) {
+          html += '<section class="dgd-more"><div class="dgd-head">' + (isHome ? "More stories" : "More " + escapeHtml(catName || "stories")) + '</div>' +
+                  '<div class="dgd-more__list">' + pool.map(dRow).join("") + '</div></section>';
+        }
+        return html;
+      }
+
       function feed() {
         var box = document.getElementById("dg-feed");
         if (!box) return;
 
         var list = (typeof getFiltered === "function") ? getFiltered() : [];
+        var desk = document.getElementById("dg-desk");
         if (!list.length) {
           document.body.classList.remove("dg-on");
           box.innerHTML = "";
+          if (desk) desk.innerHTML = "";
           return;
         }
 
@@ -914,9 +1229,15 @@
                   "</div>";
         }
 
-        box.className = "dg-feed" + (trending.length ? "" : " dg-feed--solo");
         box.innerHTML = html;
         wireSlides(box);
+
+        /* computer version */
+        if (desk) {
+          var cat = (typeof activeCategory !== "undefined") ? activeCategory : "all";
+          var isHome = (cat === "all") && !((typeof searchQuery !== "undefined") && String(searchQuery).trim());
+          desk.innerHTML = deskFeed(list, lead, isHome, isHome ? "" : (cat !== "all" ? cat : "Search results"));
+        }
         document.body.classList.add("dg-on");
       }
 
