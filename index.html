@@ -242,6 +242,41 @@
     }
   </style>
 
+  <!-- HEADER FIX (computers only, 900px and wider): Watch, Listen, search and Sign in get room
+       and never run into the tabs. Built into this file so it always loads with the page.
+       The tab-fitting script for it is further down. -->
+  <style>
+    @media (min-width: 900px) {
+      .masthead .topbar .acct { gap: 8px; }
+      .masthead .topbar .acct .top-extra {
+        flex: 0 0 auto;
+        padding: 8px 10px;
+        line-height: 1.2;
+        white-space: nowrap;
+      }
+      .masthead .topbar .acct .top-extra svg,
+      .masthead .topbar .acct .d-dot { flex: 0 0 auto; }
+      /* a long name on the Sign in button is shortened with "..." instead of pushing everything */
+      .masthead .topbar .acct .top-account-link {
+        max-width: 170px;
+        overflow: hidden;
+      }
+      .masthead .topbar .acct .top-account-link span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      /* tabs keep their size; the script moves extra ones into "More" when space is short */
+      .masthead .topbar #tabs > button,
+      .masthead .topbar #tabs > a,
+      .masthead .topbar #tabs .tabs-more { flex: 0 0 auto; }
+    }
+    @media (min-width: 900px) and (max-width: 1199px) {
+      .masthead .topbar .acct .top-extra { padding: 8px 8px; }
+    }
+  </style>
+
   <!-- NEW 1 of 3: homepage feed styles. Only affects .dg-feed and .dg-desk.
        Phones: top story = swipeable big card, Trending = big pictures, other stories = rows,
        with a big picture every 5th story.
@@ -936,7 +971,68 @@
   <script src="js/home.js?v=10"></script>
   <script src="js/category-view.js?v=2"></script>
   <script src="js/desktop-home.js?v=3"></script>
-  <script src="js/header-fit.js?v=1"></script>
+
+  <!-- HEADER FIX script (computers only, 900px and wider).
+       Keeps the row of tabs from running into Watch, Listen, search and Sign in by moving
+       tabs into the "More" menu until everything fits. Phones are not affected.
+       Built into this file so it always loads with the page. -->
+  <script>
+    (function () {
+      var t = document.getElementById("tabs");
+      var more = t && t.querySelector(".tabs-more");
+      var panel = more && more.querySelector(".more-panel");
+      var acct = document.querySelector(".masthead .acct");
+      if (!t || !more || !panel || !acct) return;
+
+      var mq = window.matchMedia("(min-width: 900px)");
+
+      /* every tab, in its original order */
+      var all = [].slice.call(t.children)
+        .filter(function (el) { return el !== more; })
+        .concat([].slice.call(panel.children));
+
+      /* the most tabs we would like to show on each screen size */
+      function wanted() {
+        var w = window.innerWidth;
+        return w >= 1280 ? 8 : (w >= 1100 ? 5 : 4);
+      }
+
+      function place(keep) {
+        all.forEach(function (el, i) {
+          if (i >= keep) panel.appendChild(el);
+          else t.insertBefore(el, more);
+        });
+      }
+
+      /* true when the last tab ("More") reaches the right-hand items */
+      function tooWide() {
+        return more.getBoundingClientRect().right > acct.getBoundingClientRect().left - 12;
+      }
+
+      var busy = false;
+      function fit() {
+        if (busy || !mq.matches) return;
+        busy = true;
+        var keep = Math.min(wanted(), all.length);
+        place(keep);
+        while (keep > 2 && tooWide()) {
+          keep--;
+          place(keep);
+        }
+        busy = false;
+      }
+
+      fit();
+      window.addEventListener("load", fit);
+      window.addEventListener("resize", fit);
+      if (mq.addEventListener) mq.addEventListener("change", fit);
+      else if (mq.addListener) mq.addListener(fit);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+      /* runs again when Watch / Listen appear or the signed-in name loads */
+      if (window.ResizeObserver) new ResizeObserver(fit).observe(acct);
+    })();
+  </script>
+
   <script src="js/live-audio-home.js?v=2"></script>
   <script src="js/podcast-home.js"></script>
   <script src="js/video-home.js?v=1"></script>
