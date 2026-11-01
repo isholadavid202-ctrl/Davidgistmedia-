@@ -34,7 +34,12 @@
     .short h3{margin:0 0 4px;font-size:1.05rem}
     .short p{margin:0 0 6px;font-size:.9rem;color:#ddd;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
     .short .views{font-size:.8rem;color:#bbb}
-    .mute{position:absolute;top:12px;right:12px;z-index:2;width:42px;height:42px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:1rem;cursor:pointer}
+
+    /* Sound button: a red "Tap for sound" pill while the video is muted, a small round speaker once sound is on */
+    .mute{position:absolute;top:12px;right:12px;z-index:2;display:flex;align-items:center;justify-content:center;gap:8px;min-width:42px;height:42px;padding:0 12px;border-radius:999px;border:0;background:rgba(0,0,0,.6);color:#fff;font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer}
+    .mute span{display:none;white-space:nowrap}
+    .mute.off{background:#c8102e}
+    .mute.off span{display:inline}
 
     /* Like, comment and share buttons */
     .act{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:#fff;font-family:inherit;font-size:.78rem;font-weight:700;cursor:pointer;padding:0}
@@ -139,7 +144,7 @@
   <div class="toast" id="toast" role="status"></div>
 
   <div id="site-footer"></div>
-  <script src="js/footer.js?v=2"></script>
+  <script src="js/footer.js?v=3"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
@@ -421,7 +426,7 @@
           return '<article class="short" data-id="' + esc(v.id) + '">' +
             '<video src="' + esc(v.video_url) + '"' + (v.thumbnail_url ? ' poster="' + esc(v.thumbnail_url) + '"' : "") +
             ' loop muted playsinline preload="metadata"></video>' +
-            '<button type="button" class="mute" aria-label="Sound on or off"><i class="fa-solid fa-volume-xmark"></i></button>' +
+            '<button type="button" class="mute off" aria-label="Turn sound on or off"><i class="fa-solid fa-volume-xmark"></i><span>Tap for sound</span></button>' +
             '<div class="rail">' + actionsHtml(v) + '</div>' +
             '<div class="info"><h3>' + esc(v.title) + '</h3>' +
             (v.description ? '<p>' + esc(v.description) + '</p>' : "") +
@@ -436,7 +441,16 @@
             if (en.isIntersecting && en.intersectionRatio >= 0.6) {
               v.muted = !soundOn;
               var p = v.play();
-              if (p && p.catch) p.catch(function () {});
+              if (p && p.catch) p.catch(function () {
+                /* the browser refused to play with sound: play it muted instead and show "Tap for sound" again */
+                if (!v.muted) {
+                  v.muted = true;
+                  soundOn = false;
+                  applySound();
+                  var q = v.play();
+                  if (q && q.catch) q.catch(function () {});
+                }
+              });
               countView(en.target.getAttribute("data-id"));
             } else {
               v.pause();
@@ -448,19 +462,33 @@
 
       function applySound() {
         document.querySelectorAll("#short-feed video").forEach(function (v) { v.muted = !soundOn; });
-        document.querySelectorAll("#short-feed .mute i").forEach(function (i) {
-          i.className = soundOn ? "fa-solid fa-volume-high" : "fa-solid fa-volume-xmark";
+        document.querySelectorAll("#short-feed .mute").forEach(function (b) {
+          b.classList.toggle("off", !soundOn);
+          var i = b.querySelector("i");
+          if (i) i.className = soundOn ? "fa-solid fa-volume-high" : "fa-solid fa-volume-xmark";
         });
       }
 
       $("short-feed").addEventListener("click", function (e) {
         if (e.target.closest("[data-act]")) return;
+        var card = e.target.closest(".short");
+        var v = card && card.querySelector("video");
+
+        /* the speaker button turns the sound on or off */
         if (e.target.closest(".mute")) {
           soundOn = !soundOn;
           applySound();
+          if (soundOn && v && v.paused) v.play().catch(function () {});
           return;
         }
-        var v = e.target.closest(".short") && e.target.closest(".short").querySelector("video");
+        /* the first tap on a muted video turns the sound on, like TikTok */
+        if (!soundOn) {
+          soundOn = true;
+          applySound();
+          if (v && v.paused) v.play().catch(function () {});
+          return;
+        }
+        /* after that, a tap pauses or plays */
         if (v) { if (v.paused) v.play().catch(function () {}); else v.pause(); }
       });
 
