@@ -43,12 +43,25 @@
 
     /* Like, comment and share buttons */
     .act{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:#fff;font-family:inherit;font-size:.78rem;font-weight:700;cursor:pointer;padding:0}
-    .act i{display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.5);font-size:1.15rem}
-    .act.on i{color:#ff3b57}
+    .act i,.act .ic{display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.5);font-size:1.15rem}
+
+    /* Like button, Facebook style: thumbs-up outline; blue and filled once liked */
+    .like .ic svg{width:24px;height:24px;fill:currentColor}
+    .like .i-on{display:none}
+    .like.on .i-on{display:block}
+    .like.on .i-off{display:none}
+    .like.on{color:#1877f2}
+    .like.on .ic{color:#1877f2;animation:likepop .35s ease}
+    .like .lbl{display:none}
+    @keyframes likepop{0%{transform:scale(.7) rotate(-14deg)}55%{transform:scale(1.28) rotate(8deg)}100%{transform:scale(1) rotate(0)}}
+
     .rail{position:absolute;right:10px;bottom:90px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:16px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
     .bar{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
     .bar .act{flex-direction:row;gap:8px;padding:10px 18px;border:1px solid #333;border-radius:999px;background:#1a1a1a;font-size:.92rem}
-    .bar .act i{width:auto;height:auto;background:none;font-size:1rem}
+    .bar .act i,.bar .act .ic{width:auto;height:auto;background:none;font-size:1rem}
+    .bar .like .ic svg{width:20px;height:20px}
+    .bar .like .lbl{display:inline}
+    .bar .like.on{border-color:#1877f2;background:rgba(24,119,242,.16)}
 
     /* Long videos */
     #long-grid{display:grid;grid-template-columns:1fr;gap:26px 20px}
@@ -219,10 +232,16 @@
       }
       function isLiked(id) { return getLiked().indexOf(id) > -1; }
 
+      /* thumbs-up icons: outline when not liked, solid when liked */
+      var THUMB_OFF = '<svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.58 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2zM9 9l4.34-4.34L12 10h9v2l-3 7H9V9zM1 9h4v12H1z"/></svg>';
+      var THUMB_ON = '<svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>';
+
       function actionsHtml(v) {
         var liked = isLiked(v.id);
-        return '<button type="button" class="act' + (liked ? " on" : "") + '" data-act="like" data-id="' + esc(v.id) + '" aria-label="Like">' +
-          '<i class="fa-solid fa-heart"></i><span data-lc="' + esc(v.id) + '">' + (Number(v.likes) || 0) + '</span></button>' +
+        return '<button type="button" class="act like' + (liked ? " on" : "") + '" data-act="like" data-id="' + esc(v.id) + '" aria-label="Like">' +
+          '<span class="ic">' + THUMB_OFF + THUMB_ON + '</span>' +
+          '<span class="lbl" data-ll="' + esc(v.id) + '">' + (liked ? "Liked" : "Like") + '</span>' +
+          '<span data-lc="' + esc(v.id) + '">' + (Number(v.likes) || 0) + '</span></button>' +
           '<button type="button" class="act" data-act="comment" data-id="' + esc(v.id) + '" aria-label="Comments">' +
           '<i class="fa-solid fa-comment"></i><span data-cc="' + esc(v.id) + '">' + (commentCounts[v.id] || 0) + '</span></button>' +
           '<button type="button" class="act" data-act="share" data-id="' + esc(v.id) + '" aria-label="Share">' +
@@ -236,6 +255,7 @@
         document.querySelectorAll('[data-act="like"][data-id="' + id + '"]').forEach(function (b) {
           b.classList.toggle("on", isLiked(id));
         });
+        document.querySelectorAll('[data-ll="' + id + '"]').forEach(function (el) { el.textContent = isLiked(id) ? "Liked" : "Like"; });
       }
       function paintComments(id) {
         document.querySelectorAll('[data-cc="' + id + '"]').forEach(function (el) { el.textContent = commentCounts[id] || 0; });
@@ -451,6 +471,7 @@
                   if (q && q.catch) q.catch(function () {});
                 }
               });
+              if (soundOn) checkAudio(v);
               countView(en.target.getAttribute("data-id"));
             } else {
               v.pause();
@@ -460,8 +481,28 @@
         feed.querySelectorAll(".short").forEach(function (el) { io.observe(el); });
       }
 
+      /* Does this video file contain an audio track at all? (true, false, or null if the browser can't tell) */
+      function audioState(v) {
+        if (typeof v.webkitAudioDecodedByteCount === "number") return v.webkitAudioDecodedByteCount > 0;
+        if (typeof v.mozHasAudio === "boolean") return v.mozHasAudio;
+        if (v.audioTracks && typeof v.audioTracks.length === "number") return v.audioTracks.length > 0;
+        return null;
+      }
+      var warned = {};
+      function checkAudio(v) {
+        setTimeout(function () {
+          if (!soundOn || v.paused || v.currentTime < 0.5) return;
+          var card = v.closest(".short");
+          var id = card ? card.getAttribute("data-id") : "";
+          if (audioState(v) === false && !warned[id]) {
+            warned[id] = true;
+            toast("This video has no sound. It was uploaded without an audio track.");
+          }
+        }, 1800);
+      }
+
       function applySound() {
-        document.querySelectorAll("#short-feed video").forEach(function (v) { v.muted = !soundOn; });
+        document.querySelectorAll("#short-feed video").forEach(function (v) { v.muted = !soundOn; if (soundOn) v.volume = 1; });
         document.querySelectorAll("#short-feed .mute").forEach(function (b) {
           b.classList.toggle("off", !soundOn);
           var i = b.querySelector("i");
@@ -479,6 +520,7 @@
           soundOn = !soundOn;
           applySound();
           if (soundOn && v && v.paused) v.play().catch(function () {});
+          if (soundOn && v) checkAudio(v);
           return;
         }
         /* the first tap on a muted video turns the sound on, like TikTok */
@@ -486,6 +528,7 @@
           soundOn = true;
           applySound();
           if (v && v.paused) v.play().catch(function () {});
+          if (v) checkAudio(v);
           return;
         }
         /* after that, a tap pauses or plays */
