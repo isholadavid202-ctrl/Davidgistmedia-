@@ -277,6 +277,17 @@
     }
   </style>
 
+  <!-- FULL WIDTH (computers only, 900px and wider): the page uses up to 1680px of the screen, like CNN,
+       instead of 1280px. The header, the headlines strip and the body all share the same width. -->
+  <style>
+    @media (min-width: 900px) {
+      :root { --dg-max: 1680px; --dg-pad: clamp(20px, 2.4vw, 48px); }
+      .wrap { max-width: var(--dg-max); padding-left: var(--dg-pad); padding-right: var(--dg-pad); }
+      #topic-strip.topic-strip { max-width: var(--dg-max); padding-left: var(--dg-pad); padding-right: var(--dg-pad); }
+      .masthead .drawer.open { left: max(var(--dg-pad), calc(50% - var(--dg-max) / 2 + var(--dg-pad))); }
+    }
+  </style>
+
   <!-- NEW 1 of 3: homepage feed styles. Only affects .dg-feed and .dg-desk.
        Phones: top story = swipeable big card, Trending = big pictures, other stories = rows,
        with a big picture every 5th story.
@@ -939,6 +950,7 @@
     <div id="live-banner"></div>
     <div id="trending-section"></div>
     <div id="podcast-home"></div>
+    <!-- The video sections start here, and the feed script below moves them into the middle of the page -->
     <div id="video-home"></div>
 
     <!-- Adsterra banner 300x250 (phones and computers) -->
@@ -991,10 +1003,10 @@
         .filter(function (el) { return el !== more; })
         .concat([].slice.call(panel.children));
 
-      /* the most tabs we would like to show on each screen size */
+      /* the most tabs we would like to show on each screen size (wide screens show more, like CNN) */
       function wanted() {
         var w = window.innerWidth;
-        return w >= 1280 ? 8 : (w >= 1100 ? 5 : 4);
+        return w >= 1700 ? 12 : (w >= 1500 ? 10 : (w >= 1280 ? 8 : (w >= 1100 ? 5 : 4)));
       }
 
       function place(keep) {
@@ -1035,7 +1047,7 @@
 
   <script src="js/live-audio-home.js?v=2"></script>
   <script src="js/podcast-home.js"></script>
-  <script src="js/video-home.js?v=1"></script>
+  <script src="js/video-home.js?v=2"></script>
   <script src="js/install-banner.js?v=1"></script>
 
   <!-- Fills the latest headlines strip each time the homepage is drawn -->
@@ -1062,11 +1074,30 @@
 
   <!-- NEW 3 of 3: draws the feed using your own home.js functions.
        Phones: swipeable top card, Trending, rows, a big picture every 5th story.
-       Computers (900px and wider): CNN style body. No comments anywhere. -->
+       Computers (900px and wider): CNN style body. No comments anywhere.
+       The Short Videos and Long Videos sections are moved into the middle of the page. -->
   <script>
     (function () {
       if (typeof renderPage !== "function") return;
       var base = renderPage;
+
+      /* The "Short Videos" and "Long Videos" sections (made by video-home.js) are moved into the middle of the page.
+         .dg-video-slot is the empty spot reserved for them: phones use the one in the list, computers the one in the CNN body. */
+      var vh = document.getElementById("video-home");
+      var mqDesk = window.matchMedia("(min-width: 900px)");
+      var SLOT = '<div class="dg-video-slot"></div>';
+      function parkVideo() {
+        /* before the feed is redrawn, take the video section out so it is not thrown away */
+        var m = document.querySelector("main");
+        if (vh && m && vh.parentNode !== m) m.appendChild(vh);
+      }
+      function placeVideo() {
+        if (!vh) return;
+        var host = document.querySelector(mqDesk.matches ? "#dg-desk .dg-video-slot" : "#dg-feed .dg-video-slot");
+        if (host && vh.parentNode !== host) host.appendChild(vh);
+      }
+      if (mqDesk.addEventListener) mqDesk.addEventListener("change", placeVideo);
+      else if (mqDesk.addListener) mqDesk.addListener(placeVideo);
 
       var camera = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>';
 
@@ -1249,6 +1280,9 @@
             html += '<div class="dgd-spot"><div>' + dOverlay(spot) + '</div><div>' + side.map(dRow).join("") + '</div></div>';
           }
 
+          /* the video sections go here: after the top stories and the spotlight, before the category rows */
+          html += SLOT;
+
           /* Top Picks: three tall cards (chosen before the category sections use up the stories) */
           var picks = take(3);
 
@@ -1295,6 +1329,7 @@
         var desk = document.getElementById("dg-desk");
         if (!list.length) {
           document.body.classList.remove("dg-on");
+          parkVideo();
           box.innerHTML = "";
           if (desk) desk.innerHTML = "";
           return;
@@ -1320,11 +1355,16 @@
                   '<div class="dg-trend__grid">' + trending.map(big).join("") + "</div></section>";
         }
         if (rest.length) {
-          html += '<div class="dg-list">' +
-                  rest.map(function (a, i) { return (i % 5 === 4) ? big(a) : row(a); }).join("") +
-                  "</div>";
+          var items = rest.map(function (a, i) { return (i % 5 === 4) ? big(a) : row(a); });
+          /* the video sections go in the middle of the list (after at most 6 stories) */
+          var at = Math.max(1, Math.min(6, Math.ceil(items.length / 2)));
+          items.splice(at, 0, SLOT);
+          html += '<div class="dg-list">' + items.join("") + "</div>";
+        } else {
+          html += SLOT;
         }
 
+        parkVideo();
         box.innerHTML = html;
         wireSlides(box);
 
@@ -1334,6 +1374,7 @@
           var isHome = (cat === "all") && !((typeof searchQuery !== "undefined") && String(searchQuery).trim());
           desk.innerHTML = deskFeed(list, lead, isHome, isHome ? "" : (cat !== "all" ? cat : "Search results"));
         }
+        placeVideo();
         document.body.classList.add("dg-on");
       }
 
