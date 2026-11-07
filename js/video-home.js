@@ -16,6 +16,8 @@
 .dgv-short .dgv-cap{position:absolute;left:0;right:0;bottom:0;padding:46px 10px 10px;background:linear-gradient(to top,rgba(0,0,0,.88),rgba(0,0,0,0))}
 .dgv-short .dgv-cap b{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:.9rem;line-height:1.25;font-weight:700;color:#fff}
 .dgv-short .dgv-cap span{display:block;margin-top:4px;font-size:.72rem;color:#cfcfcf}
+/* the play-icon-and-length line is only for computers (below) */
+.dgv-short .dgv-cap .dgv-dur{display:none}
 .dgv-badge{position:absolute;top:8px;right:8px;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:.7rem;padding-left:2px}
 
 .dgv-long-grid{display:grid;grid-template-columns:1fr}
@@ -31,6 +33,46 @@
 @media(min-width:820px){
   .dgv-short{flex-basis:190px}
   .dgv-long-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px}
+}
+
+/* ===== COMPUTERS ONLY (900px and wider): CNN "Shorts" look =====
+   A big bold title, then a row of tall picture cards that fills the page width.
+   Each card has the headline on the picture, and a play icon with the video length. */
+@media(min-width:900px){
+  #video-home .cat-section{margin-top:44px;padding-top:0;border-top:0}
+  #video-home .cat-head .bar{display:none}
+  #video-home .cat-head h2,#video-home .cat-head h2 a{font-size:26px;font-weight:800;line-height:1.15;color:var(--ink)}
+  #video-home .cat-head{margin-bottom:16px}
+
+  .dgv-row{--cols:4;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:16px;overflow:visible;scroll-snap-type:none;padding:0}
+  .dgv-short{flex:none;width:auto;border-radius:8px}
+  .dgv-short:nth-child(n+5){display:none}
+  .dgv-short .dgv-cap{padding:70px 14px 14px;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.6) 45%,rgba(0,0,0,0) 100%)}
+  .dgv-short .dgv-cap b{font-size:1.02rem;line-height:1.28;-webkit-line-clamp:4}
+  .dgv-short .dgv-cap .dgv-views{display:none}
+  .dgv-short .dgv-cap .dgv-dur{display:flex;align-items:center;gap:7px;margin-top:10px;font-size:.78rem;font-weight:700;color:#fff}
+  .dgv-dur svg{flex:0 0 auto;width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2}
+  .dgv-dur svg path{fill:#fff;stroke:none}
+  .dgv-badge{display:none}
+  .dgv-short:hover b{text-decoration:underline}
+
+  /* long videos: picture first so every picture lines up, then the headline under it */
+  .dgv-long-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 28px}
+  .dgv-lcard{padding:0;border-bottom:0}
+  .dgv-lcard .dgv-thumb{order:1}
+  .dgv-lcard h3{order:2;margin:12px 0 6px;font-size:1.1rem;font-weight:700}
+  .dgv-lcard .dgv-meta{order:3;margin:0}
+}
+@media(min-width:1100px){
+  .dgv-row{--cols:5}
+  .dgv-short:nth-child(n+5){display:block}
+  .dgv-short:nth-child(n+6){display:none}
+}
+@media(min-width:1500px){
+  .dgv-row{--cols:6}
+  .dgv-short:nth-child(n+6){display:block}
+  .dgv-short:nth-child(n+7){display:none}
+  .dgv-long-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 }`;
   var st = document.createElement("style");
   st.textContent = css;
@@ -81,6 +123,13 @@
   function heading(text, href) {
     return '<div class="cat-head"><div class="left"><span class="bar"></span><h2><a href="' + href + '">' + text + '</a></h2></div></div>';
   }
+  /* round play icon, drawn here so it never depends on an icon font */
+  var PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.2"/><path d="M10 8l6 4-6 4z"/></svg>';
+  function clock(sec) {
+    sec = Math.round(Number(sec) || 0);
+    var m = Math.floor(sec / 60), s = sec % 60;
+    return m + ":" + (s < 10 ? "0" : "") + s;
+  }
 
   /* ---------- Render ---------- */
   function render(shorts, longs) {
@@ -89,9 +138,11 @@
     if (shorts.length) {
       html += '<section class="cat-section">' + heading("Short Videos", "videos.html#short") +
         '<div class="dgv-row">' + shorts.map(function (v) {
-          return '<a class="dgv-short" href="videos.html#short">' + cover(v) +
+          return '<a class="dgv-short" href="videos.html#short" data-src="' + esc(v.video_url) + '">' + cover(v) +
             '<span class="dgv-badge"><i class="fa-solid fa-play"></i></span>' +
-            '<div class="dgv-cap"><b>' + esc(v.title) + '</b><span>' + viewsText(v.views) + '</span></div></a>';
+            '<div class="dgv-cap"><b>' + esc(v.title) + '</b>' +
+            '<span class="dgv-views">' + viewsText(v.views) + '</span>' +
+            '<span class="dgv-dur">' + PLAY + '<em>' + viewsText(v.views) + '</em></span></div></a>';
         }).join("") + '</div></section>';
     }
 
@@ -106,6 +157,26 @@
     }
 
     root.innerHTML = html;
+    if (window.matchMedia("(min-width: 900px)").matches) fillLengths();
+  }
+
+  /* Computers only: read each video file's length (just the first bytes of the file) and show it, like CNN */
+  function fillLengths() {
+    root.querySelectorAll(".dgv-short[data-src]").forEach(function (card) {
+      var src = card.getAttribute("data-src");
+      if (!isFile(src)) return;
+      var tmp = document.createElement("video");
+      tmp.preload = "metadata";
+      tmp.muted = true;
+      tmp.onloadedmetadata = function () {
+        var d = tmp.duration;
+        var em = card.querySelector(".dgv-dur em");
+        if (em && isFinite(d) && d > 0) em.textContent = clock(d);
+        tmp.removeAttribute("src");
+        tmp.load();
+      };
+      tmp.src = src;
+    });
   }
 
   /* Hide the video sections while a news category tab is open */
