@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Turns night mode on before the page is drawn, so it does not flash white -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("dg_theme") || localStorage.getItem("theme");
+        if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6QHB1S6KFV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-6QHB1S6KFV");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sport | Davidgistmedia</title>
+  <meta name="description" content="Football, basketball, athletics, boxing and more. Sports news from Nigeria and around the world on Davidgistmedia Sport.">
+  <meta name="theme-color" content="#111111">
+  <meta property="og:title" content="Davidgistmedia Sport">
+  <meta property="og:description" content="Sports news from Nigeria and around the world.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://davidgistmedia.onrender.com/sport.html">
+  <link rel="canonical" href="https://davidgistmedia.onrender.com/sport.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
+     crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --bg: #ffffff; --ink: #141414; --muted: #666666; --line: #e3e3e3; --card: #f4f4f4;
+      --red: #c8102e; --yellow: #ffd230;
+    }
+    html[data-theme="dark"] {
+      --bg: #101010; --ink: #f0f0f0; --muted: #a6a6a2; --line: #2b2b2b; --card: #1b1b1b;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.4}
+    a{color:inherit;text-decoration:none}
+    h1,h2,h3{margin:0}
+    [hidden]{display:none !important}
+
+    /* ---------- top bar ---------- */
+    .sp-top{background:#111;color:#fff}
+    .sp-top .in{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
+    .sp-brand{font:700 1.5rem Georgia,"Times New Roman",serif;color:#fff;white-space:nowrap}
+    .sp-brand span{color:#e8344c}
+    .sp-badge{background:var(--yellow);color:#111;font-weight:900;letter-spacing:.08em;padding:4px 10px;border-radius:3px;font-size:.85rem}
+    .sp-spacer{flex:1}
+    .sp-home{color:#d8d8d8;font-size:.9rem;font-weight:600;white-space:nowrap}
+    .sp-home:hover{color:#fff}
+    .sp-theme{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;cursor:pointer;font-size:1rem;line-height:1}
+
+    /* ---------- sports menu ---------- */
+    .sp-nav{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--line)}
+    .sp-nav .in{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;overflow-x:auto;scrollbar-width:none}
+    .sp-nav .in::-webkit-scrollbar{display:none}
+    .sp-nav a{flex:0 0 auto;padding:15px 15px 12px;font-weight:700;font-size:.95rem;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+    .sp-nav a:hover{color:var(--ink)}
+    .sp-nav a.on{color:var(--ink);border-bottom-color:var(--yellow)}
+
+    main{max-width:1400px;margin:0 auto;padding:24px 20px 8px}
+    .sp-page{margin:0 0 20px;font-size:2rem;font-weight:800}
+    .sp-empty{padding:60px 10px;text-align:center;color:var(--muted)}
+
+    /* ---------- story blocks ---------- */
+    .ph{display:block;margin:0 0 10px}
+    .ph img,.noimg{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:6px;background:var(--card)}
+    .kick{display:block;margin:0 0 4px;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+    .t{display:block;font-size:1.12rem;font-weight:700;line-height:1.28}
+    .meta{display:block;margin-top:6px;font-size:.8rem;color:var(--muted)}
+    .pic:hover .t,.item:hover .t,.mr a:hover{text-decoration:underline}
+
+    /* big story with the words on the picture */
+    .lead{position:relative;display:block;overflow:hidden;border-radius:10px;background:#111;aspect-ratio:4/5;color:#fff}
+    .lead img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .lead::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.6) 32%,rgba(0,0,0,0) 65%)}
+    .lead .cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22px 22px 24px}
+    .lead .tag{display:inline-block;margin:0 0 10px;padding:5px 10px;border-radius:3px;background:var(--yellow);color:#111;font-size:.72rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
+    .lead h2{font-size:1.7rem;font-weight:800;line-height:1.15;color:#fff}
+    .lead p{margin:10px 0 0;font-size:1rem;color:#e6e6e6;line-height:1.4}
+    .lead .meta{color:#cfcfcf}
+
+    .hero{display:grid;gap:22px}
+    .hero-side{display:grid;gap:22px;align-content:start}
+    .row4{display:grid;gap:22px;margin-top:30px;grid-template-columns:repeat(2,minmax(0,1fr))}
+
+    /* headings with a yellow bar */
+    .head{display:flex;align-items:center;gap:10px;margin:0 0 16px}
+    .head::before{content:"";width:6px;height:1.3em;background:var(--yellow);border-radius:2px}
+    .head h2{font-size:1.3rem;font-weight:800}
+    .head a{margin-left:auto;font-size:.85rem;font-weight:700;color:var(--muted)}
+    .head a:hover{color:var(--ink)}
+
+    .cols{display:grid;gap:36px;margin-top:42px}
+    .item{display:flex;gap:14px;padding:16px 0;border-top:1px solid var(--line)}
+    .item:first-of-type{border-top:0;padding-top:0}
+    .item .th{flex:0 0 36%}
+    .item .th img,.item .th .noimg{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:var(--card)}
+    .item .bd{flex:1;min-width:0}
+    .item .t{font-size:1.05rem}
+
+    .side .box{background:var(--card);border-radius:10px;padding:18px 18px 8px;margin-bottom:26px}
+    .mr{list-style:none;margin:0;padding:0;counter-reset:mr}
+    .mr li{counter-increment:mr;display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}
+    .mr li:first-child{border-top:0;padding-top:4px}
+    .mr li::before{content:counter(mr);flex:0 0 auto;min-width:28px;font-size:1.7rem;font-weight:800;line-height:1;color:var(--yellow);-webkit-text-stroke:1px rgba(0,0,0,.25)}
+    .mr a{font-size:.98rem;font-weight:700;line-height:1.3}
+
+    .ad-slot{margin:6px 0 26px;text-align:center}
+    .ad-slot small{display:block;margin:0 0 6px;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .ad-slot .box{display:flex;justify-content:center;overflow:hidden;min-height:250px}
+
+    .sec{margin-top:44px}
+    .grid4{display:grid;gap:22px;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid4 .t{font-size:1rem}
+
+    /* ---------- small phones ---------- */
+    @media (max-width: 520px) {
+      .sp-top .in{padding:10px 14px;gap:10px}
+      .sp-brand{font-size:1.15rem}
+      .sp-badge{padding:3px 8px;font-size:.75rem}
+      .sp-home{font-size:.82rem}
+      .sp-nav .in{padding:0 8px}
+      main{padding-left:14px;padding-right:14px}
+    }
+    @media (max-width: 360px) {
+      .sp-top .in{padding:10px;gap:8px}
+      .sp-brand{font-size:1.02rem}
+      .sp-badge{padding:3px 6px;font-size:.7rem}
+      .sp-home{font-size:.76rem}
+      .sp-theme{width:30px;height:30px}
+    }
+
+    /* ---------- computers ---------- */
+    @media (min-width: 900px) {
+      main{padding-top:28px}
+      .lead{aspect-ratio:16/9}
+      .lead h2{font-size:2.1rem;max-width:760px}
+      .lead .cap{padding:28px 30px 30px}
+      .hero{grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:26px}
+      .row4{grid-template-columns:repeat(4,minmax(0,1fr));gap:26px}
+      .cols{grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:48px}
+      .item .th{flex-basis:230px}
+      .item .t{font-size:1.2rem}
+      .grid4{grid-template-columns:repeat(4,minmax(0,1fr));gap:26px}
+    }
+    @media (min-width: 900px) and (max-width: 1199px) {
+      .item .th{flex-basis:190px}
+      .lead h2{font-size:1.7rem}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sp-top">
+    <div class="in">
+      <a class="sp-brand" href="index.html">David<span>gistmedia</span></a>
+      <span class="sp-badge">SPORT</span>
+      <span class="sp-spacer"></span>
+      <a class="sp-home" href="index.html">&larr; Home</a>
+      <button type="button" class="sp-theme" id="theme-btn" aria-label="Switch between light and dark">&#9790;</button>
+    </div>
+  </div>
+
+  <nav class="sp-nav" aria-label="Sports">
+    <div class="in" id="sp-nav"></div>
+  </nav>
+
+  <main id="sp-main">
+    <div class="sp-empty">Loading sport...</div>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="js/footer.js?v=3"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script>
+    (function () {
+      var sb = typeof supabaseClient !== "undefined" ? supabaseClient : null;
+      var $ = function (id) { return document.getElementById(id); };
+
+      /* ---------- The sports in the menu ----------
+         A story is placed by its TAGS first (type "football" in the tags box when you post).
+         If it has no matching tag, the words in its headline and summary are used instead. */
+      var SPORTS = [
+        { key: "football",   label: "Football",   re: /\b(football|soccer|premier league|epl|la liga|serie a|bundesliga|ligue 1|champions league|europa league|fifa|caf|afcon|world cup qualifier|super eagles|super falcons|npfl|striker|midfielder|goalkeeper|transfer window)\b/i },
+        { key: "basketball", label: "Basketball", re: /\b(basketball|nba|wnba|fiba|d'?tigers|d.?tigress|dunk)\b/i },
+        { key: "athletics",  label: "Athletics",  re: /\b(athletics|sprint|sprinter|marathon|olympic|olympics|relay|track and field|javelin|long jump|high jump)\b/i },
+        { key: "boxing",     label: "Boxing & MMA", re: /\b(boxing|boxer|heavyweight|knockout|wbc|wba|ibf|wbo|ufc|mma|wrestling|wwe)\b/i },
+        { key: "tennis",     label: "Tennis",     re: /\b(tennis|wimbledon|grand slam|atp|wta|us open|french open|australian open)\b/i },
+        { key: "cricket",    label: "Cricket",    re: /\b(cricket|ipl|test match|t20)\b/i },
+        { key: "rugby",      label: "Rugby",      re: /\b(rugby)\b/i },
+        { key: "motorsport", label: "Motorsport", re: /\b(formula 1|formula one|f1|motogp|grand prix|nascar)\b/i }
+      ];
+      var byKey = {};
+      SPORTS.forEach(function (s) { byKey[s.key] = s; });
+
+      var all = [];
+
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      function isHttps(u) { return /^https:\/\//i.test(String(u || "")); }
+      function img(url, w) {
+        if (!url) return "";
+        try {
+          if (url.indexOf("unsplash.com") > -1) return url.split("?")[0] + "?w=" + w + "&q=75&auto=format&fit=crop";
+          if (url.indexOf("supabase.co") > -1) return url + (url.indexOf("?") > -1 ? "&" : "?") + "width=" + w + "&quality=75";
+        } catch (e) {}
+        return url;
+      }
+      function ago(d) {
+        var t = new Date(d);
+        if (isNaN(t.getTime())) return "";
+        var mins = Math.floor((Date.now() - t.getTime()) / 60000);
+        if (mins < 1) return "Just now";
+        if (mins < 60) return mins + (mins === 1 ? " min" : " mins") + " ago";
+        var hrs = Math.floor(mins / 60);
+        if (hrs < 24) return hrs + (hrs === 1 ? " hr" : " hrs") + " ago";
+        var days = Math.floor(hrs / 24);
+        if (days < 7) return days + (days === 1 ? " day" : " days") + " ago";
+        return t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
+      }
+      function tagList(a) {
+        var t = a.tags;
+        if (typeof t === "string") { try { var p = JSON.parse(t); if (Array.isArray(p)) t = p; } catch (e) {} }
+        if (typeof t === "string") t = t.split(",");
+        return Array.isArray(t) ? t.map(function (x) { return String(x).trim().toLowerCase(); }) : [];
+      }
+      /* which sport is this story about? */
+      function sportOf(a) {
+        var tags = tagList(a);
+        for (var i = 0; i < SPORTS.length; i++) {
+          var s = SPORTS[i];
+          if (tags.indexOf(s.key) > -1 || tags.indexOf(s.label.toLowerCase()) > -1) return s.key;
+        }
+        var text = (a.title || "") + " " + (a.excerpt || "");
+        for (var j = 0; j < SPORTS.length; j++) {
+          if (SPORTS[j].re.test(text)) return SPORTS[j].key;
+        }
+        return "other";
+      }
+      function href(a) { return 'href="article.html?slug=' + encodeURIComponent(a.slug) + '"'; }
+      function kickerOf(a) {
+        var k = sportOf(a);
+        return k === "other" ? "Sport" : byKey[k].label;
+      }
+
+      /* ---------- Story blocks ---------- */
+      function picture(a, w) {
+        return a.image_url ? '<img src="' + esc(img(a.image_url, w)) + '" alt="" loading="lazy">' : '<span class="noimg"></span>';
+      }
+      function pic(a) {
+        return '<a class="pic" ' + href(a) + '><span class="ph">' + picture(a, 600) + '</span>' +
+          '<span class="kick">' + esc(kickerOf(a)) + '</span><h3 class="t">' + esc(a.title) + '</h3>' +
+          '<span class="meta">' + ago(a.published_at) + '</span></a>';
+      }
+      function lead(a) {
+        return '<a class="lead" ' + href(a) + '>' +
+          (a.image_url ? '<img src="' + esc(img(a.image_url, 1200)) + '" alt="" fetchpriority="high">' : '') +
+          '<div class="cap"><span class="tag">' + esc(kickerOf(a)) + '</span><h2>' + esc(a.title) + '</h2>' +
+          (a.excerpt ? '<p>' + esc(a.excerpt) + '</p>' : '') +
+          '<span class="meta">' + esc(a.author || "Davidgistmedia") + ' &middot; ' + ago(a.published_at) + '</span></div></a>';
+      }
+      function item(a) {
+        return '<a class="item" ' + href(a) + '><span class="th">' + picture(a, 400) + '</span>' +
+          '<span class="bd"><span class="kick">' + esc(kickerOf(a)) + '</span><h3 class="t">' + esc(a.title) + '</h3>' +
+          '<span class="meta">' + esc(a.author || "Davidgistmedia") + ' &middot; ' + ago(a.published_at) + '</span></span></a>';
+      }
+      function head(title, link, linkText) {
+        return '<div class="head"><h2>' + esc(title) + '</h2>' + (link ? '<a href="' + link + '">' + linkText + '</a>' : '') + '</div>';
+      }
+      var AD = '<div class="ad-slot"><small>Advertisement</small><div class="box"><script>atOptions={"key":"1de90f316aa8dede9349d9abffc48ea9","format":"iframe","height":250,"width":300,"params":{}};<\/script><script src="https://bauval.org/22/1de90f316aa8dede9349d9abffc48ea9"><\/script></div></div>';
+
+      /* ---------- Menu ---------- */
+      function renderNav(active) {
+        var links = ['<a href="#" data-k="home" class="' + (active === "home" ? "on" : "") + '">Home</a>'];
+        SPORTS.forEach(function (s) {
+          links.push('<a href="#' + s.key + '" data-k="' + s.key + '" class="' + (active === s.key ? "on" : "") + '">' + esc(s.label) + '</a>');
+        });
+        $("sp-nav").innerHTML = links.join("");
+      }
+
+      /* ---------- Pages ---------- */
+      function renderHome() {
+        var list = all.slice();
+        if (!list.length) { return '<div class="sp-empty">No sports stories yet. Post a story in the Sports category and it will appear here.</div>'; }
+        var lead0 = list.find(function (a) { return a.featured; }) || list[0];
+        var pool = list.filter(function (a) { return a.id !== lead0.id; });
+        function take(n) { return pool.splice(0, n); }
+        var side = take(2), row = take(4), latest = take(8);
+
+        /* Most liked, for the side box */
+        var liked = list.filter(function (a) { return (a.likes || 0) > 0; })
+          .sort(function (a, b) { return (b.likes || 0) - (a.likes || 0); }).slice(0, 5);
+        if (!liked.length) liked = list.slice(0, 5);
+
+        var html = '<div class="hero"><div>' + lead(lead0) + '</div><div class="hero-side">' + side.map(pic).join("") + '</div></div>';
+        if (row.length) html += '<div class="row4">' + row.map(pic).join("") + '</div>';
+
+        html += '<div class="cols"><div>' + head("Latest sport") +
+          (latest.length ? latest.map(item).join("") : '<div class="sp-empty" style="padding:20px 0;text-align:left">More stories soon.</div>') +
+          '</div><aside class="side"><div class="box">' + head("Most liked") +
+          '<ol class="mr">' + liked.map(function (a) { return '<li><a ' + href(a) + '>' + esc(a.title) + '</a></li>'; }).join("") + '</ol></div>' + AD + '</aside></div>';
+
+        /* a section for each sport that has stories left over */
+        SPORTS.forEach(function (s) {
+          var items = pool.filter(function (a) { return sportOf(a) === s.key; }).slice(0, 4);
+          if (items.length < 2) return;
+          html += '<section class="sec">' + head(s.label, "#" + s.key, "More " + esc(s.label) + " &rsaquo;") +
+            '<div class="grid4">' + items.map(pic).join("") + '</div></section>';
+        });
+        return html;
+      }
+
+      function renderSport(key) {
+        var s = byKey[key];
+        var list = all.filter(function (a) { return sportOf(a) === key; });
+        var html = '<h1 class="sp-page">' + esc(s.label) + '</h1>';
+        if (!list.length) return html + '<div class="sp-empty">No ' + esc(s.label) + ' stories yet. Add the tag "' + esc(s.key) + '" when you post a sports story and it will appear here.</div>';
+        var pool = list.slice();
+        var lead0 = pool.shift(), side = pool.splice(0, 2), rest = pool;
+        html += '<div class="hero"><div>' + lead(lead0) + '</div><div class="hero-side">' + side.map(pic).join("") + '</div></div>';
+        if (rest.length) html += '<section class="sec">' + head("More " + s.label) + '<div class="grid4">' + rest.map(pic).join("") + '</div></section>';
+        return html;
+      }
+
+      function show() {
+        var key = location.hash.replace("#", "");
+        if (!byKey[key]) key = "home";
+        renderNav(key);
+        $("sp-main").innerHTML = key === "home" ? renderHome() : renderSport(key);
+        document.title = (key === "home" ? "Sport" : byKey[key].label + " | Sport") + " | Davidgistmedia";
+      }
+      window.addEventListener("hashchange", function () { show(); window.scrollTo(0, 0); });
+      /* the "Home" menu link has no hash */
+      $("sp-nav").addEventListener("click", function (e) {
+        var a = e.target.closest("a[data-k=home]");
+        if (!a) return;
+        e.preventDefault();
+        history.pushState(null, "", location.pathname);
+        show(); window.scrollTo(0, 0);
+      });
+
+      /* ---------- Night mode button ---------- */
+      $("theme-btn").addEventListener("click", function () {
+        var dark = document.documentElement.getAttribute("data-theme") !== "dark";
+        document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+        try { localStorage.setItem("dg_theme", dark ? "dark" : "light"); localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+      });
+
+      /* ---------- Load the sports stories ---------- */
+      async function load() {
+        if (!sb) { $("sp-main").innerHTML = '<div class="sp-empty">Sport is not available right now.</div>'; return; }
+        var base = "id,slug,title,excerpt,image_url,ca
