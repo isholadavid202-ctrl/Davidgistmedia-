@@ -242,9 +242,7 @@
     }
   </style>
 
-  <!-- HEADER FIX (computers only, 900px and wider): Watch, Listen, search and Sign in get room
-       and never run into the tabs. Built into this file so it always loads with the page.
-       The tab-fitting script for it is further down. -->
+  <!-- HEADER FIX (computers only, 900px and wider) -->
   <style>
     @media (min-width: 900px) {
       .masthead .topbar .acct { gap: 8px; }
@@ -256,7 +254,6 @@
       }
       .masthead .topbar .acct .top-extra svg,
       .masthead .topbar .acct .d-dot { flex: 0 0 auto; }
-      /* a long name on the Sign in button is shortened with "..." instead of pushing everything */
       .masthead .topbar .acct .top-account-link {
         max-width: 170px;
         overflow: hidden;
@@ -267,7 +264,6 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-      /* tabs keep their size; the script moves extra ones into "More" when space is short */
       .masthead .topbar #tabs > button,
       .masthead .topbar #tabs > a,
       .masthead .topbar #tabs .tabs-more { flex: 0 0 auto; }
@@ -277,8 +273,7 @@
     }
   </style>
 
-  <!-- FULL WIDTH (computers only, 900px and wider): the page uses up to 1680px of the screen, like CNN,
-       instead of 1280px. The header, the headlines strip and the body all share the same width. -->
+  <!-- FULL WIDTH (computers only, 900px and wider) -->
   <style>
     @media (min-width: 900px) {
       :root { --dg-max: 1680px; --dg-pad: clamp(20px, 2.4vw, 48px); }
@@ -380,7 +375,6 @@
       stroke-linejoin: round;
     }
 
-    /* swipeable pictures inside the top card */
     .dg-slides {
       position: absolute;
       inset: 0;
@@ -401,7 +395,6 @@
       scroll-snap-align: start;
     }
 
-    /* ---------- Section heading (Trending) ---------- */
     .dg-sec-head {
       display: flex;
       align-items: center;
@@ -421,7 +414,6 @@
       color: var(--ink, #111);
     }
 
-    /* ---------- Big picture story: full-width image, headline below ---------- */
     .dg-big {
       display: block;
       padding: 18px 0;
@@ -445,7 +437,6 @@
       color: var(--ink, #111);
     }
 
-    /* ---------- Other stories: thumbnail left, headline right ---------- */
     .dg-list { margin-top: 8px; }
     .dg-row {
       display: flex;
@@ -832,7 +823,7 @@
       <button data-cat="africa">Africa</button>
       <button data-cat="politics">Politics</button>
       <button data-cat="entertainment">Entertainment</button>
-      <a href="sport.html">Sport</a>
+      <button onclick="window.location.href='sport.html'">Sport</button>
       <button data-cat="business">Business</button>
       <button data-cat="technology">Technology</button>
       <button data-cat="science">Science</button>
