@@ -68,6 +68,22 @@
             </div>
           </div>
 
+          <!-- Sport: appears when the category is Sports. It adds the sport's tag for you, so the story shows under that sport on the Sport page. -->
+          <div id="sport-pick" style="display:none">
+            <label for="sport-kind">Sport (shows this story under that sport on the Sport page)</label>
+            <select id="sport-kind">
+              <option value="">Not sure / other sport</option>
+              <option value="football">Football</option>
+              <option value="basketball">Basketball</option>
+              <option value="athletics">Athletics</option>
+              <option value="boxing">Boxing &amp; MMA</option>
+              <option value="tennis">Tennis</option>
+              <option value="cricket">Cricket</option>
+              <option value="rugby">Rugby</option>
+              <option value="motorsport">Motorsport</option>
+            </select>
+          </div>
+
           <!-- Pictures and video are added here by js/media-upload.js -->
           <div id="media-box"></div>
 
@@ -455,6 +471,62 @@
           }, 0);
         });
       }
+    })();
+  </script>
+
+  <!-- Sport picker: shows a Sport dropdown when the category is Sports and keeps the Tags box in step with it.
+       It only reads and writes the Tags box, so admin.js does not need to change. -->
+  <script>
+    (function () {
+      var KEYS = ["football", "basketball", "athletics", "boxing", "tennis", "cricket", "rugby", "motorsport"];
+      var cat = document.getElementById("category");
+      var tags = document.getElementById("tags");
+      var pick = document.getElementById("sport-pick");
+      var sel = document.getElementById("sport-kind");
+      if (!cat || !tags || !pick || !sel) return;
+
+      function list() {
+        return tags.value.split(",").map(function (t) { return t.trim(); }).filter(Boolean);
+      }
+      function currentSport() {
+        var l = list().map(function (t) { return t.toLowerCase(); });
+        for (var i = 0; i < KEYS.length; i++) { if (l.indexOf(KEYS[i]) > -1) return KEYS[i]; }
+        return "";
+      }
+      /* write the chosen sport into the Tags box (and remove any other sport tag) */
+      function apply() {
+        var l = list().filter(function (t) { return KEYS.indexOf(t.toLowerCase()) === -1; });
+        if (cat.value === "sports" && sel.value) l.push(sel.value);
+        tags.value = l.join(", ");
+        last = tags.value;
+      }
+      var last = tags.value;
+      function refresh() {
+        var isSports = cat.value === "sports";
+        pick.style.display = isSports ? "block" : "none";
+        if (isSports) sel.value = currentSport();
+        else sel.value = "";
+      }
+
+      cat.addEventListener("change", function () {
+        if (cat.value !== "sports") { sel.value = ""; apply(); }
+        refresh();
+        if (cat.value === "sports") { sel.value = currentSport(); }
+      });
+      sel.addEventListener("change", apply);
+      tags.addEventListener("input", function () { last = tags.value; if (cat.value === "sports") sel.value = currentSport(); });
+
+      /* The newsroom form fills these boxes itself when you open a story to edit, or clears them after publishing.
+         That does not trigger the events above, so check for it a couple of times a second. */
+      var lastCat = cat.value;
+      setInterval(function () {
+        if (cat.value !== lastCat || tags.value !== last) {
+          lastCat = cat.value;
+          last = tags.value;
+          refresh();
+        }
+      }, 500);
+      refresh();
     })();
   </script>
 </body>
