@@ -242,7 +242,9 @@
     }
   </style>
 
-  <!-- HEADER FIX (computers only, 900px and wider) -->
+  <!-- HEADER FIX (computers only, 900px and wider): Watch, Listen, search and Sign in get room
+       and never run into the tabs. Built into this file so it always loads with the page.
+       The tab-fitting script for it is further down. -->
   <style>
     @media (min-width: 900px) {
       .masthead .topbar .acct { gap: 8px; }
@@ -254,6 +256,7 @@
       }
       .masthead .topbar .acct .top-extra svg,
       .masthead .topbar .acct .d-dot { flex: 0 0 auto; }
+      /* a long name on the Sign in button is shortened with "..." instead of pushing everything */
       .masthead .topbar .acct .top-account-link {
         max-width: 170px;
         overflow: hidden;
@@ -264,6 +267,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+      /* tabs keep their size; the script moves extra ones into "More" when space is short */
       .masthead .topbar #tabs > button,
       .masthead .topbar #tabs > a,
       .masthead .topbar #tabs .tabs-more { flex: 0 0 auto; }
@@ -273,7 +277,8 @@
     }
   </style>
 
-  <!-- FULL WIDTH (computers only, 900px and wider) -->
+  <!-- FULL WIDTH (computers only, 900px and wider): the page uses up to 1680px of the screen, like CNN,
+       instead of 1280px. The header, the headlines strip and the body all share the same width. -->
   <style>
     @media (min-width: 900px) {
       :root { --dg-max: 1680px; --dg-pad: clamp(20px, 2.4vw, 48px); }
@@ -283,7 +288,10 @@
     }
   </style>
 
-  <!-- Homepage feed styles -->
+  <!-- NEW 1 of 3: homepage feed styles. Only affects .dg-feed and .dg-desk.
+       Phones: top story = swipeable big card, Trending = big pictures, other stories = rows,
+       with a big picture every 5th story.
+       Computers (900px and wider): CNN style body. -->
   <style>
     .dg-feed { padding: 20px 0 0; }
 
@@ -375,6 +383,7 @@
       stroke-linejoin: round;
     }
 
+    /* swipeable pictures inside the top card */
     .dg-slides {
       position: absolute;
       inset: 0;
@@ -395,6 +404,7 @@
       scroll-snap-align: start;
     }
 
+    /* ---------- Section heading (Trending) ---------- */
     .dg-sec-head {
       display: flex;
       align-items: center;
@@ -414,6 +424,7 @@
       color: var(--ink, #111);
     }
 
+    /* ---------- Big picture story: full-width image, headline below ---------- */
     .dg-big {
       display: block;
       padding: 18px 0;
@@ -437,6 +448,7 @@
       color: var(--ink, #111);
     }
 
+    /* ---------- Other stories: thumbnail left, headline right ---------- */
     .dg-list { margin-top: 8px; }
     .dg-row {
       display: flex;
@@ -481,12 +493,18 @@
       color: var(--muted, #6b6b6b);
     }
 
+    /* comments never show on homepage stories */
     .dg-feed [class*="comment"] { display: none !important; }
 
+    /* when the new feed is on, hide the old story lists (not the header or menu) */
     body.dg-on #hero-section,
     body.dg-on #trending-section,
     body.dg-on #category-sections { display: none !important; }
 
+    /* ======================================================================
+       COMPUTERS and "desktop site" view only (900px and wider): CNN style body.
+       Phones never see this: .dg-desk is hidden below 900px.
+       ====================================================================== */
     .dg-desk { display: none; }
 
     @media (min-width: 900px) {
@@ -495,6 +513,7 @@
       .dg-desk a { text-decoration: none; color: var(--ink, #111); }
       .dg-desk h1, .dg-desk h2, .dg-desk h3 { margin: 0; }
 
+      /* category page title (when a tab other than Home is chosen) */
       .dg-desk .dgd-pagehead {
         margin: 0 0 22px;
         padding-bottom: 12px;
@@ -505,6 +524,7 @@
         color: var(--ink, #111);
       }
 
+      /* ---------- section titles: black bar + capital letters ---------- */
       .dgd-head {
         display: flex;
         align-items: center;
@@ -524,6 +544,7 @@
         background: var(--ink, #111);
       }
 
+      /* ---------- story blocks ---------- */
       .dgd-item { display: block; margin: 0 0 22px; }
       .dgd-ph { display: block; margin: 0 0 10px; }
       .dgd-ph img,
@@ -562,6 +583,7 @@
       .dgd-text:hover,
       .dgd-mini a:hover span { text-decoration: underline; }
 
+      /* headline only, with a thin line above */
       .dgd-text {
         display: block;
         padding: 12px 0;
@@ -571,6 +593,7 @@
         color: var(--ink, #111);
       }
 
+      /* small picture on the left, headline on the right */
       .dgd-row {
         display: flex;
         align-items: flex-start;
@@ -592,6 +615,7 @@
       .dgd-row .dgd-t { font-size: 15px; font-weight: 600; line-height: 1.32; }
       .dgd-body { flex: 1; min-width: 0; }
 
+      /* ---------- top: three columns ---------- */
       .dgd-top {
         display: grid;
         column-gap: 30px;
@@ -599,6 +623,7 @@
       }
       .dgd-col { min-width: 0; }
 
+      /* middle: big headline above the picture */
       .dgd-lead { display: block; text-align: center; margin: 0 0 22px; }
       .dgd-lead h2 {
         margin: 0 0 18px;
@@ -639,6 +664,7 @@
       .dgd-mini .dgd-noimg { aspect-ratio: 16 / 10; border-radius: 3px; margin-bottom: 8px; display: block; width: 100%; object-fit: cover; background: var(--line, #dcdcdc); }
       .dgd-mini span { display: block; font-size: 14px; font-weight: 600; line-height: 1.3; color: var(--ink, #111); }
 
+      /* ---------- spotlight: big picture with words on it + small stories ---------- */
       .dgd-spot {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
@@ -677,6 +703,7 @@
       .dgd-cap h3 { font-size: 28px; font-weight: 800; line-height: 1.18; margin: 0 0 8px; }
       .dgd-cap .dgd-by { color: rgba(255,255,255,.8) !important; }
 
+      /* ---------- category sections: three across ---------- */
       .dgd-band {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -688,6 +715,7 @@
       .dgd-sec { min-width: 0; }
       .dgd-spot > div + div .dgd-row:first-child { border-top: 0; padding-top: 0; }
 
+      /* ---------- Top Picks: three tall cards ---------- */
       .dgd-picks { margin-top: 48px; }
       .dgd-picks h2 { margin: 0 0 16px; font-size: 26px; font-weight: 800; color: var(--ink, #111); }
       .dgd-picks__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
@@ -708,6 +736,7 @@
       }
       .dgd-pick .dgd-cap h3 { font-size: 21px; margin: 0; }
 
+      /* ---------- everything else ---------- */
       .dgd-more { margin-top: 48px; }
       .dgd-more__list {
         display: grid;
@@ -716,6 +745,7 @@
       }
     }
 
+    /* narrower computer screens */
     @media (min-width: 900px) and (max-width: 1199px) {
       .dgd-top, .dgd-spot, .dgd-band { column-gap: 20px; }
       .dgd-more__list { column-gap: 20px; }
@@ -797,7 +827,6 @@
     </div>
 
     <div class="wrap drawer" id="drawer">
-      <a href="sport.html">Sport</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="editorial-policy.html">Editorial Policy</a>
@@ -823,7 +852,7 @@
       <button data-cat="africa">Africa</button>
       <button data-cat="politics">Politics</button>
       <button data-cat="entertainment">Entertainment</button>
-      <button onclick="window.location.href='sport.html'">Sport</button>
+      <button data-cat="sports">Sports</button>
       <button data-cat="business">Business</button>
       <button data-cat="technology">Technology</button>
       <button data-cat="science">Science</button>
@@ -838,7 +867,9 @@
     </nav>
   </header>
 
-  <!-- Places tabs and sign-in button -->
+  <!-- Places the tabs and the Sign in link.
+       Phones: tabs sit under the header and stay at the top while scrolling.
+       Computers: tabs sit in the top row, with a "More" dropdown, and Sign in sits at the right. -->
   <script>
     (function () {
       var t = document.getElementById("tabs");
@@ -851,7 +882,7 @@
       var link = document.getElementById("top-account-link");
       var utilWrap = document.querySelector(".util-bar .wrap");
       var mq = window.matchMedia("(min-width: 900px)");
-
+      /* how many tabs stay in the row; the rest go under "More" */
       function keepCount() {
         var w = window.innerWidth;
         return w >= 1280 ? 8 : (w >= 1100 ? 5 : 4);
@@ -905,21 +936,24 @@
     })();
   </script>
 
-  <!-- Latest headlines strip (computers only) -->
+  <!-- Latest headlines strip (computers only, filled in below) -->
   <div class="topic-strip" id="topic-strip"></div>
 
   <main class="wrap">
     <section class="hero-section" id="hero-section"></section>
 
+    <!-- NEW 2 of 3: the new feed goes here.
+         dg-feed = the phone version. dg-desk = the computer (CNN style) version. -->
     <div class="dg-feed" id="dg-feed"></div>
     <div class="dg-desk" id="dg-desk"></div>
 
     <div id="live-banner"></div>
     <div id="trending-section"></div>
     <div id="podcast-home"></div>
+    <!-- The video sections start here, and the feed script below moves them into the middle of the page -->
     <div id="video-home"></div>
 
-    <!-- Adsterra banner 300x250 -->
+    <!-- Adsterra banner 300x250 (phones and computers) -->
     <div class="ad-slot">
       <span class="ad-label">Advertisement</span>
       <div class="ad-box ad-tall">
@@ -950,5 +984,505 @@
   <script src="js/category-view.js?v=2"></script>
   <script src="js/desktop-home.js?v=3"></script>
 
+  <!-- HEADER FIX script (computers only, 900px and wider).
+       Keeps the row of tabs from running into Watch, Listen, search and Sign in by moving
+       tabs into the "More" menu until everything fits. Phones are not affected.
+       Built into this file so it always loads with the page. -->
+  <script>
+    (function () {
+      var t = document.getElementById("tabs");
+      var more = t && t.querySelector(".tabs-more");
+      var panel = more && more.querySelector(".more-panel");
+      var acct = document.querySelector(".masthead .acct");
+      if (!t || !more || !panel || !acct) return;
+
+      var mq = window.matchMedia("(min-width: 900px)");
+
+      /* every tab, in its original order */
+      var all = [].slice.call(t.children)
+        .filter(function (el) { return el !== more; })
+        .concat([].slice.call(panel.children));
+
+      /* the most tabs we would like to show on each screen size (wide screens show more, like CNN) */
+      function wanted() {
+        var w = window.innerWidth;
+        return w >= 1700 ? 12 : (w >= 1500 ? 10 : (w >= 1280 ? 8 : (w >= 1100 ? 5 : 4)));
+      }
+
+      function place(keep) {
+        all.forEach(function (el, i) {
+          if (i >= keep) panel.appendChild(el);
+          else t.insertBefore(el, more);
+        });
+      }
+
+      /* true when the last tab ("More") reaches the right-hand items */
+      function tooWide() {
+        return more.getBoundingClientRect().right > acct.getBoundingClientRect().left - 12;
+      }
+
+      var busy = false;
+      function fit() {
+        if (busy || !mq.matches) return;
+        busy = true;
+        var keep = Math.min(wanted(), all.length);
+        place(keep);
+        while (keep > 2 && tooWide()) {
+          keep--;
+          place(keep);
+        }
+        busy = false;
+      }
+
+      fit();
+      window.addEventListener("load", fit);
+      window.addEventListener("resize", fit);
+      if (mq.addEventListener) mq.addEventListener("change", fit);
+      else if (mq.addListener) mq.addListener(fit);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+      /* runs again when Watch / Listen appear or the signed-in name loads */
+      if (window.ResizeObserver) new ResizeObserver(fit).observe(acct);
+    })();
+  </script>
+
+  <script src="js/live-audio-home.js?v=2"></script>
+  <script src="js/podcast-home.js"></script>
+  <script src="js/video-home.js?v=2"></script>
+  <script src="js/install-banner.js?v=1"></script>
+
+  <!-- Fills the latest headlines strip each time the homepage is drawn -->
+  <script>
+    (function () {
+      if (typeof renderPage !== "function") return;
+      var base = renderPage;
+      function esc(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      function strip() {
+        var box = document.getElementById("topic-strip");
+        if (!box) return;
+        if (activeCategory !== "all" || !allArticles.length) { box.innerHTML = ""; return; }
+        box.innerHTML = allArticles.slice(0, 8).map(function (a) {
+          return '<a href="article.html?slug=' + encodeURIComponent(a.slug) + '">' + esc(a.title) + "</a>";
+        }).join("");
+      }
+      renderPage = function () { base(); strip(); };
+      if (allArticles.length) strip();
+    })();
+  </script>
+
+  <!-- NEW 3 of 3: draws the feed using your own home.js functions.
+       Phones: swipeable top card, Trending, rows, a big picture every 5th story.
+       Computers (900px and wider): CNN style body. No comments anywhere.
+       The Short Videos and Long Videos sections are moved into the middle of the page. -->
+  <script>
+    (function () {
+      if (typeof renderPage !== "function") return;
+      var base = renderPage;
+
+      /* The "Short Videos" and "Long Videos" sections (made by video-home.js) are moved into the middle of the page.
+         .dg-video-slot is the empty spot reserved for them: phones use the one in the list, computers the one in the CNN body. */
+      var vh = document.getElementById("video-home");
+      var mqDesk = window.matchMedia("(min-width: 900px)");
+      var SLOT = '<div class="dg-video-slot"></div>';
+      function parkVideo() {
+        /* before the feed is redrawn, take the video section out so it is not thrown away */
+        var m = document.querySelector("main");
+        if (vh && m && vh.parentNode !== m) m.appendChild(vh);
+      }
+      function placeVideo() {
+        if (!vh) return;
+        var host = document.querySelector(mqDesk.matches ? "#dg-desk .dg-video-slot" : "#dg-feed .dg-video-slot");
+        if (host && vh.parentNode !== host) host.appendChild(vh);
+      }
+      if (mqDesk.addEventListener) mqDesk.addEventListener("change", placeVideo);
+      else if (mqDesk.addListener) mqDesk.addListener(placeVideo);
+
+      var camera = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>';
+
+      function meta(a) {
+        return '<div class="dg-row__meta">' + authorHtml(a.author) + " · " + formatWhen(a.published_at) + "</div>";
+      }
+      function link(a) {
+        return 'href="article.html?slug=' + encodeURIComponent(a.slug) + '"';
+      }
+
+      /* the very first story: big card with text on the picture.
+         With more than one picture, they can be swiped left and right. */
+      function leadCard(a) {
+        var pics = leadPictures(a);
+        var multi = pics.length > 1;
+        var media;
+        if (multi) {
+          media = '<div class="dg-slides">' + pics.map(function (u, i) {
+            return '<img src="' + escapeHtml(getOptimizedImage(u, 800)) + '" alt="" draggable="false" ' +
+                   (i === 0 ? 'fetchpriority="high"' : 'loading="lazy"') + ">";
+          }).join("") + "</div>" +
+          '<div class="dg-card__count" aria-hidden="true">' + camera + "<span>1</span>/" + pics.length + "</div>";
+        } else {
+          media = a.image_url
+            ? '<img class="dg-card__img" src="' + escapeHtml(getOptimizedImage(a.image_url, 800)) + '" alt="" fetchpriority="high">'
+            : "";
+        }
+        return '<a class="dg-card" ' + link(a) + ">" + media +
+          '<div class="dg-card__content">' +
+            '<span class="dg-card__badge">' + escapeHtml(a.category) + "</span>" +
+            '<h2 class="dg-card__title">' + escapeHtml(a.title) + "</h2>" +
+            '<div class="dg-card__meta">' + authorHtml(a.author) + " · " + formatWhen(a.published_at) + "</div>" +
+          "</div></a>";
+      }
+
+      /* updates the "1/2" number while swiping */
+      function wireSlides(box) {
+        box.querySelectorAll(".dg-slides").forEach(function (slides) {
+          var counter = slides.parentElement.querySelector(".dg-card__count span");
+          if (!counter) return;
+          slides.addEventListener("scroll", function () {
+            var w = slides.clientWidth || 1;
+            counter.textContent = String(Math.round(slides.scrollLeft / w) + 1);
+          }, { passive: true });
+        });
+      }
+
+      /* big picture story: full-width picture, headline below */
+      function big(a) {
+        return '<a class="dg-big" ' + link(a) + ">" +
+          (a.image_url
+            ? '<img class="dg-big__img" src="' + escapeHtml(getOptimizedImage(a.image_url, 800)) + '" alt="" loading="lazy">'
+            : '<div class="dg-big__ph"></div>') +
+          '<h3 class="dg-big__title"><span class="dg-row__tag">' + escapeHtml(a.category) + "</span>" + escapeHtml(a.title) + "</h3>" +
+          meta(a) + "</a>";
+      }
+
+      /* small story: thumbnail left, headline right */
+      function row(a) {
+        return '<a class="dg-row" ' + link(a) + ">" +
+          (a.image_url
+            ? '<img class="dg-row__img" src="' + escapeHtml(getOptimizedImage(a.image_url, 400)) + '" alt="" loading="lazy">'
+            : '<div class="dg-row__ph"></div>') +
+          '<div class="dg-row__body">' +
+            '<h3 class="dg-row__title"><span class="dg-row__tag">' + escapeHtml(a.category) + "</span>" + escapeHtml(a.title) + "</h3>" +
+            meta(a) +
+          "</div></a>";
+      }
+
+      /* ====================================================================
+         COMPUTER VERSION (shown only on screens 900px and wider, see the CSS).
+         CNN style: three columns on top, a spotlight story, category sections,
+         Top Picks, then everything else.
+         ==================================================================== */
+      function dImg(a, w) {
+        return a.image_url
+          ? '<img src="' + escapeHtml(getOptimizedImage(a.image_url, w)) + '" alt="" loading="lazy">'
+          : '<span class="dgd-noimg"></span>';
+      }
+      function ago(a) { return timeAgo(a.published_at); }
+
+      /* picture, small red label, headline, time */
+      function dPic(a) {
+        return '<a class="dgd-item" ' + link(a) + '>' +
+          '<span class="dgd-ph">' + dImg(a, 600) + '</span>' +
+          '<span class="dgd-kick">' + escapeHtml(a.category) + '</span>' +
+          '<h3 class="dgd-t">' + escapeHtml(a.title) + '</h3>' +
+          '<span class="dgd-meta">' + ago(a) + '</span></a>';
+      }
+      /* headline only */
+      function dText(a) {
+        return '<a class="dgd-text" ' + link(a) + '>' + escapeHtml(a.title) + '</a>';
+      }
+      /* small picture left, headline right */
+      function dRow(a) {
+        return '<a class="dgd-row" ' + link(a) + '>' +
+          '<span class="dgd-th">' + dImg(a, 300) + '</span>' +
+          '<span class="dgd-body"><h3 class="dgd-t">' + escapeHtml(a.title) + '</h3>' +
+          '<span class="dgd-meta">' + ago(a) + '</span></span></a>';
+      }
+      /* three small pictures in a row */
+      function dMini(list) {
+        return '<div class="dgd-mini">' + list.map(function (a) {
+          return '<a ' + link(a) + '>' + dImg(a, 300) + '<span>' + escapeHtml(a.title) + '</span></a>';
+        }).join("") + '</div>';
+      }
+      /* picture with the words on it */
+      function dOverlay(a) {
+        return '<a class="dgd-ovl" ' + link(a) + '>' +
+          (a.image_url ? '<img src="' + escapeHtml(getOptimizedImage(a.image_url, 1000)) + '" alt="" loading="lazy">' : '') +
+          '<div class="dgd-cap"><span class="dgd-badge">' + escapeHtml(a.category) + '</span>' +
+          '<h3>' + escapeHtml(a.title) + '</h3>' +
+          '<span class="dgd-by">' + authorHtml(a.author) + ' · ' + formatWhen(a.published_at) + '</span></div></a>';
+      }
+      /* tall card */
+      function dPick(a) {
+        return '<a class="dgd-pick" ' + link(a) + '>' +
+          (a.image_url ? '<img src="' + escapeHtml(getOptimizedImage(a.image_url, 700)) + '" alt="" loading="lazy">' : '') +
+          '<div class="dgd-cap"><span class="dgd-badge">' + escapeHtml(a.category) + '</span>' +
+          '<h3>' + escapeHtml(a.title) + '</h3></div></a>';
+      }
+      function dSection(c, items) {
+        return '<section class="dgd-sec"><div class="dgd-head">' + escapeHtml(c) + '</div>' +
+          dPic(items[0]) + items.slice(1).map(dRow).join("") + '</section>';
+      }
+      function chunk(arr, n) {
+        var out = [];
+        for (var i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n));
+        return out;
+      }
+
+      function deskFeed(list, lead, isHome, catName) {
+        var pool = list.filter(function (a) { return a.id !== lead.id; });
+        function take(n) { return pool.splice(0, n); }
+
+        /* Trending = most liked stories */
+        var trend = pool
+          .filter(function (a) { return (a.likes || 0) > 0; })
+          .sort(function (a, b) { return (b.likes || 0) - (a.likes || 0); })
+          .slice(0, 4);
+        pool = pool.filter(function (a) { return trend.indexOf(a) === -1; });
+
+        var leftPics = take(3), leftText = take(2);
+        var midText = take(3), midMini = take(3);
+        var rightFeature = take(1);
+        var rightRows = trend.length ? trend : take(4);
+
+        /* left column */
+        var left = leftPics.map(dPic).join("") + leftText.map(dText).join("");
+
+        /* middle column */
+        var mid = '<a class="dgd-lead" ' + link(lead) + '>' +
+          '<h2>' + escapeHtml(lead.title) + '</h2>' +
+          '<span class="dgd-ph">' + dImg(lead, 1000) + '</span>' +
+          (lead.excerpt ? '<span class="dgd-deck">' + escapeHtml(lead.excerpt) + '</span>' : '') +
+          '<span class="dgd-by">' + authorHtml(lead.author) + ' · ' + formatWhen(lead.published_at) + '</span></a>' +
+          midText.map(dText).join("") +
+          (midMini.length ? dMini(midMini) : "");
+
+        /* right column */
+        var right = rightFeature.map(dPic).join("");
+        if (rightRows.length) {
+          right += '<div class="dgd-head" style="margin-top:6px">' + (trend.length ? "Trending" : "Latest") + '</div>' +
+                   rightRows.map(dRow).join("");
+        }
+
+        /* only keep the columns that have something in them */
+        var cols = [], widths = [];
+        if (left) { cols.push(left); widths.push("minmax(0,1fr)"); }
+        cols.push(mid); widths.push("minmax(0,2.1fr)");
+        if (right) { cols.push(right); widths.push("minmax(0,1fr)"); }
+        var html = (catName ? '<h1 class="dgd-pagehead">' + escapeHtml(catName) + '</h1>' : "") +
+          '<div class="dgd-top" style="grid-template-columns:' + widths.join(" ") + '">' +
+          cols.map(function (c) { return '<div class="dgd-col">' + c + '</div>'; }).join("") + '</div>';
+
+        if (isHome) {
+          /* spotlight: big picture + small stories */
+          if (pool.length >= 3) {
+            var spot = take(1)[0], side = take(Math.min(4, pool.length));
+            html += '<div class="dgd-spot"><div>' + dOverlay(spot) + '</div><div>' + side.map(dRow).join("") + '</div></div>';
+          }
+
+          /* the video sections go here: after the top stories and the spotlight, before the category rows */
+          html += SLOT;
+
+          /* Top Picks: three tall cards (chosen before the category sections use up the stories) */
+          var picks = take(3);
+
+          /* category sections: one story with a picture, then up to two small ones */
+          var order = [], groups = {};
+          pool.forEach(function (a) {
+            var c = a.category || "news";
+            if (!groups[c]) { groups[c] = []; order.push(c); }
+            groups[c].push(a);
+          });
+          var sections = order.slice(0, 12).map(function (c) {
+            var items = groups[c].slice(0, 3);
+            pool = pool.filter(function (a) { return items.indexOf(a) === -1; });
+            return { c: c, items: items };
+          });
+          var bands = chunk(sections, 3);
+          bands.forEach(function (band, i) {
+            html += '<div class="dgd-band">' + band.map(function (s) { return dSection(s.c, s.items); }).join("") + '</div>';
+            if (i === 0 && picks.length === 3) {
+              html += '<section class="dgd-picks"><h2>Top Picks</h2><div class="dgd-picks__grid">' + picks.map(dPick).join("") + '</div></section>';
+              picks = [];
+            }
+          });
+          if (picks.length === 3) {
+            html += '<section class="dgd-picks"><h2>Top Picks</h2><div class="dgd-picks__grid">' + picks.map(dPick).join("") + '</div></section>';
+          } else if (picks.length) {
+            pool = picks.concat(pool);
+          }
+        }
+
+        /* everything left over */
+        if (pool.length) {
+          html += '<section class="dgd-more"><div class="dgd-head">' + (isHome ? "More stories" : "More " + escapeHtml(catName || "stories")) + '</div>' +
+                  '<div class="dgd-more__list">' + pool.map(dRow).join("") + '</div></section>';
+        }
+        return html;
+      }
+
+      function feed() {
+        var box = document.getElementById("dg-feed");
+        if (!box) return;
+
+        var list = (typeof getFiltered === "function") ? getFiltered() : [];
+        var desk = document.getElementById("dg-desk");
+        if (!list.length) {
+          document.body.classList.remove("dg-on");
+          parkVideo();
+          box.innerHTML = "";
+          if (desk) desk.innerHTML = "";
+          return;
+        }
+
+        var lead = list.find(function (a) { return a.featured; }) || list[0];
+
+        /* Trending: the most liked stories, shown as big pictures */
+        var trending = list
+          .filter(function (a) { return a.id !== lead.id && (a.likes || 0) > 0; })
+          .sort(function (a, b) { return (b.likes || 0) - (a.likes || 0); })
+          .slice(0, 3);
+        var used = {};
+        used[lead.id] = true;
+        trending.forEach(function (a) { used[a.id] = true; });
+
+        /* every other story on the homepage; every 5th one is a big picture */
+        var rest = list.filter(function (a) { return !used[a.id]; });
+
+        var html = leadCard(lead);
+        if (trending.length) {
+          html += '<section class="dg-trend"><div class="dg-sec-head"><span class="dg-bar"></span><h2>Trending</h2></div>' +
+                  '<div class="dg-trend__grid">' + trending.map(big).join("") + "</div></section>";
+        }
+        if (rest.length) {
+          var items = rest.map(function (a, i) { return (i % 5 === 4) ? big(a) : row(a); });
+          /* the video sections go in the middle of the list (after at most 6 stories) */
+          var at = Math.max(1, Math.min(6, Math.ceil(items.length / 2)));
+          items.splice(at, 0, SLOT);
+          html += '<div class="dg-list">' + items.join("") + "</div>";
+        } else {
+          html += SLOT;
+        }
+
+        parkVideo();
+        box.innerHTML = html;
+        wireSlides(box);
+
+        /* computer version */
+        if (desk) {
+          var cat = (typeof activeCategory !== "undefined") ? activeCategory : "all";
+          var isHome = (cat === "all") && !((typeof searchQuery !== "undefined") && String(searchQuery).trim());
+          desk.innerHTML = deskFeed(list, lead, isHome, isHome ? "" : (cat !== "all" ? cat : "Search results"));
+        }
+        placeVideo();
+        document.body.classList.add("dg-on");
+      }
+
+      renderPage = function () { base(); feed(); };
+      if (typeof allArticles !== "undefined" && allArticles.length) feed();
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var menuBtn = document.getElementById("menu-btn");
+      var drawer = document.getElementById("drawer");
+      var searchBtn = document.getElementById("search-btn");
+      var form = document.getElementById("search-form");
+      var input = document.getElementById("search-input");
+      if (menuBtn && drawer) {
+        menuBtn.addEventListener("click", function () {
+          var open = drawer.classList.toggle("open");
+          menuBtn.setAttribute("aria-expanded", open);
+        });
+      }
+      if (searchBtn && form) {
+        searchBtn.addEventListener("click", function () {
+          var closed = form.classList.toggle("is-closed");
+          searchBtn.setAttribute("aria-expanded", !closed);
+          if (!closed && input) input.focus();
+        });
+      }
+    })();
+
+    // Night Mode Toggle Functionality
+    (function () {
+      const themeBtn = document.getElementById("theme-toggle-btn");
+      const themeIcon = document.getElementById("theme-icon");
+
+      function applyTheme(isDark) {
+        document.body.classList.toggle("dark-mode", isDark);
+        document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+        if (themeIcon) themeIcon.className = isDark ? "fa-solid fa-sun" : "fa-regular fa-moon";
+      }
+
+      let saved = null;
+      try { saved = localStorage.getItem("dg_theme") || localStorage.getItem("theme"); } catch (e) {}
+      applyTheme(saved === "dark");
+
+      if (themeBtn) {
+        themeBtn.addEventListener("click", function () {
+          const isDark = !document.body.classList.contains("dark-mode");
+          applyTheme(isDark);
+          // Saved under both names so the homepage and the story pages stay in step
+          try {
+            localStorage.setItem("dg_theme", isDark ? "dark" : "light");
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+          } catch (e) {}
+        });
+      }
+    })();
+
+    // Dynamic Account Check
+    async function updateHeaderAccount() {
+      const accountBtn = document.getElementById("top-account-link");
+      if (!accountBtn) return;
+
+      try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+
+        if (user) {
+          accountBtn.href = "profile.html";
+          const { data: profile } = await supabaseClient
+            .from("profiles")
+            .select("full_name, avatar_url")
+            .eq("id", user.id)
+            .single();
+
+          const displayName = profile?.full_name || user.user_metadata?.full_name || "My account";
+          const avatarUrl = profile?.avatar_url;
+
+          if (avatarUrl) {
+            accountBtn.innerHTML = `
+              <img src="${escapeHtml(avatarUrl)}" alt="" style="width:18px; height:18px; border-radius:50%; object-fit:cover; border:1px solid #bb1919;">
+              <span>${escapeHtml(displayName)}</span>
+            `;
+          } else {
+            accountBtn.textContent = displayName;
+          }
+        } else {
+          accountBtn.textContent = "Sign in";
+          accountBtn.href = "profile.html";
+        }
+      } catch (e) {
+        console.error("Auth check error:", e);
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str == null ? "" : str)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    document.addEventListener("DOMContentLoaded", updateHeaderAccount);
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/service-worker.js");
+      });
+    }
+  </script>
 </body>
 </html>
