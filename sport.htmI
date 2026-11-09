@@ -369,4 +369,22 @@
       /* ---------- Load the sports stories ---------- */
       async function load() {
         if (!sb) { $("sp-main").innerHTML = '<div class="sp-empty">Sport is not available right now.</div>'; return; }
-        var base = "id,slug,title,excerpt,image_url,ca
+        var base = "id,slug,title,excerpt,image_url,category,author,published_at,likes,featured";
+        var sets = [base + ",images,tags", base + ",images", base];
+        var res = null;
+        for (var i = 0; i < sets.length; i++) {
+          res = await sb.from("articles").select(sets[i]).eq("category", "sports")
+            .order("published_at", { ascending: false }).limit(100);
+          if (!res.error) break;
+          if (!/images|tags|column/i.test(res.error.message || "")) break;
+        }
+        if (!res || res.error) { $("sp-main").innerHTML = '<div class="sp-empty">Couldn\'t load sport right now. Please try again.</div>'; return; }
+        all = (res.data || []).filter(function (a) { return a && a.slug && a.title; });
+        show();
+      }
+      renderNav("home");
+      load();
+    })();
+  </script>
+</body>
+</html>
