@@ -11,6 +11,11 @@
     })();
   </script>
 
+  <!-- Old links such as index.html#sports now go to the Sport page -->
+  <script>
+    if (location.hash === "#sports") location.replace("sport.html");
+  </script>
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6QHB1S6KFV"></script>
   <script>
@@ -827,6 +832,7 @@
     </div>
 
     <div class="wrap drawer" id="drawer">
+      <a href="sport.html">Sport</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="editorial-policy.html">Editorial Policy</a>
@@ -852,7 +858,7 @@
       <button data-cat="africa">Africa</button>
       <button data-cat="politics">Politics</button>
       <button data-cat="entertainment">Entertainment</button>
-      <button data-cat="sports">Sports</button>
+      <a href="sport.html">Sport</a>
       <button data-cat="business">Business</button>
       <button data-cat="technology">Technology</button>
       <button data-cat="science">Science</button>
@@ -974,7 +980,7 @@
   </main>
 
   <div id="site-footer"></div>
-  <script src="js/footer.js?v=3"></script>
+  <script src="js/footer.js?v=4"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
