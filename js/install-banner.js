@@ -26,25 +26,27 @@
   function show() {
     var css = document.createElement("style");
     css.textContent =
-      "#dgm-install{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));" +
-      "max-width:520px;margin:0 auto;z-index:9999;background:#fff;color:#1a1a1a;border:1px solid #ddd;" +
-      "border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.18);padding:10px 12px;display:flex;" +
-      "align-items:center;gap:10px;font-family:system-ui,-apple-system,Arial,sans-serif}" +
-      "#dgm-install img{width:40px;height:40px;border-radius:8px;flex:0 0 40px}" +
+      "#dgm-install{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));" +
+      "max-width:480px;margin:0 auto;z-index:9999;background:#111;color:#fff;border-radius:12px;" +
+      "box-shadow:0 6px 20px rgba(0,0,0,.28);padding:8px 8px 8px 10px;display:flex;align-items:center;gap:10px;" +
+      "font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif}" +
+      "#dgm-install img{width:34px;height:34px;border-radius:8px;flex:0 0 34px}" +
       "#dgm-install .dgm-txt{flex:1;min-width:0}" +
-      "#dgm-install strong{display:block;font-size:14px;line-height:1.25}" +
-      "#dgm-install span{display:block;font-size:12px;color:#555;line-height:1.3;margin-top:2px}" +
-      "#dgm-install .dgm-btn{background:#c8102e;color:#fff;text-decoration:none;font-weight:700;" +
-      "font-size:13px;padding:9px 14px;border-radius:6px;white-space:nowrap}" +
-      "#dgm-install .dgm-x{background:none;border:0;font-size:24px;line-height:1;color:#666;" +
-      "padding:0 4px;cursor:pointer}";
+      "#dgm-install strong{display:block;font-size:13px;line-height:1.25;font-weight:800;color:#fff;" +
+      "white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
+      "#dgm-install span{display:block;font-size:11.5px;color:#bdbdbd;line-height:1.3;margin-top:1px;" +
+      "white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
+      "#dgm-install .dgm-btn{background:#ffd230;color:#111;text-decoration:none;font-weight:800;" +
+      "font-size:12.5px;padding:8px 14px;border-radius:999px;white-space:nowrap}" +
+      "#dgm-install .dgm-x{background:none;border:0;font-size:22px;line-height:1;color:#9a9a9a;" +
+      "padding:0 6px;cursor:pointer}";
     document.head.appendChild(css);
 
     var bar = document.createElement("div");
     bar.id = "dgm-install";
     var sub = isAndroid
-      ? "Read breaking news faster, right from your home screen."
-      : "Tap the Share button, then Add to Home Screen.";
+      ? "Faster news, right from your home screen."
+      : "Tap Share, then Add to Home Screen.";
     bar.innerHTML =
       '<img src="favicon.png" alt="">' +
       '<div class="dgm-txt"><strong>Get the Davidgistmedia app</strong><span>' + sub + "</span></div>" +
@@ -57,5 +59,5 @@
     if (dl) dl.addEventListener("click", function () { setTimeout(hideFor7Days, 500); });
   }
 
-  setTimeout(show, 2000);
+  setTimeout(show, 6000);
 })();
