@@ -61,7 +61,7 @@
   <style>
     :root {
       --bg: #ffffff; --ink: #141414; --muted: #666666; --line: #e3e3e3; --card: #f4f4f4;
-      --red: #c8102e; --yellow: #ffd230;
+      --red: #c8102e; --dg-accent: #c8102e;
       --font: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     }
     html[data-theme="dark"] {
@@ -94,7 +94,7 @@
     .sp-search{background:var(--card);border-bottom:1px solid var(--line)}
     .sp-search form{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;gap:8px}
     .sp-search input{flex:1;min-width:0;padding:11px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:1rem;font-family:inherit}
-    .sp-search button{padding:11px 18px;border:0;border-radius:8px;background:var(--yellow);color:#111;font-weight:800;cursor:pointer;font-family:inherit}
+    .sp-search button{padding:11px 18px;border:0;border-radius:8px;background:var(--dg-accent);color:#fff;font-weight:800;cursor:pointer;font-family:inherit}
 
     /* ---------- menu ---------- */
     .sp-nav{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--line)}
@@ -102,7 +102,7 @@
     .sp-nav .in::-webkit-scrollbar{display:none}
     .sp-nav a{flex:0 0 auto;padding:15px 15px 12px;font-weight:700;font-size:.95rem;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
     .sp-nav a:hover{color:var(--ink)}
-    .sp-nav a.on{color:var(--ink);border-bottom-color:var(--yellow)}
+    .sp-nav a.on{color:var(--ink);border-bottom-color:var(--dg-accent)}
 
     main{max-width:1400px;margin:0 auto;padding:24px 20px 8px}
     .sp-page{margin:0 0 20px;font-size:2rem;font-weight:800;text-transform:capitalize}
@@ -121,7 +121,7 @@
     .lead img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
     .lead::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.6) 32%,rgba(0,0,0,0) 65%)}
     .lead .cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22px 22px 24px}
-    .lead .tag{display:inline-block;margin:0 0 10px;padding:5px 10px;border-radius:3px;background:var(--yellow);color:#111;font-size:.72rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
+    .lead .tag{display:inline-block;margin:0 0 10px;padding:5px 10px;border-radius:3px;background:var(--dg-accent);color:#fff;font-size:.72rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
     .lead h2{font-size:1.7rem;font-weight:800;line-height:1.15;color:#fff}
     .lead p{margin:10px 0 0;font-size:1rem;color:#e6e6e6;line-height:1.4}
     .lead .meta{color:#cfcfcf}
@@ -130,9 +130,9 @@
     .hero-side{display:grid;gap:22px;align-content:start}
     .row4{display:grid;gap:22px;margin-top:30px;grid-template-columns:repeat(2,minmax(0,1fr))}
 
-    /* headings with a yellow bar */
+    /* headings with a red bar */
     .head{display:flex;align-items:center;gap:10px;margin:0 0 16px}
-    .head::before{content:"";width:6px;height:1.3em;background:var(--yellow);border-radius:2px}
+    .head::before{content:"";width:6px;height:1.3em;background:var(--dg-accent);border-radius:2px}
     .head h2{font-size:1.3rem;font-weight:800}
     .head a{margin-left:auto;font-size:.85rem;font-weight:700;color:var(--muted)}
     .head a:hover{color:var(--ink)}
@@ -149,17 +149,17 @@
     .mr{list-style:none;margin:0;padding:0;counter-reset:mr}
     .mr li{counter-increment:mr;display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}
     .mr li:first-child{border-top:0;padding-top:4px}
-    .mr li::before{content:counter(mr);flex:0 0 auto;min-width:28px;font-size:1.7rem;font-weight:800;line-height:1;color:var(--yellow);-webkit-text-stroke:1px rgba(0,0,0,.25)}
+    .mr li::before{content:counter(mr);flex:0 0 auto;min-width:28px;font-size:1.7rem;font-weight:800;line-height:1;color:var(--dg-accent);-webkit-text-stroke:1px rgba(0,0,0,.25)}
     .mr a{font-size:.98rem;font-weight:700;line-height:1.3}
 
     .sec{margin-top:44px}
     .grid4{display:grid;gap:22px;grid-template-columns:repeat(2,minmax(0,1fr))}
     .grid4 .t{font-size:1rem}
 
-    /* video sections (made by js/video-home.js) use the same yellow headings */
+    /* video sections (made by js/video-home.js) use the same red headings */
     .cat-head{margin:0 0 16px}
     .cat-head .left{display:flex;align-items:center;gap:10px}
-    .cat-head .bar{display:block;width:6px;height:1.3em;background:var(--yellow);border-radius:2px}
+    .cat-head .bar{display:block;width:6px;height:1.3em;background:var(--dg-accent);border-radius:2px}
     .cat-head h2{font-size:1.3rem;font-weight:800}
     #video-home{margin-top:10px}
 
