@@ -22,7 +22,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Read the full story on Davidgistmedia.">
-  <meta name="theme-color" content="#0d0d0d">
+  <meta name="theme-color" content="#111111">
   <title id="page-title">Davidgistmedia</title>
   <link rel="stylesheet" href="styles.css?v=3">
   <link rel="stylesheet" href="bbc.css?v=14">
@@ -37,40 +37,27 @@
      crossorigin="anonymous"></script>
 
   <style>
-    /* Night mode colors: text, boxes, lines and muted text all use these */
+    /* Same colours as the homepage and the Sport page */
+    :root {
+      --bg: #ffffff; --card: #f4f4f4; --yellow: #ffd230;
+      --font: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
     html[data-theme="dark"],
     body.dark-mode {
-      --ink: #ececea;
-      --paper: #1b1b1d;
-      --page: #121213;
-      --line: #2f2f31;
-      --muted: #a3a3a0;
-      --near-black: #0a0a0b;
-      --red: #e8344c;
+      --bg: #101010; --card: #1b1b1b;
+      --ink: #f0f0f0; --paper: #1b1b1d; --page: #121213; --line: #2b2b2b;
+      --muted: #a6a6a2; --near-black: #0a0a0b; --red: #e8344c;
       color-scheme: dark;
     }
+    [hidden] { display: none !important; }
+    body { background: var(--bg); }
     html[data-theme="dark"] body,
     body.dark-mode {
-      background-color: #0d0d0d !important;
+      background-color: #101010 !important;
       color: #f0f0f0 !important;
     }
-    html[data-theme="dark"] .masthead,
-    html[data-theme="dark"] .util-bar,
-    html[data-theme="dark"] .tabs,
-    body.dark-mode .masthead,
-    body.dark-mode .util-bar,
-    body.dark-mode .tabs {
-      background-color: #161616 !important;
-      border-color: #2a2a2a !important;
-    }
     html[data-theme="dark"] a,
-    body.dark-mode a {
-      color: #f0f0f0;
-    }
-    html[data-theme="dark"] a.top-account-link,
-    body.dark-mode a.top-account-link {
-      color: #e8344c !important;
-    }
+    body.dark-mode a { color: #f0f0f0; }
     html[data-theme="dark"] .comment-form input,
     html[data-theme="dark"] .comment-form textarea,
     body.dark-mode .comment-form input,
@@ -85,9 +72,7 @@
       border-color: #3a3a3d;
     }
     html[data-theme="dark"] .engage-btn,
-    body.dark-mode .engage-btn {
-      color: #d6d6d3;
-    }
+    body.dark-mode .engage-btn { color: #d6d6d3; }
     /* The "Get the app" card */
     html[data-theme="dark"] #dgm-install,
     body.dark-mode #dgm-install {
@@ -96,283 +81,142 @@
       border-color: #333;
     }
     html[data-theme="dark"] #dgm-install span,
-    body.dark-mode #dgm-install span {
-      color: #bdbdbd;
-    }
+    body.dark-mode #dgm-install span { color: #bdbdbd; }
 
-    .util-bar .wrap {
+    /* ---------- top bar (same as the homepage) ---------- */
+    .sp-top, .sp-drawer, .sp-nav, .follow { font-family: var(--font); }
+    .sp-top { background: #111; color: #fff; }
+    .sp-top .in { max-width: 1400px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 14px; }
+    .sp-brand { font: 700 1.5rem Georgia, "Times New Roman", serif; color: #fff !important; white-space: nowrap; }
+    .sp-brand span { color: #e8344c; }
+    .sp-spacer { flex: 1; }
+    .sp-account { color: #e8344c !important; font-weight: 700; font-size: .9rem; display: inline-flex; align-items: center; gap: 6px; max-width: 150px; white-space: nowrap; }
+    .sp-account span { overflow: hidden; text-overflow: ellipsis; }
+    .sp-btn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); background: transparent; color: #fff; cursor: pointer; line-height: 1; display: grid; place-items: center; padding: 0; }
+    .sp-btn i { font-size: .95rem; }
+
+    .sp-drawer { background: #111; border-top: 1px solid #2b2b2b; }
+    .sp-drawer .in { max-width: 1400px; margin: 0 auto; padding: 4px 20px 10px; display: flex; flex-direction: column; }
+    .sp-drawer a { padding: 12px 0; border-bottom: 1px solid #2b2b2b; color: #e6e6e6 !important; font-weight: 700; font-size: .95rem; }
+    .sp-drawer a:hover { color: #fff !important; }
+
+    /* ---------- menu ---------- */
+    .sp-nav { position: sticky; top: 0; z-index: 30; background: var(--bg); border-bottom: 1px solid var(--line); }
+    .sp-nav .in { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; overflow-x: auto; scrollbar-width: none; }
+    .sp-nav .in::-webkit-scrollbar { display: none; }
+    .sp-nav a { flex: 0 0 auto; padding: 15px 15px 12px; font-weight: 700; font-size: .95rem; color: var(--muted) !important; border-bottom: 3px solid transparent; white-space: nowrap; text-decoration: none; }
+    .sp-nav a:hover { color: var(--ink) !important; }
+
+    /* ---------- small, professional follow bar ---------- */
+    .follow {
+      max-width: 720px;
+      margin: 28px auto;
+      padding: 12px 0;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-    }
-    .top-account-link {
-      color: #bb1919;
-      font-weight: 700;
-      text-decoration: none;
-      font-size: 0.9rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .masthead { padding-top: 12px; }
-    .masthead .topbar {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      padding-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 10px 12px;
+      border-top: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
     }
-    .topbar .brand-title {
-      font-size: clamp(1.35rem, 5.6vw, 2rem);
-      white-space: nowrap;
-    }
-    .topbar .icons {
-      display: flex;
-      gap: 4px;
-      flex: 0 0 80px;
-    }
-    .topbar .acct {
-      flex: 0 0 80px;
-      display: flex;
-      justify-content: flex-end;
-    }
-    .theme-toggle-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 1px solid rgba(128,128,128,0.3);
+    .follow-label { margin-right: auto; font-size: .85rem; font-weight: 700; color: var(--ink); }
+    .follow-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
       background: transparent;
-      color: var(--ink);
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      padding: 0;
-    }
-    .theme-toggle-btn i {
-      font-size: 0.95rem;
-    }
-    .topbar button {
-      width: 36px;
-      height: 36px;
-      display: grid;
-      place-items: center;
-      color: var(--ink);
-    }
-    .topbar svg {
-      width: 25px;
-      height: 25px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .masthead .drawer { display: none; flex-direction: column; align-items: stretch; text-align: left; gap: 0; padding: 4px 0 8px; }
-    .masthead .drawer.open { display: flex; }
-    .drawer a { padding: 13px 0; border-bottom: 1px solid var(--line); font-weight: 700; font-size: .95rem; }
-    .drawer a:hover { color: var(--red); }
-
-    /* ===== WhatsApp Channel box ===== */
-    .wa-box {
-      max-width: 720px;
-      margin: 32px auto;
-      padding: 22px 24px;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      background: var(--paper, #ffffff);
-      border: 1px solid var(--line, #e2e2e4);
-      border-left: 5px solid #25d366;
-      border-radius: 14px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-    .wa-icon {
-      flex: 0 0 52px;
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: #25d366;
-      display: grid;
-      place-items: center;
-    }
-    .wa-icon svg { width: 30px; height: 30px; fill: #ffffff; stroke: none; }
-    .wa-text { flex: 1 1 220px; min-width: 0; }
-    .wa-text h3 {
-      margin: 0 0 4px;
-      font-size: 1.15rem;
-      line-height: 1.25;
-      font-weight: 800;
-      color: var(--ink, #111111);
-    }
-    .wa-text p {
-      margin: 0;
-      font-size: 0.92rem;
-      line-height: 1.45;
-      color: var(--muted, #666666);
-    }
-    .wa-btn {
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 22px;
-      background: #075e54;
-      color: #ffffff !important;
-      font-size: 0.95rem;
+      font-size: .85rem;
       font-weight: 700;
+      line-height: 1;
+      color: var(--ink) !important;
       text-decoration: none !important;
-      border-radius: 999px;
-      transition: background 0.2s;
+      transition: background .15s, border-color .15s;
     }
-    .wa-btn:hover { background: #0a7a6c; }
+    .follow-btn:hover { background: var(--card); border-color: var(--muted); }
+    .follow-btn svg { flex: 0 0 auto; width: 16px; height: 16px; stroke: none; }
+    .follow-btn.wa svg { fill: #25d366; }
+    .follow-btn.tg svg { fill: #229ed9; }
     @media (max-width: 520px) {
-      .wa-box { margin: 24px 0; padding: 18px; }
-      .wa-btn { width: 100%; }
+      .follow { margin: 22px 14px; gap: 8px; }
+      .follow-label { flex: 0 0 100%; }
+      .follow-btn { flex: 1 1 0; justify-content: center; padding: 8px 10px; }
+      .sp-top .in { padding: 10px 14px; gap: 10px; }
+      .sp-brand { font-size: 1.15rem; }
+      .sp-account { font-size: .82rem; max-width: 90px; }
+      .sp-nav .in { padding: 0 8px; }
     }
-
-    /* ===== Telegram Channel box ===== */
-    .tg-box {
-      box-sizing: border-box;
-      max-width: 720px;
-      margin: 32px auto;
-      padding: 22px 24px;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      background: var(--paper, #ffffff);
-      border: 1px solid var(--line, #e2e2e4);
-      border-left: 5px solid #229ed9;
-      border-radius: 14px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-    .tg-icon {
-      flex: 0 0 52px;
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: #229ed9;
-      display: grid;
-      place-items: center;
-    }
-    .tg-icon svg { width: 30px; height: 30px; fill: #ffffff; stroke: none; }
-    .tg-text { flex: 1 1 220px; min-width: 0; }
-    .tg-text h3 {
-      margin: 0 0 4px;
-      font-size: 1.15rem;
-      line-height: 1.25;
-      font-weight: 800;
-      color: var(--ink, #111111);
-    }
-    .tg-text p {
-      margin: 0;
-      font-size: 0.92rem;
-      line-height: 1.45;
-      color: var(--muted, #666666);
-    }
-    .tg-btn {
-      box-sizing: border-box;
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 22px;
-      background: #1c7fb5;
-      color: #ffffff !important;
-      font-size: 0.95rem;
-      font-weight: 700;
-      text-decoration: none !important;
-      border-radius: 999px;
-      transition: background 0.2s;
-    }
-    .tg-btn:hover { background: #2391cc; }
-    @media (max-width: 520px) {
-      .tg-box { margin: 24px 0; padding: 18px; }
-      .tg-btn { width: 100%; }
+    @media (max-width: 360px) {
+      .sp-top .in { padding: 10px; gap: 8px; }
+      .sp-brand { font-size: 1.02rem; }
+      .sp-btn { width: 30px; height: 30px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Utility Bar -->
-  <div class="util-bar">
-    <div class="wrap">
-      <span id="today"></span>
-      <a href="profile.html" id="top-account-link" class="top-account-link">Sign in</a>
+  <div class="sp-top">
+    <div class="in">
+      <a class="sp-brand" href="index.html">David<span>gistmedia</span></a>
+      <span class="sp-spacer"></span>
+      <a class="sp-account" href="profile.html" id="top-account-link">Sign in</a>
+      <button type="button" class="sp-btn" id="theme-toggle-btn" aria-label="Switch between light and dark"><i class="fa-regular fa-moon" id="theme-icon"></i></button>
+      <button type="button" class="sp-btn" id="menu-btn" aria-label="Menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
     </div>
   </div>
 
-  <!-- Main Header with Night Mode Icon -->
-  <header class="masthead">
-    <div class="wrap topbar">
-      <div class="icons">
-        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-        </button>
-      </div>
-      <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
-      <div class="acct">
-        <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
-          <i class="fa-regular fa-moon" id="theme-icon"></i>
-        </button>
-      </div>
-    </div>
-
-    <div class="wrap drawer" id="drawer">
+  <div class="sp-drawer" id="drawer" hidden>
+    <div class="in">
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="editorial-policy.html">Editorial Policy</a>
       <a href="privacy-policy.html">Privacy</a>
       <a href="terms.html">Terms</a>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
       <a href="staff.html">Staff login</a>
       <a href="admin.html">Admin login</a>
     </div>
+  </div>
 
-    <nav class="tabs" aria-label="Main navigation">
+  <nav class="sp-nav" aria-label="News sections">
+    <div class="in">
       <a href="index.html">Home</a>
+      <a href="index.html#nigeria">Nigeria</a>
+      <a href="index.html#africa">Africa</a>
+      <a href="index.html#politics">Politics</a>
+      <a href="index.html#entertainment">Entertainment</a>
+      <a href="sport.html">Sport</a>
+      <a href="index.html#business">Business</a>
+      <a href="index.html#technology">Technology</a>
+      <a href="index.html#science">Science</a>
+      <a href="index.html#education">Education</a>
+      <a href="index.html#fashion">Fashion</a>
+      <a href="index.html#europe">Europe</a>
+      <a href="index.html#world">World</a>
+      <a href="index.html#local">Local News</a>
       <a href="podcasts.html">Podcasts</a>
       <a href="live.html">Live</a>
-    </nav>
-  </header>
+      <a href="videos.html">Videos</a>
+    </div>
+  </nav>
 
   <!-- The story is built here by js/article.js -->
   <main class="wrap article-page" id="article-root">
     <div class="empty-state">Loading story…</div>
   </main>
 
-  <!-- ===== WhatsApp Channel box + Telegram Channel box (under the story) ===== -->
+  <!-- Follow bar (under the story) -->
   <div class="wrap">
-    <div class="wa-box">
-      <div class="wa-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      </div>
-      <div class="wa-text">
-        <h3>Join Our WhatsApp Channel</h3>
-        <p>Get breaking news, entertainment and Nigeria updates from Davidgistmedia straight to your phone.</p>
-      </div>
-      <a class="wa-btn" href="https://whatsapp.com/channel/0029Vb8oG8j84OmHMlgJfw20" target="_blank" rel="noopener noreferrer">
-        Join Channel
+    <div class="follow">
+      <span class="follow-label">Follow Davidgistmedia</span>
+      <a class="follow-btn wa" href="https://whatsapp.com/channel/0029Vb8oG8j84OmHMlgJfw20" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp Channel
       </a>
-    </div>
-
-    <!-- ===== Telegram Channel box ===== -->
-    <div class="tg-box">
-      <div class="tg-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-      </div>
-      <div class="tg-text">
-        <h3>Join Our Telegram Channel</h3>
-        <p>Get breaking news, entertainment and Nigeria updates from Davidgistmedia straight to your phone.</p>
-      </div>
-      <a class="tg-btn" href="https://t.me/davidgistmediaent" target="_blank" rel="noopener noreferrer">
-        Join Channel
+      <a class="follow-btn tg" href="https://t.me/davidgistmediaent" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        Telegram Channel
       </a>
     </div>
   </div>
@@ -391,19 +235,16 @@
   <script src="/js/install-banner.js?v=1"></script>
 
   <script>
+    // Menu button
     (function () {
       var menuBtn = document.getElementById("menu-btn");
       var drawer = document.getElementById("drawer");
       if (menuBtn && drawer) {
         menuBtn.addEventListener("click", function () {
-          var open = drawer.classList.toggle("open");
-          menuBtn.setAttribute("aria-expanded", open);
+          drawer.hidden = !drawer.hidden;
+          menuBtn.setAttribute("aria-expanded", String(!drawer.hidden));
         });
       }
-      var today = document.getElementById("today");
-      if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
-        weekday: "long", day: "numeric", month: "long", year: "numeric"
-      });
     })();
 
     // Night Mode Toggle Logic (Persistent Across Articles)
@@ -455,11 +296,11 @@
 
           if (avatarUrl) {
             accountBtn.innerHTML = `
-              <img src="${escapeHtml(avatarUrl)}" alt="" style="width:18px; height:18px; border-radius:50%; object-fit:cover; border:1px solid #bb1919;">
+              <img src="${escapeHtml(avatarUrl)}" alt="" style="width:18px; height:18px; border-radius:50%; object-fit:cover; border:1px solid #e8344c;">
               <span>${escapeHtml(displayName)}</span>
             `;
           } else {
-            accountBtn.textContent = displayName;
+            accountBtn.innerHTML = "<span>" + escapeHtml(displayName) + "</span>";
           }
         } else {
           accountBtn.textContent = "Sign in";
