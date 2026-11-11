@@ -59,7 +59,7 @@
 }
 
 /* ---------- Picture caption ---------- */
-.article-page .photo-cap { border-left-color: var(--yellow); }
+.article-page .photo-cap { border-left-color: var(--dg-accent); }
 
 /* ---------- Share icons: round, thin outline ---------- */
 .article-page .share-row a {
@@ -95,7 +95,7 @@
   cursor: pointer;
 }
 .article-page .engage-btn:hover { background: var(--card); border-color: var(--muted); }
-.article-page .engage-btn.liked { background: var(--yellow); border-color: var(--yellow); color: #111; }
+.article-page .engage-btn.liked { background: var(--dg-accent); border-color: var(--dg-accent); color: #111; }
 
 /* =====================================================================
    RELATED STORIES
@@ -126,7 +126,7 @@
   content: "";
   width: 6px;
   height: 1.3em;
-  background: var(--yellow);
+  background: var(--dg-accent);
   border-radius: 2px;
 }
 #related-section .cat-head .left { display: flex; align-items: center; gap: 10px; }
@@ -134,7 +134,7 @@
   display: block;
   width: 6px;
   height: 1.3em;
-  background: var(--yellow);
+  background: var(--dg-accent);
   border-radius: 2px;
 }
 .rel-head h2,
@@ -268,7 +268,7 @@
   content: "";
   width: 6px;
   height: 1.3em;
-  background: var(--yellow);
+  background: var(--dg-accent);
   border-radius: 2px;
 }
 .article-page .comment-item { padding: 16px 0; border-top: 1px solid var(--line); }
