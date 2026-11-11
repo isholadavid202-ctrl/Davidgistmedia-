@@ -1,6 +1,6 @@
 /* Article page styles. Loads after bbc.css.
    Matches the homepage and the Sport page: yellow bar headings, red category labels,
-   bold sans-serif headlines, thin grey lines, rounded pictures. */
+   thin grey lines, rounded pictures. */
 
 /* ---------- Back link and category label ---------- */
 .article-page .back-link {
@@ -23,15 +23,17 @@
   color: var(--red);
 }
 
-/* Headline: bold sans-serif */
+/* Headline: same look as the homepage headlines (bold sans-serif, tight lines).
+   To make it a little lighter use 600, or a little stronger use 800. */
 .article-page h1,
 .ssr-article h1 {
   font-family: var(--font) !important;
-  font-weight: 800 !important;
-  font-size: clamp(1.5rem, 5.4vw, 2rem) !important;
-  line-height: 1.2 !important;
-  letter-spacing: -0.01em !important;
-  margin: 6px 0 14px !important;
+  font-weight: 700 !important;
+  font-size: clamp(1.4rem, 5.8vw, 2rem) !important;
+  line-height: 1.28 !important;
+  letter-spacing: 0 !important;
+  color: var(--ink) !important;
+  margin: 4px 0 14px !important;
 }
 
 /* First version of the page: author line above the photo */
@@ -95,19 +97,31 @@
 .article-page .engage-btn:hover { background: var(--card); border-color: var(--muted); }
 .article-page .engage-btn.liked { background: var(--yellow); border-color: var(--yellow); color: #111; }
 
-/* ---------- Related stories (built by js/article.js) ---------- */
-.rel-sec {
-  margin: 40px 0 28px;
-  padding-top: 24px;
-  border-top: 1px solid var(--line);
+/* =====================================================================
+   RELATED STORIES
+   These rules work with the new markup (.rel-*) and also with the old
+   markup (.cat-section / .story-card), so the block looks right either way.
+   Phones: a list, small picture on the left, headline on the right.
+   Wider screens: two columns, picture on top, headline underneath.
+   ===================================================================== */
+.rel-sec,
+#related-section .cat-section {
+  margin: 40px 0 28px !important;
+  padding: 24px 0 0 !important;
+  border: 0 !important;
+  border-top: 1px solid var(--line) !important;
   font-family: var(--font);
 }
-.rel-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 16px;
+
+/* heading with the yellow bar */
+.rel-head,
+#related-section .cat-head {
+  display: block;
+  margin: 0 0 18px !important;
+  padding: 0 !important;
+  border: 0 !important;
 }
+.rel-head { display: flex; align-items: center; gap: 10px; }
 .rel-head::before {
   content: "";
   width: 6px;
@@ -115,52 +129,129 @@
   background: var(--yellow);
   border-radius: 2px;
 }
-.rel-head h2 { margin: 0; font-size: 1.3rem; font-weight: 800; color: var(--ink); }
+#related-section .cat-head .left { display: flex; align-items: center; gap: 10px; }
+#related-section .cat-head .bar {
+  display: block;
+  width: 6px;
+  height: 1.3em;
+  background: var(--yellow);
+  border-radius: 2px;
+}
+.rel-head h2,
+#related-section .cat-head h2 {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: var(--font) !important;
+  font-size: 1.3rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  line-height: 1.2 !important;
+  color: var(--ink) !important;
+}
 
-.rel-item {
-  display: flex;
-  gap: 14px;
-  padding: 16px 0;
-  border-top: 1px solid var(--line);
+/* the list */
+.rel-list,
+#related-section .card-grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+}
+
+/* one story (phone: picture left, words right) */
+.rel-item,
+#related-section .story-card {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start;
+  gap: 14px !important;
+  margin: 0 !important;
+  padding: 16px 0 !important;
+  border: 0 !important;
+  border-top: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
   color: inherit;
   text-decoration: none;
 }
-.rel-item:first-child { border-top: 0; padding-top: 0; }
+.rel-item:first-child,
+#related-section .story-card:first-child { border-top: 0 !important; padding-top: 0 !important; }
+
 .rel-th { flex: 0 0 36%; }
 .rel-th img,
-.rel-noimg {
+.rel-noimg,
+#related-section .story-card > img {
   display: block;
   width: 100%;
+  height: auto !important;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: 6px;
   background: var(--card);
 }
-.rel-bd { flex: 1; min-width: 0; }
-.rel-kick {
+#related-section .story-card > img { flex: 0 0 36%; width: 36% !important; }
+
+.rel-bd,
+#related-section .story-card .body { flex: 1; min-width: 0; padding: 0 !important; }
+
+/* red category label */
+.rel-kick,
+#related-section .story-card .cat {
   display: block;
-  margin: 0 0 4px;
+  margin: 0 0 5px !important;
   font-size: .72rem;
   font-weight: 800;
   letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--red);
 }
-.rel-t {
-  display: block;
-  margin: 0;
-  font-family: var(--font);
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1.28;
-  color: var(--ink);
-}
-.rel-meta { display: block; margin-top: 6px; font-size: .8rem; color: var(--muted); }
-.rel-item:hover .rel-t { text-decoration: underline; }
 
-@media (min-width: 900px) {
-  .rel-th { flex-basis: 200px; }
-  .rel-t { font-size: 1.15rem; }
+/* headline: clean sans-serif, up to 4 lines */
+.rel-t,
+#related-section .story-card h3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+  margin: 0 !important;
+  font-family: var(--font) !important;
+  font-size: 1.02rem !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  letter-spacing: 0 !important;
+  color: var(--ink) !important;
+}
+
+/* time */
+.rel-meta,
+#related-section .story-card .meta {
+  display: block;
+  margin: 7px 0 0 !important;
+  font-size: .8rem;
+  color: var(--muted);
+}
+.rel-item:hover .rel-t,
+#related-section .story-card:hover h3 { text-decoration: underline; }
+
+/* wider screens: two columns, picture on top */
+@media (min-width: 700px) {
+  .rel-list,
+  #related-section .card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 28px 28px !important;
+  }
+  .rel-item,
+  #related-section .story-card {
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 0 !important;
+    border-top: 0 !important;
+  }
+  .rel-th { flex: none; width: 100%; }
+  #related-section .story-card > img { flex: none; width: 100% !important; }
+  .rel-t,
+  #related-section .story-card h3 { font-size: 1.08rem !important; -webkit-line-clamp: 3; }
 }
 
 /* ---------- Comments ---------- */
