@@ -3,7 +3,7 @@
 <head>
   <script>
     (function () {
-      try { if (localStorage.getItem("dg_theme") === "dark") document.documentElement.setAttribute("data-theme", "dark"); } catch (e) {}
+      try { var t = localStorage.getItem("dg_theme") || localStorage.getItem("theme"); if (t === "dark") document.documentElement.setAttribute("data-theme", "dark"); } catch (e) {}
     })();
   </script>
   <meta charset="UTF-8">
@@ -31,155 +31,111 @@
     h1,h2,h3{margin:0}
     [hidden]{display:none !important}
 
-    /* ---------- top bar ---------- */
+    /* ---------- top bars ---------- */
     .sp-top{background:#111;color:#fff}
-    .sp-top .in{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px}
-    .sp-brand{font:700 1.5rem Georgia,"Times New Roman",serif;color:#fff;white-space:nowrap}
-    .sp-brand span{color:#e8344c}
+    .sp-top .in{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:6px}
+    .sp-brand{margin-left:6px;font:700 1.5rem Georgia,"Times New Roman",serif;color:#fff;white-space:nowrap}
+    .sp-brand span{color:var(--dg-accent)}
     .sp-spacer{flex:1}
-    .sp-util{background:var(--card);border-bottom:1px solid var(--line)}
+    .sp-util{background:var(--card);border-bottom:1px solid var(--line);position:relative;z-index:50}
     .sp-util .in{max-width:1400px;margin:0 auto;padding:7px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.78rem;color:var(--muted)}
-    .sp-account{color:var(--ink);font-weight:700;font-size:.82rem;display:inline-flex;align-items:center;gap:7px;min-width:0;max-width:65%;white-space:nowrap}
-    .sp-account span{overflow:hidden;text-overflow:ellipsis}
-    .sp-account i{font-size:.8rem}
-    .sp-account img{flex:0 0 auto}
-    .sp-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;cursor:pointer;font-size:1rem;line-height:1;display:grid;place-items:center;padding:0}
-    .sp-btn i{font-size:.95rem}
-    #menu-btn,#search-btn{border:0;width:36px;height:36px}
-    .sp-top .in{gap:6px}
-    .sp-brand{margin-left:6px}
-
-    /* menu drawer and search bar */
+    .sp-account{color:var(--ink);font-weight:700;font-size:.82rem;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;padding:6px 0}
+    .sp-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;cursor:pointer;display:grid;place-items:center;padding:0}
+    #menu-btn{border:0;width:36px;height:36px}
     .sp-drawer{background:#111;border-top:1px solid #2b2b2b}
     .sp-drawer .in{max-width:1400px;margin:0 auto;padding:4px 20px 10px;display:flex;flex-direction:column}
     .sp-drawer a{padding:12px 0;border-bottom:1px solid #2b2b2b;color:#e6e6e6;font-weight:700;font-size:.95rem}
     .sp-drawer a:hover{color:#fff}
-    .sp-search{background:var(--card);border-bottom:1px solid var(--line)}
-    .sp-search form{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;gap:8px}
-    .sp-search input{flex:1;min-width:0;padding:11px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:1rem;font-family:inherit}
-    .sp-search button{padding:11px 18px;border:0;border-radius:8px;background:var(--dg-accent);color:#111;font-weight:800;cursor:pointer;font-family:inherit}
-
-    /* ---------- menu ---------- */
-    .sp-nav{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--line)}
-    .sp-nav .in{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;overflow-x:auto;scrollbar-width:none}
-    .sp-nav .in::-webkit-scrollbar{display:none}
-    .sp-nav a{flex:0 0 auto;padding:15px 15px 12px;font-weight:700;font-size:.95rem;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
-    .sp-nav a:hover{color:var(--ink)}
-    .sp-nav a.on{color:var(--ink);border-bottom-color:var(--dg-accent)}
-
-    main{max-width:1400px;margin:0 auto;padding:24px 20px 8px}
-    .sp-page{margin:0 0 20px;font-size:2rem;font-weight:800;text-transform:capitalize}
     .sp-empty{padding:60px 10px;text-align:center;color:var(--muted)}
-
-    /* ---------- story blocks ---------- */
-    .ph{display:block;margin:0 0 10px}
-    .ph img,.noimg{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:6px;background:var(--card)}
-    .kick{display:block;margin:0 0 4px;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
-    .t{display:block;font-size:1.12rem;font-weight:700;line-height:1.28}
-    .meta{display:block;margin-top:6px;font-size:.8rem;color:var(--muted)}
-    .pic:hover .t,.item:hover .t,.mr a:hover{text-decoration:underline}
-
-    /* big story with the words on the picture */
-    .lead{position:relative;display:block;overflow:hidden;border-radius:10px;background:#111;aspect-ratio:4/5;color:#fff}
-    .lead img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-    .lead::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.6) 32%,rgba(0,0,0,0) 65%);pointer-events:none}
-    .lead .cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22px 22px 24px}
-    .lead .tag{display:inline-block;margin:0 0 10px;padding:5px 10px;border-radius:3px;background:var(--dg-accent);color:#111;font-size:.72rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
-    .lead h2{font-size:1.7rem;font-weight:800;line-height:1.15;color:#fff}
-    .lead p{margin:10px 0 0;font-size:1rem;color:#e6e6e6;line-height:1.4}
-    .lead .meta{color:#cfcfcf}
-    .lead .slides{position:absolute;inset:0;z-index:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-    .lead .slides::-webkit-scrollbar{display:none}
-    .lead .slide{position:relative;flex:0 0 100%;width:100%;height:100%;scroll-snap-align:start;background:#000;overflow:hidden}
-    .lead .slide img,.lead .slide video,.lead .slide iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0;background:#000}
-    .lead .v-play,.lead .yt-play{position:absolute;inset:0;z-index:1;width:100%;height:100%;padding:0;border:0;background-color:transparent;background-position:center;background-size:cover;background-repeat:no-repeat;cursor:pointer}
-    .lead .yt-play{background-color:#000}
-    .lead .v-play span,.lead .yt-play span{position:absolute;left:50%;top:50%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;background:rgba(0,0,0,.65);border:2px solid #fff}
-    .lead .v-play span::after,.lead .yt-play span::after{content:"";position:absolute;left:26px;top:19px;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent}
-    .lead-multi .cap,.lead-media .cap{pointer-events:none}
-    .lead-media .cap h2 a{pointer-events:auto}
-    .lead-media .cap h2 a:hover{text-decoration:underline}
-    .lead.is-playing::after,.lead.is-playing .cap,.lead.is-playing .count{display:none}
-    .lead .count{position:absolute;top:12px;right:12px;z-index:3;display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(0,0,0,.62);color:#fff;font-size:.8rem;font-weight:700;pointer-events:none}
-    .lead .count svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-
-    .hero{display:grid;gap:22px}
-    .hero-side{display:grid;gap:22px;align-content:start}
-    .row4{display:grid;gap:22px;margin-top:30px;grid-template-columns:repeat(2,minmax(0,1fr))}
-
-    /* headings with a yellow bar */
-    .head{display:flex;align-items:center;gap:10px;margin:0 0 16px}
-    .head::before{content:"";width:6px;height:1.3em;background:var(--dg-accent);border-radius:2px}
-    .head h2{font-size:1.3rem;font-weight:800}
-    .head a{margin-left:auto;font-size:.85rem;font-weight:700;color:var(--muted)}
-    .head a:hover{color:var(--ink)}
-    .head h1{font-size:1.6rem;font-weight:800;line-height:1.2}
-    .head-page{margin:0 0 20px}
-
-    .cols{display:grid;gap:36px;margin-top:42px}
-    .item{display:flex;gap:14px;padding:16px 0;border-top:1px solid var(--line)}
-    .item:first-of-type{border-top:0;padding-top:0}
-    .item .th{flex:0 0 36%}
-    .item .th img,.item .th .noimg{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:var(--card)}
-    .item .bd{flex:1;min-width:0}
-    .item .t{font-size:1.05rem}
-
-    .side .box{background:var(--card);border-radius:10px;padding:18px 18px 8px;margin-bottom:26px}
-    .mr{list-style:none;margin:0;padding:0;counter-reset:mr}
-    .mr li{counter-increment:mr;display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}
-    .mr li:first-child{border-top:0;padding-top:4px}
-    .mr li::before{content:counter(mr);flex:0 0 auto;min-width:28px;font-size:1.7rem;font-weight:800;line-height:1;color:var(--dg-accent);-webkit-text-stroke:1px rgba(0,0,0,.25)}
-    .mr a{font-size:.98rem;font-weight:700;line-height:1.3}
-
-    .sec{margin-top:44px}
-    .grid4{display:grid;gap:22px;grid-template-columns:repeat(2,minmax(0,1fr))}
-    .grid4 .t{font-size:1rem}
-
-    /* video sections (made by js/video-home.js) use the same yellow headings */
-    .cat-head{margin:0 0 16px}
-    .cat-head .left{display:flex;align-items:center;gap:10px}
-    .cat-head .bar{display:block;width:6px;height:1.3em;background:var(--dg-accent);border-radius:2px}
-    .cat-head h2{font-size:1.3rem;font-weight:800}
-    #video-home{margin-top:10px}
-
-    /* the "Get the app" card in night mode */
-    html[data-theme="dark"] #dgm-install{background:#1b1b1d;color:#ececea;border-color:#333}
-    html[data-theme="dark"] #dgm-install span{color:#bdbdbd}
-
-    /* ---------- small phones ---------- */
-    @media (max-width: 520px) {
-      .sp-top .in{padding:10px 14px;gap:10px}
+    @media (max-width:520px){
+      .sp-top .in{padding:10px 14px}
       .sp-brand{font-size:1.15rem}
       .sp-util .in{padding:7px 14px}
-      .sp-nav .in{padding:0 8px}
-      main{padding-left:14px;padding-right:14px}
-    }
-    @media (max-width: 360px) {
-      .sp-top .in{padding:10px;gap:8px}
-      .sp-brand{font-size:1.02rem}
-      .sp-btn{width:30px;height:30px}
     }
 
-    /* ---------- computers ---------- */
-    @media (min-width: 900px) {
-      main{padding-top:28px}
-      .lead{aspect-ratio:16/9}
-      .lead h2{font-size:2.1rem;max-width:760px}
-      .lead .cap{padding:28px 30px 30px}
-      .hero{grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:26px}
-      .row4{grid-template-columns:repeat(4,minmax(0,1fr));gap:26px}
-      .cols{grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:48px}
-      .item .th{flex-basis:230px}
-      .item .t{font-size:1.2rem}
-      .grid4{grid-template-columns:repeat(4,minmax(0,1fr));gap:26px}
+    /* ---------- story page (same look as the main site) ---------- */
+    .art{max-width:820px;margin:0 auto;padding:22px 20px 0}
+    .back{display:inline-block;margin:0 0 14px;font-size:.88rem;font-weight:700;color:var(--muted)}
+    .back:hover{color:var(--ink)}
+    .art .cat{display:block;margin:0 0 6px;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+    .art h1{margin:4px 0 14px;font-family:var(--font);font-size:clamp(1.4rem,5.8vw,2rem);font-weight:700;line-height:1.28;color:var(--ink)}
+
+    .byline{margin:0 0 18px;color:var(--muted);font-size:.88rem}
+    .byline-author{margin:0 0 6px;color:var(--ink)}
+    .byline-author a{color:inherit;font-weight:700}
+    .byline-info{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+    .byline-info svg{width:14px;height:14px;margin-right:5px;vertical-align:-2px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .by-bar{width:1px;height:12px;background:var(--line)}
+
+    .hero-fig{margin:0 0 20px}
+    .hero-fig img{display:block;width:100%;height:auto;border-radius:8px}
+    .photo-cap{margin:10px 0 0;padding:2px 0 2px 12px;border-left:3px solid var(--dg-accent);font-size:.9rem;line-height:1.45}
+    .photo-cap b{margin-right:8px;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--red)}
+    .vid{position:relative;margin:0 0 18px;border-radius:8px;overflow:hidden;background:#000;aspect-ratio:16/9}
+    .vid iframe,.vid video{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+    .share-row{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 22px}
+    .share-row a{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink);font-size:1.05rem}
+    .share-row a:hover{background:var(--card);border-color:var(--muted)}
+
+    .article-body p{margin:0 0 1.1em;font-size:1.08rem;line-height:1.7}
+    .article-body figure{margin:22px 0}
+    .article-body figure img{display:block;width:100%;height:auto;border-radius:8px}
+
+    /* related stories */
+    .rel-sec{margin:40px 0 28px;padding:24px 0 0;border-top:1px solid var(--line)}
+    .rel-head{display:flex;align-items:center;gap:10px;margin:0 0 18px}
+    .rel-head::before{content:"";width:6px;height:1.3em;background:var(--dg-accent);border-radius:2px}
+    .rel-head h2{font-size:1.3rem;font-weight:800;line-height:1.2}
+    .rel-list{display:grid;grid-template-columns:1fr}
+    .rel-item{display:flex;flex-direction:row;align-items:flex-start;gap:14px;padding:16px 0;border-top:1px solid var(--line)}
+    .rel-item:first-child{border-top:0;padding-top:0}
+    .rel-th{flex:0 0 36%}
+    .rel-th img,.rel-noimg{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:var(--card)}
+    .rel-bd{flex:1;min-width:0}
+    .rel-kick{display:block;margin:0 0 5px;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+    .rel-t{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;font-size:1.02rem;font-weight:600;line-height:1.3}
+    .rel-meta{display:block;margin:7px 0 0;font-size:.8rem;color:var(--muted)}
+    .rel-item:hover .rel-t{text-decoration:underline}
+    @media (min-width:700px){
+      .rel-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+      .rel-item{flex-direction:column;gap:10px;padding:0;border-top:0}
+      .rel-th{flex:none;width:100%}
+      .rel-t{font-size:1.08rem;-webkit-line-clamp:3}
     }
-    @media (min-width: 900px) and (max-width: 1199px) {
-      .item .th{flex-basis:190px}
-      .lead h2{font-size:1.7rem}
-    }
-  
-    /* ---------- Sport site extras ---------- */
-    .sp-brand span{color:var(--dg-accent)}
+
+    /* like and share buttons */
+    .engage-row{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 26px}
+    .engage-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--ink);font-family:var(--font);font-size:.88rem;font-weight:700;cursor:pointer}
+    .engage-btn:hover{background:var(--card);border-color:var(--muted)}
+    .engage-btn.liked{background:var(--dg-accent);border-color:var(--dg-accent);color:#111}
+    .engage-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .engage-btn[disabled]{opacity:.6;cursor:default}
+
+    /* comments */
+    .comments-section{margin:0 0 10px}
+    .comments-section h3{display:flex;align-items:center;gap:10px;margin:0 0 16px;font-size:1.3rem;font-weight:800}
+    .comments-section h3::before{content:"";width:6px;height:1.3em;background:var(--dg-accent);border-radius:2px}
+    .comment-gate{border:1px solid var(--line);border-radius:10px;padding:18px;margin:0 0 20px;background:var(--card)}
+    .comment-gate p{margin:0 0 12px;color:var(--muted);font-size:.95rem}
+    .comment-gate p strong{color:var(--ink);font-size:1.05rem}
+    .comment-gate a.engage-btn{display:inline-flex;align-items:center}
+    .comment-form{display:flex;flex-direction:column;gap:10px;margin:0 0 22px}
+    .comment-form input,.comment-form textarea{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font-family:var(--font);font-size:1rem}
+    .comment-form textarea{min-height:100px;resize:vertical}
+    .comment-form .engage-btn{align-self:flex-start}
+    .comment-as{margin:0;color:var(--muted);font-size:.92rem}
+    .comment-as a{text-decoration:underline;text-underline-offset:3px}
+    .cstatus{margin:0;font-size:.88rem;color:var(--muted)}
+    .cstatus.error{color:var(--red)}
+    .comment-item{padding:16px 0;border-top:1px solid var(--line)}
+    .comment-item:first-child{border-top:0}
+    .comment-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0 0 6px}
+    .comment-head .meta{font-size:.8rem;color:var(--muted)}
+    .comment-item p{margin:0;font-size:1rem;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+    .vh{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+
+    /* ---------- footer ---------- */
     .sx{margin-top:44px;background:#111;color:#e6e6e6;border-top:3px solid var(--dg-accent)}
     .sx a{color:inherit}
     .sx .in{max-width:1400px;margin:0 auto;padding:0 20px}
@@ -197,28 +153,6 @@
     .sx-follow a:hover{background:var(--dg-accent);border-color:var(--dg-accent);color:#111}
     .sx-copy{padding:16px 0 26px;border-top:1px solid #2b2b2b;font-size:.78rem;line-height:1.6;color:#8f8f8f}
     @media (min-width:820px){.sx-cols{grid-template-columns:repeat(3,minmax(0,1fr))}}
-
-    /* ---------- Story page ---------- */
-    .art{max-width:820px;margin:0 auto;padding:22px 20px 0}
-    .back{display:inline-block;margin:0 0 14px;font-size:.88rem;font-weight:700;color:var(--muted)}
-    .back:hover{color:var(--ink)}
-    .art h1{margin:4px 0 14px;font-size:clamp(1.45rem,5.8vw,2.1rem);font-weight:700;line-height:1.25}
-    .byline{margin:0 0 18px;font-size:.88rem;color:var(--muted)}
-    .byline b{color:var(--ink)}
-    .hero-fig{margin:0 0 20px}
-    .hero-fig img{display:block;width:100%;height:auto;border-radius:8px}
-    .photo-cap{margin:10px 0 0;padding:2px 0 2px 12px;border-left:3px solid var(--dg-accent);font-size:.9rem;line-height:1.45}
-    .photo-cap b{margin-right:8px;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--red)}
-    .vid{position:relative;margin:0 0 18px;border-radius:8px;overflow:hidden;background:#000;aspect-ratio:16/9}
-    .vid iframe,.vid video{position:absolute;inset:0;width:100%;height:100%;border:0}
-    .share{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 22px}
-    .share a{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;color:var(--ink)}
-    .share a:hover{background:var(--card)}
-    .art-body p{margin:0 0 1.1em;font-size:1.08rem;line-height:1.7}
-    .art-body figure{margin:22px 0}
-    .art-body figure img{display:block;width:100%;height:auto;border-radius:8px}
-    .rel{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
-    .vh{position:absolute;left:-9999px}
   </style>
 </head>
 <body>
@@ -226,7 +160,7 @@
   <div class="sp-util">
     <div class="in">
       <span id="today"></span>
-      <a class="sp-account" href="https://davidgistmedia.onrender.com/" id="main-site-link">&larr; Davidgistmedia</a>
+      <a class="sp-account" href="https://davidgistmedia.onrender.com/" id="main-site-link" target="_self">&larr; Davidgistmedia</a>
     </div>
   </div>
 
@@ -235,7 +169,7 @@
       <button type="button" class="sp-btn" id="menu-btn" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       <a class="sp-brand" href="index.html">Davidgist<span>sport</span></a>
       <span class="sp-spacer"></span>
-      <button type="button" class="sp-btn" id="theme-toggle-btn" aria-label="Switch between light and dark"><span id="theme-icon" style="display:grid;place-items:center"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></span></button>
+      <button type="button" class="sp-btn" id="theme-toggle-btn" aria-label="Switch between light and dark"><span id="theme-icon" style="display:grid;place-items:center"></span></button>
     </div>
   </div>
 
@@ -250,7 +184,7 @@
     </div>
   </div>
 
-  <main class="art" id="article-root">
+  <main class="art article-page" id="article-root">
     <div class="sp-empty">Loading story...</div>
   </main>
 
@@ -295,23 +229,19 @@
     function escapeHtml(s) {
       return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
-    function getOptimizedImage(url, w) {
-      w = w || 650;
-      if (!url) return "";
-      try {
-        if (url.indexOf("unsplash.com") > -1) return url.split("?")[0] + "?w=" + w + "&q=75&auto=format&fit=crop&ar=16:9";
-        if (url.indexOf("supabase.co") > -1) return url + (url.indexOf("?") > -1 ? "&" : "?") + "width=" + w + "&quality=75";
-      } catch (e) {}
-      return url;
+    function nigeriaParts(d) {
+      var t = new Date(d);
+      if (isNaN(t.getTime())) return null;
+      var day = t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
+      var clock = t.toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Africa/Lagos" }).replace(/am|pm/i, function (m) { return m.toUpperCase(); });
+      return { t: t, day: day, clock: clock };
     }
-    function formatWhen(d) {
-      try {
-        var t = new Date(d);
-        if (isNaN(t.getTime())) return "";
-        var day = t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
-        var time = t.toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Africa/Lagos" }).replace(/am|pm/i, function (m) { return m.toUpperCase(); });
-        return day + ", " + time;
-      } catch (e) { return ""; }
+    function formatWhen(d) { var p = nigeriaParts(d); return p ? p.day + ", " + p.clock : ""; }
+    function whenHtml(d) {
+      var p = nigeriaParts(d);
+      if (!p) return "";
+      var icon = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+      return '<time datetime="' + p.t.toISOString() + '">' + icon + p.day + ", " + p.clock + "</time>";
     }
     function timeAgo(d) {
       try {
@@ -329,15 +259,14 @@
         return t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
       } catch (e) { return ""; }
     }
-    </script>
+  </script>
 
   <script>
     (function () {
       var sb = typeof supabaseClient !== "undefined" ? supabaseClient : null;
       var $ = function (id) { return document.getElementById(id); };
 
-      /* If true, search engines are told the main Davidgistmedia page is the original of each story,
-         which avoids two copies of the same story competing. Set to false to make this site the original. */
+      /* If true, search engines are told the main Davidgistmedia page is the original of each story. */
       var CANONICAL_TO_MAIN = true;
       var MAIN = "https://davidgistmedia.onrender.com";
 
@@ -359,7 +288,6 @@
         if (typeof t === "string") t = t.split(",");
         return Array.isArray(t) ? t.map(function (x) { return String(x).trim().toLowerCase(); }) : [];
       }
-      /* which sport is a story about? Its tags first, then the words in its headline and summary */
       function sportOf(a) {
         var tags = tagList(a);
         for (var i = 0; i < SPORTS.length; i++) {
@@ -370,24 +298,6 @@
         return "other";
       }
       function kickerOf(a) { var k = sportOf(a); return k === "other" ? "Sport" : byKey[k].label; }
-      function href(a) { return 'href="article.html?slug=' + encodeURIComponent(a.slug) + '"'; }
-      function by(a) { return escapeHtml(a.author || "Davidgistmedia") + " &middot; " + timeAgo(a.published_at); }
-      function picture(a, w) {
-        return a.image_url ? '<img src="' + escapeHtml(getOptimizedImage(a.image_url, w)) + '" alt="" loading="lazy">' : '<span class="noimg"></span>';
-      }
-      function pic(a) {
-        return '<a class="pic" ' + href(a) + '><span class="ph">' + picture(a, 600) + '</span>' +
-          '<span class="kick">' + escapeHtml(kickerOf(a)) + '</span><h3 class="t">' + escapeHtml(a.title) + '</h3>' +
-          '<span class="meta">' + timeAgo(a.published_at) + '</span></a>';
-      }
-      function item(a) {
-        return '<a class="item" ' + href(a) + '><span class="th">' + picture(a, 400) + '</span>' +
-          '<span class="bd"><span class="kick">' + escapeHtml(kickerOf(a)) + '</span><h3 class="t">' + escapeHtml(a.title) + '</h3>' +
-          '<span class="meta">' + by(a) + '</span></span></a>';
-      }
-      function head(title, link, linkText) {
-        return '<div class="head"><h2>' + escapeHtml(title) + '</h2>' + (link ? '<a href="' + link + '">' + linkText + '</a>' : '') + '</div>';
-      }
 
       function isHttps(u) { return /^https:\/\//i.test(String(u || "")); }
       function pictureList(v) {
@@ -446,19 +356,62 @@
         document.head.appendChild(s);
       }
 
+      /* ---- verified badges (same verified_authors table as the main site) ---- */
+      var badges = {}, badgesLoaded = null;
+      function nkey(n) { return String(n || "").trim().toLowerCase(); }
+      function loadBadges() {
+        if (badgesLoaded) return badgesLoaded;
+        badgesLoaded = (async function () {
+          try {
+            var r = await sb.from("verified_authors").select("name,title,kind");
+            (r.data || []).forEach(function (x) { badges[nkey(x.name)] = x; });
+          } catch (e) {}
+        })();
+        return badgesLoaded;
+      }
+      function badgeFor(name) {
+        var b = badges[nkey(name)];
+        if (!b) return "";
+        var color = b.kind === "owner" ? "#f97316" : "#1d9bf0", pts = [];
+        for (var i = 0; i < 48; i++) {
+          var ang = (i / 48) * Math.PI * 2, r = 9.2 + 1.1 * Math.cos(8 * ang);
+          pts.push((12 + r * Math.cos(ang)).toFixed(2) + "," + (12 + r * Math.sin(ang)).toFixed(2));
+        }
+        var t = escapeHtml(b.title);
+        return '<svg viewBox="0 0 24 24" width="18" height="18" role="img" aria-label="' + t + '" style="display:inline-block;vertical-align:-3px;margin-left:5px"><title>' + t + '</title><polygon points="' + pts.join(" ") + '" fill="' + color + '"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      }
+
+      /* ---- likes (remembered in this browser) ---- */
+      function getLikedIds() { try { return JSON.parse(localStorage.getItem("dg_liked_v2") || "[]"); } catch (e) { return []; } }
+      function setLikedIds(list) { try { localStorage.setItem("dg_liked_v2", JSON.stringify(list)); } catch (e) {} }
+
+      var current = null, likeBusy = false;
+
+      function shareRowHtml(a) {
+        var url = encodeURIComponent(location.href), title = encodeURIComponent(a.title || "");
+        return '<div class="share-row" aria-label="Share this story">' +
+          '<a href="https://www.facebook.com/sharer/sharer.php?u=' + url + '" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook"><i class="fa-brands fa-facebook-f"></i></a>' +
+          '<a href="https://x.com/intent/post?text=' + title + "&url=" + url + '&via=Davidgistmedian" target="_blank" rel="noopener noreferrer" aria-label="Share on X"><i class="fa-brands fa-x-twitter"></i></a>' +
+          '<a href="mailto:?subject=' + title + "&body=" + title + "%0A" + url + '" aria-label="Share by email"><i class="fa-solid fa-envelope"></i></a>' +
+          '<a href="https://t.me/share/url?url=' + url + "&text=" + title + '" target="_blank" rel="noopener noreferrer" aria-label="Share on Telegram"><i class="fa-brands fa-telegram"></i></a>' +
+          '<a href="https://wa.me/?text=' + title + "%20" + url + '" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a></div>';
+      }
 
       async function load() {
         var root = $("article-root");
         var slug = new URLSearchParams(location.search).get("slug");
         if (!slug) { root.innerHTML = '<a class="back" href="index.html">&larr; Back to Sport</a><p>No story specified.</p>'; return; }
         if (!sb) { root.innerHTML = '<p>Stories are not available right now.</p>'; return; }
-        var res = await sb.from("articles").select("*").eq("slug", slug).single();
-        var a = res.data;
-        if (res.error || !a) { root.innerHTML = '<a class="back" href="index.html">&larr; Back to Sport</a><p>That story couldn\'t be found. It may have been removed.</p>'; return; }
+
+        var results = await Promise.all([sb.from("articles").select("*").eq("slug", slug).single(), loadBadges()]);
+        var a = results[0].data;
+        if (results[0].error || !a) { root.innerHTML = '<a class="back" href="index.html">&larr; Back to Sport</a><p>That story couldn\'t be found. It may have been removed.</p>'; return; }
+        current = a;
 
         document.title = a.title + " | Davidgist Sport";
         addSeo(a);
 
+        var author = a.author || "Davidgistmedia";
         var words = String(a.content || "").trim().split(/\s+/).filter(Boolean).length;
         var mins = Math.max(1, Math.ceil(words / 200));
         var paras = String(a.content || "").split(/\n+/).filter(function (p) { return p.trim(); }).map(function (p) { return "<p>" + escapeHtml(p) + "</p>"; });
@@ -468,8 +421,7 @@
         paras.forEach(function (p, i) { body.push(p); if (n < extra.length && (i + 1) % gap === 0) body.push(extra[n++]); });
         while (n < extra.length) body.push(extra[n++]);
 
-        var videos = String(a.video_url || "").split(/[\s,]+/).filter(isHttps).map(function (u) { return videoHtml(u, a.image_url); }).join("");
-        var media = videos;
+        var media = String(a.video_url || "").split(/[\s,]+/).filter(isHttps).map(function (u) { return videoHtml(u, a.image_url); }).join("");
         if (!media && a.image_url) {
           var cap = String(a.image_caption || "").trim(), capHtml = "";
           if (cap) {
@@ -479,28 +431,160 @@
           media = '<figure class="hero-fig"><img src="' + escapeHtml(a.image_url) + '" alt="' + escapeHtml(cap) + '">' + capHtml + "</figure>";
         }
 
-        var url = encodeURIComponent(location.href), title = encodeURIComponent(a.title || "");
-        var share = '<div class="share" aria-label="Share this story">' +
-          '<a href="https://www.facebook.com/sharer/sharer.php?u=' + url + '" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook"><i class="fa-brands fa-facebook-f"></i></a>' +
-          '<a href="https://x.com/intent/post?text=' + title + "&url=" + url + '" target="_blank" rel="noopener noreferrer" aria-label="Share on X"><i class="fa-brands fa-x-twitter"></i></a>' +
-          '<a href="https://t.me/share/url?url=' + url + "&text=" + title + '" target="_blank" rel="noopener noreferrer" aria-label="Share on Telegram"><i class="fa-brands fa-telegram"></i></a>' +
-          '<a href="https://wa.me/?text=' + title + "%20" + url + '" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a></div>';
-
-        root.innerHTML = '<a class="back" href="index.html">&larr; Back to Sport</a>' +
-          '<span class="kick">' + escapeHtml(kickerOf(a)) + '</span>' +
-          "<h1>" + escapeHtml(a.title) + "</h1>" +
-          '<div class="byline">By <b>' + escapeHtml(a.author || "Davidgistmedia") + "</b> &middot; " + formatWhen(a.published_at) + " &middot; " + mins + " min read</div>" +
-          media + share + '<div class="art-body">' + body.join("") + "</div>" + '<div id="related"></div>';
-
-        /* more sport stories */
-        var rel = await sb.from("articles").select("id,slug,title,excerpt,image_url,category,author,published_at")
-          .eq("category", "sports").neq("id", a.id).order("published_at", { ascending: false }).limit(5);
-        if (rel.data && rel.data.length) {
-          $("related").innerHTML = '<section class="rel">' + head("More sport") + rel.data.map(item).join("") + "</section>";
+        var updatedHtml = "";
+        if (a.updated_at && a.published_at) {
+          var pub = nigeriaParts(a.published_at), upd = nigeriaParts(a.updated_at);
+          if (pub && upd && upd.t - pub.t > 3600000 && upd.day !== pub.day) {
+            updatedHtml = '<span class="by-bar" aria-hidden="true"></span><span><em>Updated ' + upd.day + "</em></span>";
+          }
         }
+
+        var liked = getLikedIds().indexOf(a.id) > -1;
+
+        root.innerHTML =
+          '<a class="back" href="index.html">&larr; Back to Sport</a>' +
+          '<div class="cat">' + escapeHtml(kickerOf(a)) + "</div>" +
+          "<h1>" + escapeHtml(a.title) + "</h1>" +
+          '<div class="byline">' +
+            '<div class="byline-author">By <a href="' + MAIN + "/author.html?name=" + encodeURIComponent(author) + '">' + escapeHtml(author) + "</a>" + badgeFor(author) + "</div>" +
+            '<div class="byline-info">' + whenHtml(a.published_at) + updatedHtml + '<span class="by-bar" aria-hidden="true"></span><span>' + mins + " min read</span></div>" +
+          "</div>" +
+          media + shareRowHtml(a) +
+          '<div class="article-body">' + body.join("") + "</div>" +
+          '<div id="related-section"></div>' +
+          '<div class="engage-row">' +
+            '<button class="engage-btn' + (liked ? " liked" : "") + '" id="like-btn" aria-pressed="' + liked + '">' +
+              '<svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>' +
+              '<span id="like-count">' + (a.likes || 0) + "</span> Like</button>" +
+            '<button class="engage-btn" id="share-btn"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></svg>Share</button>' +
+          "</div>" +
+          '<div class="comments-section"><h3 id="comments-heading">Comments</h3><div id="comment-box"></div><div id="comments-list"></div></div>';
+
+        $("like-btn").addEventListener("click", handleLike);
+        $("share-btn").addEventListener("click", handleShare);
+        renderCommentBox();
+        loadComments();
+        loadRelated();
       }
 
-      /* date, menu button, night mode and footer year */
+      /* ---- related stories ---- */
+      async function loadRelated() {
+        var box = $("related-section");
+        var r = await sb.from("articles").select("id,slug,title,excerpt,image_url,category,published_at")
+          .eq("category", current.category).neq("id", current.id).order("published_at", { ascending: false }).limit(3);
+        if (r.error || !r.data || !r.data.length) { box.innerHTML = ""; return; }
+        box.innerHTML = '<section class="rel-sec"><div class="rel-head"><h2>Related Stories</h2></div><div class="rel-list">' +
+          r.data.map(function (s) {
+            return '<a class="rel-item" href="article.html?slug=' + encodeURIComponent(s.slug) + '">' +
+              '<span class="rel-th">' + (s.image_url ? '<img src="' + escapeHtml(s.image_url) + '" alt="" loading="lazy" decoding="async">' : '<span class="rel-noimg"></span>') + "</span>" +
+              '<span class="rel-bd"><span class="rel-kick">' + escapeHtml(kickerOf(s)) + '</span><span class="rel-t">' + escapeHtml(s.title) + "</span>" +
+              '<span class="rel-meta" title="' + escapeHtml(formatWhen(s.published_at)) + '">' + timeAgo(s.published_at) + "</span></span></a>";
+          }).join("") + "</div></section>";
+      }
+
+      /* ---- comments (same comments table as the main site) ---- */
+      async function getUser() {
+        try { var r = await sb.auth.getSession(); return r.data && r.data.session ? r.data.session.user : null; } catch (e) { return null; }
+      }
+      function savedName(u) { var m = (u && u.user_metadata) || {}; return String(m.full_name || m.name || "").trim(); }
+
+      async function renderCommentBox() {
+        var box = $("comment-box");
+        if (!box) return;
+        var user = await getUser();
+        if (!user) {
+          /* Sign-in lives on the main site, so the reader signs in there and comes back to this story on the main site */
+          var next = encodeURIComponent("/article.html?slug=" + encodeURIComponent(current.slug));
+          box.innerHTML = '<div class="comment-gate"><p><strong>Join the conversation</strong></p>' +
+            '<p>Sign in with your email to leave a comment. It takes a few seconds and there is no password.</p>' +
+            '<a class="engage-btn" href="' + MAIN + "/account.html?next=" + next + '">Sign in or create account</a></div>';
+          return;
+        }
+        var name = savedName(user);
+        box.innerHTML = '<form id="comment-form" class="comment-form">' +
+          '<input id="comment-website" class="vh" name="website" autocomplete="off" tabindex="-1" aria-hidden="true">' +
+          (name ? '<p class="comment-as">Commenting as <strong>' + escapeHtml(name) + '</strong> &middot; <a href="' + MAIN + '/account.html">Change</a></p>'
+                : '<input id="comment-name" placeholder="Your name (shown with your comment)" maxlength="60" required>') +
+          '<textarea id="comment-text" placeholder="Write a comment..." required maxlength="1000"></textarea>' +
+          '<button class="engage-btn" type="submit" id="comment-submit-btn">Post comment</button>' +
+          '<p class="cstatus" id="comment-status"></p></form>';
+        $("comment-form").addEventListener("submit", handleCommentSubmit);
+      }
+
+      async function loadComments() {
+        var list = $("comments-list");
+        var r = await sb.from("comments").select("*").eq("article_id", current.id).order("created_at", { ascending: false });
+        $("comments-heading").textContent = "Comments" + (r.data && r.data.length ? " (" + r.data.length + ")" : "");
+        if (r.error) { list.innerHTML = '<p class="cstatus error">Couldn\'t load comments.</p>'; return; }
+        if (!r.data || !r.data.length) { list.innerHTML = '<p class="cstatus">No comments yet. Be the first to say something.</p>'; return; }
+        list.innerHTML = r.data.map(function (c) {
+          return '<div class="comment-item"><div class="comment-head"><strong>' + escapeHtml(c.name || "Anonymous") + '</strong><span class="meta">' + formatWhen(c.created_at) + "</span></div><p>" + escapeHtml(c.content) + "</p></div>";
+        }).join("");
+      }
+
+      async function handleCommentSubmit(e) {
+        e.preventDefault();
+        var nameInput = $("comment-name"), textInput = $("comment-text"), honeypot = $("comment-website");
+        var btn = $("comment-submit-btn"), status = $("comment-status");
+        if (honeypot && honeypot.value.trim()) { textInput.value = ""; status.textContent = ""; return; }
+        var content = textInput.value.trim();
+        if (!content) return;
+        var user = await getUser();
+        if (!user) { renderCommentBox(); return; }
+        var hadName = !!savedName(user), name = savedName(user);
+        if (!name) {
+          name = nameInput ? nameInput.value.trim() : "";
+          if (!name) { status.textContent = "Please enter the name to show with your comment."; status.className = "cstatus error"; return; }
+        }
+        btn.disabled = true; status.textContent = "Posting..."; status.className = "cstatus";
+        if (!hadName) { try { await sb.auth.updateUser({ data: { full_name: name } }); } catch (err) {} }
+        var r = await sb.from("comments").insert({ article_id: current.id, user_id: user.id, name: name, content: content });
+        btn.disabled = false;
+        if (r.error) {
+          var blocked = r.error.code === "42501" || /row-level security|permission/i.test(r.error.message || "");
+          status.textContent = blocked ? "Please sign in again to post your comment." : "Couldn't post your comment. Try again.";
+          status.className = "cstatus error";
+          return;
+        }
+        status.textContent = ""; textInput.value = "";
+        loadComments();
+        if (!hadName) renderCommentBox();
+      }
+
+      async function handleLike() {
+        if (!current || likeBusy) return;
+        likeBusy = true;
+        var id = current.id, btn = $("like-btn"), countEl = $("like-count");
+        var ids = getLikedIds(), wasLiked = ids.indexOf(id) > -1;
+        var before = current.likes || 0, after = wasLiked ? Math.max(before - 1, 0) : before + 1;
+        btn.classList.toggle("liked", !wasLiked);
+        btn.setAttribute("aria-pressed", String(!wasLiked));
+        countEl.textContent = after;
+        var failed = false;
+        try {
+          var r = await sb.rpc(wasLiked ? "decrement_likes" : "increment_likes", { article_id: id });
+          if (r.error) failed = true;
+        } catch (e) { failed = true; }
+        if (failed) {
+          btn.classList.toggle("liked", wasLiked);
+          btn.setAttribute("aria-pressed", String(wasLiked));
+          countEl.textContent = before;
+          alert("Couldn't save that. Please try again.");
+        } else {
+          current.likes = after;
+          setLikedIds(wasLiked ? ids.filter(function (x) { return x !== id; }) : ids.concat([id]));
+        }
+        likeBusy = false;
+      }
+
+      function handleShare() {
+        if (!current) return;
+        var url = location.href;
+        if (navigator.share) navigator.share({ title: current.title, url: url }).catch(function () {});
+        else if (navigator.clipboard) navigator.clipboard.writeText(url).then(function () { alert("Link copied to clipboard."); });
+      }
+
+      /* ---- date, menu, back link, night mode, footer year ---- */
       var today = $("today");
       if (today) {
         var shortDate = window.innerWidth < 600;
@@ -513,17 +597,22 @@
         var d = $("drawer"); d.hidden = !d.hidden;
         this.setAttribute("aria-expanded", String(!d.hidden));
       });
+      /* force the jump to the main site, so nothing on this page can swallow the click */
+      $("main-site-link").addEventListener("click", function (e) {
+        e.preventDefault();
+        window.location.assign(MAIN + "/");
+      });
+
       var themeIcon = $("theme-icon");
-      var MOON = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>', SUN = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
-      function syncIcon() {
-        themeIcon.innerHTML = document.documentElement.getAttribute("data-theme") === "dark" ? SUN : MOON;
-      }
+      var MOON = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+      var SUN = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+      function syncIcon() { themeIcon.innerHTML = document.documentElement.getAttribute("data-theme") === "dark" ? SUN : MOON; }
       syncIcon();
       $("theme-toggle-btn").addEventListener("click", function () {
         var dark = document.documentElement.getAttribute("data-theme") !== "dark";
         document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
         syncIcon();
-        try { localStorage.setItem("dg_theme", dark ? "dark" : "light"); } catch (e) {}
+        try { localStorage.setItem("dg_theme", dark ? "dark" : "light"); localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
       });
 
       load();
