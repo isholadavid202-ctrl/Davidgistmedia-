@@ -349,6 +349,35 @@
       function by(a) { return escapeHtml(a.author || "Davidgistmedia") + " &middot; " + timeAgo(a.published_at); }
       function sectionLink(key) { return key === "sports" ? "sport.html" : "#" + key; }
 
+      /* ---------- Verified badge (orange for the owner, blue for verified authors) ---------- */
+      var badges = {}, badgesLoaded = null;
+      function nkey(n) { return String(n || "").trim().toLowerCase(); }
+      function loadBadges() {
+        if (badgesLoaded) return badgesLoaded;
+        badgesLoaded = (async function () {
+          try {
+            var r = await sb.from("verified_authors").select("name,title,kind");
+            (r.data || []).forEach(function (x) { badges[nkey(x.name)] = x; });
+          } catch (e) {}
+        })();
+        return badgesLoaded;
+      }
+      function badgeFor(name) {
+        var b = badges[nkey(name)];
+        if (!b) return "";
+        var color = b.kind === "owner" ? "#f97316" : "#1d9bf0", pts = [];
+        for (var i = 0; i < 48; i++) {
+          var ang = (i / 48) * Math.PI * 2, r = 9.2 + 1.1 * Math.cos(8 * ang);
+          pts.push((12 + r * Math.cos(ang)).toFixed(2) + "," + (12 + r * Math.sin(ang)).toFixed(2));
+        }
+        var t = escapeHtml(b.title);
+        return '<svg viewBox="0 0 24 24" width="18" height="18" role="img" aria-label="' + t + '" style="display:inline-block;vertical-align:-3px;margin-left:1px"><title>' + t + '</title><polygon points="' + pts.join(" ") + '" fill="' + color + '"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      }
+      function leadBy(a) {
+        var name = a.author || "Davidgistmedia";
+        return escapeHtml(name) + badgeFor(name) + " &middot; " + timeAgo(a.published_at);
+      }
+
       /* ---------- Story blocks ---------- */
       function picture(a, w) {
         return a.image_url ? '<img src="' + escapeHtml(getOptimizedImage(a.image_url, w)) + '" alt="" loading="lazy">' : '<span class="noimg"></span>';
@@ -390,7 +419,7 @@
       }
       function lead(a) {
         var caption = '<div class="cap"><span class="tag">' + escapeHtml(kickerOf(a)) + '</span>';
-        var tail = (a.excerpt ? '<p>' + escapeHtml(a.excerpt) + '</p>' : '') + '<span class="meta">' + by(a) + '</span></div>';
+        var tail = (a.excerpt ? '<p>' + escapeHtml(a.excerpt) + '</p>' : '') + '<span class="meta">' + leadBy(a) + '</span></div>';
         var videos = videoList(a);
 
         /* a story with video: the video fills the card; extra pictures make it a slideshow */
@@ -639,6 +668,7 @@
       async function load() {
         var cached = readCache();
         if (cached && cached.length) { all = cached; show(); }
+        if (sb) loadBadges().then(function () { if (all.length) show(); });
         if (!sb) {
           if (!cached) $("hero-section").innerHTML = '<div class="sp-empty">Stories are not available right now.</div>';
           return;
@@ -656,6 +686,7 @@
           return;
         }
         all = (res.data || []).filter(function (a) { return a && a.slug && a.title; });
+        await loadBadges();
         writeCache(all);
         show();
       }
