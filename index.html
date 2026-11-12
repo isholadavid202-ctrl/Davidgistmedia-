@@ -1,21 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Turns night mode on before the page is drawn, so it does not flash white -->
   <script>
     (function () {
-      try { if (localStorage.getItem("dg_theme") === "dark") document.documentElement.setAttribute("data-theme", "dark"); } catch (e) {}
+      try {
+        var t = localStorage.getItem("dg_theme") || localStorage.getItem("theme");
+        if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      } catch (e) {}
     })();
+  </script>
+
+  <!-- Old links such as index.html#sports now go to the Sport page -->
+  <script>
+    if (location.hash === "#sports") location.replace("sport.html");
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6QHB1S6KFV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-6QHB1S6KFV");
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Davidgist Sport</title>
-  <meta name="description" content="Football, basketball, athletics, boxing and more. Sports news from Nigeria and around the world on Davidgist Sport.">
+  <title>Davidgistmedia | Home</title>
+  <meta name="description" content="Davidgistmedia — your source for entertainment, Nigeria, sports and business news.">
   <meta name="theme-color" content="#111111">
-  <meta property="og:title" content="Davidgist Sport">
-  <meta property="og:description" content="Sports news from Nigeria and around the world.">
+  <meta property="og:title" content="Davidgistmedia">
+  <meta property="og:description" content="Your Source for Entertainment & Breaking News across Nigeria.">
   <meta property="og:type" content="website">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:url" content="https://davidgistmedia.onrender.com/">
+  <link rel="canonical" href="https://davidgistmedia.onrender.com/">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "NewsMediaOrganization",
+    "name": "Davidgistmedia",
+    "url": "https://davidgistmedia.onrender.com/",
+    "sameAs": [
+      "https://www.wikidata.org/wiki/Q141446255",
+      "https://x.com/Davidgistmedian",
+      "https://www.tiktok.com/@davidgistmediang",
+      "https://www.instagram.com/davidgistmediang/",
+      "https://www.youtube.com/@davidgistmediang"
+    ]
+  }
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
+     crossorigin="anonymous"></script>
 
   <style>
     :root {
@@ -180,56 +221,17 @@
       .item .th{flex-basis:190px}
       .lead h2{font-size:1.7rem}
     }
-  
-    /* ---------- Sport site extras ---------- */
-    .sp-brand span{color:var(--dg-accent)}
-    .sx{margin-top:44px;background:#111;color:#e6e6e6;border-top:3px solid var(--dg-accent)}
-    .sx a{color:inherit}
-    .sx .in{max-width:1400px;margin:0 auto;padding:0 20px}
-    .sx-top{padding:28px 0 22px;border-bottom:1px solid #2b2b2b}
-    .sx-brand{display:inline-block;font:700 1.5rem Georgia,"Times New Roman",serif;color:#fff}
-    .sx-brand span{color:var(--dg-accent)}
-    .sx-tag{margin:8px 0 0;max-width:420px;font-size:.9rem;line-height:1.5;color:#a9a9a9}
-    .sx-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 20px;padding:24px 0}
-    .sx-cols h4{display:flex;align-items:center;gap:9px;margin:0 0 10px;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#fff}
-    .sx-cols h4::before{content:"";width:5px;height:1.15em;border-radius:2px;background:var(--dg-accent)}
-    .sx-cols a{display:block;padding:6px 0;font-size:.9rem;color:#b8b8b8}
-    .sx-cols a:hover{color:#fff}
-    .sx-follow{display:flex;flex-wrap:wrap;gap:10px;padding:18px 0;border-top:1px solid #2b2b2b}
-    .sx-follow a{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border:1px solid #3a3a3a;border-radius:50%;color:#fff}
-    .sx-follow a:hover{background:var(--dg-accent);border-color:var(--dg-accent);color:#111}
-    .sx-copy{padding:16px 0 26px;border-top:1px solid #2b2b2b;font-size:.78rem;line-height:1.6;color:#8f8f8f}
-    @media (min-width:820px){.sx-cols{grid-template-columns:repeat(3,minmax(0,1fr))}}
-
-    /* ---------- Story page ---------- */
-    .art{max-width:820px;margin:0 auto;padding:22px 20px 0}
-    .back{display:inline-block;margin:0 0 14px;font-size:.88rem;font-weight:700;color:var(--muted)}
-    .back:hover{color:var(--ink)}
-    .art h1{margin:4px 0 14px;font-size:clamp(1.45rem,5.8vw,2.1rem);font-weight:700;line-height:1.25}
-    .byline{margin:0 0 18px;font-size:.88rem;color:var(--muted)}
-    .byline b{color:var(--ink)}
-    .hero-fig{margin:0 0 20px}
-    .hero-fig img{display:block;width:100%;height:auto;border-radius:8px}
-    .photo-cap{margin:10px 0 0;padding:2px 0 2px 12px;border-left:3px solid var(--dg-accent);font-size:.9rem;line-height:1.45}
-    .photo-cap b{margin-right:8px;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--red)}
-    .vid{position:relative;margin:0 0 18px;border-radius:8px;overflow:hidden;background:#000;aspect-ratio:16/9}
-    .vid iframe,.vid video{position:absolute;inset:0;width:100%;height:100%;border:0}
-    .share{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 22px}
-    .share a{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;color:var(--ink)}
-    .share a:hover{background:var(--card)}
-    .art-body p{margin:0 0 1.1em;font-size:1.08rem;line-height:1.7}
-    .art-body figure{margin:22px 0}
-    .art-body figure img{display:block;width:100%;height:auto;border-radius:8px}
-    .rel{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
-    .vh{position:absolute;left:-9999px}
   </style>
 </head>
 <body>
 
+  <!-- Splash screen -->
+  <script src="js/splash.js?v=6"></script>
+
   <div class="sp-util">
     <div class="in">
       <span id="today"></span>
-      <a class="sp-account" href="https://davidgistmedia.onrender.com/" id="main-site-link">&larr; Davidgistmedia</a>
+      <a class="sp-account" href="profile.html" id="top-account-link"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>Sign in</span></a>
     </div>
   </div>
 
@@ -237,7 +239,7 @@
     <div class="in">
       <button type="button" class="sp-btn" id="menu-btn" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       <button type="button" class="sp-btn" id="search-btn" aria-label="Search" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
-      <a class="sp-brand" href="index.html">Davidgist<span>sport</span></a>
+      <a class="sp-brand" href="/">David<span>gistmedia</span></a>
       <span class="sp-spacer"></span>
       <button type="button" class="sp-btn" id="theme-toggle-btn" aria-label="Switch between light and dark"><span id="theme-icon" style="display:grid;place-items:center"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></span></button>
     </div>
@@ -245,67 +247,45 @@
 
   <div class="sp-drawer" id="drawer" hidden>
     <div class="in">
-      <a href="https://davidgistmedia.onrender.com/">Davidgistmedia (main site)</a>
-      <a href="https://davidgistmedia.onrender.com/about.html">About</a>
-      <a href="https://davidgistmedia.onrender.com/contact.html">Contact</a>
-      <a href="https://davidgistmedia.onrender.com/editorial-policy.html">Editorial Policy</a>
-      <a href="https://davidgistmedia.onrender.com/privacy-policy.html">Privacy</a>
-      <a href="https://davidgistmedia.onrender.com/terms.html">Terms</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="editorial-policy.html">Editorial Policy</a>
+      <a href="privacy-policy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="staff.html">Staff login</a>
+      <a href="admin.html">Admin login</a>
     </div>
   </div>
 
   <div class="sp-search" id="search-bar" hidden>
     <form id="search-form">
-      <input type="text" id="search-input" placeholder="Search sport..." aria-label="Search sport">
+      <input type="text" id="search-input" placeholder="Search news..." aria-label="Search news">
       <button type="submit">Search</button>
     </form>
   </div>
 
-  <nav class="sp-nav" aria-label="Sports">
+  <nav class="sp-nav" aria-label="News sections">
     <div class="in" id="sp-nav"></div>
   </nav>
 
+
   <main>
-    <div id="content"><div class="sp-empty">Loading stories...</div></div>
+    <div id="hero-section"><div class="sp-empty">Loading stories...</div></div>
+    <div id="live-banner"></div>
+    <div id="podcast-home"></div>
+    <!-- Short Videos and Long Videos (filled in by js/video-home.js) -->
+    <div id="video-home"></div>
+    <div id="dg-rest"></div>
   </main>
 
-  <footer class="sx">
-    <div class="in">
-      <div class="sx-top">
-        <a class="sx-brand" href="index.html">Davidgist<span>sport</span></a>
-        <p class="sx-tag">Football, basketball, athletics, boxing and more. Sports news from Nigeria and around the world.</p>
-      </div>
-      <div class="sx-cols">
-        <nav aria-label="Sports"><h4>Sports</h4>
-          <a href="index.html#football">Football</a><a href="index.html#basketball">Basketball</a><a href="index.html#athletics">Athletics</a>
-          <a href="index.html#boxing">Boxing &amp; MMA</a><a href="index.html#tennis">Tennis</a>
-        </nav>
-        <nav aria-label="More sports"><h4>More sports</h4>
-          <a href="index.html#cricket">Cricket</a><a href="index.html#rugby">Rugby</a><a href="index.html#motorsport">Motorsport</a>
-        </nav>
-        <nav aria-label="Davidgistmedia"><h4>Davidgistmedia</h4>
-          <a href="https://davidgistmedia.onrender.com/">Main site</a>
-          <a href="https://davidgistmedia.onrender.com/about.html">About us</a>
-          <a href="https://davidgistmedia.onrender.com/contact.html">Contact us</a>
-          <a href="https://davidgistmedia.onrender.com/privacy-policy.html">Privacy Policy</a>
-          <a href="https://davidgistmedia.onrender.com/terms.html">Terms of Use</a>
-        </nav>
-      </div>
-      <div class="sx-follow">
-        <a href="https://x.com/Davidgistmedian" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="https://www.instagram.com/davidgistmediang/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-        <a href="https://t.me/davidgistmediaent" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
-        <a href="https://www.youtube.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-      </div>
-      <p class="sx-copy">&copy; <span id="year"></span> Davidgistmedia. All rights reserved. Davidgist Sport is part of Davidgistmedia.</p>
-    </div>
-  </footer>
+  <div id="site-footer"></div>
+  <script src="js/footer.js?v=4"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
 
+  <!-- Small helpers shared with the other scripts on this page -->
   <script>
     function escapeHtml(s) {
       return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -344,45 +324,36 @@
         return t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
       } catch (e) { return ""; }
     }
-    </script>
+  </script>
 
+  <script src="js/live-banner.js?v=1"></script>
+
+  <!-- The homepage, drawn in the same style as the Sport page -->
   <script>
     (function () {
       var sb = typeof supabaseClient !== "undefined" ? supabaseClient : null;
       var $ = function (id) { return document.getElementById(id); };
-      var all = [], query = "", CACHE_KEY = "dgs_cache_v1";
 
-      var SPORTS = [
-        { key: "football",   label: "Football",     re: /\b(football|soccer|premier league|epl|la liga|serie a|bundesliga|ligue 1|champions league|europa league|fifa|caf|afcon|world cup qualifier|super eagles|super falcons|npfl|striker|midfielder|goalkeeper|transfer window)\b/i },
-        { key: "basketball", label: "Basketball",   re: /\b(basketball|nba|wnba|fiba|d'?tigers|d.?tigress|dunk)\b/i },
-        { key: "athletics",  label: "Athletics",    re: /\b(athletics|sprint|sprinter|marathon|olympic|olympics|relay|track and field|javelin|long jump|high jump)\b/i },
-        { key: "boxing",     label: "Boxing & MMA", re: /\b(boxing|boxer|heavyweight|knockout|wbc|wba|ibf|wbo|ufc|mma|wrestling|wwe)\b/i },
-        { key: "tennis",     label: "Tennis",       re: /\b(tennis|wimbledon|grand slam|atp|wta|us open|french open|australian open)\b/i },
-        { key: "cricket",    label: "Cricket",      re: /\b(cricket|ipl|test match|t20)\b/i },
-        { key: "rugby",      label: "Rugby",        re: /\b(rugby)\b/i },
-        { key: "motorsport", label: "Motorsport",   re: /\b(formula 1|formula one|f1|motogp|grand prix|nascar)\b/i }
+      /* The sections in the menu: [key in the database, name shown] */
+      var CATS = [
+        ["nigeria", "Nigeria"], ["africa", "Africa"], ["politics", "Politics"],
+        ["entertainment", "Entertainment"], ["sports", "Sport"], ["business", "Business"],
+        ["technology", "Technology"], ["science", "Science"], ["education", "Education"],
+        ["fashion", "Fashion"], ["europe", "Europe"], ["world", "World"], ["local", "Local News"]
       ];
-      var byKey = {};
-      SPORTS.forEach(function (s) { byKey[s.key] = s; });
-      function tagList(a) {
-        var t = a.tags;
-        if (typeof t === "string") { try { var p = JSON.parse(t); if (Array.isArray(p)) t = p; } catch (e) {} }
-        if (typeof t === "string") t = t.split(",");
-        return Array.isArray(t) ? t.map(function (x) { return String(x).trim().toLowerCase(); }) : [];
-      }
-      /* which sport is a story about? Its tags first, then the words in its headline and summary */
-      function sportOf(a) {
-        var tags = tagList(a);
-        for (var i = 0; i < SPORTS.length; i++) {
-          if (tags.indexOf(SPORTS[i].key) > -1 || tags.indexOf(SPORTS[i].label.toLowerCase()) > -1) return SPORTS[i].key;
-        }
-        var text = (a.title || "") + " " + (a.excerpt || "");
-        for (var j = 0; j < SPORTS.length; j++) if (SPORTS[j].re.test(text)) return SPORTS[j].key;
-        return "other";
-      }
-      function kickerOf(a) { var k = sportOf(a); return k === "other" ? "Sport" : byKey[k].label; }
+      var LABEL = {};
+      CATS.forEach(function (c) { LABEL[c[0]] = c[1]; });
+
+      var all = [];
+      var query = "";
+      var CACHE_KEY = "dg_home_cache_v3";
+
       function href(a) { return 'href="article.html?slug=' + encodeURIComponent(a.slug) + '"'; }
+      function kickerOf(a) { return LABEL[a.category] || a.category || "News"; }
       function by(a) { return escapeHtml(a.author || "Davidgistmedia") + " &middot; " + timeAgo(a.published_at); }
+      function sectionLink(key) { return key === "sports" ? "sport.html" : "#" + key; }
+
+      /* ---------- Story blocks ---------- */
       function picture(a, w) {
         return a.image_url ? '<img src="' + escapeHtml(getOptimizedImage(a.image_url, w)) + '" alt="" loading="lazy">' : '<span class="noimg"></span>';
       }
@@ -390,14 +361,6 @@
         return '<a class="pic" ' + href(a) + '><span class="ph">' + picture(a, 600) + '</span>' +
           '<span class="kick">' + escapeHtml(kickerOf(a)) + '</span><h3 class="t">' + escapeHtml(a.title) + '</h3>' +
           '<span class="meta">' + timeAgo(a.published_at) + '</span></a>';
-      }
-      function item(a) {
-        return '<a class="item" ' + href(a) + '><span class="th">' + picture(a, 400) + '</span>' +
-          '<span class="bd"><span class="kick">' + escapeHtml(kickerOf(a)) + '</span><h3 class="t">' + escapeHtml(a.title) + '</h3>' +
-          '<span class="meta">' + by(a) + '</span></span></a>';
-      }
-      function head(title, link, linkText) {
-        return '<div class="head"><h2>' + escapeHtml(title) + '</h2>' + (link ? '<a href="' + link + '">' + linkText + '</a>' : '') + '</div>';
       }
       var slideTimer = null;
       function isHttps(u) { return /^https:\/\//i.test(String(u || "")); }
@@ -532,55 +495,83 @@
         });
       }
 
+      function item(a) {
+        return '<a class="item" ' + href(a) + '><span class="th">' + picture(a, 400) + '</span>' +
+          '<span class="bd"><span class="kick">' + escapeHtml(kickerOf(a)) + '</span><h3 class="t">' + escapeHtml(a.title) + '</h3>' +
+          '<span class="meta">' + by(a) + '</span></span></a>';
+      }
+      function head(title, link, linkText) {
+        return '<div class="head"><h2>' + escapeHtml(title) + '</h2>' + (link ? '<a href="' + link + '">' + linkText + '</a>' : '') + '</div>';
+      }
 
+      /* ---------- Menu ---------- */
       function renderNav(active) {
         var links = ['<a href="#" data-k="home" class="' + (active === "home" ? "on" : "") + '">Home</a>'];
-        SPORTS.forEach(function (s) {
-          links.push('<a href="#' + s.key + '" data-k="' + s.key + '" class="' + (active === s.key ? "on" : "") + '">' + escapeHtml(s.label) + '</a>');
+        CATS.forEach(function (c) {
+          if (c[0] === "sports") links.push('<a href="sport.html">Sport</a>');
+          else links.push('<a href="#' + c[0] + '" data-k="' + c[0] + '" class="' + (active === c[0] ? "on" : "") + '">' + escapeHtml(c[1]) + '</a>');
         });
+        links.push('<a href="podcasts.html">Podcasts</a>', '<a href="live.html">Live</a>', '<a href="videos.html">Videos</a>');
         $("sp-nav").innerHTML = links.join("");
       }
 
-      function layout(list, name, extraTail) {
+      /* ---------- Pages ---------- */
+      function homePage() {
+        var list = all.slice();
+        if (!list.length) return { top: '<div class="sp-empty">No stories yet.</div>', rest: "" };
         var lead0 = list.find(function (a) { return a.featured; }) || list[0];
         var pool = list.filter(function (a) { return a.id !== lead0.id; });
         function take(n) { return pool.splice(0, n); }
         var side = take(2), row = take(4), latest = take(8);
+
         var liked = list.filter(function (a) { return (a.likes || 0) > 0; })
           .sort(function (a, b) { return (b.likes || 0) - (a.likes || 0); }).slice(0, 5);
         if (!liked.length) liked = list.slice(0, 5);
 
-        var html = '<div class="hero"><div>' + lead(lead0) + '</div><div class="hero-side">' + side.map(pic).join("") + '</div></div>';
+        var top = '<div class="hero"><div>' + lead(lead0) + '</div><div class="hero-side">' + side.map(pic).join("") + '</div></div>';
+        if (row.length) top += '<div class="row4">' + row.map(pic).join("") + '</div>';
+        top += '<div class="cols"><div>' + head("Latest news") +
+          (latest.length ? latest.map(item).join("") : '<div class="sp-empty" style="padding:20px 0;text-align:left">More stories soon.</div>') +
+          '</div><aside class="side"><div class="box">' + head("Most liked") +
+          '<ol class="mr">' + liked.map(function (a) { return '<li><a ' + href(a) + '>' + escapeHtml(a.title) + '</a></li>'; }).join("") + '</ol></div></aside></div>';
+
+        /* a section for each category that still has stories */
+        var rest = "";
+        CATS.forEach(function (c) {
+          var items = pool.filter(function (a) { return a.category === c[0]; }).slice(0, 4);
+          if (items.length < 2) return;
+          rest += '<section class="sec">' + head(c[1], sectionLink(c[0]), "More " + escapeHtml(c[1]) + " &rsaquo;") +
+            '<div class="grid4">' + items.map(pic).join("") + '</div></section>';
+        });
+        return { top: top, rest: rest };
+      }
+
+      /* A section page (Nigeria, Politics, World ...) uses exactly the same layout as the homepage */
+      function categoryPage(key) {
+        var name = LABEL[key];
+        var list = all.filter(function (a) { return a.category === key; });
+        var html = '<div class="head head-page"><h1>' + escapeHtml(name) + '</h1></div>';
+        if (!list.length) return html + '<div class="sp-empty">No ' + escapeHtml(name) + ' stories yet.</div>';
+
+        var lead0 = list.find(function (a) { return a.featured; }) || list[0];
+        var pool = list.filter(function (a) { return a.id !== lead0.id; });
+        function take(n) { return pool.splice(0, n); }
+        var side = take(2), row = take(4), latest = take(8);
+
+        var liked = list.filter(function (a) { return (a.likes || 0) > 0; })
+          .sort(function (a, b) { return (b.likes || 0) - (a.likes || 0); }).slice(0, 5);
+        if (!liked.length) liked = list.slice(0, 5);
+
+        html += '<div class="hero"><div>' + lead(lead0) + '</div><div class="hero-side">' + side.map(pic).join("") + '</div></div>';
         if (row.length) html += '<div class="row4">' + row.map(pic).join("") + '</div>';
         if (latest.length) {
-          html += '<div class="cols"><div>' + head(name ? "Latest in " + name : "Latest sport") + latest.map(item).join("") +
+          html += '<div class="cols"><div>' + head("Latest in " + name) + latest.map(item).join("") +
             '</div><aside class="side"><div class="box">' + head("Most liked") +
             '<ol class="mr">' + liked.map(function (a) { return '<li><a ' + href(a) + '>' + escapeHtml(a.title) + '</a></li>'; }).join("") + '</ol></div></aside></div>';
         }
-        return { html: html, pool: pool };
-      }
-
-      function homePage() {
-        if (!all.length) return '<div class="sp-empty">No sports stories yet.</div>';
-        var r = layout(all, "");
-        var html = r.html;
-        SPORTS.forEach(function (s) {
-          var items = r.pool.filter(function (a) { return sportOf(a) === s.key; }).slice(0, 4);
-          if (items.length < 2) return;
-          html += '<section class="sec">' + head(s.label, "#" + s.key, "More " + escapeHtml(s.label) + " &rsaquo;") +
-            '<div class="grid4">' + items.map(pic).join("") + '</div></section>';
-        });
-        return html;
-      }
-
-      function sportPage(key) {
-        var name = byKey[key].label;
-        var list = all.filter(function (a) { return sportOf(a) === key; });
-        var html = '<div class="head head-page"><h1>' + escapeHtml(name) + '</h1></div>';
-        if (!list.length) return html + '<div class="sp-empty">No ' + escapeHtml(name) + ' stories yet.</div>';
-        var r = layout(list, name);
-        html += r.html;
-        if (r.pool.length) html += '<section class="sec">' + head("More " + name) + '<div class="grid4">' + r.pool.map(pic).join("") + '</div></section>';
+        if (pool.length) {
+          html += '<section class="sec">' + head("More " + name) + '<div class="grid4">' + pool.map(pic).join("") + '</div></section>';
+        }
         return html;
       }
 
@@ -588,22 +579,39 @@
         var list = all.filter(function (a) {
           return (a.title || "").toLowerCase().indexOf(q) > -1 || (a.excerpt || "").toLowerCase().indexOf(q) > -1;
         });
-        var html = '<div class="head head-page"><h1>Search results</h1></div>';
+        var html = '<h1 class="sp-page">Search results</h1>';
         if (!list.length) return html + '<div class="sp-empty">No stories match &ldquo;' + escapeHtml(q) + '&rdquo;.</div>';
         return html + '<div class="grid4">' + list.map(pic).join("") + '</div>';
       }
 
       function show() {
+        if (!all.length && !sb) return;
         var key = location.hash.replace("#", "");
-        if (!byKey[key]) key = "home";
+        if (!LABEL[key] || key === "sports") key = "home";
         var q = query.trim().toLowerCase();
+        var vh = $("video-home");
         renderNav(q ? "" : key);
-        $("content").innerHTML = q ? searchPage(q) : (key === "home" ? homePage() : sportPage(key));
-        wireLead($("content"));
-        document.title = (q || key === "home" ? "Davidgist Sport" : byKey[key].label + " | Davidgist Sport");
+
+        if (q) {
+          $("hero-section").innerHTML = searchPage(q);
+          $("dg-rest").innerHTML = "";
+          if (vh) vh.hidden = true;
+        } else if (key === "home") {
+          var p = homePage();
+          $("hero-section").innerHTML = p.top;
+          $("dg-rest").innerHTML = p.rest;
+          if (vh) vh.hidden = false;
+        } else {
+          $("hero-section").innerHTML = categoryPage(key);
+          $("dg-rest").innerHTML = "";
+          if (vh) vh.hidden = true;
+        }
+        wireLead($("hero-section"));
+        document.title = (key === "home" || q ? "Davidgistmedia | Home" : LABEL[key] + " | Davidgistmedia");
       }
 
       window.addEventListener("hashchange", function () { query = ""; $("search-input").value = ""; show(); window.scrollTo(0, 0); });
+      /* the "Home" menu link has no hash */
       $("sp-nav").addEventListener("click", function (e) {
         var a = e.target.closest("a[data-k=home]");
         if (!a) return;
@@ -612,6 +620,8 @@
         history.pushState(null, "", location.pathname);
         show(); window.scrollTo(0, 0);
       });
+
+      /* ---------- Search, menu and night mode buttons ---------- */
       $("search-btn").addEventListener("click", function () {
         var bar = $("search-bar");
         bar.hidden = !bar.hidden;
@@ -620,56 +630,115 @@
       });
       $("search-form").addEventListener("submit", function (e) { e.preventDefault(); query = $("search-input").value; show(); });
       $("search-input").addEventListener("input", function (e) { query = e.target.value; show(); });
-
-      /* date, menu button, night mode and footer year */
-      var today = $("today");
-      if (today) {
-        var shortDate = window.innerWidth < 600;
-        today.textContent = new Date().toLocaleDateString("en-NG", shortDate
-          ? { weekday: "short", day: "numeric", month: "short", year: "numeric" }
-          : { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-      }
-      var yr = $("year"); if (yr) yr.textContent = new Date().getFullYear();
       $("menu-btn").addEventListener("click", function () {
-        var d = $("drawer"); d.hidden = !d.hidden;
+        var d = $("drawer");
+        d.hidden = !d.hidden;
         this.setAttribute("aria-expanded", String(!d.hidden));
       });
+
       var themeIcon = $("theme-icon");
-      var MOON = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>', SUN = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
       function syncIcon() {
-        themeIcon.innerHTML = document.documentElement.getAttribute("data-theme") === "dark" ? SUN : MOON;
+        var dark = document.documentElement.getAttribute("data-theme") === "dark";
+        if (themeIcon) themeIcon.innerHTML = dark ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>' : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+        document.body.classList.toggle("dark-mode", dark);
       }
       syncIcon();
       $("theme-toggle-btn").addEventListener("click", function () {
         var dark = document.documentElement.getAttribute("data-theme") !== "dark";
         document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
         syncIcon();
-        try { localStorage.setItem("dg_theme", dark ? "dark" : "light"); } catch (e) {}
+        try { localStorage.setItem("dg_theme", dark ? "dark" : "light"); localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
       });
 
+      /* ---------- Load the stories ---------- */
       function readCache() {
         try { var c = JSON.parse(localStorage.getItem(CACHE_KEY) || "null"); return c && Array.isArray(c.articles) ? c.articles : null; } catch (e) { return null; }
+      }
+      function writeCache(list) {
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), articles: list })); } catch (e) {}
       }
       async function load() {
         var cached = readCache();
         if (cached && cached.length) { all = cached; show(); }
-        if (!sb) { if (!cached) $("content").innerHTML = '<div class="sp-empty">Stories are not available right now.</div>'; return; }
+        if (!sb) {
+          if (!cached) $("hero-section").innerHTML = '<div class="sp-empty">Stories are not available right now.</div>';
+          return;
+        }
         var base = "id,slug,title,excerpt,image_url,category,author,published_at,likes,featured";
-        var sets = [base + ",images,tags,video_url", base + ",images,tags", base + ",images", base];
+        var sets = [base + ",images,video_url", base + ",images", base];
         var res = null;
         for (var i = 0; i < sets.length; i++) {
-          res = await sb.from("articles").select(sets[i]).eq("category", "sports").order("published_at", { ascending: false }).limit(100);
+          res = await sb.from("articles").select(sets[i]).order("published_at", { ascending: false }).limit(100);
           if (!res.error) break;
-          if (!/images|tags|video_url|column/i.test(res.error.message || "")) break;
+          if (!/images|video_url|column/i.test(res.error.message || "")) break;
         }
-        if (res.error) { if (!cached || !cached.length) $("content").innerHTML = '<div class="sp-empty">Couldn\'t load stories right now. Please try again.</div>'; return; }
+        if (res.error) {
+          if (!cached || !cached.length) $("hero-section").innerHTML = '<div class="sp-empty">Couldn\'t load stories right now. Please try again.</div>';
+          return;
+        }
         all = (res.data || []).filter(function (a) { return a && a.slug && a.title; });
-        try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), articles: all })); } catch (e) {}
+        writeCache(all);
         show();
       }
       renderNav("home");
       load();
     })();
+
+    // Date in the top strip
+    (function () {
+      var el = document.getElementById("today");
+      if (!el) return;
+      var short = window.innerWidth < 600;
+      el.textContent = new Date().toLocaleDateString("en-NG", short
+        ? { weekday: "short", day: "numeric", month: "short", year: "numeric" }
+        : { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    })();
+
+    // Dynamic Account Check
+    async function updateHeaderAccount() {
+      const accountBtn = document.getElementById("top-account-link");
+      if (!accountBtn || typeof supabaseClient === "undefined") return;
+      try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (user) {
+          accountBtn.href = "profile.html";
+          const { data: profile } = await supabaseClient
+            .from("profiles")
+            .select("full_name, avatar_url")
+            .eq("id", user.id)
+            .single();
+          const displayName = profile?.full_name || user.user_metadata?.full_name || "My account";
+          const avatarUrl = profile?.avatar_url;
+          if (avatarUrl) {
+            accountBtn.innerHTML = `
+              <img src="${escapeHtml(avatarUrl)}" alt="" style="width:18px; height:18px; border-radius:50%; object-fit:cover; border:1px solid var(--line);">
+              <span>${escapeHtml(displayName)}</span>
+            `;
+          } else {
+            accountBtn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>' + escapeHtml(displayName) + "</span>";
+          }
+        } else {
+          accountBtn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>Sign in</span>';
+          accountBtn.href = "profile.html";
+        }
+      } catch (e) {
+        console.error("Auth check error:", e);
+      }
+    }
+    document.addEventListener("DOMContentLoaded", updateHeaderAccount);
+  </script>
+
+  <script src="js/live-audio-home.js?v=2"></script>
+  <script src="js/podcast-home.js"></script>
+  <script src="js/video-home.js?v=2"></script>
+  <script src="js/install-banner.js?v=1"></script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/service-worker.js");
+      });
+    }
   </script>
 </body>
 </html>
