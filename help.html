@@ -11,10 +11,15 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0d0d0d">
   <title>Help &amp; FAQs | Davidgistmedia</title>
-  <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=15">
+  <meta name="description" content="Help and frequently asked questions about Davidgistmedia.">
+  <meta name="theme-color" content="#111111">
+  <meta property="og:title" content="Help &amp; FAQs | Davidgistmedia">
+  <meta property="og:description" content="Help and frequently asked questions about Davidgistmedia.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://davidgistmedia.onrender.com/help.html">
+  <link rel="canonical" href="https://davidgistmedia.onrender.com/help.html">
+  <link rel="stylesheet" href="site-page.css?v=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -23,97 +28,57 @@
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
-
-  <!-- Top bar (same as homepage) -->
-  <style>
-    .masthead{padding-top:12px}
-    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
-    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
-    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
-    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
-    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
-    .masthead .drawer.open{display:flex}
-    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
-    .drawer a:hover{color:var(--red)}
-  </style>
+  <!-- Header, menu, night mode (put js/site-page.js in your js folder) -->
+  <script src="js/site-page.js?v=1"></script>
 </head>
 <body>
 
-  <div class="util-bar">
-    <div class="wrap"><span id="today"></span></div>
-  </div>
+  <div id="site-header"></div>
 
-  <header class="masthead">
-    <div class="wrap topbar">
-      <div class="icons">
-        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-        </button>
-      </div>
-      <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
-      <div class="acct"></div>
-    </div>
+  <main class="pg">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><span>Help &amp; FAQs</span></nav>
 
-    <div class="wrap drawer" id="drawer">
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="editorial-policy.html">Editorial Policy</a>
-      <a href="privacy-policy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
-      <a href="staff.html">Staff login</a>
-      <a href="admin.html">Admin login</a>
-    </div>
+    <header class="pg-head">
+      <span class="pg-kick">Company</span>
+      <h1>Help &amp; FAQs</h1>
+      <p class="pg-sub">Quick answers about your account, comments, the app and more.</p>
+    </header>
 
-    <nav class="tabs" aria-label="Main navigation">
-      <a href="index.html">Home</a>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
-    </nav>
-  </header>
+    <article class="pg-body">
+<div class="faq">
+<details><summary>How do I create an account or sign in?</summary><p>Tap <strong>Sign in</strong> at the top right of any page and follow the steps. An account lets you comment on stories.</p></details>
+<details><summary>Why can’t I comment on a story?</summary><p>You need to be signed in to comment. After you sign in, go back to the story and write your comment. Comments that break our rules may be removed.</p></details>
+<details><summary>How do I like or share a story?</summary><p>At the bottom of each story you will find the Like and Share buttons. There are also share icons for Facebook, X, email, Telegram and WhatsApp near the top of the story.</p></details>
+<details><summary>How do I get the Davidgistmedia app?</summary><p>On Android, tap <strong>Download</strong> on the app banner that appears on the site. On iPhone, open the site in Safari, tap the Share button, then choose <strong>Add to Home Screen</strong>.</p></details>
+<details><summary>How do I switch to dark mode?</summary><p>Tap the moon icon at the top right of any page. Tap it again to go back to light mode. The site remembers your choice.</p></details>
+<details><summary>How do I get stories by email?</summary><p>Use the <strong>Never miss a story</strong> box at the bottom of any page, type your email address and tap Subscribe. You can unsubscribe at any time.</p></details>
+<details><summary>I found a mistake in a story. What should I do?</summary><p>Please tell us through the <a href="contact.html">contact page</a>, with the link to the story. Read how we handle <a href="editorial-policy.html#corrections">corrections</a>.</p></details>
+<details><summary>How do I follow Davidgistmedia?</summary><p>Join our <a href="https://whatsapp.com/channel/0029Vb8oG8j84OmHMlgJfw20" target="_blank" rel="noopener noreferrer">WhatsApp channel</a> or <a href="https://t.me/davidgistmediaent" target="_blank" rel="noopener noreferrer">Telegram channel</a>, or follow us on X, Instagram, TikTok and YouTube.</p></details>
+<details><summary>How is my information used?</summary><p>Read our <a href="privacy-policy.html">Privacy Policy</a> and our <a href="cookies.html">Cookies</a> page.</p></details>
+</div>
+<div class="callout"><p>Can’t find your answer? <a href="contact.html">Contact us</a>.</p></div>
+    </article>
 
-  <main class="wrap article-page">
-    <a href="index.html" class="back-link">&larr; Back to home</a>
-    <h1>Help &amp; FAQs</h1>
-    <div class="article-body">
-      <p><strong>How do I get new stories in my inbox?</strong><br>Use the "Never Miss a Story" box on the homepage. Enter your email and tap Subscribe. You can unsubscribe at any time.</p>
-      <p><strong>How do I search for a story?</strong><br>Use the search icon at the top of the page and type what you are looking for.</p>
-      <p><strong>Can I comment on stories?</strong><br>Yes. Open a story and use the comments section under it. We remove comments that are abusive or break the law.</p>
-      <p><strong>I found a mistake in a story.</strong><br>Tell us on the <a href="editorial-policy.html#corrections" style="color:var(--red);font-weight:700">Corrections</a> page.</p>
-      <p><strong>How can I send a story tip or contact the team?</strong><br>Use the <a href="contact.html" style="color:var(--red);font-weight:700">contact page</a>.</p>
-      <p><strong>Where can I follow Davidgistmedia?</strong><br>On TikTok, Instagram and YouTube. The links are at the bottom of every page.</p>
+    <div class="pg-links">
+      <div class="pg-links-t">More from Davidgistmedia</div>
+    <a href="about.html">About us</a>
+    <a href="contact.html">Contact us</a>
+    <a href="advertise.html">Advertise with us</a>
+    <a href="terms.html">Terms of Use</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="accessibility.html">Accessibility Help</a>
+    <a href="editorial-policy.html">Editorial Policy</a>
     </div>
   </main>
 
-  <!-- Footer (built by js/footer.js) -->
   <div id="site-footer"></div>
-  <script src="js/footer.js"></script>
+  <script src="js/footer.js?v=5"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
-  <script src="js/extras.js"></script>
 
-  <script>
-    (function () {
-      /* Menu */
-      var menuBtn = document.getElementById("menu-btn");
-      var drawer = document.getElementById("drawer");
-      menuBtn.addEventListener("click", function () {
-        var open = drawer.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", open);
-      });
-
-      /* Today's date (top strip) */
-      var today = document.getElementById("today");
-      if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
-        weekday: "long", day: "numeric", month: "long", year: "numeric"
-      });
-    })();
-  </script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
