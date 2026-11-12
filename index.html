@@ -111,6 +111,18 @@
     .sp-nav a:hover{color:var(--ink)}
     .sp-nav a.on{color:var(--ink);border-bottom-color:var(--dg-accent)}
 
+    /* ---------- news ticker (homepage only) ---------- */
+    .sp-ticker{display:flex;align-items:stretch;background:var(--card);border-bottom:1px solid var(--line);overflow:hidden}
+    .tk-label{flex:0 0 auto;display:flex;align-items:center;padding:0 14px;background:var(--dg-accent);color:#111;font-size:.72rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
+    .tk-track{flex:1;min-width:0;overflow:hidden}
+    .tk-move{display:inline-flex;white-space:nowrap;padding:11px 0;animation:tkscroll var(--tk-dur,60s) linear infinite}
+    .tk-move:hover,.tk-move.paused{animation-play-state:paused}
+    .tk-move a{display:inline-flex;align-items:center;padding-right:30px;font-size:.9rem;font-weight:600;color:var(--ink)}
+    .tk-move a::before{content:"";flex:0 0 auto;width:6px;height:6px;margin-right:10px;border-radius:50%;background:var(--red)}
+    .tk-move a:hover{text-decoration:underline}
+    @keyframes tkscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @media (prefers-reduced-motion:reduce){.tk-track{overflow-x:auto}.tk-move{animation:none}}
+
     main{max-width:1400px;margin:0 auto;padding:24px 20px 8px}
     .sp-page{margin:0 0 20px;font-size:2rem;font-weight:800;text-transform:capitalize}
     .sp-empty{padding:60px 10px;text-align:center;color:var(--muted)}
@@ -265,6 +277,12 @@
   <nav class="sp-nav" aria-label="News sections">
     <div class="in" id="sp-nav"></div>
   </nav>
+
+  <!-- News ticker: shown on the homepage only -->
+  <div class="sp-ticker" id="ticker" hidden aria-label="Latest headlines">
+    <span class="tk-label">Latest</span>
+    <div class="tk-track"><div class="tk-move" id="tk-move"></div></div>
+  </div>
 
   <main>
     <div id="hero-section"><div class="sp-empty">Loading stories...</div></div>
@@ -563,6 +581,33 @@
         return html + '<div class="grid4">' + list.map(pic).join("") + '</div>';
       }
 
+      /* ---------- News ticker: the newest headlines, scrolling, on the homepage only ---------- */
+      var tickerSig = "";
+      function updateTicker(on) {
+        var box = $("ticker"), move = $("tk-move");
+        if (!box || !move) return;
+        if (!on || !all.length) { box.hidden = true; return; }
+        var list = all.slice(0, 10);
+        var sig = list.map(function (a) { return a.id; }).join(",");
+        if (sig !== tickerSig) {
+          tickerSig = sig;
+          var links = list.map(function (a) {
+            return '<a ' + href(a) + '>' + escapeHtml(a.title) + '</a>';
+          }).join("");
+          move.innerHTML = links + links; /* two copies, so the scroll never has a gap */
+          move.style.setProperty("--tk-dur", Math.max(40, list.length * 9) + "s");
+        }
+        box.hidden = false;
+      }
+      (function () {
+        var move = $("tk-move");
+        if (!move) return;
+        move.addEventListener("touchstart", function () { move.classList.add("paused"); }, { passive: true });
+        ["touchend", "touchcancel"].forEach(function (ev) {
+          move.addEventListener(ev, function () { setTimeout(function () { move.classList.remove("paused"); }, 1500); }, { passive: true });
+        });
+      })();
+
       function show() {
         if (!all.length && !sb) return;
         var key = location.hash.replace("#", "");
@@ -570,6 +615,7 @@
         var q = query.trim().toLowerCase();
         var vh = $("video-home");
         renderNav(q ? "" : key);
+        updateTicker(!q && key === "home");
 
         if (q) {
           $("hero-section").innerHTML = searchPage(q);
