@@ -111,17 +111,21 @@
     .sp-nav a:hover{color:var(--ink)}
     .sp-nav a.on{color:var(--ink);border-bottom-color:var(--dg-accent)}
 
-    /* ---------- news ticker (homepage only) ---------- */
-    .sp-ticker{display:flex;align-items:stretch;background:var(--card);border-bottom:1px solid var(--line);overflow:hidden}
-    .tk-label{flex:0 0 auto;display:flex;align-items:center;padding:0 14px;background:var(--dg-accent);color:#111;font-size:.72rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
-    .tk-track{flex:1;min-width:0;overflow:hidden}
-    .tk-move{display:inline-flex;white-space:nowrap;padding:11px 0;animation:tkscroll var(--tk-dur,60s) linear infinite}
+    /* ---------- news ticker (homepage only): slim and quiet ---------- */
+    .sp-ticker{display:flex;align-items:stretch;background:var(--bg);border-bottom:1px solid var(--line);overflow:hidden;line-height:1.2}
+    .tk-label{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:0 12px 0 14px;border-right:1px solid var(--line);color:var(--red);font-size:.68rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+    .tk-label::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--red);animation:tkpulse 1.4s ease-in-out infinite}
+    .tk-track{flex:1;min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)}
+    .tk-move{display:inline-flex;align-items:center;white-space:nowrap;padding:9px 0 9px 18px;animation:tkscroll var(--tk-dur,60s) linear infinite}
     .tk-move:hover,.tk-move.paused{animation-play-state:paused}
-    .tk-move a{display:inline-flex;align-items:center;padding-right:30px;font-size:.9rem;font-weight:600;color:var(--ink)}
-    .tk-move a::before{content:"";flex:0 0 auto;width:6px;height:6px;margin-right:10px;border-radius:50%;background:var(--red)}
-    .tk-move a:hover{text-decoration:underline}
+    .tk-move a{display:inline-flex;align-items:center;font-size:.84rem;font-weight:600;color:var(--ink)}
+    .tk-move a::after{content:"";flex:0 0 auto;width:4px;height:4px;margin:0 20px;border-radius:50%;background:var(--muted);opacity:.6}
+    .tk-move a:hover span{text-decoration:underline}
+    .tk-clock{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:0 14px 0 12px;border-left:1px solid var(--line);color:var(--ink);font-size:.76rem;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .tk-clock svg{flex:0 0 auto;width:13px;height:13px;color:var(--muted)}
     @keyframes tkscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-    @media (prefers-reduced-motion:reduce){.tk-track{overflow-x:auto}.tk-move{animation:none}}
+    @keyframes tkpulse{0%,100%{opacity:1}50%{opacity:.25}}
+    @media (prefers-reduced-motion:reduce){.tk-track{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.tk-move{animation:none}.tk-label::before{animation:none}}
 
     main{max-width:1400px;margin:0 auto;padding:24px 20px 8px}
     .sp-page{margin:0 0 20px;font-size:2rem;font-weight:800;text-transform:capitalize}
@@ -282,6 +286,7 @@
   <div class="sp-ticker" id="ticker" hidden aria-label="Latest headlines">
     <span class="tk-label">Latest</span>
     <div class="tk-track"><div class="tk-move" id="tk-move"></div></div>
+    <span class="tk-clock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="tk-clock"></span></span>
   </div>
 
   <main>
@@ -583,6 +588,15 @@
 
       /* ---------- News ticker: the newest headlines, scrolling, on the homepage only ---------- */
       var tickerSig = "";
+      /* the clock on the right of the ticker (Nigeria time), like a TV news bar */
+      function tickClock() {
+        var el = $("tk-clock");
+        if (!el) return;
+        el.textContent = new Date().toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Africa/Lagos" })
+          .replace(/am|pm/i, function (m) { return m.toUpperCase(); });
+      }
+      tickClock();
+      setInterval(tickClock, 10000);
       function updateTicker(on) {
         var box = $("ticker"), move = $("tk-move");
         if (!box || !move) return;
@@ -592,10 +606,10 @@
         if (sig !== tickerSig) {
           tickerSig = sig;
           var links = list.map(function (a) {
-            return '<a ' + href(a) + '>' + escapeHtml(a.title) + '</a>';
+            return '<a ' + href(a) + '><span>' + escapeHtml(a.title) + '</span></a>';
           }).join("");
           move.innerHTML = links + links; /* two copies, so the scroll never has a gap */
-          move.style.setProperty("--tk-dur", Math.max(40, list.length * 9) + "s");
+          move.style.setProperty("--tk-dur", Math.max(40, list.length * 8) + "s");
         }
         box.hidden = false;
       }
