@@ -11,14 +11,15 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="About Davidgistmedia: a news and entertainment platform covering Nigeria and the world.">
-  <meta name="theme-color" content="#0d0d0d">
-  <meta property="og:title" content="About Davidgistmedia">
-  <meta property="og:description" content="A news and entertainment platform covering Nigeria and the world.">
+  <title>About us | Davidgistmedia</title>
+  <meta name="description" content="About Davidgistmedia: a news and entertainment platform covering Nigeria, Africa and the world.">
+  <meta name="theme-color" content="#111111">
+  <meta property="og:title" content="About us | Davidgistmedia">
+  <meta property="og:description" content="About Davidgistmedia: a news and entertainment platform covering Nigeria, Africa and the world.">
   <meta property="og:type" content="website">
-  <title>About Davidgistmedia</title>
-  <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=13">
+  <meta property="og:url" content="https://davidgistmedia.onrender.com/about.html">
+  <link rel="canonical" href="https://davidgistmedia.onrender.com/about.html">
+  <link rel="stylesheet" href="site-page.css?v=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -27,141 +28,67 @@
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
-
-  <!-- Top bar (same as homepage) -->
-  <style>
-    .masthead{padding-top:12px}
-    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
-    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
-    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
-    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
-    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
-    .masthead .drawer.open{display:flex}
-    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
-    .drawer a:hover{color:var(--red)}
-  </style>
-
-  <!-- About page -->
-  <style>
-    .about-page{max-width:700px;padding:22px 0 40px}
-    .about-page h1{font-family:var(--serif);font-size:clamp(1.8rem,6vw,2.4rem);line-height:1.2;font-weight:700;margin:8px 0 18px}
-    .about-page h2{font-family:var(--font);font-size:1rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin:32px 0 10px;padding-top:14px;border-top:2px solid var(--ink)}
-    .about-page p{font-size:1.08rem;line-height:1.7;margin:0 0 1em}
-    .about-page a.inline{color:var(--red);text-decoration:underline;text-underline-offset:3px}
-    .about-list{list-style:none;margin:0 0 1em;padding:0}
-    .about-list li{padding:11px 0;border-bottom:1px solid var(--line);font-size:1.02rem}
-    .about-list li:first-child{border-top:1px solid var(--line)}
-    .about-list strong{display:block;font-weight:700}
-  </style>
+  <!-- Header, menu, night mode (put js/site-page.js in your js folder) -->
+  <script src="js/site-page.js?v=1"></script>
 </head>
 <body>
 
-  <div class="util-bar">
-    <div class="wrap"><span id="today"></span></div>
-  </div>
+  <div id="site-header"></div>
 
-  <header class="masthead">
-    <div class="wrap topbar">
-      <div class="icons">
-        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-        </button>
-      </div>
-      <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
-      <div class="acct"></div>
+  <main class="pg">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><span>About us</span></nav>
+
+    <header class="pg-head">
+      <span class="pg-kick">Company</span>
+      <h1>About us</h1>
+      <p class="pg-sub">Davidgistmedia is a news and entertainment platform covering Nigeria and the world.</p>
+    </header>
+
+    <article class="pg-body">
+<h2>Who we are</h2>
+<p>Davidgistmedia brings readers breaking news, entertainment, sport, business, politics, technology and more from Nigeria, Africa and around the world. We publish quickly, and we work to keep what we publish accurate and clearly sourced.</p>
+
+<h2>What we cover</h2>
+<ul>
+  <li>Nigeria, Africa and local news</li>
+  <li>Politics and business</li>
+  <li>Entertainment and fashion</li>
+  <li>Sport, including football, basketball, athletics and boxing</li>
+  <li>Technology, science and education</li>
+  <li>Europe and world news</li>
+</ul>
+
+<h2>Where to find us</h2>
+<p>You can read Davidgistmedia on this website and on your phone, where you can install our app from the banner on the site. We also publish <a href="videos.html">videos</a>, <a href="podcasts.html">podcasts</a> and <a href="live.html">live</a> coverage, and share stories on our <a href="https://whatsapp.com/channel/0029Vb8oG8j84OmHMlgJfw20" target="_blank" rel="noopener noreferrer">WhatsApp</a> and <a href="https://t.me/davidgistmediaent" target="_blank" rel="noopener noreferrer">Telegram</a> channels.</p>
+
+<h2>Our founder</h2>
+<p>Davidgistmedia was founded by <a href="author.html">Ishola David</a>, who is also its CEO. He writes and publishes stories on the site, with a focus on keeping readers informed quickly and accurately.</p>
+
+<h2>Our standards</h2>
+<p>We hold ourselves to clear rules on accuracy, sourcing, corrections and the way we separate news from opinion and advertising. You can read them in our <a href="editorial-policy.html">Editorial Policy</a>.</p>
+
+<div class="callout"><p><strong>Have a story tip or spotted a mistake?</strong></p><p>Please <a href="contact.html">contact us</a>. We read every message.</p></div>
+    </article>
+
+    <div class="pg-links">
+      <div class="pg-links-t">More from Davidgistmedia</div>
+    <a href="contact.html">Contact us</a>
+    <a href="advertise.html">Advertise with us</a>
+    <a href="help.html">Help &amp; FAQs</a>
+    <a href="terms.html">Terms of Use</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="accessibility.html">Accessibility Help</a>
+    <a href="editorial-policy.html">Editorial Policy</a>
     </div>
-
-    <div class="wrap drawer" id="drawer">
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="editorial-policy.html">Editorial Policy</a>
-      <a href="privacy-policy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
-      <a href="staff.html">Staff login</a>
-      <a href="admin.html">Admin login</a>
-    </div>
-
-    <nav class="tabs" aria-label="Main navigation">
-      <a href="index.html">Home</a>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
-    </nav>
-  </header>
-
-  <main class="wrap about-page">
-    <a class="back-link" href="index.html">← Back to home</a>
-
-    <h1>About Davidgistmedia</h1>
-
-    <p>
-      Davidgistmedia is a news and entertainment platform covering Nigeria and the world.
-      We publish stories on entertainment, sports, business, politics, technology and
-      breaking news from home and abroad, with a focus on keeping readers informed
-      quickly and accurately.
-    </p>
-
-    <h2>What we cover</h2>
-    <ul class="about-list">
-      <li><strong>Nigeria and local news</strong>Stories that matter to readers at home.</li>
-      <li><strong>Entertainment</strong>Music, film, celebrities and culture.</li>
-      <li><strong>Sports, business and technology</strong>Results, markets, and the ideas shaping the future.</li>
-      <li><strong>World and politics</strong>Major events and decisions, explained clearly.</li>
-      <li><strong>Podcasts and live coverage</strong>Conversations and live updates, on the site and on our social channels.</li>
-    </ul>
-
-    <h2>Who runs it</h2>
-    <p>
-      Davidgistmedia was founded by
-      <a class="inline" href="author.html">Ishola David</a>, who is the Founder and CEO
-      and writes and publishes stories on the site.
-    </p>
-
-    <h2>Our standards</h2>
-    <p>
-      We aim to be accurate and fair. Our
-      <a class="inline" href="editorial-policy.html">Editorial Policy</a> explains how we
-      choose, check and publish stories. If we get something wrong, we correct it openly.
-      See our <a class="inline" href="corrections.html">Corrections</a> page to report
-      an error.
-    </p>
-
-    <h2>Get in touch</h2>
-    <p>
-      Story tips, questions or feedback? Visit our
-      <a class="inline" href="contact.html">contact page</a>, or email
-      <a class="inline" href="mailto:davidgistmediatv@gmail.com">davidgistmediatv@gmail.com</a>.
-      You can also advertise with us through our
-      <a class="inline" href="advertise.html">advertising page</a>.
-    </p>
   </main>
 
-  <!-- Footer (built by js/footer.js) -->
   <div id="site-footer"></div>
-  <script src="js/footer.js"></script>
+  <script src="js/footer.js?v=5"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
-  <script src="js/extras.js"></script>
-
-  <script>
-    (function () {
-      var menuBtn = document.getElementById("menu-btn");
-      var drawer = document.getElementById("drawer");
-      menuBtn.addEventListener("click", function () {
-        var open = drawer.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", open);
-      });
-      var today = document.getElementById("today");
-      if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
-        weekday: "long", day: "numeric", month: "long", year: "numeric"
-      });
-    })();
-  </script>
 
   <script>
     if ("serviceWorker" in navigator) {
