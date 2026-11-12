@@ -11,10 +11,15 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0d0d0d">
   <title>Privacy Policy | Davidgistmedia</title>
-  <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=15">
+  <meta name="description" content="Davidgistmedia Privacy Policy: what information we collect and how we use it, including advertising and cookies.">
+  <meta name="theme-color" content="#111111">
+  <meta property="og:title" content="Privacy Policy | Davidgistmedia">
+  <meta property="og:description" content="Davidgistmedia Privacy Policy: what information we collect and how we use it, including advertising and cookies.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://davidgistmedia.onrender.com/privacy-policy.html">
+  <link rel="canonical" href="https://davidgistmedia.onrender.com/privacy-policy.html">
+  <link rel="stylesheet" href="site-page.css?v=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -23,145 +28,93 @@
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
-
-  <!-- Top bar (same as homepage) -->
-  <style>
-    .masthead{padding-top:12px}
-    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
-    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
-    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
-    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
-    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
-    .masthead .drawer.open{display:flex}
-    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
-    .drawer a:hover{color:var(--red)}
-  </style>
+  <!-- Header, menu, night mode (put js/site-page.js in your js folder) -->
+  <script src="js/site-page.js?v=1"></script>
 </head>
 <body>
 
-  <div class="util-bar">
-    <div class="wrap"><span id="today"></span></div>
-  </div>
+  <div id="site-header"></div>
 
-  <header class="masthead">
-    <div class="wrap topbar">
-      <div class="icons">
-        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-        </button>
-      </div>
-      <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
-      <div class="acct"></div>
-    </div>
+  <main class="pg">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><span>Privacy Policy</span></nav>
 
-    <div class="wrap drawer" id="drawer">
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="editorial-policy.html">Editorial Policy</a>
-      <a href="privacy-policy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
-      <a href="staff.html">Staff login</a>
-      <a href="admin.html">Admin login</a>
-    </div>
+    <header class="pg-head">
+      <span class="pg-kick">Legal</span>
+      <h1>Privacy Policy</h1>
+      <p class="pg-sub">How Davidgistmedia collects, uses and protects your information.</p>
+      <p class="pg-meta">Last updated: 12 November 2026</p>
+    </header>
 
-    <nav class="tabs" aria-label="Main navigation">
-      <a href="index.html">Home</a>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
-    </nav>
-  </header>
+    <article class="pg-body">
+<p>This policy explains what information Davidgistmedia collects when you use our website and app, how we use it, and the choices you have. We handle personal information in line with the Nigeria Data Protection Act 2023 and other laws that apply to us.</p>
 
-  <main class="wrap article-page">
-    <a href="index.html" class="back-link">&larr; Back to home</a>
-    <h1>Privacy Policy</h1>
-    <div class="article-body">
-      <p><em>Last updated: <span id="updated"></span></em></p>
-      <p>This Privacy Policy explains how Davidgistmedia ("we", "us", "our") collects, uses and protects information when you visit davidgistmedia.onrender.com (the "Site"). By using the Site, you agree to this policy.</p>
+<h2>Information we collect</h2>
+<ul>
+  <li><strong>Account information:</strong> when you sign in or create an account, we receive details such as your name, email address and profile picture.</li>
+  <li><strong>Comments:</strong> what you write and the name you post under.</li>
+  <li><strong>Newsletter:</strong> your email address if you subscribe to our emails.</li>
+  <li><strong>Usage information:</strong> pages you visit, the device and browser you use, and your approximate location, collected with analytics tools.</li>
+  <li><strong>Information on your device:</strong> small items saved in your browser, such as your light or dark mode choice, stories you liked and a copy of recent stories to help pages load faster.</li>
+</ul>
 
-      <p><strong>Information we collect</strong></p>
-      <p><em>Information you give us.</em> If you subscribe to our newsletter, we collect your email address. If you post a comment, we collect the name you enter and the text of your comment. If you contact us by email or phone, we keep the details you send us so that we can reply.</p>
-      <p><em>Information collected automatically.</em> When you visit the Site, we and our partners may collect technical information such as your IP address, browser type, device type, pages visited, the time and date of your visit, and the website you came from. We also record actions such as liking a story.</p>
+<h2>How we use it</h2>
+<ul>
+  <li>To run the Service, show you stories and let you comment and sign in.</li>
+  <li>To send the emails you asked for.</li>
+  <li>To understand how the Service is used and make it better.</li>
+  <li>To show advertising and measure how it performs.</li>
+  <li>To keep the Service safe and prevent abuse.</li>
+</ul>
 
-      <p><strong>How we use information</strong></p>
-      <p>We use information to run and improve the Site, to show you stories, to send newsletters to people who subscribed, to display and moderate comments, to understand how the Site is used, to keep it secure, and to show advertising.</p>
+<h2>Advertising and Google AdSense</h2>
+<p>We use Google AdSense and other advertising services to show ads. Third-party vendors, including Google, use cookies to serve ads based on your earlier visits to this and other websites. Google’s use of advertising cookies lets it and its partners serve ads to you based on your visit to our site and other sites on the internet.</p>
+<p>You can opt out of personalised advertising by visiting <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google Ads Settings</a>, or learn more at <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer">aboutads.info</a>. You can read how Google uses information from sites that use its services at <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">policies.google.com/technologies/partner-sites</a>.</p>
 
-      <p><strong>Cookies and similar technologies</strong></p>
-      <p>Cookies are small files stored on your device. We and our partners use cookies and similar technologies to remember your preferences, measure traffic, and show and measure ads. You can control or delete cookies in your browser settings. Some parts of the Site may not work properly if you block them.</p>
+<h2>Analytics</h2>
+<p>We use Google Analytics to count visits and understand which stories readers enjoy. It collects information such as pages viewed and device details.</p>
 
-      <p><strong>Google Analytics</strong></p>
-      <p>We use Google Analytics to understand how visitors use the Site. Google Analytics uses cookies to collect information such as pages viewed and how long visitors stay. You can learn how Google uses data from sites that use its services at <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer" style="color:var(--red);font-weight:700">policies.google.com/technologies/partner-sites</a>.</p>
+<h2>Cookies</h2>
+<p>We use cookies and similar technologies. Read more on our <a href="cookies.html">Cookies</a> page, including how to control them.</p>
 
-      <p><strong>Advertising (Google AdSense)</strong></p>
-      <p>We use Google AdSense to show ads on the Site. Google, as a third-party vendor, uses cookies to serve ads based on your visits to this Site and other sites on the internet. Google's use of advertising cookies enables it and its partners to serve ads to you based on your visit to our Site and/or other sites. You can opt out of personalised advertising by visiting <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" style="color:var(--red);font-weight:700">Google Ads Settings</a>. You can also visit <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer" style="color:var(--red);font-weight:700">aboutads.info</a> to opt out of some third-party vendors' use of cookies for personalised advertising.</p>
+<h2>Who we share information with</h2>
+<p>We do not sell your personal information. We share it only with service providers who help us run the Service (such as hosting, database, analytics and advertising providers), when the law requires it, or to protect our rights and our readers.</p>
 
-      <p><strong>Data storage and service providers</strong></p>
-      <p>Comments, likes, newsletter subscriptions and our stories are stored with our database provider, Supabase. We also rely on our hosting provider, Render, to deliver the Site. These providers process data on our behalf and are bound by their own privacy terms.</p>
+<h2>How long we keep it</h2>
+<p>We keep information for as long as we need it for the purposes above, or as the law requires, and then delete or anonymise it.</p>
 
-      <p><strong>Sharing of information</strong></p>
-      <p>We do not sell your personal information. We share information only with the service providers described above, when required by law, or to protect the rights and safety of our visitors and the Site.</p>
+<h2>Your choices and rights</h2>
+<p>You can ask to see, correct or delete the personal information we hold about you, and you can unsubscribe from our emails at any time. You can also clear the information saved in your browser. To make a request, <a href="contact.html">contact us</a>.</p>
 
-      <p><strong>Comments are public</strong></p>
-      <p>Comments you post appear publicly on the Site together with the name you enter. Please do not include personal information you do not want others to see. You can ask us to remove your comment by email.</p>
+<h2>Children</h2>
+<p>The Service is not aimed at children under 13, and we do not knowingly collect their personal information.</p>
 
-      <p><strong>Newsletter</strong></p>
-      <p>If you subscribe, we use your email address only to send you our stories and updates. You can ask us to remove your email address at any time by writing to us.</p>
+<h2>Security</h2>
+<p>We take reasonable steps to protect your information, but no website can promise complete security.</p>
 
-      <p><strong>External links and embedded content</strong></p>
-      <p>The Site may link to or embed content from other websites, such as YouTube. These sites have their own privacy practices, and we are not responsible for them.</p>
+<h2>Changes to this policy</h2>
+<p>We may update this policy. The date at the top of this page shows the latest version.</p>
+    </article>
 
-      <p><strong>Children</strong></p>
-      <p>The Site is not directed at children under 13, and we do not knowingly collect personal information from children.</p>
-
-      <p><strong>Your rights</strong></p>
-      <p>Depending on where you live, you may have the right to access, correct or delete the personal information we hold about you, and to object to certain uses of it. To make a request, email us at the address below.</p>
-
-      <p><strong>Security</strong></p>
-      <p>We take reasonable steps to protect information, but no method of transmission or storage over the internet is completely secure.</p>
-
-      <p><strong>Changes to this policy</strong></p>
-      <p>We may update this policy from time to time. The "Last updated" date at the top shows when it was last changed. Continued use of the Site means you accept the updated policy.</p>
-
-      <p><strong>Contact us</strong></p>
-      <p>Questions or requests about this policy can be sent to <a href="mailto:davidgistmediatv@gmail.com" style="color:var(--red);font-weight:700">davidgistmediatv@gmail.com</a>.</p>
+    <div class="pg-links">
+      <div class="pg-links-t">More from Davidgistmedia</div>
+    <a href="about.html">About us</a>
+    <a href="contact.html">Contact us</a>
+    <a href="advertise.html">Advertise with us</a>
+    <a href="help.html">Help &amp; FAQs</a>
+    <a href="terms.html">Terms of Use</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="accessibility.html">Accessibility Help</a>
+    <a href="editorial-policy.html">Editorial Policy</a>
     </div>
   </main>
 
-  <!-- Footer (built by js/footer.js) -->
   <div id="site-footer"></div>
-  <script src="js/footer.js"></script>
+  <script src="js/footer.js?v=5"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
-  <script src="js/extras.js"></script>
 
-  <script>
-    (function () {
-      /* Menu */
-      var menuBtn = document.getElementById("menu-btn");
-      var drawer = document.getElementById("drawer");
-      menuBtn.addEventListener("click", function () {
-        var open = drawer.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", open);
-      });
-
-      /* Today's date (top strip) */
-      var today = document.getElementById("today");
-      if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
-        weekday: "long", day: "numeric", month: "long", year: "numeric"
-      });
-
-      /* "Last updated" date in the policy */
-      var updated = document.getElementById("updated");
-      if (updated) updated.textContent = new Date().toLocaleDateString("en-NG", {
-        day: "numeric", month: "long", year: "numeric"
-      });
-    })();
-  </script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
