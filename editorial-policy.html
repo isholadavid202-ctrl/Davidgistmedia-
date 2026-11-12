@@ -11,10 +11,15 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0d0d0d">
-  <title>Editorial &amp; Corrections Policy | Davidgistmedia</title>
-  <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=15">
+  <title>Editorial Policy | Davidgistmedia</title>
+  <meta name="description" content="Davidgistmedia Editorial Policy: accuracy, sourcing, corrections, opinion, advertising and external links.">
+  <meta name="theme-color" content="#111111">
+  <meta property="og:title" content="Editorial Policy | Davidgistmedia">
+  <meta property="og:description" content="Davidgistmedia Editorial Policy: accuracy, sourcing, corrections, opinion, advertising and external links.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://davidgistmedia.onrender.com/editorial-policy.html">
+  <link rel="canonical" href="https://davidgistmedia.onrender.com/editorial-policy.html">
+  <link rel="stylesheet" href="site-page.css?v=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -23,102 +28,70 @@
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
-
-  <!-- Top bar (same as homepage) -->
-  <style>
-    .masthead{padding-top:12px}
-    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
-    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
-    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
-    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
-    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
-    .masthead .drawer.open{display:flex}
-    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
-    .drawer a:hover{color:var(--red)}
-  </style>
+  <!-- Header, menu, night mode (put js/site-page.js in your js folder) -->
+  <script src="js/site-page.js?v=1"></script>
 </head>
 <body>
 
-  <div class="util-bar">
-    <div class="wrap"><span id="today"></span></div>
-  </div>
+  <div id="site-header"></div>
 
-  <header class="masthead">
-    <div class="wrap topbar">
-      <div class="icons">
-        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-        </button>
-      </div>
-      <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
-      <div class="acct"></div>
-    </div>
+  <main class="pg">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><span>Editorial Policy</span></nav>
 
-    <div class="wrap drawer" id="drawer">
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="editorial-policy.html">Editorial Policy</a>
-      <a href="privacy-policy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
-      <a href="staff.html">Staff login</a>
-      <a href="admin.html">Admin login</a>
-    </div>
+    <header class="pg-head">
+      <span class="pg-kick">Legal</span>
+      <h1>Editorial Policy</h1>
+      <p class="pg-sub">The standards we hold ourselves to when we report and publish.</p>
+      <p class="pg-meta">Last updated: 12 November 2026</p>
+    </header>
 
-    <nav class="tabs" aria-label="Main navigation">
-      <a href="index.html">Home</a>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
-    </nav>
-  </header>
+    <article class="pg-body">
+<h2>Accuracy</h2>
+<p>We aim to be accurate and fair. We check facts before we publish, and we say clearly when something is not yet confirmed.</p>
 
-  <main class="wrap article-page">
-    <a href="index.html" class="back-link">&larr; Back to home</a>
-    <h1>Editorial &amp; Corrections Policy</h1>
-    <div class="article-body">
-      <p><strong>Our standards</strong></p>
-      <p>Davidgistmedia aims to report news accurately and fairly. We try to verify information before publishing and to clearly separate factual reporting from opinion where relevant.</p>
+<h2>Sources and credit</h2>
+<p>We name our sources whenever we can. When we use information, pictures or video from another organisation or person, we credit them. We do not pass off other people’s work as our own.</p>
 
-      <p><strong>Sourcing</strong></p>
-      <p>Where a story is based on another outlet's reporting, we aim to credit that source. Where a story is original reporting, it reflects our own research.</p>
+<h2>Independence</h2>
+<p>Our reporting is independent. Advertisers, partners and supporters do not decide what we publish. We tell readers when there is a connection that matters.</p>
 
-      <p id="corrections"><strong>Mistakes happen</strong></p>
-      <p>If we get something wrong, we will correct it. Significant corrections will be noted at the bottom of the affected article along with the date of the correction.</p>
+<h2>News, analysis and opinion</h2>
+<p>We keep news reporting separate from analysis and opinion. Analysis pieces are marked as <strong>Analysis</strong>, so readers know what they are reading.</p>
 
-      <p><strong>Reporting an error</strong></p>
-      <p>If you believe an article contains an inaccuracy, please email <a href="mailto:davidgistmediatv@gmail.com" style="color:var(--red);font-weight:700">davidgistmediatv@gmail.com</a> with a link to the story and a description of the issue. We review every report we receive.</p>
+<h2>Advertising and sponsored content</h2>
+<p>Advertising and sponsored content are clearly marked and are kept separate from our news. See <a href="advertise.html">Advertise with us</a>.</p>
+
+<h2 id="corrections">Corrections</h2>
+<p>If we get something wrong, we want to put it right quickly. We correct errors of fact, and when a story changes in a way that matters we say so, for example with an “Updated” date on the story.</p>
+<p>To report a mistake, please <a href="contact.html">contact us</a> with the link to the story and what you think is wrong.</p>
+
+<h2>Comments</h2>
+<p>Readers need an account to comment. We may remove comments that are abusive, unlawful, misleading or off-topic. See our <a href="terms.html">Terms of Use</a>.</p>
+
+<h2 id="external-links">External links</h2>
+<p>We link to other websites when we think it helps readers, for example to show a source. A link is not an endorsement, and we are not responsible for the content of external sites.</p>
+    </article>
+
+    <div class="pg-links">
+      <div class="pg-links-t">More from Davidgistmedia</div>
+    <a href="about.html">About us</a>
+    <a href="contact.html">Contact us</a>
+    <a href="advertise.html">Advertise with us</a>
+    <a href="help.html">Help &amp; FAQs</a>
+    <a href="terms.html">Terms of Use</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="accessibility.html">Accessibility Help</a>
     </div>
   </main>
 
-  <!-- Footer (built by js/footer.js) -->
   <div id="site-footer"></div>
-  <script src="js/footer.js"></script>
+  <script src="js/footer.js?v=5"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
-  <script src="js/extras.js"></script>
 
-  <script>
-    (function () {
-      /* Menu */
-      var menuBtn = document.getElementById("menu-btn");
-      var drawer = document.getElementById("drawer");
-      menuBtn.addEventListener("click", function () {
-        var open = drawer.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", open);
-      });
-
-      /* Today's date (top strip) */
-      var today = document.getElementById("today");
-      if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
-        weekday: "long", day: "numeric", month: "long", year: "numeric"
-      });
-    })();
-  </script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
