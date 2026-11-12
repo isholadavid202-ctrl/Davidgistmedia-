@@ -11,10 +11,15 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0d0d0d">
   <title>Cookies | Davidgistmedia</title>
-  <link rel="stylesheet" href="styles.css?v=3">
-  <link rel="stylesheet" href="bbc.css?v=15">
+  <meta name="description" content="Davidgistmedia Cookies: how we use cookies and similar technologies and how to control them.">
+  <meta name="theme-color" content="#111111">
+  <meta property="og:title" content="Cookies | Davidgistmedia">
+  <meta property="og:description" content="Davidgistmedia Cookies: how we use cookies and similar technologies and how to control them.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://davidgistmedia.onrender.com/cookies.html">
+  <link rel="canonical" href="https://davidgistmedia.onrender.com/cookies.html">
+  <link rel="stylesheet" href="site-page.css?v=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.png" type="image/png">
@@ -23,97 +28,62 @@
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3106219138870596"
      crossorigin="anonymous"></script>
-
-  <!-- Top bar (same as homepage) -->
-  <style>
-    .masthead{padding-top:12px}
-    .masthead .topbar{flex-direction:row;justify-content:space-between;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-    .topbar .brand-title{font-size:clamp(1.35rem,5.6vw,2rem);white-space:nowrap}
-    .topbar .icons{display:flex;gap:4px;flex:0 0 80px}
-    .topbar .acct{flex:0 0 80px;display:flex;justify-content:flex-end}
-    .topbar button{width:36px;height:36px;display:grid;place-items:center;color:var(--ink)}
-    .topbar svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-    .masthead .drawer{display:none;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:4px 0 8px}
-    .masthead .drawer.open{display:flex}
-    .drawer a{padding:13px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:.95rem}
-    .drawer a:hover{color:var(--red)}
-  </style>
+  <!-- Header, menu, night mode (put js/site-page.js in your js folder) -->
+  <script src="js/site-page.js?v=1"></script>
 </head>
 <body>
 
-  <div class="util-bar">
-    <div class="wrap"><span id="today"></span></div>
-  </div>
+  <div id="site-header"></div>
 
-  <header class="masthead">
-    <div class="wrap topbar">
-      <div class="icons">
-        <button type="button" id="menu-btn" aria-label="Menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-        </button>
-      </div>
-      <a class="brand-title" href="index.html">David<span class="gold">gistmedia</span></a>
-      <div class="acct"></div>
-    </div>
+  <main class="pg">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><span>Cookies</span></nav>
 
-    <div class="wrap drawer" id="drawer">
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="editorial-policy.html">Editorial Policy</a>
-      <a href="privacy-policy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
-      <a href="staff.html">Staff login</a>
-      <a href="admin.html">Admin login</a>
-    </div>
+    <header class="pg-head">
+      <span class="pg-kick">Legal</span>
+      <h1>Cookies</h1>
+      <p class="pg-sub">What cookies are, how we use them, and how you can control them.</p>
+      <p class="pg-meta">Last updated: 12 November 2026</p>
+    </header>
 
-    <nav class="tabs" aria-label="Main navigation">
-      <a href="index.html">Home</a>
-      <a href="podcasts.html">Podcasts</a>
-      <a href="live.html">Live</a>
-    </nav>
-  </header>
+    <article class="pg-body">
+<h2>What are cookies?</h2>
+<p>Cookies are small files saved on your device when you visit a website. We also use similar technologies, such as your browser’s local storage, which work in the same way. They help a website work, remember your choices and understand how it is used.</p>
 
-  <main class="wrap article-page">
-    <a href="index.html" class="back-link">&larr; Back to home</a>
-    <h1>Cookies</h1>
-    <div class="article-body">
-      <p>Cookies are small text files stored on your device when you visit a website. Davidgistmedia uses them to keep the site working, understand how it is used and show advertising.</p>
-      <p><strong>Analytics.</strong> We use Google Analytics to count visitors and see which stories are read. This data is combined and does not name you.</p>
-      <p><strong>Advertising.</strong> We use Google AdSense. Google and its partners may use cookies to show ads based on your visits to this and other websites. You can manage ad personalisation in your Google account settings.</p>
-      <p><strong>Site preferences.</strong> We may store small settings on your device, such as your theme choice.</p>
-      <p><strong>Controlling cookies.</strong> You can block or delete cookies in your browser settings. Some parts of the site may not work properly if you do.</p>
-      <p>For more on how we handle your data, read our <a href="privacy-policy.html" style="color:var(--red);font-weight:700">Privacy Policy</a>. Questions? <a href="contact.html" style="color:var(--red);font-weight:700">Contact us</a>.</p>
+<h2>How we use them</h2>
+<ul>
+  <li><strong>Essential and preference:</strong> keeping you signed in, remembering your light or dark mode choice, remembering stories you liked and keeping a copy of recent stories so pages load faster. We also remember when you close the app banner.</li>
+  <li><strong>Analytics:</strong> Google Analytics helps us count visits and see which stories are read.</li>
+  <li><strong>Advertising:</strong> Google AdSense and other partners use cookies to show and measure ads, including ads based on your earlier visits.</li>
+</ul>
+
+<h2>Controlling cookies</h2>
+<p>You can delete or block cookies in your browser settings. If you block them, parts of the site, such as signing in, may not work properly.</p>
+<p>To manage personalised advertising, visit <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google Ads Settings</a> or <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer">aboutads.info</a>.</p>
+
+<h2>More information</h2>
+<p>See our <a href="privacy-policy.html">Privacy Policy</a> to learn how we use your information, or <a href="contact.html">contact us</a> with a question.</p>
+    </article>
+
+    <div class="pg-links">
+      <div class="pg-links-t">More from Davidgistmedia</div>
+    <a href="about.html">About us</a>
+    <a href="contact.html">Contact us</a>
+    <a href="advertise.html">Advertise with us</a>
+    <a href="help.html">Help &amp; FAQs</a>
+    <a href="terms.html">Terms of Use</a>
+    <a href="privacy-policy.html">Privacy Policy</a>
+    <a href="accessibility.html">Accessibility Help</a>
+    <a href="editorial-policy.html">Editorial Policy</a>
     </div>
   </main>
 
-  <!-- Footer (built by js/footer.js) -->
   <div id="site-footer"></div>
-  <script src="js/footer.js"></script>
+  <script src="js/footer.js?v=5"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
-  <script src="js/extras.js"></script>
 
-  <script>
-    (function () {
-      /* Menu */
-      var menuBtn = document.getElementById("menu-btn");
-      var drawer = document.getElementById("drawer");
-      menuBtn.addEventListener("click", function () {
-        var open = drawer.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", open);
-      });
-
-      /* Today's date (top strip) */
-      var today = document.getElementById("today");
-      if (today) today.textContent = new Date().toLocaleDateString("en-NG", {
-        weekday: "long", day: "numeric", month: "long", year: "numeric"
-      });
-    })();
-  </script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
