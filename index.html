@@ -111,20 +111,6 @@
     .sp-nav a:hover{color:var(--ink)}
     .sp-nav a.on{color:var(--ink);border-bottom-color:var(--dg-accent)}
 
-    /* ---------- news ticker (homepage only): slim and quiet ---------- */
-    .sp-ticker{display:flex;align-items:stretch;background:var(--bg);border-bottom:1px solid var(--line);overflow:hidden;line-height:1.2}
-    .tk-label{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:0 12px 0 14px;border-right:1px solid var(--line);color:var(--red);font-size:.68rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
-    .tk-label::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--red);animation:tkpulse 1.4s ease-in-out infinite}
-    .tk-track{flex:1;min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)}
-    .tk-move{display:inline-flex;align-items:center;white-space:nowrap;padding:9px 0 9px 18px;animation:tkscroll var(--tk-dur,60s) linear infinite}
-    .tk-move:hover,.tk-move.paused{animation-play-state:paused}
-    .tk-move a{display:inline-flex;align-items:center;font-size:.84rem;font-weight:600;color:var(--ink)}
-    .tk-move a::after{content:"";flex:0 0 auto;width:4px;height:4px;margin:0 20px;border-radius:50%;background:var(--muted);opacity:.6}
-    .tk-move a:hover span{text-decoration:underline}
-    @keyframes tkscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-    @keyframes tkpulse{0%,100%{opacity:1}50%{opacity:.25}}
-    @media (prefers-reduced-motion:reduce){.tk-track{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.tk-move{animation:none}.tk-label::before{animation:none}}
-
     main{max-width:1400px;margin:0 auto;padding:24px 20px 8px}
     .sp-page{margin:0 0 20px;font-size:2rem;font-weight:800;text-transform:capitalize}
     .sp-empty{padding:60px 10px;text-align:center;color:var(--muted)}
@@ -171,6 +157,8 @@
     .head h2{font-size:1.3rem;font-weight:800}
     .head a{margin-left:auto;font-size:.85rem;font-weight:700;color:var(--muted)}
     .head a:hover{color:var(--ink)}
+    .head h1{font-size:1.6rem;font-weight:800;line-height:1.2}
+    .head-page{margin:0 0 20px}
 
     .cols{display:grid;gap:36px;margin-top:42px}
     .item{display:flex;gap:14px;padding:16px 0;border-top:1px solid var(--line)}
@@ -280,11 +268,6 @@
     <div class="in" id="sp-nav"></div>
   </nav>
 
-  <!-- News ticker: shown on the homepage only -->
-  <div class="sp-ticker" id="ticker" hidden aria-label="Latest headlines">
-    <span class="tk-label">Latest</span>
-    <div class="tk-track"><div class="tk-move" id="tk-move"></div></div>
-  </div>
 
   <main>
     <div id="hero-section"><div class="sp-empty">Loading stories...</div></div>
@@ -563,14 +546,32 @@
         return { top: top, rest: rest };
       }
 
+      /* A section page (Nigeria, Politics, World ...) uses exactly the same layout as the homepage */
       function categoryPage(key) {
+        var name = LABEL[key];
         var list = all.filter(function (a) { return a.category === key; });
-        var html = '<h1 class="sp-page">' + escapeHtml(LABEL[key]) + '</h1>';
-        if (!list.length) return html + '<div class="sp-empty">No ' + escapeHtml(LABEL[key]) + ' stories yet.</div>';
-        var pool = list.slice();
-        var lead0 = pool.shift(), side = pool.splice(0, 2), rest = pool;
+        var html = '<div class="head head-page"><h1>' + escapeHtml(name) + '</h1></div>';
+        if (!list.length) return html + '<div class="sp-empty">No ' + escapeHtml(name) + ' stories yet.</div>';
+
+        var lead0 = list.find(function (a) { return a.featured; }) || list[0];
+        var pool = list.filter(function (a) { return a.id !== lead0.id; });
+        function take(n) { return pool.splice(0, n); }
+        var side = take(2), row = take(4), latest = take(8);
+
+        var liked = list.filter(function (a) { return (a.likes || 0) > 0; })
+          .sort(function (a, b) { return (b.likes || 0) - (a.likes || 0); }).slice(0, 5);
+        if (!liked.length) liked = list.slice(0, 5);
+
         html += '<div class="hero"><div>' + lead(lead0) + '</div><div class="hero-side">' + side.map(pic).join("") + '</div></div>';
-        if (rest.length) html += '<section class="sec">' + head("More " + LABEL[key]) + '<div class="grid4">' + rest.map(pic).join("") + '</div></section>';
+        if (row.length) html += '<div class="row4">' + row.map(pic).join("") + '</div>';
+        if (latest.length) {
+          html += '<div class="cols"><div>' + head("Latest in " + name) + latest.map(item).join("") +
+            '</div><aside class="side"><div class="box">' + head("Most liked") +
+            '<ol class="mr">' + liked.map(function (a) { return '<li><a ' + href(a) + '>' + escapeHtml(a.title) + '</a></li>'; }).join("") + '</ol></div></aside></div>';
+        }
+        if (pool.length) {
+          html += '<section class="sec">' + head("More " + name) + '<div class="grid4">' + pool.map(pic).join("") + '</div></section>';
+        }
         return html;
       }
 
@@ -583,33 +584,6 @@
         return html + '<div class="grid4">' + list.map(pic).join("") + '</div>';
       }
 
-      /* ---------- News ticker: the newest headlines, scrolling, on the homepage only ---------- */
-      var tickerSig = "";
-      function updateTicker(on) {
-        var box = $("ticker"), move = $("tk-move");
-        if (!box || !move) return;
-        if (!on || !all.length) { box.hidden = true; return; }
-        var list = all.slice(0, 10);
-        var sig = list.map(function (a) { return a.id; }).join(",");
-        if (sig !== tickerSig) {
-          tickerSig = sig;
-          var links = list.map(function (a) {
-            return '<a ' + href(a) + '><span>' + escapeHtml(a.title) + '</span></a>';
-          }).join("");
-          move.innerHTML = links + links; /* two copies, so the scroll never has a gap */
-          move.style.setProperty("--tk-dur", Math.max(40, list.length * 8) + "s");
-        }
-        box.hidden = false;
-      }
-      (function () {
-        var move = $("tk-move");
-        if (!move) return;
-        move.addEventListener("touchstart", function () { move.classList.add("paused"); }, { passive: true });
-        ["touchend", "touchcancel"].forEach(function (ev) {
-          move.addEventListener(ev, function () { setTimeout(function () { move.classList.remove("paused"); }, 1500); }, { passive: true });
-        });
-      })();
-
       function show() {
         if (!all.length && !sb) return;
         var key = location.hash.replace("#", "");
@@ -617,7 +591,6 @@
         var q = query.trim().toLowerCase();
         var vh = $("video-home");
         renderNav(q ? "" : key);
-        updateTicker(!q && key === "home");
 
         if (q) {
           $("hero-section").innerHTML = searchPage(q);
