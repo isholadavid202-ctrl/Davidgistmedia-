@@ -533,7 +533,7 @@
           if (c[0] === "sports") links.push('<a href="sport.html">Sport</a>');
           else links.push('<a href="#' + c[0] + '" data-k="' + c[0] + '" class="' + (active === c[0] ? "on" : "") + '">' + escapeHtml(c[1]) + '</a>');
         });
-        links.push('<a href="podcasts.html">Podcasts</a>', '<a href="live.html">Live</a>', '<a href="videos.html">Videos</a>');
+        links.push('<a href="podcasts.html">Podcasts</a>', '<a href="live.html">Live</a>', '<a href="live-audio.html">Live Audio</a>', '<a href="videos.html">Videos</a>');
         $("sp-nav").innerHTML = links.join("");
       }
 
