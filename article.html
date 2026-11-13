@@ -170,47 +170,11 @@
     .sx-copy{padding:16px 0 26px;border-top:1px solid #2b2b2b;font-size:.78rem;line-height:1.6;color:#8f8f8f}
     @media (min-width:820px){.sx-cols{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
-    /* advertisement strips */
-    .ad-top-bar{width:100%;background:#f4f4f5;border-bottom:1px solid #e2e2e4;padding:8px 0 10px;text-align:center}
-    html[data-theme="dark"] .ad-top-bar{background:#1a1a1a;border-bottom-color:#2a2a2a}
-    .ad-label{display:block;margin-bottom:5px;font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-    .ad-box{display:flex;justify-content:center;overflow:hidden}
-    .ad-small{min-height:50px}.ad-wide{min-height:90px}
-    .ad-slot{margin:20px auto;max-width:820px;padding:0 20px;text-align:center}
-    .ad-slot .ad-box.ad-tall{min-height:250px}
-    .ad-mobile{display:block}.ad-desktop{display:none}
-    @media(min-width:768px){.ad-mobile{display:none}.ad-desktop{display:block}}
     html[data-theme="dark"] #dgm-install{background:#1b1b1d;color:#ececea;border-color:#333}
     html[data-theme="dark"] #dgm-install span{color:#bdbdbd}
   </style>
 </head>
 <body>
-
-  <!-- Advertisement at the very top: 320x50 on phones, 728x90 on computers -->
-  <div class="ad-top-bar">
-    <div class="ad-mobile">
-      <span class="ad-label">Advertisement</span>
-      <div class="ad-box ad-small">
-        <script>
-          if (window.innerWidth < 768) {
-            atOptions = { 'key' : '9977ebe385fd5bcc794d085739e547b1', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-            document.write('<scr' + 'ipt src="https://bauval.org/22/9977ebe385fd5bcc794d085739e547b1"></scr' + 'ipt>');
-          }
-        </script>
-      </div>
-    </div>
-    <div class="ad-desktop">
-      <span class="ad-label">Advertisement</span>
-      <div class="ad-box ad-wide">
-        <script>
-          if (window.innerWidth >= 768) {
-            atOptions = { 'key' : 'b1efa552ea21b90dc79455108f6238ef', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-            document.write('<scr' + 'ipt src="https://bauval.org/22/b1efa552ea21b90dc79455108f6238ef"></scr' + 'ipt>');
-          }
-        </script>
-      </div>
-    </div>
-  </div>
 
   <div class="sp-util">
     <div class="in">
@@ -245,17 +209,6 @@
   <main class="art article-page" id="article-root">
     <div class="sp-empty">Loading story...</div>
   </main>
-
-  <!-- Advertisement below the story: 300x250 -->
-  <div class="ad-slot">
-    <span class="ad-label">Advertisement</span>
-    <div class="ad-box ad-tall">
-      <script>
-        atOptions = { 'key' : '1de90f316aa8dede9349d9abffc48ea9', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
-      </script>
-      <script src="https://bauval.org/22/1de90f316aa8dede9349d9abffc48ea9"></script>
-    </div>
-  </div>
 
   <div id="site-footer"></div>
   <script src="js/footer.js?v=4"></script>
