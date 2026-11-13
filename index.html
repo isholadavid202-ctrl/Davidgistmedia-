@@ -216,6 +216,11 @@
       .item .th{flex-basis:190px}
       .lead h2{font-size:1.7rem}
     }
+
+    /* Computers: use the whole width of the screen */
+    @media (min-width:1000px){
+      .sp-util .in,.sp-top .in,.sp-drawer .in,.sp-nav .in,.sp-search form,main{max-width:none;padding-left:48px;padding-right:48px}
+    }
   </style>
 </head>
 <body>
@@ -426,7 +431,7 @@
         if (videos.length) {
           var poster = isHttps(a.image_url) ? a.image_url : "";
           var items = videos.map(function (u) { return slideVideo(u, poster); })
-            .concat(pictureList(a.images).slice(0, 5).map(slideImg));
+            .concat(leadPictures(a).map(slideImg));
           var many = items.length > 1;
           return '<div class="lead lead-story lead-media' + (many ? ' lead-multi' : '') + '">' +
             '<div class="slides">' + items.join("") + '</div>' +
@@ -690,6 +695,8 @@
         writeCache(all);
         show();
       }
+      var startQuery = new URLSearchParams(location.search).get("q");
+      if (startQuery) { query = startQuery; $("search-input").value = startQuery; $("search-bar").hidden = false; }
       renderNav("home");
       load();
     })();
