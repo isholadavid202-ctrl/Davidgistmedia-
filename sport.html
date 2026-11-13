@@ -8,10 +8,10 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Davidgist Sport</title>
-  <meta name="description" content="Football, basketball, athletics, boxing and more. Sports news from Nigeria and around the world on Davidgist Sport.">
+  <title>Davidgistmedia Sports</title>
+  <meta name="description" content="Football, basketball, athletics, boxing and more. Sports news from Nigeria and around the world on Davidgistmedia Sports.">
   <meta name="theme-color" content="#111111">
-  <meta property="og:title" content="Davidgist Sport">
+  <meta property="og:title" content="Davidgistmedia Sports">
   <meta property="og:description" content="Sports news from Nigeria and around the world.">
   <meta property="og:type" content="website">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -36,7 +36,7 @@
 
     .sp-top{background:#111;color:#fff}
     .sp-top .in{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:6px}
-    .sp-brand{margin-left:6px;font:700 1.5rem Georgia,"Times New Roman",serif;color:#fff;white-space:nowrap}
+    .sp-brand{margin-left:6px;font:700 1.3rem Georgia,"Times New Roman",serif;color:#fff;white-space:nowrap}
     .sp-brand span{color:var(--dg-accent)}
     .sp-spacer{flex:1}
     .sp-util{background:var(--card);border-bottom:1px solid var(--line)}
@@ -145,13 +145,13 @@
 
     @media (max-width: 520px) {
       .sp-top .in{padding:10px 14px}
-      .sp-brand{font-size:1.15rem}
+      .sp-brand{font-size:.98rem}
       .sp-util .in{padding:7px 14px}
       .sp-nav .in{padding:0 8px}
       main{padding-left:14px;padding-right:14px}
     }
     @media (max-width: 360px) {
-      .sp-brand{font-size:1.02rem}
+      .sp-brand{font-size:.85rem}
       .sp-btn{width:30px;height:30px}
     }
     @media (min-width: 900px) {
@@ -170,6 +170,10 @@
       .item .th{flex-basis:190px}
       .lead h2{font-size:1.7rem}
     }
+
+    /* Davidgistmedia Sports logo: serif name + yellow "SPORTS" tag */
+    .sp-brand .logo-tag,.sx-brand .logo-tag{display:inline-block;margin-left:.55em;padding:.28em .55em .22em;border-radius:3px;background:var(--dg-accent);color:#111;font:800 .55em/1 var(--font);letter-spacing:.16em;text-transform:uppercase;vertical-align:.18em}
+    .sp-brand{letter-spacing:-.01em}
   </style>
 </head>
 <body>
@@ -185,7 +189,7 @@
     <div class="in">
       <button type="button" class="sp-btn" id="menu-btn" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       <button type="button" class="sp-btn" id="search-btn" aria-label="Search" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
-      <a class="sp-brand" href="sport.html">Davidgist<span>sport</span></a>
+      <a class="sp-brand" href="sport.html">Davidgistmedia<span class="logo-tag">Sports</span></a>
       <span class="sp-spacer"></span>
       <button type="button" class="sp-btn" id="theme-toggle-btn" aria-label="Switch between light and dark"><span id="theme-icon" style="display:grid;place-items:center"></span></button>
     </div>
@@ -220,7 +224,7 @@
   <footer class="sx">
     <div class="in">
       <div class="sx-top">
-        <a class="sx-brand" href="sport.html">Davidgist<span>sport</span></a>
+        <a class="sx-brand" href="sport.html">Davidgistmedia<span class="logo-tag">Sports</span></a>
         <p class="sx-tag">Football, basketball, athletics, boxing and more. Sports news from Nigeria and around the world.</p>
       </div>
       <div class="sx-cols">
@@ -246,7 +250,7 @@
         <a href="https://t.me/davidgistmediaent" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
         <a href="https://www.youtube.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
       </div>
-      <p class="sx-copy">&copy; <span id="year"></span> Davidgistmedia. All rights reserved. Davidgist Sport is part of Davidgistmedia.</p>
+      <p class="sx-copy">&copy; <span id="year"></span> Davidgistmedia. All rights reserved. Davidgistmedia Sports is the sports section of Davidgistmedia.</p>
     </div>
   </footer>
 
@@ -532,7 +536,7 @@
         renderNav(q ? "" : key);
         $("content").innerHTML = q ? searchPage(q) : (key === "home" ? homePage() : sportPage(key));
         wireLead($("content"));
-        document.title = (q || key === "home" ? "Davidgist Sport" : byKey[key].label + " | Davidgist Sport");
+        document.title = (q || key === "home" ? "Davidgistmedia Sports" : byKey[key].label + " | Davidgistmedia Sports");
       }
 
       window.addEventListener("hashchange", function () { query = ""; $("search-input").value = ""; show(); window.scrollTo(0, 0); });
