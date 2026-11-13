@@ -380,7 +380,7 @@
         if (videos.length) {
           var poster = isHttps(a.image_url) ? a.image_url : "";
           var items = videos.map(function (u) { return slideVideo(u, poster); })
-            .concat(pictureList(a.images).slice(0, 5).map(slideImg));
+            .concat(leadPictures(a).map(slideImg));
           var many = items.length > 1;
           return '<div class="lead lead-story lead-media' + (many ? ' lead-multi' : '') + '">' +
             '<div class="slides">' + items.join("") + '</div>' +
