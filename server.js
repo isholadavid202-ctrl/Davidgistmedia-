@@ -464,6 +464,97 @@ app.get(["/videos.html", "/videos"], async (req, res) => {
   res.type("html").send(html);
 });
 
+// Link previews for the Sport and Yoruba story pages (sport-article.html and yoruba-article.html).
+// WhatsApp, Facebook and X do not run scripts, so the title, picture and summary are put into
+// the page here, the same way as for article.html. The story itself is still drawn by the page.
+function sectionArticleRoute(fileName, siteName, locale) {
+  return async (req, res) => {
+    let html = template(fileName);
+    const slug = req.query.slug ? String(req.query.slug).slice(0, 200) : "";
+    let status = 200;
+
+    if (slug) {
+      try {
+        const rows = await cached("a:" + slug, 60 * 1000, () =>
+          sb(
+            `articles?slug=eq.${encodeURIComponent(slug)}` +
+              `&select=title,excerpt,image_url,author,category,content,published_at,updated_at&limit=1`
+          ),
+          false
+        );
+        const a = Array.isArray(rows) ? rows[0] : null;
+
+        if (Array.isArray(rows) && !a) {
+          status = 404;
+        }
+
+        if (a) {
+          const origin = originOf(req);
+          const pageUrl = `${origin}/${fileName}?slug=${encodeURIComponent(slug)}`;
+          const mainUrl = `${origin}/article.html?slug=${encodeURIComponent(slug)}`;
+          const title = a.title || siteName;
+          const author = a.author || "Davidgistmedia";
+          const plain = String(a.content || "").replace(/\s+/g, " ").trim();
+          const desc = a.excerpt || (plain ? plain.slice(0, 160) : "Read the full story on " + siteName + ".");
+          let img = a.image_url || "";
+          if (img && !/^https?:\/\//i.test(img)) {
+            img = origin + "/" + img.replace(/^\/+/, "");
+          }
+
+          const ld = {
+            "@context": "https://schema.org",
+            "@type": "NewsArticle",
+            headline: title.slice(0, 110),
+            description: desc,
+            mainEntityOfPage: { "@type": "WebPage", "@id": mainUrl },
+            image: img ? [img] : undefined,
+            datePublished: isoDate(a.published_at) || undefined,
+            dateModified: isoDate(a.updated_at || a.published_at) || undefined,
+            author: {
+              "@type": "Person",
+              name: author,
+              url: `${origin}/author.html?name=${encodeURIComponent(author)}`,
+            },
+            publisher: {
+              "@type": "Organization",
+              name: "Davidgistmedia",
+              url: origin + "/",
+              logo: { "@type": "ImageObject", url: origin + "/favicon.png" },
+            },
+          };
+
+          const tags = `
+  <link rel="canonical" href="${esc(mainUrl)}">
+  <meta name="description" content="${esc(desc)}">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="${esc(siteName)}">
+  ${locale ? `<meta property="og:locale" content="${esc(locale)}">` : ""}
+  <meta property="og:title" content="${esc(title)}">
+  <meta property="og:description" content="${esc(desc)}">
+  <meta property="og:url" content="${esc(pageUrl)}">
+  ${img ? `<meta property="og:image" content="${esc(img)}">` : ""}
+  <meta name="twitter:card" content="${img ? "summary_large_image" : "summary"}">
+  <meta name="twitter:title" content="${esc(title)}">
+  <meta name="twitter:description" content="${esc(desc)}">
+  ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ""}
+  <script type="application/ld+json">${ldJson(ld)}</script>
+`;
+          html = html.replace(/<title[^>]*>[\s\S]*?<\/title>/i, () => `<title>${esc(title)} | ${esc(siteName)}</title>`);
+          html = html.replace("</head>", () => tags + "</head>");
+        }
+      } catch (e) {
+        console.error(fileName + " render failed:", e.message);
+      }
+    }
+
+    res.set("Cache-Control", "no-cache");
+    res.status(status).type("html").send(html);
+  };
+}
+
+app.get(["/yoruba-article.html", "/yoruba-article"], sectionArticleRoute("yoruba-article.html", "Davidgistmedia Yorùbá", "yo_NG"));
+app.get(["/sport-article.html", "/sport-article"], sectionArticleRoute("sport-article.html", "Davidgistmedia Sports", "en_NG"));
+
 app.use("/.well-known", express.static(path.join(__dirname, ".well-known"), { dotfiles: "allow" }));
 app.use(express.static(ROOT, { extensions: ["html"] }));
 
