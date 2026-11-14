@@ -172,8 +172,13 @@
     }
 
     /* Davidgistmedia Sports logo: serif name + yellow "SPORTS" tag */
-    .sp-brand .logo-tag,.sx-brand .logo-tag{display:inline-block;margin-left:.55em;padding:.28em .55em .22em;border-radius:3px;background:var(--dg-accent);color:#111;font:800 .55em/1 var(--font);letter-spacing:.16em;text-transform:uppercase;vertical-align:.18em}
+    .sp-brand .logo-tag,.sx-brand .logo-tag{display:inline-block;margin-left:.5em;padding:.3em .55em .24em;border-radius:3px;background:var(--dg-accent);color:#111;font:800 .68em/1 var(--font);letter-spacing:.12em;text-transform:uppercase;vertical-align:.12em}
     .sp-brand{letter-spacing:-.01em}
+
+    /* Computers: a centred page, not stretched edge to edge */
+    @media (min-width:1000px){
+      .sp-util .in,.sp-top .in,.sp-drawer .in,.sp-nav .in,.sp-search form,main{max-width:1240px;padding-left:24px;padding-right:24px}
+    }
   </style>
 </head>
 <body>
