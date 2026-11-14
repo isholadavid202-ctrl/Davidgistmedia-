@@ -172,6 +172,11 @@
 
     html[data-theme="dark"] #dgm-install{background:#1b1b1d;color:#ececea;border-color:#333}
     html[data-theme="dark"] #dgm-install span{color:#bdbdbd}
+
+    /* Computers: a centred page, not stretched edge to edge */
+    @media (min-width:1000px){
+      .sp-util .in,.sp-top .in,.sp-drawer .in{max-width:1240px;padding-left:24px;padding-right:24px}
+    }
   </style>
 </head>
 <body>
@@ -194,6 +199,8 @@
 
   <div class="sp-drawer" id="drawer" hidden>
     <div class="in">
+      <a href="sport.html">Sport</a>
+      <a href="yoruba.html">Yorùbá</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="editorial-policy.html">Editorial Policy</a>
@@ -264,7 +271,7 @@
 
       var CATS = [
         ["nigeria", "Nigeria"], ["africa", "Africa"], ["politics", "Politics"],
-        ["entertainment", "Entertainment"], ["sports", "Sport"], ["business", "Business"],
+        ["entertainment", "Entertainment"], ["sports", "Sport"], ["yoruba", "Yorùbá"], ["business", "Business"],
         ["technology", "Technology"], ["science", "Science"], ["education", "Education"],
         ["fashion", "Fashion"], ["europe", "Europe"], ["world", "World"], ["local", "Local News"]
       ];
