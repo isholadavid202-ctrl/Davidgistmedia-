@@ -83,6 +83,11 @@
     .ep-stats i{margin-right:6px}
     .ep-player{width:100%;margin:0 0 6px}
     .ep-desc{white-space:pre-line}
+
+    /* Computers: a centred page, not stretched edge to edge */
+    @media (min-width:1000px){
+      .sp-util .hd-in,.sp-top .hd-in,.sp-drawer .hd-in,.sp-nav .hd-in,.sp-search form{max-width:1240px;padding-left:24px;padding-right:24px}
+    }
   </style>
 </head>
 <body>
@@ -106,6 +111,8 @@
 
   <div class="sp-drawer" id="drawer" hidden>
     <div class="hd-in">
+      <a href="sport.html">Sport</a>
+      <a href="yoruba.html">Yorùbá</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="editorial-policy.html">Editorial Policy</a>
@@ -113,6 +120,7 @@
       <a href="terms.html">Terms</a>
       <a href="podcasts.html">Podcasts</a>
       <a href="live.html">Live</a>
+      <a href="live-audio.html">Live Audio</a>
       <a href="videos.html">Videos</a>
       <a href="staff.html">Staff login</a>
       <a href="admin.html">Admin login</a>
@@ -129,8 +137,11 @@
   <nav class="sp-nav" aria-label="Main navigation">
     <div class="hd-in">
       <a href="index.html">Home</a>
+      <a href="sport.html">Sport</a>
+      <a href="yoruba.html">Yorùbá</a>
       <a href="podcasts.html" class="on">Podcasts</a>
       <a href="live.html">Live</a>
+      <a href="live-audio.html">Live Audio</a>
       <a href="videos.html">Videos</a>
     </div>
   </nav>
