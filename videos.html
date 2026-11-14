@@ -16,17 +16,53 @@
     a{color:inherit;text-decoration:none}
     [hidden]{display:none !important}
 
-    .vh-top{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:14px 16px}
-    .brand{font:700 1.4rem Georgia,"Times New Roman",serif}
-    .brand span{color:#c8102e}
-    .back{font-size:.9rem;color:#bbb;font-weight:600}
+    /* ---------- Header (same as the homepage) ---------- */
+    :root{--h-bg:#0d0d0d;--h-ink:#f0f0f0;--h-muted:#a6a6a2;--h-line:#2b2b2b;--h-card:#1b1b1b;--h-red:#c8102e}
+    .sp-util{background:var(--h-card);border-bottom:1px solid var(--h-line)}
+    .sp-util .hd-in{max-width:1400px;margin:0 auto;padding:7px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.78rem;color:var(--h-muted)}
+    .sp-account{color:var(--h-ink);font-weight:700;font-size:.82rem;display:inline-flex;align-items:center;gap:7px;min-width:0;max-width:65%;white-space:nowrap;padding:6px 0;text-decoration:none}
+    .sp-account span{overflow:hidden;text-overflow:ellipsis}
+    .sp-account img{flex:0 0 auto}
+    .sp-top{background:#111;color:#fff}
+    .sp-top .hd-in{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:6px}
+    .sp-brand{margin-left:6px;font:700 1.5rem Georgia,"Times New Roman",serif;color:#fff;white-space:nowrap;text-decoration:none}
+    .sp-brand span{color:#e8344c}
+    .sp-spacer{flex:1}
+    .sp-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;cursor:pointer;display:grid;place-items:center;padding:0}
+    #menu-btn,#search-btn{border:0;width:36px;height:36px}
+    .sp-drawer{background:#111;border-top:1px solid #2b2b2b}
+    .sp-drawer .hd-in{max-width:1400px;margin:0 auto;padding:4px 20px 10px;display:flex;flex-direction:column}
+    .sp-drawer a{padding:12px 0;border-bottom:1px solid #2b2b2b;color:#e6e6e6;font-weight:700;font-size:.95rem;text-decoration:none}
+    .sp-drawer a:hover{color:#fff}
+    .sp-search{background:var(--h-card);border-bottom:1px solid var(--h-line)}
+    .sp-search form{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;gap:8px}
+    .sp-search input{flex:1;min-width:0;padding:11px 14px;border:1px solid var(--h-line);border-radius:8px;background:var(--h-bg);color:var(--h-ink);font-size:1rem;font-family:inherit}
+    .sp-search button{padding:11px 18px;border:0;border-radius:8px;background:var(--h-red);color:#fff;font-weight:800;cursor:pointer;font-family:inherit}
+    .sp-drawer[hidden],.sp-search[hidden]{display:none !important}
+    .sp-nav{position:sticky;top:0;z-index:30;background:var(--h-bg);border-bottom:1px solid var(--h-line)}
+    .sp-nav .hd-in{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;overflow-x:auto;scrollbar-width:none}
+    .sp-nav .hd-in::-webkit-scrollbar{display:none}
+    .sp-nav a{flex:0 0 auto;padding:15px 15px 12px;font-weight:700;font-size:.95rem;color:var(--h-muted);border-bottom:3px solid transparent;white-space:nowrap;text-decoration:none}
+    .sp-nav a:hover{color:var(--h-ink)}
+    .sp-nav a.on{color:var(--h-ink);border-bottom-color:var(--h-red)}
+    @media (max-width:520px){
+      .sp-top .hd-in{padding:10px 14px}
+      .sp-brand{font-size:1.15rem}
+      .sp-util .hd-in{padding:7px 14px}
+      .sp-nav .hd-in{padding:0 8px}
+    }
+    @media (max-width:360px){
+      .sp-brand{font-size:1.02rem}
+      .sp-btn{width:30px;height:30px}
+    }
+
     .vh-tabs{display:flex;max-width:1200px;margin:0 auto;padding:0 16px;border-bottom:1px solid #222}
     .vh-tabs button{flex:1;background:none;border:0;border-bottom:3px solid transparent;color:#999;font-family:inherit;font-size:1rem;font-weight:700;padding:13px 0;cursor:pointer}
     .vh-tabs button.on{color:#fff;border-bottom-color:#c8102e}
     main{max-width:1200px;margin:0 auto;padding:16px}
 
     /* Short videos */
-    #short-feed{position:relative;height:calc(100vh - 140px);height:calc(100dvh - 140px);min-height:420px;max-width:440px;margin:0 auto;overflow-y:auto;scroll-snap-type:y mandatory;border-radius:14px;background:#000;scrollbar-width:none}
+    #short-feed{position:relative;height:calc(100vh - 235px);height:calc(100dvh - 235px);min-height:420px;max-width:440px;margin:0 auto;overflow-y:auto;scroll-snap-type:y mandatory;border-radius:14px;background:#000;scrollbar-width:none}
     #short-feed::-webkit-scrollbar{display:none}
     .short{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;background:#000}
     .short video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
@@ -115,14 +151,67 @@
 
     .toast{position:fixed;left:50%;bottom:30px;z-index:90;transform:translateX(-50%);max-width:88vw;padding:11px 18px;border-radius:999px;background:#fff;color:#000;font-size:.9rem;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s}
     .toast.show{opacity:1}
+
+    /* Computers: a centred page, not stretched edge to edge */
+    @media (min-width:1000px){
+      .sp-util .hd-in,.sp-top .hd-in,.sp-drawer .hd-in,.sp-nav .hd-in,.sp-search form,main{max-width:1240px;padding-left:24px;padding-right:24px}
+    }
   </style>
 </head>
 <body>
 
-  <div class="vh-top">
-    <a class="brand" href="index.html">David<span>gistmedia</span></a>
-    <a class="back" href="index.html">&larr; Home</a>
+  <div class="sp-util">
+    <div class="hd-in">
+      <span id="today"></span>
+      <a class="sp-account" href="profile.html" id="top-account-link">Sign in</a>
+    </div>
   </div>
+
+  <div class="sp-top">
+    <div class="hd-in">
+      <button type="button" class="sp-btn" id="menu-btn" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <button type="button" class="sp-btn" id="search-btn" aria-label="Search" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+      <a class="sp-brand" href="/">David<span>gistmedia</span></a>
+      <span class="sp-spacer"></span>
+    </div>
+  </div>
+
+  <div class="sp-drawer" id="drawer" hidden>
+    <div class="hd-in">
+      <a href="sport.html">Sport</a>
+      <a href="yoruba.html">Yorùbá</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="editorial-policy.html">Editorial Policy</a>
+      <a href="privacy-policy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="podcasts.html">Podcasts</a>
+      <a href="live.html">Live</a>
+      <a href="live-audio.html">Live Audio</a>
+      <a href="videos.html">Videos</a>
+      <a href="staff.html">Staff login</a>
+      <a href="admin.html">Admin login</a>
+    </div>
+  </div>
+
+  <div class="sp-search" id="search-bar" hidden>
+    <form id="search-form">
+      <input type="text" id="search-input" placeholder="Search news..." aria-label="Search news">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <nav class="sp-nav" aria-label="Main navigation">
+    <div class="hd-in">
+      <a href="index.html">Home</a>
+      <a href="sport.html">Sport</a>
+      <a href="yoruba.html">Yorùbá</a>
+      <a href="podcasts.html">Podcasts</a>
+      <a href="live.html">Live</a>
+      <a href="live-audio.html">Live Audio</a>
+      <a href="videos.html" class="on">Videos</a>
+    </div>
+  </nav>
 
   <div class="vh-tabs">
     <button type="button" id="t-short" class="on">Short</button>
@@ -162,6 +251,59 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
+  <script>
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      $("menu-btn").addEventListener("click", function () {
+        var d = $("drawer"); d.hidden = !d.hidden;
+        this.setAttribute("aria-expanded", String(!d.hidden));
+      });
+      $("search-btn").addEventListener("click", function () {
+        var b = $("search-bar"); b.hidden = !b.hidden;
+        this.setAttribute("aria-expanded", String(!b.hidden));
+        if (!b.hidden) $("search-input").focus();
+      });
+      $("search-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var q = $("search-input").value.trim();
+        if (q) location.href = "index.html?q=" + encodeURIComponent(q);
+      });
+      var today = $("today");
+      if (today) {
+        var shortDate = window.innerWidth < 600;
+        today.textContent = new Date().toLocaleDateString("en-NG", shortDate
+          ? { weekday: "short", day: "numeric", month: "short", year: "numeric" }
+          : { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+      }    })();
+
+    function dgHeadEsc(s) {
+      return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+    /* shows the member's name and picture instead of "Sign in" when logged in */
+    async function updateHeaderAccount() {
+      const accountBtn = document.getElementById("top-account-link");
+      if (!accountBtn || typeof supabaseClient === "undefined") return;
+      try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (user) {
+          accountBtn.href = "profile.html";
+          const { data: profile } = await supabaseClient.from("profiles").select("full_name, avatar_url").eq("id", user.id).single();
+          const displayName = (profile && profile.full_name) || (user.user_metadata && user.user_metadata.full_name) || "My account";
+          const avatarUrl = profile && profile.avatar_url;
+          if (avatarUrl) {
+            accountBtn.innerHTML = '<img src="' + dgHeadEsc(avatarUrl) + '" alt="" style="width:18px;height:18px;border-radius:50%;object-fit:cover;border:1px solid #e8344c;"><span>' + dgHeadEsc(displayName) + '</span>';
+          } else {
+            accountBtn.innerHTML = "<span>" + dgHeadEsc(displayName) + "</span>";
+          }
+        } else {
+          accountBtn.textContent = "Sign in";
+          accountBtn.href = "profile.html";
+        }
+      } catch (e) { console.error("Auth check error:", e); }
+    }
+    document.addEventListener("DOMContentLoaded", updateHeaderAccount);
+  </script>
+
   <script>
     (function () {
       var sb = typeof supabaseClient !== "undefined" ? supabaseClient : null;
