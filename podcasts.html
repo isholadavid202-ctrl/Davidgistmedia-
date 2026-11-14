@@ -90,18 +90,15 @@
     .pod-stats{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--muted);font-size:.85rem;margin:0}
     .pod-stats i{margin-right:5px}
     .pod-item audio{grid-column:1 / -1;width:100%;margin-top:14px}
-    /* Computers: the episodes fill the screen in two or three columns */
+    /* Computers: the episodes sit in two columns */
     @media (min-width:1000px){
-      .pod-page{max-width:none;padding-left:48px;padding-right:48px}
+      .pod-page{max-width:1240px;padding-left:24px;padding-right:24px}
       .pod-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 48px}
     }
-    @media (min-width:1500px){
-      .pod-list{grid-template-columns:repeat(3,minmax(0,1fr))}
-    }
 
-    /* Computers: use the whole width of the screen */
+    /* Computers: a centred page, not stretched edge to edge */
     @media (min-width:1000px){
-      .sp-util .hd-in,.sp-top .hd-in,.sp-drawer .hd-in,.sp-nav .hd-in,.sp-search form{max-width:none;padding-left:48px;padding-right:48px}
+      .sp-util .hd-in,.sp-top .hd-in,.sp-drawer .hd-in,.sp-nav .hd-in,.sp-search form{max-width:1240px;padding-left:24px;padding-right:24px}
     }
   </style>
 </head>
@@ -126,6 +123,8 @@
 
   <div class="sp-drawer" id="drawer" hidden>
     <div class="hd-in">
+      <a href="sport.html">Sport</a>
+      <a href="yoruba.html">Yorùbá</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="editorial-policy.html">Editorial Policy</a>
@@ -150,6 +149,8 @@
   <nav class="sp-nav" aria-label="Main navigation">
     <div class="hd-in">
       <a href="index.html">Home</a>
+      <a href="sport.html">Sport</a>
+      <a href="yoruba.html">Yorùbá</a>
       <a href="podcasts.html" class="on">Podcasts</a>
       <a href="live.html">Live</a>
       <a href="live-audio.html">Live Audio</a>
