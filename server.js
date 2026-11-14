@@ -280,7 +280,7 @@ app.get(["/", "/index.html"], async (req, res) => {
     const rows = await cached("home", 60 * 1000, () =>
       sb(
         "articles?select=title,slug,excerpt,image_url,category,author,published_at,featured" +
-          "&order=published_at.desc&limit=20"
+          "&category=not.in.(sports,yoruba)&order=published_at.desc&limit=20"
       )
     );
     if (Array.isArray(rows) && rows.length) {
