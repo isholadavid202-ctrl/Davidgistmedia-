@@ -9,10 +9,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Davidgistmedia Yorùbá</title>
-  <meta name="description" content="Ìròyìn ní èdè Yorùbá: news in the Yoruba language from Nigeria and around the world, on Davidgistmedia Yorùbá.">
+  <meta name="description" content="Ìròyìn ní èdè Yorùbá láti Nàìjíríà àti gbogbo àgbáyé, lórí Davidgistmedia Yorùbá.">
   <meta name="theme-color" content="#111111">
   <meta property="og:title" content="Davidgistmedia Yorùbá">
-  <meta property="og:description" content="Ìròyìn ní èdè Yorùbá, from Nigeria and around the world.">
+  <meta property="og:description" content="Ìròyìn ní èdè Yorùbá láti Nàìjíríà àti gbogbo àgbáyé.">
   <meta property="og:type" content="website">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -171,7 +171,7 @@
       .lead h2{font-size:1.7rem}
     }
 
-    /* Davidgistmedia Yorùbá logo: serif name + green "YORÙBÁ" tag */
+    /* Davidgistmedia Yorùbá logo: serif name + yellow "SPORTS" tag */
     .sp-brand .logo-tag,.sx-brand .logo-tag{display:inline-block;margin-left:.5em;padding:.3em .55em .24em;border-radius:3px;background:var(--dg-accent);color:#fff;font:800 .68em/1 var(--font);letter-spacing:.12em;text-transform:uppercase;vertical-align:.12em}
     .sp-brand{letter-spacing:-.01em}
 
@@ -192,55 +192,71 @@
 
   <div class="sp-top">
     <div class="in">
-      <button type="button" class="sp-btn" id="menu-btn" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-      <button type="button" class="sp-btn" id="search-btn" aria-label="Search" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+      <button type="button" class="sp-btn" id="menu-btn" aria-label="Àtòjọ" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <button type="button" class="sp-btn" id="search-btn" aria-label="Wá" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
       <a class="sp-brand" href="yoruba.html">Davidgistmedia<span class="logo-tag">Yorùbá</span></a>
       <span class="sp-spacer"></span>
-      <button type="button" class="sp-btn" id="theme-toggle-btn" aria-label="Switch between light and dark"><span id="theme-icon" style="display:grid;place-items:center"></span></button>
+      <button type="button" class="sp-btn" id="theme-toggle-btn" aria-label="Yí ìmọ́lẹ̀ àti òkùnkùn padà"><span id="theme-icon" style="display:grid;place-items:center"></span></button>
     </div>
   </div>
 
   <div class="sp-drawer" id="drawer" hidden>
     <div class="in">
-      <a href="/">Davidgistmedia (main site)</a>
+      <a href="/">Davidgistmedia (Ojú-òpó àkọ́kọ́)</a>
       <a href="sport.html">Davidgistmedia Sports</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="editorial-policy.html">Editorial Policy</a>
-      <a href="privacy-policy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
+      <a href="about.html">Nípa Wa</a>
+      <a href="contact.html">Kàn Sí Wa</a>
+      <a href="editorial-policy.html">Ìlànà Ìṣàtúnṣe Ìròyìn</a>
+      <a href="privacy-policy.html">Àṣírí</a>
+      <a href="terms.html">Àwọn Òfin</a>
     </div>
   </div>
 
   <div class="sp-search" id="search-bar" hidden>
     <form id="search-form">
-      <input type="text" id="search-input" placeholder="Search stories..." aria-label="Search stories">
-      <button type="submit">Search</button>
+      <input type="text" id="search-input" placeholder="Wá ìròyìn..." aria-label="Wá ìròyìn">
+      <button type="submit">Wá</button>
     </form>
   </div>
 
+  <nav class="sp-nav" aria-label="Sports">
+    <div class="in" id="sp-nav"></div>
+  </nav>
+
   <main>
-    <div id="content"><div class="sp-empty">Loading stories...</div></div>
+    <div id="content"><div class="sp-empty">Ń gbé àwọn ìròyìn wá...</div></div>
   </main>
 
   <footer class="sx">
     <div class="in">
       <div class="sx-top">
         <a class="sx-brand" href="yoruba.html">Davidgistmedia<span class="logo-tag">Yorùbá</span></a>
-        <p class="sx-tag">Ìròyìn ní èdè Yorùbá. News in the Yoruba language, from Nigeria and around the world.</p>
+        <p class="sx-tag">Ìròyìn ní èdè Yorùbá láti Nàìjíríà àti gbogbo àgbáyé.</p>
       </div>
       <div class="sx-cols">
-        <nav aria-label="Sections"><h4>Sections</h4>
-          <a href="/">Home</a>
-          <a href="sport.html">Sports</a>
-          <a href="yoruba.html">Yorùbá</a>
+        <nav aria-label="Àwọn Ẹ̀ka"><h4>Àwọn Ẹ̀ka</h4>
+          <a href="yoruba.html#nigeria">Nàìjíríà</a>
+          <a href="yoruba.html#politics">Ìṣèlú</a>
+          <a href="yoruba.html#sports">Eré Ìdárayá</a>
+          <a href="yoruba.html#entertainment">Eré Ìnàjú</a>
+          <a href="yoruba.html#business">Ìṣòwò</a>
+          <a href="yoruba.html#africa">Áfíríkà</a>
+        </nav>
+        <nav aria-label="Àwọn Ẹ̀ka Mìíràn"><h4>Àwọn Ẹ̀ka Mìíràn</h4>
+          <a href="yoruba.html#world">Àgbáyé</a>
+          <a href="yoruba.html#health">Ìlera</a>
+          <a href="yoruba.html#education">Ẹ̀kọ́</a>
+          <a href="yoruba.html#technology">Ìmọ̀ Ẹ̀rọ</a>
+          <a href="yoruba.html#culture">Àṣà</a>
+          <a href="yoruba.html#local">Ìròyìn Àdúgbò</a>
         </nav>
         <nav aria-label="Davidgistmedia"><h4>Davidgistmedia</h4>
-          <a href="/">Main site</a>
-          <a href="about.html">About us</a>
-          <a href="contact.html">Contact us</a>
-          <a href="privacy-policy.html">Privacy Policy</a>
-          <a href="terms.html">Terms of Use</a>
+          <a href="/">Ojú-òpó àkọ́kọ́</a>
+          <a href="sport.html">Davidgistmedia Sports</a>
+          <a href="about.html">Nípa Wa</a>
+          <a href="contact.html">Kàn Sí Wa</a>
+          <a href="privacy-policy.html">Ìlànà Àṣírí</a>
+          <a href="terms.html">Àwọn Òfin Lílò</a>
         </nav>
       </div>
       <div class="sx-follow">
@@ -250,7 +266,7 @@
         <a href="https://t.me/davidgistmediaent" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
         <a href="https://www.youtube.com/@davidgistmediang" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
       </div>
-      <p class="sx-copy">&copy; <span id="year"></span> Davidgistmedia. All rights reserved. Davidgistmedia Yorùbá is the Yoruba-language section of Davidgistmedia.</p>
+      <p class="sx-copy">&copy; <span id="year"></span> Davidgistmedia. Gbogbo ẹ̀tọ́ wà ní ìpamọ́. Davidgistmedia Yorùbá jẹ́ ẹ̀ka èdè Yorùbá ti Davidgistmedia.</p>
     </div>
   </footer>
 
@@ -259,6 +275,25 @@
   <script src="js/supabase-client.js"></script>
 
   <script>
+        var YO_DAYS_FULL = ["Ọjọ́ Àìkú", "Ọjọ́ Ajé", "Ọjọ́ Ìṣẹ́gun", "Ọjọ́rú", "Ọjọ́bọ̀", "Ọjọ́ Ẹtì", "Ọjọ́ Àbámẹ́ta"];
+    var YO_DAYS_SHORT = ["Àìkú", "Ajé", "Ìṣẹ́gun", "Ọjọ́rú", "Ọjọ́bọ̀", "Ẹtì", "Àbámẹ́ta"];
+    var YO_MONTHS = ["Ṣẹ́rẹ́", "Èrèlé", "Ẹrẹ́nà", "Ìgbè", "Èbìbì", "Òkúdù", "Agẹmọ", "Ògún", "Owewe", "Ọ̀wàrà", "Bélú", "Ọ̀pẹ̀"];
+    function lagosParts(d) {
+      var t = new Date(d);
+      if (isNaN(t.getTime())) return null;
+      var o = {};
+      new Intl.DateTimeFormat("en-US", { timeZone: "Africa/Lagos", weekday: "short", day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "2-digit", hour12: true })
+        .formatToParts(t).forEach(function (x) { o[x.type] = x.value; });
+      var wd = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }[o.weekday];
+      return { t: t, wd: wd, day: Number(o.day), mon: Number(o.month) - 1, year: Number(o.year), clock: o.hour + ":" + o.minute + " " + (o.dayPeriod || "").toUpperCase() };
+    }
+    function yoDateNow(short) {
+      var p = lagosParts(new Date());
+      if (!p) return "";
+      return short
+        ? YO_DAYS_SHORT[p.wd] + ", " + p.day + " " + YO_MONTHS[p.mon] + " " + p.year
+        : YO_DAYS_FULL[p.wd] + ", " + p.day + " Oṣù " + YO_MONTHS[p.mon] + " " + p.year;
+    }
     function escapeHtml(s) {
       return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
@@ -276,15 +311,16 @@
         var t = new Date(d);
         if (isNaN(t.getTime())) return "";
         var ms = Date.now() - t.getTime();
-        if (ms < 0) return "Just now";
+        if (ms < 0) return "Nísinsìnyí";
         var mins = Math.floor(ms / 60000);
-        if (mins < 1) return "Just now";
-        if (mins < 60) return mins + (mins === 1 ? " min" : " mins") + " ago";
+        if (mins < 1) return "Nísinsìnyí";
+        if (mins < 60) return "ìṣẹ́jú " + mins + " sẹ́yìn";
         var hrs = Math.floor(mins / 60);
-        if (hrs < 24) return hrs + (hrs === 1 ? " hr" : " hrs") + " ago";
+        if (hrs < 24) return "wákàtí " + hrs + " sẹ́yìn";
         var days = Math.floor(hrs / 24);
-        if (days < 7) return days + (days === 1 ? " day" : " days") + " ago";
-        return t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
+        if (days < 7) return "ọjọ́ " + days + " sẹ́yìn";
+        var p = lagosParts(t);
+        return p ? p.day + " " + YO_MONTHS[p.mon] + " " + p.year : "";
       } catch (e) { return ""; }
     }
   </script>
@@ -295,7 +331,38 @@
       var $ = function (id) { return document.getElementById(id); };
       var all = [], query = "", CACHE_KEY = "dgy_cache_v1";
 
-      function kickerOf(a) { return "Yorùbá"; }
+      var SPORTS = [
+        { key: "nigeria", label: "Nàìjíríà", re: /(?!)/ },
+        { key: "politics", label: "Ìṣèlú", re: /(?!)/ },
+        { key: "sports", label: "Eré Ìdárayá", re: /(?!)/ },
+        { key: "entertainment", label: "Eré Ìnàjú", re: /(?!)/ },
+        { key: "business", label: "Ìṣòwò", re: /(?!)/ },
+        { key: "africa", label: "Áfíríkà", re: /(?!)/ },
+        { key: "world", label: "Àgbáyé", re: /(?!)/ },
+        { key: "health", label: "Ìlera", re: /(?!)/ },
+        { key: "education", label: "Ẹ̀kọ́", re: /(?!)/ },
+        { key: "technology", label: "Ìmọ̀ Ẹ̀rọ", re: /(?!)/ },
+        { key: "culture", label: "Àṣà", re: /(?!)/ },
+        { key: "local", label: "Ìròyìn Àdúgbò", re: /(?!)/ }
+      ];
+      var byKey = {};
+      SPORTS.forEach(function (s) { byKey[s.key] = s; });
+      function tagList(a) {
+        var t = a.tags;
+        if (typeof t === "string") { try { var p = JSON.parse(t); if (Array.isArray(p)) t = p; } catch (e) {} }
+        if (typeof t === "string") t = t.split(",");
+        return Array.isArray(t) ? t.map(function (x) { return String(x).trim().toLowerCase(); }) : [];
+      }
+      function sportOf(a) {
+        var tags = tagList(a);
+        for (var i = 0; i < SPORTS.length; i++) {
+          if (tags.indexOf(SPORTS[i].key) > -1 || tags.indexOf(SPORTS[i].label.toLowerCase()) > -1) return SPORTS[i].key;
+        }
+        var text = (a.title || "") + " " + (a.excerpt || "");
+        for (var j = 0; j < SPORTS.length; j++) if (SPORTS[j].re.test(text)) return SPORTS[j].key;
+        return "other";
+      }
+      function kickerOf(a) { var k = sportOf(a); return k === "other" ? "Yorùbá" : byKey[k].label; }
       function href(a) { return 'href="yoruba-article.html?slug=' + encodeURIComponent(a.slug) + '"'; }
       function by(a) { return escapeHtml(a.author || "Davidgistmedia") + " &middot; " + timeAgo(a.published_at); }
       function picture(a, w) {
@@ -341,12 +408,12 @@
         var yt = youtubeId(u);
         if (yt) {
           var thumb = poster ? getOptimizedImage(poster, 1200) : "https://i.ytimg.com/vi/" + yt + "/hqdefault.jpg";
-          return '<div class="slide slide-v"><button type="button" class="yt-play" data-yt="' + yt + '" aria-label="Play video" style="background-image:url(\'' + escapeHtml(thumb) + '\')"><span></span></button></div>';
+          return '<div class="slide slide-v"><button type="button" class="yt-play" data-yt="' + yt + '" aria-label="Ṣí fídíò" style="background-image:url(\'' + escapeHtml(thumb) + '\')"><span></span></button></div>';
         }
         var src = u.indexOf("#") === -1 ? u + "#t=0.1" : u;
         return '<div class="slide slide-v"><video preload="metadata" playsinline' +
           (poster ? ' poster="' + escapeHtml(getOptimizedImage(poster, 1200)) + '"' : '') +
-          ' src="' + escapeHtml(src) + '"></video><button type="button" class="v-play" aria-label="Play video"><span></span></button></div>';
+          ' src="' + escapeHtml(src) + '"></video><button type="button" class="v-play" aria-label="Ṣí fídíò"><span></span></button></div>';
       }
 
       function lead(a) {
@@ -442,7 +509,13 @@
         });
       }
 
-      function renderNav() {}
+      function renderNav(active) {
+        var links = ['<a href="#" data-k="home" class="' + (active === "home" ? "on" : "") + '">Ilé</a>'];
+        SPORTS.forEach(function (s) {
+          links.push('<a href="#' + s.key + '" data-k="' + s.key + '" class="' + (active === s.key ? "on" : "") + '">' + escapeHtml(s.label) + '</a>');
+        });
+        $("sp-nav").innerHTML = links.join("");
+      }
 
       function layout(list, name) {
         var lead0 = list.find(function (a) { return a.featured; }) || list[0];
@@ -456,18 +529,34 @@
         var html = '<div class="hero"><div>' + lead(lead0) + '</div><div class="hero-side">' + side.map(pic).join("") + '</div></div>';
         if (row.length) html += '<div class="row4">' + row.map(pic).join("") + '</div>';
         if (latest.length) {
-          html += '<div class="cols"><div>' + head(name ? "Latest in " + name : "Latest stories") + latest.map(item).join("") +
-            '</div><aside class="side"><div class="box">' + head("Most liked") +
+          html += '<div class="cols"><div>' + head(name ? "Ìròyìn tuntun nínú " + name : "Ìròyìn tuntun") + latest.map(item).join("") +
+            '</div><aside class="side"><div class="box">' + head("Àwọn tí wọ́n fẹ́ràn jù") +
             '<ol class="mr">' + liked.map(function (a) { return '<li><a ' + href(a) + '>' + escapeHtml(a.title) + '</a></li>'; }).join("") + '</ol></div></aside></div>';
         }
         return { html: html, pool: pool };
       }
 
       function homePage() {
-        if (!all.length) return '<div class="sp-empty">No stories yet.</div>';
+        if (!all.length) return '<div class="sp-empty">Kò tíì sí ìròyìn.</div>';
         var r = layout(all, "");
         var html = r.html;
-        if (r.pool.length) html += '<section class="sec">' + head("More stories") + '<div class="grid4">' + r.pool.map(pic).join("") + '</div></section>';
+        SPORTS.forEach(function (s) {
+          var items = r.pool.filter(function (a) { return sportOf(a) === s.key; }).slice(0, 4);
+          if (items.length < 2) return;
+          html += '<section class="sec">' + head(s.label, "#" + s.key, "Ìròyìn mìíràn &rsaquo;") +
+            '<div class="grid4">' + items.map(pic).join("") + '</div></section>';
+        });
+        return html;
+      }
+
+      function sportPage(key) {
+        var name = byKey[key].label;
+        var list = all.filter(function (a) { return sportOf(a) === key; });
+        var html = '<div class="head head-page"><h1>' + escapeHtml(name) + '</h1></div>';
+        if (!list.length) return html + '<div class="sp-empty">Kò tíì sí ìròyìn nínú ' + escapeHtml(name) + '.</div>';
+        var r = layout(list, name);
+        html += r.html;
+        if (r.pool.length) html += '<section class="sec">' + head("Ìròyìn mìíràn nínú " + name) + '<div class="grid4">' + r.pool.map(pic).join("") + '</div></section>';
         return html;
       }
 
@@ -475,19 +564,30 @@
         var list = all.filter(function (a) {
           return (a.title || "").toLowerCase().indexOf(q) > -1 || (a.excerpt || "").toLowerCase().indexOf(q) > -1;
         });
-        var html = '<div class="head head-page"><h1>Search results</h1></div>';
-        if (!list.length) return html + '<div class="sp-empty">No stories match &ldquo;' + escapeHtml(q) + '&rdquo;.</div>';
+        var html = '<div class="head head-page"><h1>Èsì ìwákiri</h1></div>';
+        if (!list.length) return html + '<div class="sp-empty">Kò sí ìròyìn tó bá &ldquo;' + escapeHtml(q) + '&rdquo; mu.</div>';
         return html + '<div class="grid4">' + list.map(pic).join("") + '</div>';
       }
 
       function show() {
+        var key = location.hash.replace("#", "");
+        if (!byKey[key]) key = "home";
         var q = query.trim().toLowerCase();
-        $("content").innerHTML = q ? searchPage(q) : homePage();
+        renderNav(q ? "" : key);
+        $("content").innerHTML = q ? searchPage(q) : (key === "home" ? homePage() : sportPage(key));
         wireLead($("content"));
-        document.title = "Davidgistmedia Yorùbá";
+        document.title = (q || key === "home" ? "Davidgistmedia Yorùbá" : byKey[key].label + " | Davidgistmedia Yorùbá");
       }
 
       window.addEventListener("hashchange", function () { query = ""; $("search-input").value = ""; show(); window.scrollTo(0, 0); });
+      $("sp-nav").addEventListener("click", function (e) {
+        var a = e.target.closest("a[data-k=home]");
+        if (!a) return;
+        e.preventDefault();
+        query = ""; $("search-input").value = "";
+        history.pushState(null, "", location.pathname);
+        show(); window.scrollTo(0, 0);
+      });
       $("search-btn").addEventListener("click", function () {
         var bar = $("search-bar");
         bar.hidden = !bar.hidden;
@@ -500,9 +600,7 @@
       var today = $("today");
       if (today) {
         var shortDate = window.innerWidth < 600;
-        today.textContent = new Date().toLocaleDateString("en-NG", shortDate
-          ? { weekday: "short", day: "numeric", month: "short", year: "numeric" }
-          : { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+        today.textContent = yoDateNow(shortDate);
       }
       var yr = $("year"); if (yr) yr.textContent = new Date().getFullYear();
       $("menu-btn").addEventListener("click", function () {
@@ -527,7 +625,7 @@
       async function load() {
         var cached = readCache();
         if (cached && cached.length) { all = cached; show(); }
-        if (!sb) { if (!cached) $("content").innerHTML = '<div class="sp-empty">Stories are not available right now.</div>'; return; }
+        if (!sb) { if (!cached) $("content").innerHTML = '<div class="sp-empty">Àwọn ìròyìn kò sí lọ́wọ́lọ́wọ́ báyìí.</div>'; return; }
         var base = "id,slug,title,excerpt,image_url,category,author,published_at,likes,featured";
         var sets = [base + ",images,tags,video_url", base + ",images,tags", base + ",images", base];
         var res = null;
@@ -536,7 +634,7 @@
           if (!res.error) break;
           if (!/images|tags|video_url|column/i.test(res.error.message || "")) break;
         }
-        if (res.error) { if (!cached || !cached.length) $("content").innerHTML = '<div class="sp-empty">Couldn\'t load stories right now. Please try again.</div>'; return; }
+        if (res.error) { if (!cached || !cached.length) $("content").innerHTML = '<div class="sp-empty">Kò lè gbé àwọn ìròyìn wá báyìí. Jọ̀wọ́ tún gbìyànjú.</div>'; return; }
         all = (res.data || []).filter(function (a) { return a && a.slug && a.title; });
         try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), articles: all })); } catch (e) {}
         show();
