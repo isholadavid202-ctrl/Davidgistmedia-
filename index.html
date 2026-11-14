@@ -249,6 +249,8 @@
 
   <div class="sp-drawer" id="drawer" hidden>
     <div class="in">
+      <a href="sport.html">Sport</a>
+      <a href="yoruba.html">Yorùbá</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="editorial-policy.html">Editorial Policy</a>
@@ -338,7 +340,7 @@
       /* The sections in the menu: [key in the database, name shown] */
       var CATS = [
         ["nigeria", "Nigeria"], ["africa", "Africa"], ["politics", "Politics"],
-        ["entertainment", "Entertainment"], ["sports", "Sport"], ["business", "Business"],
+        ["entertainment", "Entertainment"], ["sports", "Sport"], ["yoruba", "Yorùbá"], ["business", "Business"],
         ["technology", "Technology"], ["science", "Science"], ["education", "Education"],
         ["fashion", "Fashion"], ["europe", "Europe"], ["world", "World"], ["local", "Local News"]
       ];
@@ -352,7 +354,7 @@
       function href(a) { return 'href="article.html?slug=' + encodeURIComponent(a.slug) + '"'; }
       function kickerOf(a) { return LABEL[a.category] || a.category || "News"; }
       function by(a) { return escapeHtml(a.author || "Davidgistmedia") + " &middot; " + timeAgo(a.published_at); }
-      function sectionLink(key) { return key === "sports" ? "sport.html" : "#" + key; }
+      function sectionLink(key) { return key === "sports" ? "sport.html" : key === "yoruba" ? "yoruba.html" : "#" + key; }
 
       /* ---------- Verified badge (orange for the owner, blue for verified authors) ---------- */
       var badges = {}, badgesLoaded = null;
@@ -531,6 +533,7 @@
         var links = ['<a href="#" data-k="home" class="' + (active === "home" ? "on" : "") + '">Home</a>'];
         CATS.forEach(function (c) {
           if (c[0] === "sports") links.push('<a href="sport.html">Sport</a>');
+          else if (c[0] === "yoruba") links.push('<a href="yoruba.html">Yorùbá</a>');
           else links.push('<a href="#' + c[0] + '" data-k="' + c[0] + '" class="' + (active === c[0] ? "on" : "") + '">' + escapeHtml(c[1]) + '</a>');
         });
         links.push('<a href="podcasts.html">Podcasts</a>', '<a href="live.html">Live</a>', '<a href="live-audio.html">Live Audio</a>', '<a href="videos.html">Videos</a>');
@@ -591,7 +594,7 @@
       function show() {
         if (!all.length && !sb) return;
         var key = location.hash.replace("#", "");
-        if (!LABEL[key] || key === "sports") key = "home";
+        if (!LABEL[key] || key === "sports" || key === "yoruba") key = "home";
         var q = query.trim().toLowerCase();
         var vh = $("video-home");
         renderNav(q ? "" : key);
