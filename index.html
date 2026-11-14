@@ -348,6 +348,8 @@
       CATS.forEach(function (c) { LABEL[c[0]] = c[1]; });
 
       var all = [];
+      /* Sport and Yoruba stories live on their own pages, so they are not listed on the main site */
+      function isMain(a) { return a && a.category !== "sports" && a.category !== "yoruba"; }
       var query = "";
       var CACHE_KEY = "dg_home_cache_v3";
 
@@ -675,7 +677,7 @@
       }
       async function load() {
         var cached = readCache();
-        if (cached && cached.length) { all = cached; show(); }
+        if (cached && cached.length) { all = cached.filter(isMain); show(); }
         if (sb) loadBadges().then(function () { if (all.length) show(); });
         if (!sb) {
           if (!cached) $("hero-section").innerHTML = '<div class="sp-empty">Stories are not available right now.</div>';
@@ -685,7 +687,7 @@
         var sets = [base + ",images,video_url", base + ",images", base];
         var res = null;
         for (var i = 0; i < sets.length; i++) {
-          res = await sb.from("articles").select(sets[i]).order("published_at", { ascending: false }).limit(100);
+          res = await sb.from("articles").select(sets[i]).not("category", "in", "(sports,yoruba)").order("published_at", { ascending: false }).limit(100);
           if (!res.error) break;
           if (!/images|video_url|column/i.test(res.error.message || "")) break;
         }
@@ -693,7 +695,7 @@
           if (!cached || !cached.length) $("hero-section").innerHTML = '<div class="sp-empty">Couldn\'t load stories right now. Please try again.</div>';
           return;
         }
-        all = (res.data || []).filter(function (a) { return a && a.slug && a.title; });
+        all = (res.data || []).filter(function (a) { return a && a.slug && a.title && isMain(a); });
         await loadBadges();
         writeCache(all);
         show();
