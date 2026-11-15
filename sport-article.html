@@ -304,7 +304,7 @@
       var $ = function (id) { return document.getElementById(id); };
 
       /* If true, search engines are told the main Davidgistmedia page is the original of each story. */
-      var CANONICAL_TO_MAIN = true;
+      var CANONICAL_TO_MAIN = false;
       var MAIN = "https://davidgistmedia.onrender.com";
 
       var SPORTS = [
@@ -374,7 +374,7 @@
           var c = document.createElement("link"); c.rel = "canonical"; c.href = mainUrl; document.head.appendChild(c);
         }
         setMeta("name", "description", desc);
-        setMeta("property", "og:title", a.title);
+        setMeta("property", "og:title", a.title + " | Davidgistmedia Sports");
         setMeta("property", "og:description", desc);
         setMeta("property", "og:type", "article");
         setMeta("property", "og:image", a.image_url);
