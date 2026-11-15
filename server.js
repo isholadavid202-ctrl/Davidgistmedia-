@@ -113,6 +113,11 @@ function template(name) {
   return TEMPLATES[name];
 }
 
+// Which page shows a story: Sport and Yoruba stories have their own section pages
+function pageFor(category) {
+  return category === "yoruba" ? "yoruba-article.html" : category === "sports" ? "sport-article.html" : "article.html";
+}
+
 function originOf(req) {
   return "https://" + req.get("host");
 }
@@ -208,10 +213,10 @@ app.get("/sitemap.xml", async (req, res) => {
   const origin = originOf(req);
   try {
     const rows = await cached("sitemap", 10 * 60 * 1000, () =>
-      sb("articles?select=slug,published_at,updated_at&order=published_at.desc&limit=1000")
+      sb("articles?select=slug,category,published_at,updated_at&order=published_at.desc&limit=1000")
     );
     const urls = [];
-    const pages = ["", "about.html", "contact.html", "editorial-policy.html", "privacy-policy.html", "terms.html"];
+    const pages = ["", "sport.html", "yoruba.html", "about.html", "contact.html", "editorial-policy.html", "privacy-policy.html", "terms.html"];
     pages.forEach((p) => {
       if (p === "" || fs.existsSync(path.join(ROOT, p))) {
         urls.push(`<url><loc>${esc(origin + "/" + p)}</loc></url>`);
@@ -221,7 +226,7 @@ app.get("/sitemap.xml", async (req, res) => {
       if (!a.slug) return;
       const last = isoDate(a.updated_at || a.published_at);
       urls.push(
-        `<url><loc>${esc(origin + "/article.html?slug=" + encodeURIComponent(a.slug))}</loc>` +
+        `<url><loc>${esc(origin + "/" + pageFor(a.category) + "?slug=" + encodeURIComponent(a.slug))}</loc>` +
           (last ? `<lastmod>${last}</lastmod>` : "") +
           `</url>`
       );
@@ -241,7 +246,7 @@ app.get("/news-sitemap.xml", async (req, res) => {
     const rows = await cached("newsmap", 5 * 60 * 1000, () => {
       const since = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
       return sb(
-        `articles?select=title,slug,published_at` +
+        `articles?select=title,slug,category,published_at` +
           `&published_at=gte.${encodeURIComponent(since)}` +
           `&order=published_at.desc&limit=1000`
       );
@@ -252,7 +257,7 @@ app.get("/news-sitemap.xml", async (req, res) => {
       if (!a.slug || !a.title || !pub) return;
       items.push(
         `<url>` +
-          `<loc>${esc(origin + "/article.html?slug=" + encodeURIComponent(a.slug))}</loc>` +
+          `<loc>${esc(origin + "/" + pageFor(a.category) + "?slug=" + encodeURIComponent(a.slug))}</loc>` +
           `<news:news>` +
           `<news:publication><news:name>Davidgistmedia</news:name><news:language>en</news:language></news:publication>` +
           `<news:publication_date>${pub}</news:publication_date>` +
