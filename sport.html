@@ -8,13 +8,19 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Davidgistmedia Sports</title>
-  <meta name="description" content="Football, basketball, athletics, boxing and more. Sports news from Nigeria and around the world on Davidgistmedia Sports.">
+  <title>Davidgistmedia Sports (DGM Sport) | Nigerian and World Sports News</title>
+  <meta name="description" content="DGM Sport: football, basketball, athletics, boxing and more. Sports news from Nigeria and around the world on Davidgistmedia Sports.">
   <meta name="theme-color" content="#111111">
   <meta property="og:title" content="Davidgistmedia Sports">
   <meta property="og:description" content="Sports news from Nigeria and around the world.">
   <meta property="og:type" content="website">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-sport.svg" type="image/svg+xml">
+  <link rel="icon" href="/icon-sport-48.png" type="image/png" sizes="48x48">
+  <link rel="icon" href="/icon-sport-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-sport.png">
+  <link rel="manifest" href="/manifest-sport.json">
+  <meta name="application-name" content="DGM Sports">
+  <meta name="apple-mobile-web-app-title" content="DGM Sports">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
@@ -235,6 +241,9 @@
       #theme-toggle-btn{order:3}
     }
   </style>
+
+  <link rel="canonical" href="https://davidgistmedia.onrender.com/sport.html">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Davidgistmedia Sports", "alternateName": ["DGM Sports", "DGM Sport", "Davidgist Sport", "Davidgistmedia Sport"], "url": "https://davidgistmedia.onrender.com/sport.html", "inLanguage": "en", "publisher": {"@type": "NewsMediaOrganization", "name": "Davidgistmedia", "url": "https://davidgistmedia.onrender.com/", "logo": {"@type": "ImageObject", "url": "https://davidgistmedia.onrender.com/icon-sport-512.png"}}}</script>
 </head>
 <body>
 
@@ -684,7 +693,7 @@
         renderNav(q ? "" : key);
         $("content").innerHTML = q ? searchPage(q) : (key === "home" ? homePage() : sportPage(key));
         wireLead($("content"));
-        document.title = (q || key === "home" ? "Davidgistmedia Sports" : byKey[key].label + " | Davidgistmedia Sports");
+        document.title = (q || key === "home" ? "Davidgistmedia Sports (DGM Sport) | Nigerian and World Sports News" : byKey[key].label + " | Davidgistmedia Sports");
       }
 
       window.addEventListener("hashchange", function () { query = ""; $("search-input").value = ""; show(); window.scrollTo(0, 0); });
