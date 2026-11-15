@@ -1,0 +1,25 @@
+{
+  "name": "Davidgistmedia Sports",
+  "short_name": "DGM Sport",
+  "description": "Davidgistmedia Sports – news from Davidgistmedia",
+  "lang": "en",
+  "start_url": "/sport.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#111111",
+  "icons": [
+    {
+      "src": "/icon-sport-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-sport-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
