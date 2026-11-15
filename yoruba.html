@@ -8,13 +8,19 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Davidgistmedia Yorùbá</title>
-  <meta name="description" content="Ìròyìn ní èdè Yorùbá láti Nàìjíríà àti gbogbo àgbáyé, lórí Davidgistmedia Yorùbá.">
+  <title>Davidgistmedia Yorùbá (DGM Yoruba) | Ìròyìn Yorùbá</title>
+  <meta name="description" content="DGM Yoruba: ìròyìn ní èdè Yorùbá láti Nàìjíríà àti gbogbo àgbáyé, lórí Davidgistmedia Yorùbá. News in the Yoruba language.">
   <meta name="theme-color" content="#111111">
   <meta property="og:title" content="Davidgistmedia Yorùbá">
   <meta property="og:description" content="Ìròyìn ní èdè Yorùbá láti Nàìjíríà àti gbogbo àgbáyé.">
   <meta property="og:type" content="website">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-yoruba.svg" type="image/svg+xml">
+  <link rel="icon" href="/icon-yoruba-48.png" type="image/png" sizes="48x48">
+  <link rel="icon" href="/icon-yoruba-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-yoruba.png">
+  <link rel="manifest" href="/manifest-yoruba.json">
+  <meta name="application-name" content="DGM Yoruba">
+  <meta name="apple-mobile-web-app-title" content="DGM Yoruba">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
@@ -235,6 +241,9 @@
       #theme-toggle-btn{order:3}
     }
   </style>
+
+  <link rel="canonical" href="https://davidgistmedia.onrender.com/yoruba.html">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Davidgistmedia Yorùbá", "alternateName": ["DGM Yoruba", "DGM Yorùbá", "Davidgistmedia Yoruba", "Davidgist Yoruba"], "url": "https://davidgistmedia.onrender.com/yoruba.html", "inLanguage": "yo", "publisher": {"@type": "NewsMediaOrganization", "name": "Davidgistmedia", "url": "https://davidgistmedia.onrender.com/", "logo": {"@type": "ImageObject", "url": "https://davidgistmedia.onrender.com/icon-yoruba-512.png"}}}</script>
 </head>
 <body>
 
@@ -718,7 +727,7 @@
         renderNav(q ? "" : key);
         $("content").innerHTML = q ? searchPage(q) : (key === "home" ? homePage() : sportPage(key));
         wireLead($("content"));
-        document.title = (q || key === "home" ? "Davidgistmedia Yorùbá" : byKey[key].label + " | Davidgistmedia Yorùbá");
+        document.title = (q || key === "home" ? "Davidgistmedia Yorùbá (DGM Yoruba) | Ìròyìn Yorùbá" : byKey[key].label + " | Davidgistmedia Yorùbá");
       }
 
       window.addEventListener("hashchange", function () { query = ""; $("search-input").value = ""; show(); window.scrollTo(0, 0); });
