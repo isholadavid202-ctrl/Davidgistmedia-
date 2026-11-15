@@ -84,8 +84,35 @@
     html[data-theme="dark"] .engage-btn{color:#d6d6d3}
 
     /* Computers: a centred page, not stretched edge to edge */
-    @media (min-width:1000px){
+    @media (min-width:900px){
       .sp-util .hd-in,.sp-top .hd-in,.sp-drawer .hd-in,.sp-nav .hd-in,.sp-search form,main.wrap{max-width:1240px;padding-left:24px;padding-right:24px}
+    }
+
+    /* ---- Computers: a clean news-site header and front page ---- */
+    @media (min-width:900px){
+      .sp-top{background:var(--bg,var(--h-bg,#fff));color:var(--ink,var(--h-ink,#141414))}
+      .sp-top .in,.sp-top .hd-in{padding:20px 24px 16px}
+      .sp-brand{font-size:2.4rem;letter-spacing:-.02em;color:var(--ink,var(--h-ink,#141414));margin-left:12px}
+      .sp-brand .logo-tag{font-size:.4em}
+      .sp-btn{border-color:var(--line,var(--h-line,#e3e3e3));color:var(--ink,var(--h-ink,#141414))}
+      #menu-btn,#search-btn{color:var(--ink,var(--h-ink,#141414))}
+      .sp-nav{border-top:1px solid var(--line,var(--h-line,#e3e3e3));border-bottom:2px solid var(--ink,var(--h-ink,#141414))}
+      .sp-nav a{padding:13px 16px 11px;font-size:.92rem;color:var(--ink,var(--h-ink,#141414))}
+      .sp-drawer .in,.sp-drawer .hd-in{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 40px;padding:26px 24px 34px}
+      .sp-drawer a{border-bottom:0;padding:8px 0;font-size:.98rem}
+      .head h2{font-size:.82rem;letter-spacing:.07em;text-transform:uppercase}
+      .head::before{width:4px;height:1.15em}
+    }
+
+    /* Computers: "Watch" and "Listen" links on the right of the header */
+    .sp-desk-link{display:none}
+    @media (min-width:900px){
+      .sp-desk-link{display:inline-flex;align-items:center;gap:7px;order:1;padding:8px 12px;font-weight:700;font-size:.92rem;color:var(--ink,var(--h-ink,#141414));text-decoration:none;white-space:nowrap}
+      .sp-desk-link:hover{color:#c8102e}
+      .sp-desk-link .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#e8344c}
+      .sp-desk-link svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+      #search-btn{order:2}
+      #theme-toggle-btn{order:3}
     }
   </style>
 </head>
@@ -103,7 +130,7 @@
       <button type="button" class="sp-btn" id="menu-btn" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
       <button type="button" class="sp-btn" id="search-btn" aria-label="Search" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
       <a class="sp-brand" href="/">David<span>gistmedia</span></a>
-      <span class="sp-spacer"></span>
+      <span class="sp-spacer"></span><a class="sp-desk-link" href="live.html"><i class="dot"></i>Watch</a><a class="sp-desk-link" href="podcasts.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15v-3a8 8 0 0116 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>Listen</a>
       <button type="button" class="sp-btn" id="theme-toggle-btn" aria-label="Switch between light and dark"><span id="theme-icon" style="display:grid;place-items:center"></span></button>
     </div>
   </div>
