@@ -85,6 +85,26 @@
             </select>
           </div>
 
+          <!-- Yoruba: appears when the category is Yoruba. It adds the section's tag, so the story shows under that section on the Yoruba page. -->
+          <div id="yoruba-pick" style="display:none">
+            <label for="yoruba-kind">Yoruba section (shows this story under that section on the Yoruba page)</label>
+            <select id="yoruba-kind">
+              <option value="">Not sure / no section</option>
+              <option value="nigeria">Nàìjíríà (Nigeria)</option>
+              <option value="politics">Ìṣèlú (Politics)</option>
+              <option value="sports">Eré Ìdárayá (Sports)</option>
+              <option value="entertainment">Eré Ìnàjú (Entertainment)</option>
+              <option value="business">Ìṣòwò (Business)</option>
+              <option value="africa">Áfíríkà (Africa)</option>
+              <option value="world">Àgbáyé (World)</option>
+              <option value="health">Ìlera (Health)</option>
+              <option value="education">Ẹ̀kọ́ (Education)</option>
+              <option value="technology">Ìmọ̀ Ẹ̀rọ (Technology)</option>
+              <option value="culture">Àṣà (Culture)</option>
+              <option value="local">Ìròyìn Àdúgbò (Local news)</option>
+            </select>
+          </div>
+
           <!-- Pictures and video are added here by js/media-upload.js -->
           <div id="media-box"></div>
 
@@ -526,6 +546,49 @@
           last = tags.value;
           refresh();
         }
+      }, 500);
+      refresh();
+    })();
+  </script>
+  <!-- Yoruba picker: shows a Yoruba section dropdown when the category is Yoruba and keeps the Tags box in step with it. -->
+  <script>
+    (function () {
+      var KEYS = ["nigeria", "politics", "sports", "entertainment", "business", "africa", "world", "health", "education", "technology", "culture", "local"];
+      var cat = document.getElementById("category");
+      var tags = document.getElementById("tags");
+      var pick = document.getElementById("yoruba-pick");
+      var sel = document.getElementById("yoruba-kind");
+      if (!cat || !tags || !pick || !sel) return;
+
+      function list() {
+        return tags.value.split(",").map(function (t) { return t.trim(); }).filter(Boolean);
+      }
+      function currentKind() {
+        var l = list().map(function (t) { return t.toLowerCase(); });
+        for (var i = 0; i < KEYS.length; i++) { if (l.indexOf(KEYS[i]) > -1) return KEYS[i]; }
+        return "";
+      }
+      function apply() {
+        var l = list().filter(function (t) { return KEYS.indexOf(t.toLowerCase()) === -1; });
+        if (cat.value === "yoruba" && sel.value) l.push(sel.value);
+        tags.value = l.join(", ");
+        last = tags.value;
+      }
+      var last = tags.value;
+      function refresh() {
+        var on = cat.value === "yoruba";
+        pick.style.display = on ? "block" : "none";
+        sel.value = on ? currentKind() : "";
+      }
+      cat.addEventListener("change", function () {
+        if (cat.value !== "yoruba") { sel.value = ""; apply(); }
+        refresh();
+      });
+      sel.addEventListener("change", apply);
+      tags.addEventListener("input", function () { last = tags.value; if (cat.value === "yoruba") sel.value = currentKind(); });
+      var lastCat = cat.value;
+      setInterval(function () {
+        if (cat.value !== lastCat || tags.value !== last) { lastCat = cat.value; last = tags.value; refresh(); }
       }, 500);
       refresh();
     })();
