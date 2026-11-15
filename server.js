@@ -317,6 +317,12 @@ app.get(["/article.html", "/article"], async (req, res) => {
         status = 404;
       }
 
+      // Sport and Yoruba stories belong to their own sections, so the link shows where they were published
+      if (a && (a.category === "yoruba" || a.category === "sports")) {
+        const section = a.category === "yoruba" ? "/yoruba-article.html" : "/sport-article.html";
+        return res.redirect(302, section + "?slug=" + encodeURIComponent(slug));
+      }
+
       if (a) {
         const origin = originOf(req);
         const pageUrl = `${origin}/article.html?slug=${encodeURIComponent(slug)}`;
@@ -491,8 +497,8 @@ function sectionArticleRoute(fileName, siteName, locale) {
         if (a) {
           const origin = originOf(req);
           const pageUrl = `${origin}/${fileName}?slug=${encodeURIComponent(slug)}`;
-          const mainUrl = `${origin}/article.html?slug=${encodeURIComponent(slug)}`;
           const title = a.title || siteName;
+          const shareTitle = title + " | " + siteName;
           const author = a.author || "Davidgistmedia";
           const plain = String(a.content || "").replace(/\s+/g, " ").trim();
           const desc = a.excerpt || (plain ? plain.slice(0, 160) : "Read the full story on " + siteName + ".");
@@ -506,7 +512,7 @@ function sectionArticleRoute(fileName, siteName, locale) {
             "@type": "NewsArticle",
             headline: title.slice(0, 110),
             description: desc,
-            mainEntityOfPage: { "@type": "WebPage", "@id": mainUrl },
+            mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl },
             image: img ? [img] : undefined,
             datePublished: isoDate(a.published_at) || undefined,
             dateModified: isoDate(a.updated_at || a.published_at) || undefined,
@@ -524,17 +530,17 @@ function sectionArticleRoute(fileName, siteName, locale) {
           };
 
           const tags = `
-  <link rel="canonical" href="${esc(mainUrl)}">
+  <link rel="canonical" href="${esc(pageUrl)}">
   <meta name="description" content="${esc(desc)}">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="${esc(siteName)}">
   ${locale ? `<meta property="og:locale" content="${esc(locale)}">` : ""}
-  <meta property="og:title" content="${esc(title)}">
+  <meta property="og:title" content="${esc(shareTitle)}">
   <meta property="og:description" content="${esc(desc)}">
   <meta property="og:url" content="${esc(pageUrl)}">
   ${img ? `<meta property="og:image" content="${esc(img)}">` : ""}
   <meta name="twitter:card" content="${img ? "summary_large_image" : "summary"}">
-  <meta name="twitter:title" content="${esc(title)}">
+  <meta name="twitter:title" content="${esc(shareTitle)}">
   <meta name="twitter:description" content="${esc(desc)}">
   ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ""}
   <script type="application/ld+json">${ldJson(ld)}</script>
