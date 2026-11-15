@@ -203,6 +203,7 @@
   <div class="sp-drawer" id="drawer" hidden>
     <div class="in">
       <a href="/">Davidgistmedia (main site)</a>
+      <a href="yoruba.html">Davidgistmedia Yorùbá</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="editorial-policy.html">Editorial Policy</a>
@@ -330,6 +331,35 @@
       function kickerOf(a) { var k = sportOf(a); return k === "other" ? "Sport" : byKey[k].label; }
       function href(a) { return 'href="sport-article.html?slug=' + encodeURIComponent(a.slug) + '"'; }
       function by(a) { return escapeHtml(a.author || "Davidgistmedia") + " &middot; " + timeAgo(a.published_at); }
+      /* ---------- Verified badge (orange for the owner, blue for verified authors) ---------- */
+      var badges = {}, badgesLoaded = null;
+      function nkey(n) { return String(n || "").trim().toLowerCase(); }
+      function loadBadges() {
+        if (badgesLoaded) return badgesLoaded;
+        badgesLoaded = (async function () {
+          try {
+            var r = await sb.from("verified_authors").select("name,title,kind");
+            (r.data || []).forEach(function (x) { badges[nkey(x.name)] = x; });
+          } catch (e) {}
+        })();
+        return badgesLoaded;
+      }
+      function badgeFor(name) {
+        var b = badges[nkey(name)];
+        if (!b) return "";
+        var color = b.kind === "owner" ? "#f97316" : "#1d9bf0", pts = [];
+        for (var i = 0; i < 48; i++) {
+          var ang = (i / 48) * Math.PI * 2, r = 9.2 + 1.1 * Math.cos(8 * ang);
+          pts.push((12 + r * Math.cos(ang)).toFixed(2) + "," + (12 + r * Math.sin(ang)).toFixed(2));
+        }
+        var t = escapeHtml(b.title);
+        return '<svg viewBox="0 0 24 24" width="15" height="15" role="img" aria-label="' + t + '" style="display:inline-block;vertical-align:-2px;margin-left:4px"><title>' + t + '</title><polygon points="' + pts.join(" ") + '" fill="' + color + '"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      }
+      function leadBy(a) {
+        var name = a.author || "Davidgistmedia";
+        return escapeHtml(name) + badgeFor(name) + " &middot; " + timeAgo(a.published_at);
+      }
+
       function picture(a, w) {
         return a.image_url ? '<img src="' + escapeHtml(getOptimizedImage(a.image_url, w)) + '" alt="" loading="lazy">' : '<span class="noimg"></span>';
       }
@@ -383,7 +413,7 @@
 
       function lead(a) {
         var caption = '<div class="cap"><span class="tag">' + escapeHtml(kickerOf(a)) + '</span>';
-        var tail = (a.excerpt ? '<p>' + escapeHtml(a.excerpt) + '</p>' : '') + '<span class="meta">' + by(a) + '</span></div>';
+        var tail = (a.excerpt ? '<p>' + escapeHtml(a.excerpt) + '</p>' : '') + '<span class="meta">' + leadBy(a) + '</span></div>';
         var videos = videoList(a);
 
         if (videos.length) {
@@ -592,6 +622,7 @@
       async function load() {
         var cached = readCache();
         if (cached && cached.length) { all = cached; show(); }
+        if (sb) loadBadges().then(function () { if (all.length) show(); });
         if (!sb) { if (!cached) $("content").innerHTML = '<div class="sp-empty">Stories are not available right now.</div>'; return; }
         var base = "id,slug,title,excerpt,image_url,category,author,published_at,likes,featured";
         var sets = [base + ",images,tags,video_url", base + ",images,tags", base + ",images", base];
@@ -603,6 +634,7 @@
         }
         if (res.error) { if (!cached || !cached.length) $("content").innerHTML = '<div class="sp-empty">Couldn\'t load stories right now. Please try again.</div>'; return; }
         all = (res.data || []).filter(function (a) { return a && a.slug && a.title; });
+        await loadBadges();
         try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), articles: all })); } catch (e) {}
         show();
       }
