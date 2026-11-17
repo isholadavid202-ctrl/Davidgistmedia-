@@ -195,6 +195,11 @@
       #search-btn{order:2}
       #theme-toggle-btn{order:3}
     }
+
+    /* the Davidgistmedia mark next to the name */
+    .sp-mark{display:inline-block;width:1.25em;height:1.25em;vertical-align:-.28em;margin-right:.4em;border-radius:22%}
+    .sx-brand .sp-mark{width:1.2em;height:1.2em}
+    @media (max-width:400px){.sp-brand .sp-mark{display:none}}
   </style>
 </head>
 <body>
@@ -218,7 +223,6 @@
   <div class="sp-drawer" id="drawer" hidden>
     <div class="in">
       <a href="/">Davidgistmedia (Ojú-òpó àkọ́kọ́)</a>
-      <a href="sport.html">Davidgistmedia Sports</a>
       <a href="about.html">Nípa Wa</a>
       <a href="contact.html">Kàn Sí Wa</a>
       <a href="editorial-policy.html">Ìlànà Ìṣàtúnṣe Ìròyìn</a>
@@ -256,8 +260,7 @@
         </nav>
         <nav aria-label="Davidgistmedia"><h4>Davidgistmedia</h4>
           <a href="/">Ojú-òpó àkọ́kọ́</a>
-          <a href="sport.html">Davidgistmedia Sports</a>
-          <a href="about.html">Nípa Wa</a>
+              <a href="about.html">Nípa Wa</a>
           <a href="contact.html">Kàn Sí Wa</a>
           <a href="privacy-policy.html">Ìlànà Àṣírí</a>
           <a href="terms.html">Àwọn Òfin Lílò</a>
@@ -523,7 +526,7 @@
           '<div class="cat">' + escapeHtml(kickerOf(a)) + "</div>" +
           "<h1>" + escapeHtml(a.title) + "</h1>" +
           '<div class="byline">' +
-            '<div class="byline-author">Láti ọwọ́ <a href="author.html?name=' + encodeURIComponent(author) + '">' + escapeHtml(author) + "</a>" + badgeFor(author) + "</div>" +
+            '<div class="byline-author">Láti ọwọ́ <a href="yoruba-author.html?name=' + encodeURIComponent(author) + '">' + escapeHtml(author) + "</a>" + badgeFor(author) + "</div>" +
             '<div class="byline-info">' + whenHtml(a.published_at) + updatedHtml + '<span class="by-bar" aria-hidden="true"></span><span>' + mins + " ìṣẹ́jú láti kà</span></div>" +
           "</div>" +
           media + shareRowHtml(a) +
