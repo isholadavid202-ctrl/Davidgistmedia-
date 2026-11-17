@@ -251,6 +251,23 @@
     .au-av{flex:0 0 auto;width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:var(--dg-accent);color:#fff;font-size:1.6rem;font-weight:800}
     .au-head h1{margin:0;font-size:1.8rem;font-weight:800;line-height:1.2}
     .au-sub{margin:6px 0 0;color:var(--muted);font-size:.95rem}
+
+    /* author profile card */
+    .back{display:inline-block;margin:0 0 16px;font-size:.95rem;font-weight:700;color:var(--muted)}
+    .back:hover{color:var(--ink)}
+    .pf-card{max-width:920px;border:1px solid var(--line);border-radius:22px;padding:28px 28px 8px;margin:0 0 34px}
+    .pf-top{display:flex;align-items:center;gap:22px;margin:0 0 22px}
+    .pf-av{flex:0 0 auto;width:96px;height:96px;border-radius:50%;padding:4px;border:4px solid var(--ring,var(--line));display:grid;place-items:center;background:var(--bg);overflow:hidden}
+    .pf-av img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover}
+    .pf-av span{font-size:1.9rem;font-weight:800;color:var(--ink)}
+    .pf-top h1{margin:0;font-size:clamp(1.7rem,6vw,2.3rem);font-weight:800;line-height:1.15}
+    .pf-role{margin:8px 0 0;color:var(--red);font-size:.9rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;line-height:1.5}
+    .pf-bio{margin:0 0 6px;font-size:1.08rem;line-height:1.8}
+    .pf-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:24px 0 0;border-top:1px solid var(--line)}
+    .pf-stats>div{padding:18px 8px 20px;text-align:center}
+    .pf-stats>div+div{border-left:1px solid var(--line)}
+    .pf-stats b{display:block;font-size:clamp(1.3rem,5vw,1.8rem);font-weight:800;line-height:1.2}
+    .pf-stats span{display:block;margin-top:4px;color:var(--muted);font-size:.95rem}
   </style>
 </head>
 <body>
@@ -439,7 +456,8 @@
         if (badgesLoaded) return badgesLoaded;
         badgesLoaded = (async function () {
           try {
-            var r = await sb.from("verified_authors").select("name,title,kind");
+            var r = await sb.from("verified_authors").select("name,title,title_yo,kind");
+            if (r.error) r = await sb.from("verified_authors").select("name,title,kind");
             (r.data || []).forEach(function (x) { badges[nkey(x.name)] = x; });
           } catch (e) {}
         })();
@@ -518,6 +536,20 @@
       function initials(n) {
         return String(n || "?").trim().split(/\s+/).slice(0, 2).map(function (w) { return w.charAt(0).toUpperCase(); }).join("");
       }
+      function bigBadge(name) {
+        return badgeFor(name).replace('width="15" height="15"', 'width="30" height="30"').replace("vertical-align:-2px;margin-left:4px", "vertical-align:-5px;margin-left:8px");
+      }
+      async function fetchProfile(name) {
+        if (!sb) return null;
+        var cols = ["full_name,avatar_url,bio,bio_yo", "full_name,avatar_url,bio", "full_name,avatar_url"];
+        for (var i = 0; i < cols.length; i++) {
+          try {
+            var r = await sb.from("profiles").select(cols[i]).eq("full_name", name).limit(1);
+            if (!r.error) return (r.data && r.data[0]) || null;
+          } catch (e) {}
+        }
+        return null;
+      }
       async function load() {
         var root = $("content");
         var name = (new URLSearchParams(location.search).get("name") || "").trim();
@@ -532,10 +564,21 @@
           if (!res.error) break;
         }
         await loadBadges();
+        var prof = await fetchProfile(name);
         if (res.error) { root.innerHTML = '<div class="sp-empty">Kò lè gbé àwọn ìròyìn wá báyìí. Jọ̀wọ́ tún gbìyànjú.</div>'; return; }
         var list = (res.data || []).filter(function (a) { return a && a.slug && a.title; });
-        var html = '<div class="au-head"><div class="au-av">' + escapeHtml(initials(name)) + '</div><div><h1>' +
-          escapeHtml(name) + badgeFor(name) + '</h1><p class="au-sub">' + list.length + ' ìròyìn &middot; Davidgistmedia Yorùbá</p></div></div>';
+        var b = badges[nkey(name)] || null;
+        var ring = b ? (b.kind === "owner" ? "#f97316" : "#1d9bf0") : "";
+        var topics = {};
+        list.forEach(function (a) { topics[sportOf(a)] = 1; });
+        var firstDate = list.length ? list[list.length - 1].published_at : "";
+        var firstText = "";
+        if (firstDate) { var fp = lagosParts(firstDate); if (fp) firstText = YO_MONTHS[fp.mon] + " " + fp.year; }
+        var avatar = prof && prof.avatar_url ? '<img src="' + escapeHtml(prof.avatar_url) + '" alt="">' : '<span>' + escapeHtml(initials(name)) + '</span>';
+        var html = '<a class="back" href="yoruba.html">&larr; Padà sí ìròyìn Yorùbá</a><section class="pf-card"><div class="pf-top"><div class="pf-av"' + (ring ? ' style="--ring:' + ring + '"' : '') + '>' + avatar + '</div><div><h1>' +
+          escapeHtml(name) + bigBadge(name) + '</h1>' + (b && (b.title_yo || b.title) ? '<p class="pf-role">' + escapeHtml(b.title_yo || b.title) + '</p>' : '') + '</div></div>' +
+          (prof && (prof.bio_yo || prof.bio) ? '<p class="pf-bio">' + escapeHtml(prof.bio_yo || prof.bio) + '</p>' : '') +
+          '<div class="pf-stats"><div><b>' + list.length + '</b><span>Ìròyìn</span></div><div><b>' + Object.keys(topics).length + '</b><span>Àwọn Ẹ̀ka</span></div><div><b>' + escapeHtml(firstText || "-") + '</b><span>Ìròyìn àkọ́kọ́</span></div></div></section>';
         if (!list.length) {
           html += '<div class="sp-empty">Kò tíì sí ìròyìn láti ọwọ́ ' + escapeHtml(name) + '.</div>';
         } else {
