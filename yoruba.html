@@ -795,8 +795,6 @@
         try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), articles: all })); } catch (e) {}
         show();
       }
-      var startQuery = new URLSearchParams(location.search).get("q");
-      if (startQuery) { query = startQuery; $("search-input").value = startQuery; $("search-bar").hidden = false; }
       renderNav("home");
       load();
     })();
