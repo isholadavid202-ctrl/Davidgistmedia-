@@ -524,7 +524,7 @@ function sectionArticleRoute(fileName, siteName, locale) {
             author: {
               "@type": "Person",
               name: author,
-              url: `${origin}/author.html?name=${encodeURIComponent(author)}`,
+              url: `${origin}/${fileName === "yoruba-article.html" ? "yoruba-author.html" : "sport-author.html"}?name=${encodeURIComponent(author)}`,
             },
             publisher: {
               "@type": "Organization",
