@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function () {
+      try { var t = localStorage.getItem("dg_theme") || localStorage.getItem("theme"); if (t === "dark") document.documentElement.setAttribute("data-theme", "dark"); } catch (e) {}
+    })();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Author | Davidgistmedia Sports</title>
+  <meta name="description" content="DGM Sport: football, basketball, athletics, boxing and more. Sports news from Nigeria and around the world on Davidgistmedia Sports.">
+  <meta name="theme-color" content="#111111">
+  <meta property="og:title" content="Davidgistmedia Sports">
+  <meta property="og:description" content="Sports news from Nigeria and around the world.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="/favicon-sport.svg" type="image/svg+xml">
+  <link rel="icon" href="/icon-sport-48.png" type="image/png" sizes="48x48">
+  <link rel="icon" href="/icon-sport-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/apple-touch-icon-sport.png">
+  <link rel="manifest" href="/manifest-sport.json">
+  <meta name="application-name" content="DGM Sports">
+  <meta name="apple-mobile-web-app-title" content="DGM Sports">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg: #ffffff; --ink: #141414; --muted: #666666; --line: #e3e3e3; --card: #f4f4f4;
+      --red: #c8102e; --dg-accent: #ffd230;
+      --font: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    html[data-theme="dark"] {
+      --bg: #101010; --ink: #f0f0f0; --muted: #a6a6a2; --line: #2b2b2b; --card: #1b1b1b;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.4}
+    a{color:inherit;text-decoration:none}
+    h1,h2,h3{margin:0}
+    [hidden]{display:none !important}
+
+    .sp-top{background:#111;color:#fff}
+    .sp-top .in{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:6px}
+    .sp-brand{margin-left:6px;font:700 1.3rem Georgia,"Times New Roman",serif;color:#fff;white-space:nowrap}
+    .sp-brand span{color:var(--dg-accent)}
+    .sp-spacer{flex:1}
+    .sp-util{background:var(--card);border-bottom:1px solid var(--line)}
+    .sp-util .in{max-width:1400px;margin:0 auto;padding:7px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.78rem;color:var(--muted)}
+    .sp-account{color:var(--ink);font-weight:700;font-size:.82rem;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;padding:6px 0}
+    .sp-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;cursor:pointer;display:grid;place-items:center;padding:0}
+    #menu-btn,#search-btn{border:0;width:36px;height:36px}
+
+    .sp-drawer{background:#111;border-top:1px solid #2b2b2b}
+    .sp-drawer .in{max-width:1400px;margin:0 auto;padding:4px 20px 10px;display:flex;flex-direction:column}
+    .sp-drawer a{padding:12px 0;border-bottom:1px solid #2b2b2b;color:#e6e6e6;font-weight:700;font-size:.95rem}
+    .sp-drawer a:hover{color:#fff}
+    .sp-search{background:var(--card);border-bottom:1px solid var(--line)}
+    .sp-search form{max-width:1400px;margin:0 auto;padding:12px 20px;display:flex;gap:8px}
+    .sp-search input{flex:1;min-width:0;padding:11px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:1rem;font-family:inherit}
+    .sp-search button{padding:11px 18px;border:0;border-radius:8px;background:var(--dg-accent);color:#111;font-weight:800;cursor:pointer;font-family:inherit}
+
+    .sp-nav{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--line)}
+    .sp-nav .in{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;overflow-x:auto;scrollbar-width:none}
+    .sp-nav .in::-webkit-scrollbar{display:none}
+    .sp-nav a{flex:0 0 auto;padding:15px 15px 12px;font-weight:700;font-size:.95rem;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+    .sp-nav a:hover{color:var(--ink)}
+    .sp-nav a.on{color:var(--ink);border-bottom-color:var(--dg-accent)}
+
+    main{max-width:1400px;margin:0 auto;padding:24px 20px 8px}
+    .sp-empty{padding:60px 10px;text-align:center;color:var(--muted)}
+
+    .ph{display:block;margin:0 0 10px}
+    .ph img,.noimg{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:6px;background:var(--card)}
+    .kick{display:block;margin:0 0 4px;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+    .t{display:block;font-size:1.12rem;font-weight:700;line-height:1.28}
+    .meta{display:block;margin-top:6px;font-size:.8rem;color:var(--muted)}
+    .pic:hover .t,.item:hover .t,.mr a:hover{text-decoration:underline}
+
+    .lead{position:relative;display:block;overflow:hidden;border-radius:10px;background:#111;aspect-ratio:4/5;color:#fff}
+    .lead img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .lead::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.6) 32%,rgba(0,0,0,0) 65%);pointer-events:none}
+    .lead .cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22px 22px 24px}
+    .lead .tag{display:inline-block;margin:0 0 10px;padding:5px 10px;border-radius:3px;background:var(--dg-accent);color:#111;font-size:.72rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
+    .lead h2{font-size:1.7rem;font-weight:800;line-height:1.15;color:#fff}
+    .lead p{margin:10px 0 0;font-size:1rem;color:#e6e6e6;line-height:1.4}
+    .lead .meta{color:#cfcfcf}
+    .lead .slides{position:absolute;inset:0;z-index:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .lead .slides::-webkit-scrollbar{display:none}
+    .lead .slide{position:relative;flex:0 0 100%;width:100%;height:100%;scroll-snap-align:start;background:#000;overflow:hidden}
+    .lead .slide img,.lead .slide video,.lead .slide iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0;background:#000}
+    .lead .v-play,.lead .yt-play{position:absolute;inset:0;z-index:1;width:100%;height:100%;padding:0;border:0;background-color:transparent;background-position:center;background-size:cover;background-repeat:no-repeat;cursor:pointer}
+    .lead .yt-play{background-color:#000}
+    .lead .v-play span,.lead .yt-play span{position:absolute;left:50%;top:50%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;background:rgba(0,0,0,.65);border:2px solid #fff}
+    .lead .v-play span::after,.lead .yt-play span::after{content:"";position:absolute;left:26px;top:19px;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent}
+    .lead-multi .cap,.lead-media .cap{pointer-events:none}
+    .lead-media .cap h2 a{pointer-events:auto}
+    .lead-media .cap h2 a:hover{text-decoration:underline}
+    .lead.is-playing::after,.lead.is-playing .cap,.lead.is-playing .count{display:none}
+    .lead .count{position:absolute;top:12px;right:12px;z-index:3;display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(0,0,0,.62);color:#fff;font-size:.8rem;font-weight:700;pointer-events:none}
+    .lead .count svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+    .hero{display:grid;gap:22px}
+    .hero-side{display:grid;gap:22px;align-content:start}
+    .row4{display:grid;gap:22px;margin-top:30px;grid-template-columns:repeat(2,minmax(0,1fr))}
+
+    .head{display:flex;align-items:center;gap:10px;margin:0 0 16px}
+    .head::before{content:"";width:6px;height:1.3em;background:var(--dg-accent);border-radius:2px}
+    .head h2{font-size:1.3rem;font-weight:800}
+    .head a{margin-left:auto;font-size:.85rem;font-weight:700;color:var(--muted)}
+    .head a:hover{color:var(--ink)}
+    .head h1{font-size:1.6rem;font-weight:800;line-height:1.2}
+    .head-page{margin:0 0 20px}
+
+    .cols{display:grid;gap:36px;margin-top:42px}
+    .item{display:flex;gap:14px;padding:16px 0;border-top:1px solid var(--line)}
+    .item:first-of-type{border-top:0;padding-top:0}
+    .item .th{flex:0 0 36%}
+    .item .th img,.item .th .noimg{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:var(--card)}
+    .item .bd{flex:1;min-width:0}
+    .item .t{font-size:1.05rem}
+
+    .side .box{background:var(--card);border-radius:10px;padding:18px 18px 8px;margin-bottom:26px}
+    .mr{list-style:none;margin:0;padding:0;counter-reset:mr}
+    .mr li{counter-increment:mr;display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}
+    .mr li:first-child{border-top:0;padding-top:4px}
+    .mr li::before{content:counter(mr);flex:0 0 auto;min-width:28px;font-size:1.7rem;font-weight:800;line-height:1;color:var(--dg-accent);-webkit-text-stroke:1px rgba(0,0,0,.25)}
+    .mr a{font-size:.98rem;font-weight:700;line-height:1.3}
+
+    .sec{margin-top:44px}
+    .grid4{display:grid;gap:22px;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid4 .t{font-size:1rem}
+
+    .sx{margin-top:44px;background:#111;color:#e6e6e6;border-top:3px solid var(--dg-accent)}
+    .sx a{color:inherit}
+    .sx .in{max-width:1400px;margin:0 auto;padding:0 20px}
+    .sx-top{padding:28px 0 22px;border-bottom:1px solid #2b2b2b}
+    .sx-brand{display:inline-block;font:700 1.5rem Georgia,"Times New Roman",serif;color:#fff}
+    .sx-brand span{color:var(--dg-accent)}
+    .sx-tag{margin:8px 0 0;max-width:420px;font-size:.9rem;line-height:1.5;color:#a9a9a9}
+    .sx-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 20px;padding:24px 0}
+    .sx-cols h4{display:flex;align-items:center;gap:9px;margin:0 0 10px;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#fff}
+    .sx-cols h4::before{content:"";width:5px;height:1.15em;border-radius:2px;background:var(--dg-accent)}
+    .sx-cols a{display:block;padding:6px 0;font-size:.9rem;color:#b8b8b8}
+    .sx-cols a:hover{color:#fff}
+    .sx-follow{display:flex;flex-wrap:wrap;gap:10px;padding:18px 0;border-top:1px solid #2b2b2b}
+    .sx-follow a{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border:1px solid #3a3a3a;border-radius:50%;color:#fff}
+    .sx-follow a:hover{background:var(--dg-accent);border-color:var(--dg-accent);color:#111}
+    .sx-copy{padding:16px 0 26px;border-top:1px solid #2b2b2b;font-size:.78rem;line-height:1.6;color:#8f8f8f}
+    @media (min-width:820px){.sx-cols{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+    @media (max-width: 520px) {
+      .sp-top .in{padding:10px 14px}
+      .sp-brand{font-size:.98rem}
+      .sp-util .in{padding:7px 14px}
+      .sp-nav .in{padding:0 8px}
+      main{padding-left:14px;padding-right:14px}
+    }
+    @media (max-width: 360px) {
+      .sp-brand{font-size:.85rem}
+      .sp-btn{width:30px;height:30px}
+    }
+    @media (min-width: 900px) {
+      main{padding-top:28px}
+      .lead{aspect-ratio:16/9}
+      .lead h2{font-size:2.1rem;max-width:760px}
+      .lead .cap{padding:28px 30px 30px}
+      .hero{grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:26px}
+      .row4{grid-template-columns:repeat(4,minmax(0,1fr));gap:26px}
+      .cols{grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:48px}
+      .item .th{flex-basis:230px}
+      .item .t{font-size:1.2rem}
+      .grid4{grid-template-columns:repeat(4,minmax(0,1fr));gap:26px}
+    }
+    @media (min-width: 900px) and (max-width: 1199px) {
+      .item .th{flex-basis:190px}
+      .lead h2{font-size:1.7rem}
+    }
+
+    /* Davidgistmedia Sports logo: serif name + yellow "SPORTS" tag */
+    .sp-brand .logo-tag,.sx-brand .logo-tag{display:inline-block;margin-left:.5em;padding:.3em .55em .24em;border-radius:3px;background:var(--dg-accent);color:#111;font:800 .68em/1 var(--font);letter-spacing:.12em;text-transform:uppercase;vertical-align:.12em}
+    .sp-brand{letter-spacing:-.01em}
+
+    /* Computers: a centred page, not stretched edge to edge */
+    @media (min-width:900px){
+      .sp-util .in,.sp-top .in,.sp-drawer .in,.sp-nav .in,.sp-search form,main{max-width:1240px;padding-left:24px;padding-right:24px}
+    }
+
+    /* ---- Computers: a clean news-site header and front page ---- */
+    @media (min-width:900px){
+      .sp-top{background:var(--bg,var(--h-bg,#fff));color:var(--ink,var(--h-ink,#141414))}
+      .sp-top .in,.sp-top .hd-in{padding:20px 24px 16px}
+      .sp-brand{font-size:2.4rem;letter-spacing:-.02em;color:var(--ink,var(--h-ink,#141414));margin-left:12px}
+      .sp-brand .logo-tag{font-size:.4em}
+      .sp-btn{border-color:var(--line,var(--h-line,#e3e3e3));color:var(--ink,var(--h-ink,#141414))}
+      #menu-btn,#search-btn{color:var(--ink,var(--h-ink,#141414))}
+      .sp-nav{border-top:1px solid var(--line,var(--h-line,#e3e3e3));border-bottom:2px solid var(--ink,var(--h-ink,#141414))}
+      .sp-nav a{padding:13px 16px 11px;font-size:.92rem;color:var(--ink,var(--h-ink,#141414))}
+      .sp-drawer .in,.sp-drawer .hd-in{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 40px;padding:26px 24px 34px}
+      .sp-drawer a{border-bottom:0;padding:8px 0;font-size:.98rem}
+      .head h2{font-size:.82rem;letter-spacing:.07em;text-transform:uppercase}
+      .head::before{width:4px;height:1.15em}
+    }
+
+    @media (min-width:900px){
+      .cn-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.15fr) minmax(0,1fr);gap:0 34px;align-items:start}
+      .cn-col{min-width:0}
+      .cn-img{display:block;margin:0 0 22px}
+      .cn-img .ph{margin:0 0 10px}
+      .cn-img .ph img,.cn-img .noimg{border-radius:3px}
+      .cn-img .t{font-size:1.12rem;font-weight:600;line-height:1.26}
+      .cn-text{display:block;padding:15px 0;border-top:1px solid var(--line);margin:0}
+      .cn-text .t{font-size:.98rem;font-weight:400;line-height:1.35;color:var(--muted)}
+      .cn-thumb{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-top:1px solid var(--line)}
+      .cn-thumb .th{flex:0 0 38%}
+      .cn-thumb .th img,.cn-thumb .th .noimg{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:3px;background:var(--card)}
+      .cn-thumb .t{font-size:.92rem;font-weight:400;line-height:1.3;color:var(--muted)}
+      .cn-img:hover .t,.cn-text:hover .t,.cn-thumb:hover .t,.cn-headline:hover h1{text-decoration:underline}
+      .cn-headline{display:block;text-align:center;margin:0 0 20px}
+      .cn-headline .kick{margin:0 0 8px}
+      .cn-headline h1{font-size:clamp(2rem,2.7vw,2.7rem);font-weight:800;line-height:1.1;letter-spacing:-.01em}
+      .lead-plain .lead{aspect-ratio:16/10;border-radius:3px}
+      .lead-plain .lead::after,.lead-plain .lead .cap{display:none}
+      .cn-sum{font-size:1.05rem;line-height:1.45;margin:14px 0 8px}
+      .cn-by{font-size:.82rem;color:var(--muted);margin:0 0 8px}
+      .cn-sub{margin-top:6px}
+      .cn-sub .cn-text .t{font-size:.95rem}
+      .cn-row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 36px;margin-top:44px}
+      .cn-sec{min-width:0}
+      .cn-sec .head{margin:0 0 14px}
+    }
+
+    /* Computers: "Watch" and "Listen" links on the right of the header */
+    .sp-desk-link{display:none}
+    @media (min-width:900px){
+      .sp-desk-link{display:inline-flex;align-items:center;gap:7px;order:1;padding:8px 12px;font-weight:700;font-size:.92rem;color:var(--ink,var(--h-ink,#141414));text-decoration:none;white-space:nowrap}
+      .sp-desk-link:hover{color:#c8102e}
+      .sp-desk-link .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#e8344c}
+      .sp-desk-link svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+      #search-btn{order:2}
+      #theme-toggle-btn{order:3}
+    }
+
+    /* the Davidgistmedia mark next to the name */
+    .sp-mark{display:inline-block;width:1.25em;height:1.25em;vertical-align:-.28em;margin-right:.4em;border-radius:22%}
+    .sx-brand .sp-mark{width:1.2em;height:1.2em}
+    @media (max-width:400px){.sp-brand .sp-mark{display:none}}
+
+    /* author page */
+    .au-head{display:flex;align-items:center;gap:18px;margin:6px 0 26px;padding:0 0 22px;border-bottom:1px solid var(--line)}
+    .au-av{flex:0 0 auto;width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:var(--dg-accent);color:#111;font-size:1.6rem;font-weight:800}
+    .au-head h1{margin:0;font-size:1.8rem;font-weight:800;line-height:1.2}
+    .au-sub{margin:6px 0 0;color:var(--muted);font-size:.95rem}
+  </style>
+</head>
+<body>
+
+  <div class="sp-util">
+    <div class="in">
+      <span id="today"></span>
+      <a class="sp-account" href="/" id="main-site-link">&larr; Davidgistmedia</a>
+    </div>
+  </div>
+
+  <div class="sp-top">
+    <div class="in">
+      <button type="button" class="sp-btn" id="menu-btn" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <button type="button" class="sp-btn" id="search-btn" aria-label="Search" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+      <a class="sp-brand" href="sport.html">Davidgistmedia<span class="logo-tag">Sports</span></a>
+      <span class="sp-spacer"></span><a class="sp-desk-link" href="live.html"><i class="dot"></i>Watch</a><a class="sp-desk-link" href="podcasts.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15v-3a8 8 0 0116 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg>Listen</a>
+      <button type="button" class="sp-btn" id="theme-toggle-btn" aria-label="Switch between light and dark"><span id="theme-icon" style="display:grid;place-items:center"></span></button>
+    </div>
+  </div>
+
+  <div class="sp-drawer" id="drawer" hidden>
+    <div class="in">
+      <a href="/">Davidgistmedia (main site)</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="editorial-policy.html">Editorial Policy</a>
+      <a href="privacy-policy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </div>
+  </div>
+
+  <div class="sp-search" id="search-bar" hidden>
+    <form id="search-form">
+      <input type="text" id="search-input" placeholder="Search sport..." aria-label="Search sport">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <main>
+    <div id="content"><div class="sp-empty">Loading...</div></div>
+  </main>
+
+  <footer class="sx">
+    <div class="in">
+      <div class="sx-top">
+        <a class="sx-brand" href="sport.html">Davidgistmedia<span class="logo-tag">Sports</span></a>
+        <p class="sx-tag">Football, basketball, athletics, boxing and more. Sports news from Nigeria and around the world.</p>
+      </div>
+      <div class="sx-cols">
+        <nav aria-label="Sports"><h4>Sports</h4>
+          <a href="sport.html#football">Football</a><a href="sport.html#basketball">Basketball</a><a href="sport.html#athletics">Athletics</a>
+          <a href="sport.html#boxing">Boxing &amp; MMA</a><a href="sport.html#tennis">Tennis</a>
+        </nav>
+        <nav aria-label="More sports"><h4>More sports</h4>
+          <a href="sport.html#cricket">Cricket</a><a href="sport.html#rugby">Rugby</a><a href="sport.html#motorsport">Motorsport</a>
+        </nav>
+        <nav aria-label="Davidgistmedia"><h4>Davidgistmedia<
