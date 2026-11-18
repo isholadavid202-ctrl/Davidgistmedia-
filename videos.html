@@ -102,7 +102,7 @@
     /* Long videos */
     #long-grid{display:grid;grid-template-columns:1fr;gap:26px 20px}
     @media(min-width:700px){#long-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(min-width:1000px){#long-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(min-width:900px){#long-grid{grid-template-columns:repeat(3,1fr)}}
     .lcard{display:block;width:100%;text-align:left;background:none;border:0;color:inherit;font-family:inherit;padding:0;cursor:pointer}
     .thumb{position:relative;aspect-ratio:16/9;background:#1a1a1a;border-radius:10px;overflow:hidden}
     .thumb img,.thumb video{display:block;width:100%;height:100%;object-fit:cover}
@@ -153,7 +153,7 @@
     .toast.show{opacity:1}
 
     /* Computers: a centred page, not stretched edge to edge */
-    @media (min-width:1000px){
+    @media (min-width:900px){
       .sp-util .hd-in,.sp-top .hd-in,.sp-drawer .hd-in,.sp-nav .hd-in,.sp-search form,main{max-width:1240px;padding-left:24px;padding-right:24px}
     }
   </style>
@@ -178,8 +178,6 @@
 
   <div class="sp-drawer" id="drawer" hidden>
     <div class="hd-in">
-      <a href="sport.html">Sport</a>
-      <a href="yoruba.html">Yorùbá</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="editorial-policy.html">Editorial Policy</a>
@@ -204,8 +202,6 @@
   <nav class="sp-nav" aria-label="Main navigation">
     <div class="hd-in">
       <a href="index.html">Home</a>
-      <a href="sport.html">Sport</a>
-      <a href="yoruba.html">Yorùbá</a>
       <a href="podcasts.html">Podcasts</a>
       <a href="live.html">Live</a>
       <a href="live-audio.html">Live Audio</a>
@@ -247,6 +243,46 @@
 
   <div id="site-footer"></div>
   <script src="js/footer.js?v=4"></script>
+  <!-- Sport and Yoruba are reached from the footer only: this points "Sport" at its own site and adds "Yorùbá" next to it -->
+  <script>
+    (function () {
+      function textOf(a) { return (a.textContent || "").replace(/\s+/g, " ").trim().toLowerCase(); }
+      function footerLinks() { return [].slice.call(document.querySelectorAll("#site-footer a, footer a")); }
+      function find(links, names) { return links.filter(function (a) { return names.indexOf(textOf(a)) > -1; })[0]; }
+      function nodeOf(a) { return a.parentNode && a.parentNode.tagName === "LI" ? a.parentNode : a; }
+      function addAfter(node, href, label, mark) {
+        var copy = node.cloneNode(true);
+        var a = copy.tagName === "A" ? copy : copy.querySelector("a");
+        a.setAttribute("href", href);
+        a.setAttribute("data-dg", mark);
+        a.textContent = label;
+        node.parentNode.insertBefore(copy, node.nextSibling);
+        return copy;
+      }
+      function addSections() {
+        var links = footerLinks();
+        if (!links.length) return false;
+        if (links.some(function (a) { return a.getAttribute("data-dg") === "yoruba"; })) return true;
+        var sport = find(links, ["sport", "sports"]);
+        var node;
+        if (sport) {
+          sport.setAttribute("href", "sport.html");
+          node = nodeOf(sport);
+        } else {
+          var near = find(links, ["business", "entertainment", "live audio"]);
+          if (!near) return false;
+          node = addAfter(nodeOf(near), "sport.html", "Sport", "sport");
+        }
+        addAfter(node, "yoruba.html", "Yorùbá", "yoruba");
+        return true;
+      }
+      var tries = 0;
+      (function loop() {
+        if (addSections() || ++tries > 40) return;
+        setTimeout(loop, 250);
+      })();
+    })();
+  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
