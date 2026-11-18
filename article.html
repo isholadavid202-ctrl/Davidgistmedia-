@@ -247,31 +247,41 @@
   <!-- Sport and Yoruba are reached from the footer only: this points "Sport" at its own site and adds "Yorùbá" next to it -->
   <script>
     (function () {
-      function addSections() {
-        var f = document.getElementById("site-footer");
-        if (!f) return false;
-        if (f.querySelector('a[data-dg="yoruba"]')) return true;
-        var links = [].slice.call(f.querySelectorAll("a"));
-        var sport = links.filter(function (a) { return /^\s*sports?\s*$/i.test(a.textContent); })[0];
-        if (!sport) return false;
-        sport.setAttribute("href", "sport.html");
-        var node = sport.parentNode && sport.parentNode.tagName === "LI" ? sport.parentNode : sport;
+      function textOf(a) { return (a.textContent || "").replace(/\s+/g, " ").trim().toLowerCase(); }
+      function footerLinks() { return [].slice.call(document.querySelectorAll("#site-footer a, footer a")); }
+      function find(links, names) { return links.filter(function (a) { return names.indexOf(textOf(a)) > -1; })[0]; }
+      function nodeOf(a) { return a.parentNode && a.parentNode.tagName === "LI" ? a.parentNode : a; }
+      function addAfter(node, href, label, mark) {
         var copy = node.cloneNode(true);
         var a = copy.tagName === "A" ? copy : copy.querySelector("a");
-        a.setAttribute("href", "yoruba.html");
-        a.setAttribute("data-dg", "yoruba");
-        a.textContent = "Yorùbá";
+        a.setAttribute("href", href);
+        a.setAttribute("data-dg", mark);
+        a.textContent = label;
         node.parentNode.insertBefore(copy, node.nextSibling);
+        return copy;
+      }
+      function addSections() {
+        var links = footerLinks();
+        if (!links.length) return false;
+        if (links.some(function (a) { return a.getAttribute("data-dg") === "yoruba"; })) return true;
+        var sport = find(links, ["sport", "sports"]);
+        var node;
+        if (sport) {
+          sport.setAttribute("href", "sport.html");
+          node = nodeOf(sport);
+        } else {
+          var near = find(links, ["business", "entertainment", "live audio"]);
+          if (!near) return false;
+          node = addAfter(nodeOf(near), "sport.html", "Sport", "sport");
+        }
+        addAfter(node, "yoruba.html", "Yorùbá", "yoruba");
         return true;
       }
-      if (addSections()) return;
-      var f = document.getElementById("site-footer");
-      if (f && window.MutationObserver) {
-        var mo = new MutationObserver(function () { if (addSections()) mo.disconnect(); });
-        mo.observe(f, { childList: true, subtree: true });
-        setTimeout(function () { mo.disconnect(); }, 8000);
-      }
-      document.addEventListener("DOMContentLoaded", addSections);
+      var tries = 0;
+      (function loop() {
+        if (addSections() || ++tries > 40) return;
+        setTimeout(loop, 250);
+      })();
     })();
   </script>
 
