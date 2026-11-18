@@ -576,14 +576,14 @@
           /* Same address as the main site, so a reader who signs in there is signed in here too */
           var next = encodeURIComponent(location.pathname + location.search);
           box.innerHTML = '<div class="comment-gate"><p><strong>Darapọ̀ mọ́ ìjíròrò</strong></p>' +
-            '<p>Wọlé pẹ̀lú ímeèlì rẹ láti fi èsì sílẹ̀. Ó máa gba ìṣẹ́jú-àáyá díẹ̀, kò sì sí ọ̀rọ̀ aṣínà.</p>' +
-            '<a class="engage-btn" href="account.html?next=' + next + '">Wọlé tàbí ṣí àkántì</a></div>';
+            '<p>Wọlé tàbí ṣí àkántì láti fi èsì sílẹ̀, fẹ́ràn àwọn ìròyìn àti ṣàkóso àkọsílẹ̀ rẹ.</p>' +
+            '<a class="engage-btn" href="profile.html?next=' + next + '">Wọlé tàbí ṣí àkántì</a></div>';
           return;
         }
         var name = savedName(user);
         box.innerHTML = '<form id="comment-form" class="comment-form">' +
           '<input id="comment-website" class="vh" name="website" autocomplete="off" tabindex="-1" aria-hidden="true">' +
-          (name ? '<p class="comment-as">Ò ń fèsì gẹ́gẹ́ bí <strong>' + escapeHtml(name) + '</strong> &middot; <a href="account.html">Yípadà</a></p>'
+          (name ? '<p class="comment-as">Ò ń fèsì gẹ́gẹ́ bí <strong>' + escapeHtml(name) + '</strong> &middot; <a href="profile.html">Yípadà</a></p>'
                 : '<input id="comment-name" placeholder="Orúkọ rẹ (tí yóò hàn pẹ̀lú èsì rẹ)" maxlength="60" required>') +
           '<textarea id="comment-text" placeholder="Kọ èsì rẹ..." required maxlength="1000"></textarea>' +
           '<button class="engage-btn" type="submit" id="comment-submit-btn">Fi èsì ránṣẹ́</button>' +
