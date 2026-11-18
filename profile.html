@@ -259,6 +259,43 @@
     let currentUserId = null;
     let currentUserEmail = null;
 
+    /* ---- Going back to the story the reader came from ----
+       A story's "Sign in or create account" button sends ?next=/the-story-address.
+       It is kept here so it still works after the confirmation email or a reload. */
+    const NEXT_KEY = "dg_next";
+    function safeNext(v) {
+      try {
+        v = String(v || "");
+        if (v.charAt(0) !== "/" || v.charAt(1) === "/" || v.indexOf("\\") > -1) return "";
+        if (/^\/(profile|account)\.html/i.test(v)) return "";
+        return v.slice(0, 500);
+      } catch (e) { return ""; }
+    }
+    function rememberNext() {
+      try {
+        const p = safeNext(new URLSearchParams(location.search).get("next"));
+        if (p) localStorage.setItem(NEXT_KEY, JSON.stringify({ u: p, t: Date.now() }));
+      } catch (e) {}
+    }
+    function peekNext() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(NEXT_KEY) || "null");
+        if (raw && raw.u && Date.now() - raw.t < 60 * 60 * 1000) return safeNext(raw.u);
+      } catch (e) {}
+      return "";
+    }
+    function takeNext() {
+      const n = peekNext();
+      try { localStorage.removeItem(NEXT_KEY); } catch (e) {}
+      return n;
+    }
+    function goAfterLogin() {
+      const n = takeNext();
+      if (n) window.location.replace(n);
+      else window.location.reload();
+    }
+    rememberNext();
+
     /* Shows a message under a form (kind is "err" or "ok") */
     function say(el, text, kind) {
       el.textContent = text || "";
@@ -296,6 +333,10 @@
         setAuthMode(location.hash === "#signup" ? "signup" : "login");
         return;
       }
+
+      /* Signed in and a story is waiting: take the reader straight back to it */
+      const back = takeNext();
+      if (back) { window.location.replace(back); return; }
 
       document.getElementById("auth-screen").style.display = "none";
       document.getElementById("account-screen").style.display = "flex";
@@ -357,8 +398,8 @@
       if (error) {
         say(status, /invalid login/i.test(error.message || "") ? "Wrong email or password." : error.message, "err");
       } else {
-        say(status, "Success! Opening your account...", "ok");
-        window.location.reload();
+        say(status, peekNext() ? "Success! Taking you back to your story..." : "Success! Opening your account...", "ok");
+        goAfterLogin();
       }
     });
 
@@ -411,8 +452,8 @@
       }
 
       if (data && data.session) {
-        say(status, "Account created! Taking you in...", "ok");
-        window.location.reload();
+        say(status, peekNext() ? "Account created! Taking you back to your story..." : "Account created! Taking you in...", "ok");
+        goAfterLogin();
         return;
       }
 
