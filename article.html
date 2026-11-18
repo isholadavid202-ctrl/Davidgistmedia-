@@ -541,14 +541,14 @@
           /* Same address as the main site, so a reader who signs in there is signed in here too */
           var next = encodeURIComponent(location.pathname + location.search);
           box.innerHTML = '<div class="comment-gate"><p><strong>Join the conversation</strong></p>' +
-            '<p>Sign in with your email to leave a comment. It takes a few seconds and there is no password.</p>' +
-            '<a class="engage-btn" href="account.html?next=' + next + '">Sign in or create account</a></div>';
+            '<p>Log in or create an account to comment, like stories and manage your profile.</p>' +
+            '<a class="engage-btn" href="profile.html?next=' + next + '">Sign in or create account</a></div>';
           return;
         }
         var name = savedName(user);
         box.innerHTML = '<form id="comment-form" class="comment-form">' +
           '<input id="comment-website" class="vh" name="website" autocomplete="off" tabindex="-1" aria-hidden="true">' +
-          (name ? '<p class="comment-as">Commenting as <strong>' + escapeHtml(name) + '</strong> &middot; <a href="account.html">Change</a></p>'
+          (name ? '<p class="comment-as">Commenting as <strong>' + escapeHtml(name) + '</strong> &middot; <a href="profile.html">Change</a></p>'
                 : '<input id="comment-name" placeholder="Your name (shown with your comment)" maxlength="60" required>') +
           '<textarea id="comment-text" placeholder="Write a comment..." required maxlength="1000"></textarea>' +
           '<button class="engage-btn" type="submit" id="comment-submit-btn">Post comment</button>' +
