@@ -139,8 +139,6 @@
 
   <div class="sp-drawer" id="drawer" hidden>
     <div class="hd-in">
-      <a href="sport.html">Sport</a>
-      <a href="yoruba.html">Yorùbá</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="editorial-policy.html">Editorial Policy</a>
@@ -165,8 +163,6 @@
   <nav class="sp-nav" aria-label="Main navigation">
     <div class="hd-in">
       <a href="index.html">Home</a>
-      <a href="sport.html">Sport</a>
-      <a href="yoruba.html">Yorùbá</a>
       <a href="podcasts.html">Podcasts</a>
       <a href="live.html" class="on">Live</a>
       <a href="live-audio.html">Live Audio</a>
@@ -186,6 +182,36 @@
   <!-- Footer (built by js/footer.js) -->
   <div id="site-footer"></div>
   <script src="js/footer.js"></script>
+  <!-- Sport and Yoruba are reached from the footer only: this points "Sport" at its own site and adds "Yorùbá" next to it -->
+  <script>
+    (function () {
+      function addSections() {
+        var f = document.getElementById("site-footer");
+        if (!f) return false;
+        if (f.querySelector('a[data-dg="yoruba"]')) return true;
+        var links = [].slice.call(f.querySelectorAll("a"));
+        var sport = links.filter(function (a) { return /^\s*sports?\s*$/i.test(a.textContent); })[0];
+        if (!sport) return false;
+        sport.setAttribute("href", "sport.html");
+        var node = sport.parentNode && sport.parentNode.tagName === "LI" ? sport.parentNode : sport;
+        var copy = node.cloneNode(true);
+        var a = copy.tagName === "A" ? copy : copy.querySelector("a");
+        a.setAttribute("href", "yoruba.html");
+        a.setAttribute("data-dg", "yoruba");
+        a.textContent = "Yorùbá";
+        node.parentNode.insertBefore(copy, node.nextSibling);
+        return true;
+      }
+      if (addSections()) return;
+      var f = document.getElementById("site-footer");
+      if (f && window.MutationObserver) {
+        var mo = new MutationObserver(function () { if (addSections()) mo.disconnect(); });
+        mo.observe(f, { childList: true, subtree: true });
+        setTimeout(function () { mo.disconnect(); }, 8000);
+      }
+      document.addEventListener("DOMContentLoaded", addSections);
+    })();
+  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
