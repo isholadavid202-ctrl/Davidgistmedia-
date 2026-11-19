@@ -6,7 +6,7 @@
     sessionStorage.setItem("dg_splash", "1");
   } catch (e) {}
 
-  var MIN_SECONDS = 1.5;     // the splash always stays at least this long
+  var MIN_SECONDS = 3;     // the splash always stays at least this long
   var MAX_SECONDS = 6;       // and never longer than this
   var RED = "#C8102E";
   var esc = function (s) {
