@@ -127,6 +127,45 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
+  <!-- News alerts: right after a NEW story is published, the server is told to alert readers' phones -->
+  <script>
+    (function () {
+      var sb = typeof supabaseClient !== "undefined" ? supabaseClient : null;
+      if (!sb) return;
+      var prev = sb.from.bind(sb);
+      sb.from = function (table) {
+        var q = prev(table);
+        if (table !== "articles") return q;
+        var oi = q.insert.bind(q);
+        q.insert = function (v, o) {
+          return Promise.resolve(oi(v, o)).then(function (res) {
+            try { if (res && !res.error) notifyReaders(Array.isArray(v) ? v[0] : v); } catch (e) {}
+            return res;
+          });
+        };
+        return q;
+      };
+      async function notifyReaders(article) {
+        if (!article || !article.slug) return;
+        var s = await sb.auth.getSession();
+        var token = s && s.data && s.data.session && s.data.session.access_token;
+        if (!token) return;
+        var r = await fetch("/api/push/notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+          body: JSON.stringify({ slug: article.slug })
+        });
+        var j = await r.json().catch(function () { return {}; });
+        var el = document.getElementById("save-status");
+        if (el && typeof j.sent === "number" && !j.skipped) {
+          setTimeout(function () {
+            el.textContent = (el.textContent ? el.textContent + " " : "") + "News alert sent to " + j.sent + " reader" + (j.sent === 1 ? "" : "s") + ".";
+          }, 300);
+        }
+      }
+    })();
+  </script>
+
   <script src="js/staff.js"></script>
   <!-- Yoruba picker: shows a Yoruba section dropdown when the category is Yoruba and keeps the Tags box in step with it. -->
   <script>
