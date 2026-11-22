@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
 const app = express();
 const ROOT = __dirname;
@@ -197,6 +198,180 @@ app.use((req, res, next) => {
     return res.status(404).end();
   }
   next();
+});
+
+// ---------- News alerts (push notifications) ----------
+// Needs these settings in Render (Environment): VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT, SUPABASE_SERVICE_KEY
+const PUSH_TOPICS = ["main", "sports", "yoruba"];
+const PUSH_HOSTS = /(^|\.)(googleapis\.com|mozilla\.com|push\.apple\.com|notify\.windows\.com|windows\.com)$/i;
+const notifiedSlugs = new Set();
+
+function pushReady() {
+  return !!(process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY && process.env.SUPABASE_SERVICE_KEY);
+}
+function b64u(buf) {
+  return Buffer.from(buf).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function vapidHeader(endpoint) {
+  const pub = process.env.VAPID_PUBLIC_KEY;
+  const raw = Buffer.from(pub.replace(/-/g, "+").replace(/_/g, "/"), "base64");
+  const key = crypto.createPrivateKey({
+    key: { kty: "EC", crv: "P-256", x: b64u(raw.subarray(1, 33)), y: b64u(raw.subarray(33, 65)), d: process.env.VAPID_PRIVATE_KEY },
+    format: "jwk",
+  });
+  const head = b64u(JSON.stringify({ typ: "JWT", alg: "ES256" }));
+  const body = b64u(JSON.stringify({
+    aud: new URL(endpoint).origin,
+    exp: Math.floor(Date.now() / 1000) + 12 * 3600,
+    sub: process.env.VAPID_SUBJECT || "mailto:admin@davidgistmedia.onrender.com",
+  }));
+  const sig = crypto.sign("sha256", Buffer.from(head + "." + body), { key, dsaEncoding: "ieee-p1363" });
+  return "vapid t=" + head + "." + body + "." + b64u(sig) + ", k=" + pub;
+}
+function topicFor(category) {
+  return category === "sports" ? "sports" : category === "yoruba" ? "yoruba" : "main";
+}
+async function sbService(pathAndQuery, opts) {
+  const { url } = readConfig();
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 10000);
+  try {
+    return await fetch(`${url}/rest/v1/${pathAndQuery}`, Object.assign({}, opts, {
+      headers: Object.assign({ apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" }, (opts && opts.headers) || {}),
+      signal: ctrl.signal,
+    }));
+  } finally {
+    clearTimeout(timer);
+  }
+}
+// Checks that the person sending an alert is signed in as admin or staff
+async function staffFromToken(token) {
+  const { url, key } = readConfig();
+  const h = { apikey: key, Authorization: "Bearer " + token };
+  const u = await fetch(`${url}/auth/v1/user`, { headers: h });
+  if (!u.ok) return null;
+  const user = await u.json();
+  if (!user || !user.id) return null;
+  const r = await fetch(`${url}/rest/v1/staff_roles?select=role&user_id=eq.${encodeURIComponent(user.id)}`, { headers: h });
+  const rows = r.ok ? await r.json() : [];
+  return rows[0] && (rows[0].role === "admin" || rows[0].role === "staff") ? user : null;
+}
+// An empty "wake up" message: the phone then asks /api/push/latest for the story to show
+async function pushOne(endpoint) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 10000);
+  try {
+    const r = await fetch(endpoint, {
+      method: "POST",
+      headers: { Authorization: vapidHeader(endpoint), TTL: "86400", Urgency: "high" },
+      body: "",
+      signal: ctrl.signal,
+    });
+    return r.status;
+  } catch (e) {
+    return 0;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+app.use("/api/push", express.json({ limit: "10kb" }));
+
+app.get("/api/push/key", (req, res) => {
+  res.set("Cache-Control", "no-store");
+  res.json({ key: pushReady() ? process.env.VAPID_PUBLIC_KEY : "" });
+});
+
+app.post("/api/push/subscribe", async (req, res) => {
+  try {
+    if (!pushReady()) return res.status(503).json({ error: "alerts are not set up" });
+    const endpoint = String((req.body && req.body.endpoint) || "");
+    const topic = PUSH_TOPICS.includes(req.body && req.body.topic) ? req.body.topic : "main";
+    let host;
+    try {
+      const u = new URL(endpoint);
+      if (u.protocol !== "https:" || endpoint.length > 1000) throw new Error("bad");
+      host = u.hostname;
+    } catch (e) {
+      return res.status(400).json({ error: "bad endpoint" });
+    }
+    if (!PUSH_HOSTS.test(host)) return res.status(400).json({ error: "unsupported browser" });
+    const r = await sbService("push_subscriptions?on_conflict=endpoint", {
+      method: "POST",
+      headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify({ endpoint, topic }),
+    });
+    res.status(r.ok ? 200 : 500).json({ ok: r.ok });
+  } catch (e) {
+    console.error("Subscribe failed:", e.message);
+    res.status(500).json({ error: "failed" });
+  }
+});
+
+// The newest story for a section: the phone shows this when an alert arrives
+app.get("/api/push/latest", async (req, res) => {
+  const topic = PUSH_TOPICS.includes(req.query.topic) ? req.query.topic : "main";
+  try {
+    const filter = topic === "sports" ? "&category=eq.sports" : topic === "yoruba" ? "&category=eq.yoruba" : "&category=not.in.(sports,yoruba)";
+    const rows = await sb(`articles?select=title,slug,excerpt,image_url,category${filter}&order=published_at.desc&limit=1`);
+    const a = Array.isArray(rows) ? rows[0] : null;
+    res.set("Cache-Control", "no-store");
+    if (!a) return res.json({});
+    const origin = originOf(req);
+    let img = a.image_url || "";
+    if (img && !/^https?:\/\//i.test(img)) img = origin + "/" + img.replace(/^\/+/, "");
+    res.json({
+      title: a.title,
+      body: String(a.excerpt || "").slice(0, 140),
+      url: "/" + pageFor(a.category) + "?slug=" + encodeURIComponent(a.slug),
+      image: img || undefined,
+    });
+  } catch (e) {
+    res.json({});
+  }
+});
+
+// Called by the admin and staff pages right after a new story is published
+app.post("/api/push/notify", async (req, res) => {
+  try {
+    if (!pushReady()) return res.status(503).json({ error: "alerts are not set up" });
+    const token = (req.get("authorization") || "").replace(/^Bearer\s+/i, "");
+    const slug = String((req.body && req.body.slug) || "").slice(0, 200);
+    if (!token || !slug) return res.status(400).json({ error: "bad request" });
+    const user = await staffFromToken(token);
+    if (!user) return res.status(403).json({ error: "not allowed" });
+    if (notifiedSlugs.has(slug)) return res.json({ sent: 0, skipped: "already sent" });
+
+    const rows = await sb(`articles?slug=eq.${encodeURIComponent(slug)}&select=category,published_at&limit=1`);
+    const a = Array.isArray(rows) ? rows[0] : null;
+    if (!a) return res.status(404).json({ error: "story not found" });
+    // only brand-new stories, so editing an old one never alerts everybody
+    if (Date.now() - new Date(a.published_at).getTime() > 30 * 60 * 1000) return res.json({ sent: 0, skipped: "not new" });
+    notifiedSlugs.add(slug);
+    if (notifiedSlugs.size > 500) notifiedSlugs.clear();
+
+    const topic = topicFor(a.category);
+    const r = await sbService(`push_subscriptions?select=endpoint&topic=eq.${topic}&limit=10000`);
+    const subs = r.ok ? await r.json() : [];
+    let sent = 0;
+    const gone = [];
+    for (let i = 0; i < subs.length; i += 25) {
+      const batch = subs.slice(i, i + 25);
+      const codes = await Promise.all(batch.map((s) => pushOne(s.endpoint)));
+      codes.forEach((c, k) => {
+        if (c >= 200 && c < 300) sent++;
+        else if (c === 404 || c === 410) gone.push(batch[k].endpoint);
+      });
+    }
+    for (const e of gone) {
+      sbService(`push_subscriptions?endpoint=eq.${encodeURIComponent(e)}`, { method: "DELETE" }).catch(() => {});
+    }
+    res.json({ sent, removed: gone.length, total: subs.length });
+  } catch (e) {
+    console.error("Notify failed:", e.message);
+    res.status(500).json({ error: "failed" });
+  }
 });
 
 app.get("/robots.txt", (req, res) => {
