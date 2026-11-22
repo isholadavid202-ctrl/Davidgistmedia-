@@ -183,7 +183,7 @@
 
     /* Computers: a centred page, not stretched edge to edge */
     @media (min-width:900px){
-      .sp-util .in,.sp-top .in,.sp-drawer .in,.sp-nav .in,.sp-search form,main{max-width:1240px;padding-left:24px;padding-right:24px}
+      .sp-util .in,.sp-top .in,.sp-drawer .in,.sp-nav .in,.sp-search form,main{max-width:1400px;padding-left:32px;padding-right:32px}
     }
 
     /* ---- Computers: a clean news-site header and front page ---- */
@@ -685,13 +685,13 @@
 
       function homePage() {
         if (!all.length) return '<div class="sp-empty">Kò tíì sí ìròyìn.</div>';
-        if (isDesk()) {
+        if (isDesk()) { try {
           var dh = cnnHero(all), dpool = dh.pool, dlatest = dpool.splice(0, 8);
           var dgroups = SPORTS.map(function (s) {
             return { label: s.label, link: "#" + s.key, more: "Ìròyìn mìíràn &rsaquo;", items: dpool.filter(function (a) { return sportOf(a) === s.key; }).slice(0, 3) };
           }).filter(function (g) { return g.items.length; });
           return dh.html + cnnCols(dlatest, all, "Ìròyìn tuntun", "Àwọn tí wọ́n fẹ́ràn jù") + cnnRows(dgroups);
-        }
+        } catch (err) { if (window.console) console.error("desktop layout", err); } }
         var r = layout(all, "");
         var html = r.html;
         SPORTS.forEach(function (s) {
@@ -799,5 +799,6 @@
       load();
     })();
   </script>
+  <script src="js/notifications.js?v=1"></script>
 </body>
 </html>
