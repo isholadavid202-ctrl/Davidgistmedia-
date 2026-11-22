@@ -219,7 +219,7 @@
 
     /* Computers: a centred page, not stretched edge to edge */
     @media (min-width:900px){
-      .sp-util .in,.sp-top .in,.sp-drawer .in,.sp-nav .in,.sp-search form,main{max-width:1240px;padding-left:24px;padding-right:24px}
+      .sp-util .in,.sp-top .in,.sp-drawer .in,.sp-nav .in,.sp-search form,main{max-width:1400px;padding-left:32px;padding-right:32px}
     }
 
     /* ---- Computers: a clean news-site header and front page ---- */
@@ -689,13 +689,13 @@
       function homePage() {
         var list = all.slice();
         if (!list.length) return { top: '<div class="sp-empty">No stories yet.</div>', rest: "" };
-        if (isDesk()) {
+        if (isDesk()) { try {
           var dh = cnnHero(list), dpool = dh.pool, dlatest = dpool.splice(0, 8);
           var dgroups = CATS.map(function (c) {
             return { label: c[1], link: sectionLink(c[0]), more: "More " + c[1] + " &rsaquo;", items: dpool.filter(function (a) { return a.category === c[0]; }).slice(0, 3) };
           }).filter(function (g) { return g.items.length; });
           return { top: dh.html + cnnCols(dlatest, list, "Latest news", "Most liked"), rest: cnnRows(dgroups) };
-        }
+        } catch (err) { if (window.console) console.error("desktop layout", err); } }
         var lead0 = list.find(function (a) { return a.featured; }) || list[0];
         var pool = list.filter(function (a) { return a.id !== lead0.id; });
         function take(n) { return pool.splice(0, n); }
@@ -902,5 +902,6 @@
       });
     }
   </script>
+  <script src="js/notifications.js?v=1"></script>
 </body>
 </html>
