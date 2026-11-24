@@ -1,6 +1,17 @@
 (function () {
   var p = location.pathname;
   if (!(p === "/" || /\/(index\.html)?$/.test(p))) return; // homepage only
+  /* Show this screen only inside the installed app, never in a normal browser tab */
+  var inApp = false;
+  try {
+    inApp = (window.matchMedia && (
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.matchMedia("(display-mode: fullscreen)").matches ||
+        window.matchMedia("(display-mode: minimal-ui)").matches)) ||
+      window.navigator.standalone === true ||
+      /^android-app:\/\//.test(document.referrer || "");
+  } catch (e) {}
+  if (!inApp) return;
   try {
     if (sessionStorage.getItem("dg_splash")) return;       // once per session
     sessionStorage.setItem("dg_splash", "1");
