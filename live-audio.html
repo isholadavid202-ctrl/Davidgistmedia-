@@ -114,6 +114,53 @@
       #search-btn{order:2}
       #theme-toggle-btn{order:3}
     }
+
+    /* ---- Podcasts and Live Audio pages: a podcast-app layout ---- */
+    .pc-bar{background:#000;color:#fff;padding:11px 16px;font-weight:800;font-size:.98rem;letter-spacing:.02em;border-bottom:3px solid #c8102e}
+    .pc-bar span{display:block;max-width:1400px;margin:0 auto}
+    .pc-hero{position:relative;background:linear-gradient(180deg,#4a0b14,#2a0710)}
+    .pc-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:22px 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+    .pc-track::-webkit-scrollbar{display:none}
+    .pc-slide{position:relative;flex:0 0 min(86%,640px);height:270px;border-radius:6px;overflow:hidden;scroll-snap-align:center;background:#111;display:block;color:#fff;text-decoration:none}
+    .pc-slide .bg{position:absolute;inset:-24px;background-size:cover;background-position:center;filter:blur(22px) brightness(.55);transform:scale(1.1)}
+    .pc-slide .cv{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);height:74%;aspect-ratio:1;object-fit:cover;border-radius:6px;box-shadow:0 12px 34px rgba(0,0,0,.55);background:#222}
+    .pc-slide .cv.ph{display:grid;place-items:center;color:#999;font-size:3rem}
+    .pc-slide .cap{position:absolute;left:0;right:0;bottom:0;padding:36px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.85));display:block}
+    .pc-slide .cap b{display:block;font-size:1rem;line-height:1.25}
+    .pc-slide .cap small{display:block;margin-top:2px;opacity:.8;font-size:.8rem}
+    .pc-arrow{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:0;background:#fff;color:#111;box-shadow:0 2px 10px rgba(0,0,0,.35);cursor:pointer;display:grid;place-items:center;z-index:2;padding:0}
+    .pc-arrow.l{left:10px}.pc-arrow.r{right:10px}
+    .pc-sec{max-width:1400px;margin:0 auto;padding:30px 16px 6px}
+    .pc-sec h2{margin:0;font-size:1.5rem;font-weight:500}
+    .pc-sec .s{margin:4px 0 18px;color:var(--muted,#666);font-size:.85rem}
+    .pc-tiles{display:flex;gap:16px;flex-wrap:wrap}
+    .pc-tile{width:124px;color:inherit;text-decoration:none}
+    .pc-tile .sq{display:block;width:124px;height:124px;border-radius:4px;object-fit:cover}
+    .pc-tile .n{display:block;margin-top:6px;font-size:.74rem;color:var(--muted,#666);line-height:1.3}
+    .pc-div{max-width:1400px;margin:16px auto 0;border-top:1px solid var(--line,#e3e3e3)}
+    .pc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 14px;padding:0 0 34px}
+    .pc-item{display:block;color:inherit;text-decoration:none;min-width:0}
+    .pc-item .cvr{display:block;width:100%;aspect-ratio:1;border-radius:4px;object-fit:cover;background:var(--line,#e3e3e3)}
+    .pc-item .cvr.ph{display:grid;place-items:center;color:#888;font-size:2rem}
+    .pc-item h3{margin:10px 0 2px;font-size:1.02rem;font-weight:500;line-height:1.25}
+    .pc-item small{color:var(--muted,#666);font-size:.78rem}
+    .pc-item:hover h3{text-decoration:underline}
+    .pc-msg{grid-column:1/-1;color:var(--muted,#666);padding:10px 0}
+    @media (min-width:700px){.pc-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 18px}.pc-slide{height:340px}}
+    @media (min-width:1100px){.pc-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
+    /* live audio player card */
+    .la-card{max-width:1100px;margin:0 auto;padding:22px 16px 26px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;color:#fff}
+    .la-art{position:relative;flex:0 0 auto}
+    .la-art img{display:block;width:132px;height:132px;border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.45)}
+    .la-body{flex:1 1 280px;min-width:0}
+    .la-body h1{margin:0 0 6px;font-size:1.5rem;font-weight:800}
+    .la-status{margin:0 0 12px;opacity:.9;font-size:.95rem}
+    .live-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:3px;background:#c8102e;color:#fff;font-size:.72rem;font-weight:800;letter-spacing:.08em;margin:0 0 8px}
+    .live-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff;animation:lvpulse 1.4s ease-in-out infinite}
+    @keyframes lvpulse{50%{opacity:.25}}
+    .la-body audio{width:100%;max-width:560px}
+    .la-frame{width:100%;max-width:560px;border:0;border-radius:8px;background:#000}
+    .la-btn{display:inline-block;margin-top:4px;padding:9px 16px;border-radius:999px;background:#fff;color:#111;font-weight:800;text-decoration:none;font-size:.9rem}
   </style>
 </head>
 <body>
@@ -168,14 +215,33 @@
     </div>
   </nav>
 
-  <main class="wrap" style="padding-top:28px;padding-bottom:28px">
-    <div class="cat-head" style="margin-bottom:18px">
-      <div class="left"><span class="bar"></span><h2>Live Audio</h2></div>
+  <div class="pc-bar"><span>Davidgistmedia Live Audio</span></div>
+  <section class="pc-hero">
+    <div class="la-card">
+      <div class="la-art"><img src="/icon-512.png" alt="Davidgistmedia"></div>
+      <div class="la-body">
+        <span class="live-badge" id="la-badge" hidden>LIVE</span>
+        <h1>Davidgistmedia Live Audio</h1>
+        <p class="la-status" id="la-status">Checking the live broadcast…</p>
+        <div id="la-player"></div>
+      </div>
     </div>
-    <div id="live-root">
-      <p style="color:var(--muted)">Loading...</p>
+  </section>
+
+  <section class="pc-sec">
+    <h2>Live Audio</h2>
+    <p class="s">Listen to the live Davidgistmedia broadcast</p>
+    <div class="pc-tiles">
+      <a class="pc-tile" href="live-audio.html"><img class="sq" src="/icon-192.png" alt=""><span class="n">Davidgistmedia Live Audio</span></a>
+      <a class="pc-tile" href="live.html"><img class="sq" src="/icon-192.png" alt=""><span class="n">Davidgistmedia Live (video)</span></a>
     </div>
-  </main>
+  </section>
+  <div class="pc-div"></div>
+  <section class="pc-sec">
+    <h2>Podcasts</h2>
+    <p class="s">Headlines, analysis and interviews created for your ears</p>
+    <div class="pc-grid" id="pc-grid"><p class="pc-msg">Loading episodes…</p></div>
+  </section>
 
   <!-- Footer (built by js/footer.js) -->
   <div id="site-footer"></div>
@@ -224,9 +290,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
-  <!-- This line makes js/live.js run in audio mode. Keep it ABOVE live.js. -->
-  <script>window.LIVE_MODE = "audio";</script>
-  <script src="js/live.js"></script>
   <script src="js/extras.js"></script>
 
   <script>
@@ -305,6 +368,86 @@
         navigator.serviceWorker.register("/service-worker.js");
       });
     }
+  </script>
+  <script>
+    (async function () {
+      var $ = function (id) { return document.getElementById(id); };
+      function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+      function ytId(u) {
+        try {
+          var x = new URL(u), id = "";
+          if (x.hostname.indexOf("youtu.be") > -1) id = x.pathname.slice(1);
+          else if (x.hostname.indexOf("youtube.com") > -1) {
+            id = x.searchParams.get("v") || "";
+            var m = x.pathname.match(/\/(live|embed|shorts)\/([\w-]+)/);
+            if (!id && m) id = m[2];
+          }
+          return /^[\w-]{6,20}$/.test(id) ? id : "";
+        } catch (e) { return ""; }
+      }
+      async function setting(key) {
+        try {
+          var r = await supabaseClient.from("settings").select("value").eq("key", key).maybeSingle();
+          return r && r.data && r.data.value ? String(r.data.value).trim() : "";
+        } catch (e) { return ""; }
+      }
+      function day(d) {
+        var t = new Date(d);
+        return isNaN(t.getTime()) ? "" : t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
+      }
+      function cover(p, cls) {
+        return p.cover_url
+          ? '<img class="' + cls + '" src="' + esc(p.cover_url) + '" alt="" loading="lazy" decoding="async">'
+          : '<span class="' + cls + ' ph"><i class="fa-solid fa-microphone"></i></span>';
+      }
+      function podItem(p) {
+        return '<a class="pc-item" href="podcast.html?id=' + encodeURIComponent(p.id) + '">' + cover(p, "cvr") +
+          '<h3>' + esc(p.title) + '</h3><small>' + day(p.published_at) + (p.duration ? ' &middot; ' + esc(p.duration) : '') + '</small></a>';
+      }
+
+      var lastValue = null;
+      function parse(v) {
+        var m = v.match(/^audio:\s*(https:\/\/\S+)/i);
+        if (m) return { type: "audio", src: m[1] };
+        var yt = ytId(v);
+        if (yt) return { type: "yt", src: "https://www.youtube.com/embed/" + yt + "?rel=0&playsinline=1" };
+        var f = v.match(/<iframe[^>]+src=["'](https:\/\/[^"']+)["']/i);
+        if (f) return { type: "frame", src: f[1] };
+        if (/^https:\/\//i.test(v)) return { type: "audio", src: v };
+        return null;
+      }
+      function render(v) {
+        var box = $("la-player"), st = $("la-status"), badge = $("la-badge");
+        box.innerHTML = "";
+        var p = v ? parse(v) : null;
+        if (!p) {
+          badge.hidden = true;
+          st.textContent = "No live audio right now. Check back soon, or listen to our podcasts below.";
+          return;
+        }
+        badge.hidden = false;
+        st.textContent = "You are listening live.";
+        var el;
+        if (p.type === "audio") { el = document.createElement("audio"); el.controls = true; el.preload = "none"; el.src = p.src; }
+        else { el = document.createElement("iframe"); el.className = "la-frame"; el.src = p.src; el.height = p.type === "yt" ? "315" : "180"; el.setAttribute("allow", "autoplay; encrypted-media"); el.setAttribute("allowfullscreen", ""); }
+        box.appendChild(el);
+      }
+      async function refresh() {
+        var v = await setting("live_audio_url");
+        if (v === lastValue) return;
+        lastValue = v;
+        render(v);
+      }
+      refresh();
+      setInterval(refresh, 30000);
+
+      try {
+        var res = await supabaseClient.from("podcasts").select("id,title,cover_url,host,duration,published_at")
+          .order("published_at", { ascending: false }).limit(12);
+        var list = (res && res.data) || [];
+        $("pc-grid").innerHTML = list.length ? list.map(podItem).join("") : '<p class="pc-msg">No episodes yet. Check back soon.</p>';
+      } catch (e) { $("pc-grid").innerHTML = ""; }
+    })();
   </script>
   <script src="js/notifications.js?v=1"></script>
 </body>
