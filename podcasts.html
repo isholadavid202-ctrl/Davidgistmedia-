@@ -175,6 +175,7 @@
     .la-frame{width:100%;max-width:560px;border:0;border-radius:8px;background:#000}
     .la-btn{display:inline-block;margin-top:4px;padding:9px 16px;border-radius:999px;background:#fff;color:#111;font-weight:800;text-decoration:none;font-size:.9rem}
   </style>
+  <link rel="stylesheet" href="watch.css?v=1">
 </head>
 <body>
 
@@ -233,6 +234,7 @@
   <section class="pc-hero" id="pc-hero" aria-label="Featured podcasts" hidden>
     <button type="button" class="pc-arrow l" id="pc-prev" aria-label="Previous"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
     <div class="pc-track" id="pc-track"></div>
+    <div class="pc-dots" id="pc-dots"></div>
     <button type="button" class="pc-arrow r" id="pc-next" aria-label="Next"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
   </section>
 
@@ -248,7 +250,7 @@
   <section class="pc-sec">
     <h2>Podcasts</h2>
     <p class="s">Headlines, analysis and interviews created for your ears</p>
-    <div class="pc-grid" id="pc-grid"><p class="pc-msg">Loading episodes…</p></div>
+    <div class="pc-grid" id="pc-grid" aria-busy="true"><span class="pc-skel"><i></i><b></b><b></b></span><span class="pc-skel"><i></i><b></b><b></b></span><span class="pc-skel"><i></i><b></b><b></b></span><span class="pc-skel"><i></i><b></b><b></b></span><span class="pc-skel"><i></i><b></b><b></b></span><span class="pc-skel"><i></i><b></b><b></b></span></div>
   </section>
 
   <div id="site-footer"></div>
@@ -416,7 +418,7 @@
         grid.innerHTML = '<p class="pc-msg">Couldn\'t load podcasts right now. Please try again later.</p>';
         return;
       }
-      if (!list.length) { grid.innerHTML = '<p class="pc-msg">No episodes yet. Check back soon.</p>'; return; }
+      if (!list.length) { grid.removeAttribute('aria-busy'); grid.innerHTML = '<p class="pc-msg">No episodes yet. Check back soon.</p>'; return; }
 
       track.innerHTML = list.slice(0, 6).map(function (p) {
         return '<a class="pc-slide" href="podcast.html?id=' + encodeURIComponent(p.id) + '">' +
@@ -426,6 +428,26 @@
       }).join("");
       hero.hidden = false;
       grid.innerHTML = list.map(podItem).join("");
+      grid.removeAttribute("aria-busy");
+
+      /* dots under the carousel */
+      var slides = [].slice.call(track.querySelectorAll(".pc-slide"));
+      var dotsBox = $("pc-dots");
+      dotsBox.innerHTML = slides.map(function (s, i) { return '<button type="button" aria-label="Go to slide ' + (i + 1) + '"></button>'; }).join("");
+      var dots = [].slice.call(dotsBox.children);
+      function mark() {
+        var mid = track.scrollLeft + track.clientWidth / 2, best = 0, gap = 1e9;
+        slides.forEach(function (s, i) { var d = Math.abs(s.offsetLeft + s.offsetWidth / 2 - mid); if (d < gap) { gap = d; best = i; } });
+        dots.forEach(function (d, i) { d.classList.toggle("on", i === best); });
+      }
+      track.addEventListener("scroll", mark, { passive: true });
+      dots.forEach(function (d, i) {
+        d.addEventListener("click", function () {
+          paused = true;
+          track.scrollTo({ left: slides[i].offsetLeft - (track.clientWidth - slides[i].offsetWidth) / 2, behavior: "smooth" });
+        });
+      });
+      mark();
 
       function step(dir) {
         var first = track.querySelector(".pc-slide");
@@ -437,7 +459,8 @@
       $("pc-next").addEventListener("click", function () { step(1); });
       var paused = false;
       ["touchstart", "mouseenter", "pointerdown"].forEach(function (ev) { track.addEventListener(ev, function () { paused = true; }, { passive: true }); });
-      setInterval(function () { if (!paused && !document.hidden) step(1); }, 5000);
+      var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!calm) setInterval(function () { if (!paused && !document.hidden) step(1); }, 5000);
     })();
   </script>
 
