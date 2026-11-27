@@ -160,6 +160,15 @@
     @keyframes lvpulse{50%{opacity:.25}}
     .la-body audio{width:100%;max-width:560px}
     .la-frame{width:100%;max-width:560px;border:0;border-radius:8px;background:#000}
+    /* NEW: play button that opens the bottom player */
+    .la-play{display:inline-flex;align-items:center;gap:10px;padding:13px 24px;border-radius:999px;border:0;background:#fff;color:#111;font:800 1rem system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+    .la-play svg{width:22px;height:22px;fill:currentColor}
+    .la-play .i-pause,.la-play .t-pause{display:none}
+    .la-play.is-playing{background:#c8102e;color:#fff}
+    .la-play.is-playing .i-play,.la-play.is-playing .t-play{display:none}
+    .la-play.is-playing .i-pause{display:block}
+    .la-play.is-playing .t-pause{display:inline}
+    .la-note{margin:10px 0 0;font-size:.82rem;opacity:.8}
     .la-btn{display:inline-block;margin-top:4px;padding:9px 16px;border-radius:999px;background:#fff;color:#111;font-weight:800;text-decoration:none;font-size:.9rem}
   </style>
 </head>
@@ -428,7 +437,12 @@
         badge.hidden = false;
         st.textContent = "You are listening live.";
         var el;
-        if (p.type === "audio") { el = document.createElement("audio"); el.controls = true; el.preload = "none"; el.src = p.src; }
+        if (p.type === "audio") {
+          st.textContent = "We are live now. Tap play to listen.";
+          el = document.createElement("button"); el.type = "button"; el.className = "la-play";
+          el.setAttribute("data-dglive", ""); el.setAttribute("aria-label", "Play live audio");
+          el.innerHTML = '<svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg><span class="t-play">Listen live</span><span class="t-pause">Pause</span>';
+        }
         else { el = document.createElement("iframe"); el.className = "la-frame"; el.src = p.src; el.height = p.type === "yt" ? "315" : "180"; el.setAttribute("allow", "autoplay; encrypted-media"); el.setAttribute("allowfullscreen", ""); }
         box.appendChild(el);
       }
