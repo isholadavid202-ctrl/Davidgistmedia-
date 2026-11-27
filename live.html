@@ -139,6 +139,14 @@
     .lv-card small{font-weight:600;opacity:.9;font-size:.85rem}
     .lv-hr{border:0;border-top:1px solid #2a2a2a;margin:36px 0 22px}
     @media (min-width:800px){.lv-cards{grid-template-columns:1fr 1fr}.lv-title{font-size:1.5rem}}
+
+    /* NEW: the Live Audio card is now a button that plays in the bottom player */
+    button.lv-card{border:0;width:100%;font-family:inherit;cursor:pointer}
+    .lv-card:focus-visible{outline:3px solid #e8344c;outline-offset:2px}
+    .lv-card.is-playing{box-shadow:0 0 0 3px #e8344c}
+    .lv-card .l-pause{display:none}
+    .lv-card.is-playing .l-play{display:none}
+    .lv-card.is-playing .l-pause{display:inline}
   </style>
 </head>
 <body>
@@ -204,7 +212,8 @@
       <div class="lv-chh"><b>Live channels</b><span>Watch Davidgistmedia live, or tune in to the live audio.</span></div>
       <div class="lv-cards">
         <a class="lv-card" href="live.html"><img src="/icon-192.png" alt="">Davidgistmedia Live<small id="lv-state">Video</small></a>
-        <a class="lv-card dark" href="live-audio.html"><img src="/icon-192.png" alt="">Davidgistmedia Live Audio<small>Listen live</small></a>
+        <!-- NEW: a button that plays the live audio in the bottom player -->
+        <button type="button" class="lv-card dark" data-dglive aria-label="Play Davidgistmedia Live Audio"><img src="/icon-192.png" alt="">Davidgistmedia Live Audio<small><span class="l-play">&#9654; Listen live</span><span class="l-pause">&#10074;&#10074; Now playing</span></small></button>
       </div>
       <hr class="lv-hr">
       <a class="lv-btn" href="videos.html">More videos</a>
@@ -359,19 +368,6 @@
           return r && r.data && r.data.value ? String(r.data.value).trim() : "";
         } catch (e) { return ""; }
       }
-      function day(d) {
-        var t = new Date(d);
-        return isNaN(t.getTime()) ? "" : t.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos" });
-      }
-      function cover(p, cls) {
-        return p.cover_url
-          ? '<img class="' + cls + '" src="' + esc(p.cover_url) + '" alt="" loading="lazy" decoding="async">'
-          : '<span class="' + cls + ' ph"><i class="fa-solid fa-microphone"></i></span>';
-      }
-      function podItem(p) {
-        return '<a class="pc-item" href="podcast.html?id=' + encodeURIComponent(p.id) + '">' + cover(p, "cvr") +
-          '<h3>' + esc(p.title) + '</h3><small>' + day(p.published_at) + (p.duration ? ' &middot; ' + esc(p.duration) : '') + '</small></a>';
-      }
 
       var lastValue = null;
       function offCard() {
@@ -409,6 +405,9 @@
       setInterval(refresh, 30000);
     })();
   </script>
+
+  <!-- NEW: the bottom audio player (the Live Audio card above uses it) -->
+  <script src="js/mini-player.js"></script>
   <script src="js/notifications.js?v=1"></script>
 </body>
 </html>
