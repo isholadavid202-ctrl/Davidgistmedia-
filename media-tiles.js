@@ -29,8 +29,9 @@
     ".dgm-art{position:relative;display:block;width:148px;height:148px;border-radius:10px;overflow:hidden;background:#c8102e;padding:0;border:0;cursor:pointer;font:inherit;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.18)}" +
     ".dgm-art img{display:block;width:100%;height:100%;object-fit:cover}" +
     ".dgm-art:focus-visible{outline:3px solid #141414;outline-offset:2px}" +
-    ".dgm-ico{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:rgba(90,0,0,.68);border:2px solid #fff;display:grid;place-items:center}" +
-    ".dgm-ico svg{width:26px;height:26px;fill:#fff}" +
+    ".dgm-ico{position:absolute;right:8px;bottom:8px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.72);box-shadow:0 2px 8px rgba(0,0,0,.35);display:grid;place-items:center}" +
+    ".dgm-ico svg{width:20px;height:20px;fill:#fff}" +
+    ".is-playing .dgm-ico{background:#c8102e}" +
     ".dgm-ico .i-pause{display:none}" +
     ".is-playing .dgm-ico .i-play{display:none}" +
     ".is-playing .dgm-ico .i-pause{display:block}" +
@@ -78,7 +79,7 @@
     ".dgm-pod:hover b{text-decoration:underline}" +
     ".dgm-msg{color:var(--muted,var(--h-muted,#666));font-size:.9rem;padding:6px 0}" +
     "@media (min-width:640px){.dgm-grid{grid-template-columns:1fr 1fr}.dgm-pod{flex-basis:160px}.dgm-pod .cv{width:160px;height:160px}}" +
-    "@media (min-width:900px){.dgm-sec{margin-top:44px}.dgm-head h2{font-size:.82rem;letter-spacing:.07em;text-transform:uppercase}.dgm-head::before{width:4px;height:1.15em}}";
+    "@media (min-width:900px){.dgm-tile{width:176px}.dgm-art{width:176px;height:176px}.dgm-sec{margin-top:44px}.dgm-head h2{font-size:.82rem;letter-spacing:.07em;text-transform:uppercase}.dgm-head::before{width:4px;height:1.15em}}";
   document.head.appendChild(css);
 
   /* ---------- tiles ---------- */
