@@ -78,6 +78,28 @@
     ".dgm-pod small{display:block;margin-top:2px;font-size:.74rem;color:var(--muted,var(--h-muted,#666))}" +
     ".dgm-pod:hover b{text-decoration:underline}" +
     ".dgm-msg{color:var(--muted,var(--h-muted,#666));font-size:.9rem;padding:6px 0}" +
+    /* live broadcast on the homepage */
+    ".dgm-stage{margin:0 0 28px}" +
+    ".dgm-stage-in{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;background:radial-gradient(120% 120% at 100% 0%,#5e0b17 0%,#1d0509 55%,#0b0204 100%);color:#fff}" +
+    ".dgm-sp{position:relative;aspect-ratio:16/9;background:#000}" +
+    ".dgm-sp iframe,.dgm-sp video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}" +
+    ".dgm-sthumb{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;cursor:pointer;background:#111 center/cover no-repeat;display:block}" +
+    ".dgm-sthumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,.05) 55%)}" +
+    ".dgm-splay{position:absolute;left:50%;top:50%;z-index:1;width:72px;height:72px;margin:-36px 0 0 -36px;border-radius:50%;background:#c8102e;border:3px solid #fff;display:grid;place-items:center;box-shadow:0 6px 22px rgba(0,0,0,.5);transition:transform .15s}" +
+    ".dgm-sthumb:hover .dgm-splay{transform:scale(1.07)}" +
+    ".dgm-sthumb:focus-visible{outline:3px solid #fff;outline-offset:-6px}" +
+    ".dgm-splay svg{width:32px;height:32px;fill:#fff;margin-left:3px}" +
+    ".dgm-sinfo{padding:18px 18px 20px}" +
+    ".dgm-live2{display:inline-flex;align-self:flex-start;align-items:center;gap:7px;padding:4px 10px;border-radius:3px;background:#c8102e;color:#fff;font:800 .72rem/1.2 system-ui,Arial,sans-serif;letter-spacing:.09em}" +
+    ".dgm-live2::before{content:'';width:7px;height:7px;border-radius:50%;background:#fff;animation:dgmpulse 1.4s ease-in-out infinite}" +
+    ".dgm-sinfo h2{margin:10px 0 6px;font-size:1.45rem;font-weight:800;line-height:1.2;color:#fff}" +
+    ".dgm-sinfo p{margin:0;font-size:.95rem;line-height:1.45;color:rgba(255,255,255,.82)}" +
+    ".dgm-sacts{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}" +
+    ".dgm-sbtn{display:inline-flex;align-items:center;justify-content:center;padding:11px 18px;border-radius:999px;border:2px solid #fff;background:transparent;color:#fff;font:800 .88rem/1.2 system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;text-decoration:none;cursor:pointer}" +
+    ".dgm-sbtn.solid{background:#fff;color:#111}" +
+    ".dgm-sbtn:hover{opacity:.9}" +
+    "body.dgm-has-stage #dg-livebar{display:none}" +
+    "@media (min-width:900px){.dgm-stage-in{flex-direction:row;align-items:stretch}.dgm-sp{flex:0 0 66%;aspect-ratio:16/9}.dgm-sinfo{flex:1;display:flex;flex-direction:column;justify-content:center;padding:28px 34px}.dgm-sinfo h2{font-size:1.9rem}}" +
     /* episodes list (Live and Live Audio pages) */
     ".dgm-eps-bar{display:flex;align-items:center;flex-wrap:wrap;gap:12px 16px;margin:0 0 16px}" +
     ".dgm-lbtn{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border:0;border-radius:999px;background:#c8102e;color:#fff;font:800 .95rem system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(200,16,46,.35)}" +
@@ -223,6 +245,39 @@
       el.classList.toggle("is-on", on);
     });
   }
+  function ytId(u) {
+    try {
+      var x = new URL(u), id = "";
+      if (x.hostname.indexOf("youtu.be") > -1) id = x.pathname.slice(1);
+      else if (x.hostname.indexOf("youtube.com") > -1) {
+        id = x.searchParams.get("v") || "";
+        var m = x.pathname.match(/\/(live|embed|shorts)\/([\w-]+)/);
+        if (!id && m) id = m[2];
+      }
+      return /^[\w-]{6,20}$/.test(id) ? id : "";
+    } catch (e) { return ""; }
+  }
+  var stageKey = null;
+  function renderStage(v, a) {
+    var stage = document.getElementById("dg-live-stage");
+    if (!stage) return;
+    var key = v + "|" + (a ? 1 : 0);
+    if (key === stageKey) return;
+    stageKey = key;
+    var yt = v ? ytId(v) : "";
+    var isFile = v && /^https:\/\/\S+\.(mp4|webm|mov|m4v)(\?\S*)?$/i.test(v);
+    if (!yt && !isFile) { stage.innerHTML = ""; document.body.classList.remove("dgm-has-stage"); return; }
+    var player = yt
+      ? '<button type="button" class="dgm-sthumb" data-yt="' + yt + '" aria-label="Play the live broadcast" style="background-image:url(\'https://i.ytimg.com/vi/' + yt + '/hqdefault.jpg\')"><span class="dgm-splay">' + PLAY + '</span></button>'
+      : '<video controls playsinline preload="metadata" src="' + esc(v) + '"></video>';
+    stage.innerHTML = '<section class="dgm-stage" aria-label="Live broadcast"><div class="dgm-stage-in">' +
+      '<div class="dgm-sp">' + player + '</div>' +
+      '<div class="dgm-sinfo"><span class="dgm-live2">LIVE NOW</span><h2>Davidgistmedia Live</h2>' +
+      '<p>We are live right now. Watch the broadcast as it happens.</p>' +
+      '<div class="dgm-sacts"><a class="dgm-sbtn solid" href="live.html">Open the live page</a>' +
+      (a ? '<button type="button" class="dgm-sbtn" data-dglive>Listen to audio only</button>' : '') + '</div></div></div></section>';
+    document.body.classList.add("dgm-has-stage");
+  }
   async function setting(key) {
     try {
       var r = await supabaseClient.from("settings").select("value").eq("key", key).maybeSingle();
@@ -235,6 +290,7 @@
     var a = await setting("live_audio_url");
     state.video = !!v;
     state.audio = !!a;
+    renderStage(v, a);
     paint();
   }
 
@@ -258,10 +314,24 @@
     var boxes = qsa(".pc-tiles");
     var home = document.getElementById("dg-media");
     var eps = document.getElementById("dgm-eps");
-    if (!boxes.length && !home && !eps) return;
+    if (!boxes.length && !home && !eps && !document.getElementById("dg-live-stage")) return;
     if (eps) loadEpisodes(eps);
     boxes.forEach(function (b) { b.innerHTML = tilesHtml(); });
     if (home) { home.innerHTML = homeHtml(); loadPods(); wireVisibility(home); }
+    var stageBox = document.getElementById("dg-live-stage");
+    if (stageBox) {
+      wireVisibility(stageBox);
+      stageBox.addEventListener("click", function (e) {
+        var b = e.target.closest ? e.target.closest(".dgm-sthumb") : null;
+        if (!b) return;
+        var f = document.createElement("iframe");
+        f.src = "https://www.youtube-nocookie.com/embed/" + b.getAttribute("data-yt") + "?autoplay=1&playsinline=1&rel=0";
+        f.title = "Davidgistmedia live broadcast";
+        f.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture; fullscreen");
+        f.setAttribute("allowfullscreen", "");
+        b.parentNode.replaceChild(f, b);
+      });
+    }
     paint();
     refresh();
     setInterval(refresh, 60000);
