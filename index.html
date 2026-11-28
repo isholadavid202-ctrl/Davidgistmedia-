@@ -186,6 +186,34 @@
     html[data-theme="dark"] #dgm-install{background:#1b1b1d;color:#ececea;border-color:#333}
     html[data-theme="dark"] #dgm-install span{color:#bdbdbd}
 
+
+    /* ---------- live broadcast in the headline spot ---------- */
+    .lvh-box{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}
+    .lvh-box iframe,.lvh-box video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+    .lv-thumb{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;cursor:pointer;background:#111 center/cover no-repeat;display:block}
+    .lv-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),rgba(0,0,0,.05) 55%)}
+    .lv-play{position:absolute;left:50%;top:50%;z-index:1;width:72px;height:72px;margin:-36px 0 0 -36px;border-radius:50%;background:var(--dg-accent);border:3px solid #fff;display:grid;place-items:center;box-shadow:0 6px 22px rgba(0,0,0,.5);transition:transform .15s}
+    .lv-thumb:hover .lv-play{transform:scale(1.07)}
+    .lv-thumb:focus-visible{outline:3px solid #fff;outline-offset:-6px}
+    .lv-play svg{width:32px;height:32px;fill:#fff;margin-left:3px}
+    .lvh-live{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:3px;background:var(--dg-accent);color:#fff;font-style:normal;font-size:.7rem;font-weight:800;letter-spacing:.09em;line-height:1.3}
+    .lvh-live::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff;animation:lvhp 1.4s ease-in-out infinite}
+    @keyframes lvhp{50%{opacity:.25}}
+    .lvh-cat{font-size:.74rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+    .lvh-tags,.lvh-kick{display:flex;align-items:center;gap:10px}
+    .lvh-kick{justify-content:center}
+    .lvh-cap{padding:14px 2px 0}
+    .lvh-cap h2{font-size:1.55rem;font-weight:800;line-height:1.15}
+    .lvh-cap p{margin:8px 0 0;font-size:1rem;color:var(--muted);line-height:1.4}
+    .lvh-acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .lvh-btn{display:inline-flex;align-items:center;padding:9px 16px;border-radius:999px;border:1px solid var(--ink);background:transparent;color:var(--ink);font:700 .85rem/1.2 var(--font);cursor:pointer}
+    .lvh-btn:hover{background:var(--card)}
+    body.dg-live-hero #dg-livebar{display:none}
+    @media (min-width:900px){
+      .lvh-box{border-radius:3px}
+      .cn-mid .lvh-acts{justify-content:center}
+    }
+
     /* ---------- small phones ---------- */
     @media (max-width: 520px) {
       .sp-top .in{padding:10px 14px}
@@ -326,7 +354,6 @@
   </nav>
 
   <main>
-    <div id="dg-live-stage"></div>
     <div id="hero-section"><div class="sp-empty">Loading stories...</div></div>
     <div id="live-banner"></div>
     <div id="dg-media"></div>
@@ -480,6 +507,64 @@
       function leadBy(a) {
         var name = a.author || "Davidgistmedia";
         return escapeHtml(name) + badgeFor(name) + " &middot; " + timeAgo(a.published_at);
+      }
+
+      /* ---------- Live broadcast in the headline spot ---------- */
+      /* Optional settings (table "settings", column key / value): live_headline, live_category, live_summary */
+      var live = null, liveKey = "";
+      async function setting(k) {
+        try {
+          var r = await sb.from("settings").select("value").eq("key", k).maybeSingle();
+          return r && r.data && r.data.value ? String(r.data.value).trim() : "";
+        } catch (e) { return ""; }
+      }
+      async function loadLive() {
+        if (!sb) return;
+        var v = await setting("live_stream_url");
+        var next = null;
+        if (v) {
+          var yt = youtubeId(v), isFile = /^https:\/\/\S+\.(mp4|webm|mov|m4v)(\?\S*)?$/i.test(v);
+          if (yt || isFile) {
+            var s = await Promise.all([setting("live_headline"), setting("live_category"), setting("live_summary"), setting("live_audio_url")]);
+            next = { yt: yt, file: isFile ? v : "", headline: s[0] || "Davidgistmedia Live", category: s[1] || "Live",
+              summary: s[2] || "We are live right now. Watch the broadcast as it happens.", audio: !!s[3] };
+          }
+        }
+        var key = next ? JSON.stringify(next) : "";
+        if (key === liveKey) return;
+        liveKey = key; live = next;
+        show();
+      }
+      function liveMedia() {
+        if (live.yt) return '<button type="button" class="lv-thumb" data-yt="' + live.yt + '" aria-label="Play the live broadcast" style="background-image:url(\'https://i.ytimg.com/vi/' + live.yt + '/hqdefault.jpg\')"><span class="lv-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></button>';
+        return '<video controls playsinline preload="metadata" src="' + escapeHtml(live.file) + '"></video>';
+      }
+      function liveTag() { return '<i class="lvh-live">LIVE</i><span class="lvh-cat">' + escapeHtml(live.category) + '</span>'; }
+      function liveActs() {
+        return '<div class="lvh-acts"><a class="lvh-btn" href="live.html">Open the live page &rsaquo;</a>' +
+          (live.audio ? '<button type="button" class="lvh-btn" data-dglive>Listen to audio only</button>' : '') + '</div>';
+      }
+      function liveDesk(C) {
+        return '<a class="cn-headline" href="live.html"><span class="kick lvh-kick">' + liveTag() + '</span><h1>' + escapeHtml(live.headline) + '</h1></a>' +
+          '<div class="lvh-box">' + liveMedia() + '</div>' +
+          '<p class="cn-sum">' + escapeHtml(live.summary) + '</p>' + liveActs() +
+          (C.length ? '<div class="cn-sub">' + C.map(cnnText).join("") + '</div>' : "");
+      }
+      function liveMob() {
+        return '<div class="lvh"><div class="lvh-box">' + liveMedia() + '</div><div class="lvh-cap"><div class="lvh-tags">' + liveTag() + '</div>' +
+          '<h2><a href="live.html">' + escapeHtml(live.headline) + '</a></h2><p>' + escapeHtml(live.summary) + '</p>' + liveActs() + '</div></div>';
+      }
+      function wireLive(root) {
+        root.querySelectorAll(".lv-thumb").forEach(function (b) {
+          b.addEventListener("click", function () {
+            var f = document.createElement("iframe");
+            f.src = "https://www.youtube-nocookie.com/embed/" + b.getAttribute("data-yt") + "?autoplay=1&playsinline=1&rel=0";
+            f.title = "Davidgistmedia live broadcast";
+            f.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture; fullscreen");
+            f.setAttribute("allowfullscreen", "");
+            b.parentNode.replaceChild(f, b);
+          });
+        });
       }
 
       /* ---------- Story blocks ---------- */
@@ -651,11 +736,11 @@
         return liked.length ? liked : list.slice(0, 5);
       }
       function cnnHero(list) {
-        var lead0 = list.find(function (a) { return a.featured; }) || list[0];
-        var pool = list.filter(function (a) { return a.id !== lead0.id; });
+        var lead0 = live ? null : (list.find(function (a) { return a.featured; }) || list[0]);
+        var pool = lead0 ? list.filter(function (a) { return a.id !== lead0.id; }) : list.slice();
         var L = pool.splice(0, 4), C = pool.splice(0, 3), R = pool.splice(0, 4);
         var left = (L[0] ? cnnImg(L[0]) : "") + (L[1] ? cnnText(L[1]) : "") + (L[2] ? cnnText(L[2]) : "") + (L[3] ? cnnImg(L[3]) : "");
-        var mid = '<a class="cn-headline" ' + href(lead0) + '><span class="kick">' + escapeHtml(kickerOf(lead0)) + '</span><h1>' + escapeHtml(lead0.title) + '</h1></a>' +
+        var mid = !lead0 ? liveDesk(C) : '<a class="cn-headline" ' + href(lead0) + '><span class="kick">' + escapeHtml(kickerOf(lead0)) + '</span><h1>' + escapeHtml(lead0.title) + '</h1></a>' +
           '<div class="lead-plain">' + lead(lead0) + '</div>' +
           (lead0.excerpt ? '<p class="cn-sum">' + escapeHtml(lead0.excerpt) + '</p>' : '') +
           '<div class="cn-by">' + leadBy(lead0) + '</div>' +
@@ -690,7 +775,7 @@
       /* ---------- Pages ---------- */
       function homePage() {
         var list = all.slice();
-        if (!list.length) return { top: '<div class="sp-empty">No stories yet.</div>', rest: "" };
+        if (!list.length && !live) return { top: '<div class="sp-empty">No stories yet.</div>', rest: "" };
         if (isDesk()) { try {
           var dh = cnnHero(list), dpool = dh.pool, dlatest = dpool.splice(0, 8);
           var dgroups = CATS.map(function (c) {
@@ -698,8 +783,8 @@
           }).filter(function (g) { return g.items.length; });
           return { top: dh.html + cnnCols(dlatest, list, "Latest news", "Most liked"), rest: cnnRows(dgroups) };
         } catch (err) { if (window.console) console.error("desktop layout", err); } }
-        var lead0 = list.find(function (a) { return a.featured; }) || list[0];
-        var pool = list.filter(function (a) { return a.id !== lead0.id; });
+        var lead0 = live ? null : (list.find(function (a) { return a.featured; }) || list[0]);
+        var pool = lead0 ? list.filter(function (a) { return a.id !== lead0.id; }) : list.slice();
         function take(n) { return pool.splice(0, n); }
         var side = take(2), row = take(4), latest = take(8);
 
@@ -707,7 +792,7 @@
           .sort(function (a, b) { return (b.likes || 0) - (a.likes || 0); }).slice(0, 5);
         if (!liked.length) liked = list.slice(0, 5);
 
-        var top = '<div class="hero"><div>' + lead(lead0) + '</div><div class="hero-side">' + side.map(pic).join("") + '</div></div>';
+        var top = '<div class="hero"><div>' + (lead0 ? lead(lead0) : liveMob()) + '</div><div class="hero-side">' + side.map(pic).join("") + '</div></div>';
         if (row.length) top += '<div class="row4">' + row.map(pic).join("") + '</div>';
         top += '<div class="cols"><div>' + head("Latest news") +
           (latest.length ? latest.map(item).join("") : '<div class="sp-empty" style="padding:20px 0;text-align:left">More stories soon.</div>') +
@@ -768,6 +853,8 @@
           if (vh) vh.hidden = true;
         }
         wireLead($("hero-section"));
+        wireLive($("hero-section"));
+        document.body.classList.toggle("dg-live-hero", !!live && key === "home" && !q);
         document.title = (key === "home" || q ? "Davidgistmedia | Home" : LABEL[key] + " | Davidgistmedia");
       }
 
@@ -856,6 +943,8 @@
       if (startQuery) { query = startQuery; $("search-input").value = startQuery; $("search-bar").hidden = false; }
       renderNav("home");
       load();
+      loadLive();
+      setInterval(loadLive, 60000);
     })();
 
     // Dynamic Account Check
