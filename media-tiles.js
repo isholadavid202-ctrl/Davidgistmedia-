@@ -78,6 +78,38 @@
     ".dgm-pod small{display:block;margin-top:2px;font-size:.74rem;color:var(--muted,var(--h-muted,#666))}" +
     ".dgm-pod:hover b{text-decoration:underline}" +
     ".dgm-msg{color:var(--muted,var(--h-muted,#666));font-size:.9rem;padding:6px 0}" +
+    /* episodes list (Live and Live Audio pages) */
+    ".dgm-eps-bar{display:flex;align-items:center;flex-wrap:wrap;gap:12px 16px;margin:0 0 16px}" +
+    ".dgm-lbtn{display:inline-flex;align-items:center;gap:10px;padding:12px 22px;border:0;border-radius:999px;background:#c8102e;color:#fff;font:800 .95rem system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(200,16,46,.35)}" +
+    ".dgm-lbtn:hover{background:#a80d26}" +
+    ".dgm-lbtn:focus-visible,.dgm-epplay:focus-visible{outline:3px solid #141414;outline-offset:2px}" +
+    ".dgm-lbtn svg{width:20px;height:20px;fill:currentColor}" +
+    ".dgm-lbtn .i-pause,.dgm-lbtn .t-pause{display:none}" +
+    ".dgm-lbtn.is-playing .i-play,.dgm-lbtn.is-playing .t-play{display:none}" +
+    ".dgm-lbtn.is-playing .i-pause{display:block}" +
+    ".dgm-lbtn.is-playing .t-pause{display:inline}" +
+    ".dgm-count{font-size:.85rem;color:var(--muted,var(--h-muted,#666))}" +
+    ".dgm-all{margin-left:auto;font-size:.88rem;font-weight:700;color:var(--muted,var(--h-muted,#666));text-decoration:none}" +
+    ".dgm-all:hover{color:#c8102e}" +
+    ".dgm-eps{display:grid;grid-template-columns:1fr;gap:12px;padding-bottom:30px}" +
+    ".dgm-ep{display:flex;align-items:center;gap:14px;padding:12px;border:1px solid var(--line,var(--h-line,#e3e3e3));border-radius:12px;background:var(--h-card,var(--card,#f4f4f4))}" +
+    ".dgm-ep .th{flex:0 0 auto;display:block}" +
+    ".dgm-ep .th img,.dgm-ep .th .ph{display:grid;place-items:center;width:84px;height:84px;border-radius:8px;object-fit:cover;background:var(--line,var(--h-line,#e3e3e3));color:#888;font-size:1.6rem}" +
+    ".dgm-ep .bd{flex:1;min-width:0;color:inherit;text-decoration:none}" +
+    ".dgm-ep .bd b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:1rem;font-weight:700;line-height:1.3}" +
+    ".dgm-ep .bd small{display:block;margin-top:4px;font-size:.8rem;color:var(--muted,var(--h-muted,#666));line-height:1.3}" +
+    ".dgm-ep .bd:hover b{text-decoration:underline}" +
+    ".dgm-epplay{flex:0 0 auto;width:48px;height:48px;border-radius:50%;border:0;background:#c8102e;color:#fff;display:grid;place-items:center;cursor:pointer;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.25)}" +
+    ".dgm-epplay:hover{background:#a80d26}" +
+    ".dgm-epplay svg{width:22px;height:22px;fill:currentColor}" +
+    ".dgm-epplay .i-pause{display:none}" +
+    ".dgm-epplay.is-playing .i-pause{display:block}" +
+    ".dgm-pod .cw{position:relative;display:block}" +
+    ".dgm-pod .cw a{display:block}" +
+    ".dgm-pod .tt{color:inherit;text-decoration:none}" +
+    ".dgm-pod .pc-play{width:36px;height:36px;right:6px;bottom:6px}" +
+    "@media (max-width:520px){.dgm-count{display:none}}" +
+    "@media (min-width:900px){.dgm-eps{grid-template-columns:1fr 1fr;gap:14px 20px}}" +
     "@media (min-width:640px){.dgm-grid{grid-template-columns:1fr 1fr}.dgm-pod{flex-basis:160px}.dgm-pod .cv{width:160px;height:160px}}" +
     "@media (min-width:900px){.dgm-tile{width:176px}.dgm-art{width:176px;height:176px}.dgm-sec{margin-top:44px}.dgm-head h2{font-size:.82rem;letter-spacing:.07em;text-transform:uppercase}.dgm-head::before{width:4px;height:1.15em}}";
   document.head.appendChild(css);
@@ -118,22 +150,56 @@
       '</section>';
   }
 
+  function subOf(p) { return (p.host || "Davidgistmedia") + (p.duration ? " \u00b7 " + p.duration : ""); }
+  function attrs(p) {
+    return ' data-dgplay data-id="' + esc(p.id) + '" data-src="' + esc(p.audio_url) + '" data-title="' + esc(p.title) + '" data-sub="' + esc(subOf(p)) + '" data-cover="' + esc(p.cover_url || "") + '"';
+  }
+  function epRow(p) {
+    var link = 'podcast.html?id=' + encodeURIComponent(p.id);
+    var cv = p.cover_url
+      ? '<img src="' + esc(p.cover_url) + '" alt="" loading="lazy" decoding="async">'
+      : '<span class="ph">&#127908;</span>';
+    return '<div class="dgm-ep"><a class="th" href="' + link + '" tabindex="-1" aria-hidden="true">' + cv + '</a>' +
+      '<a class="bd" href="' + link + '"><b>' + esc(p.title) + '</b><small>' + esc(subOf(p)) + ' &middot; ' + day(p.published_at) + '</small></a>' +
+      (p.audio_url ? '<button type="button" class="dgm-epplay"' + attrs(p) + ' aria-label="Play ' + esc(p.title) + '">' + PLAY + PAUSE + '</button>' : '') + '</div>';
+  }
+  async function loadEpisodes(box) {
+    if (typeof supabaseClient === "undefined") { box.innerHTML = '<p class="dgm-msg">Podcasts are not available right now.</p>'; return; }
+    box.innerHTML = '<p class="dgm-msg">Loading episodes&hellip;</p>';
+    try {
+      var r = await supabaseClient.from("podcasts").select("*").order("published_at", { ascending: false }).limit(12);
+      if (r.error) throw r.error;
+      var rows = r.data || [];
+      if (!rows.length) { box.innerHTML = '<p class="dgm-msg">No episodes yet. Check back soon.</p>'; return; }
+      var first = rows.filter(function (p) { return p.audio_url; })[0];
+      box.innerHTML = '<div class="dgm-eps-bar">' +
+        (first ? '<button type="button" class="dgm-lbtn"' + attrs(first) + '>' + PLAY + PAUSE + '<span class="t-play">Play latest episode</span><span class="t-pause">Pause</span></button>' : '') +
+        '<span class="dgm-count">' + rows.length + (rows.length === 1 ? ' episode' : ' episodes') + '</span>' +
+        '<a class="dgm-all" href="podcasts.html">See all &rsaquo;</a></div>' +
+        '<div class="dgm-eps">' + rows.map(epRow).join("") + '</div>';
+    } catch (e) {
+      box.innerHTML = '<p class="dgm-msg">Couldn\'t load podcasts right now.</p>';
+    }
+  }
+
   async function loadPods() {
     var row = document.getElementById("dgm-pods");
     if (!row) return;
     if (typeof supabaseClient === "undefined") { row.innerHTML = '<p class="dgm-msg">Podcasts are not available right now.</p>'; return; }
     try {
-      var r = await supabaseClient.from("podcasts").select("id,title,cover_url,duration,published_at")
+      var r = await supabaseClient.from("podcasts").select("*")
         .order("published_at", { ascending: false }).limit(10);
       if (r.error) throw r.error;
       var list = r.data || [];
       if (!list.length) { row.innerHTML = '<p class="dgm-msg">New episodes coming soon.</p>'; return; }
       row.innerHTML = list.map(function (p) {
+        var link = 'podcast.html?id=' + encodeURIComponent(p.id);
         var cv = p.cover_url
           ? '<img class="cv" src="' + esc(p.cover_url) + '" alt="" loading="lazy" decoding="async">'
           : '<span class="cv ph">&#127908;</span>';
-        return '<a class="dgm-pod" href="podcast.html?id=' + encodeURIComponent(p.id) + '">' + cv +
-          '<b>' + esc(p.title) + '</b><small>' + day(p.published_at) + (p.duration ? ' &middot; ' + esc(p.duration) : '') + '</small></a>';
+        return '<div class="dgm-pod"><div class="cw"><a href="' + link + '" tabindex="-1" aria-hidden="true">' + cv + '</a>' +
+          (p.audio_url ? '<button type="button" class="pc-play"' + attrs(p) + ' aria-label="Play ' + esc(p.title) + '">' + PLAY + PAUSE + '</button>' : '') + '</div>' +
+          '<a class="tt" href="' + link + '"><b>' + esc(p.title) + '</b></a><small>' + day(p.published_at) + (p.duration ? ' &middot; ' + esc(p.duration) : '') + '</small></div>';
       }).join("");
     } catch (e) {
       row.innerHTML = '<p class="dgm-msg">Couldn\'t load podcasts right now.</p>';
@@ -191,7 +257,9 @@
   function init() {
     var boxes = qsa(".pc-tiles");
     var home = document.getElementById("dg-media");
-    if (!boxes.length && !home) return;
+    var eps = document.getElementById("dgm-eps");
+    if (!boxes.length && !home && !eps) return;
+    if (eps) loadEpisodes(eps);
     boxes.forEach(function (b) { b.innerHTML = tilesHtml(); });
     if (home) { home.innerHTML = homeHtml(); loadPods(); wireVisibility(home); }
     paint();
