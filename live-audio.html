@@ -250,7 +250,7 @@
   <section class="pc-sec">
     <h2>Podcasts</h2>
     <p class="s">Headlines, analysis and interviews created for your ears</p>
-    <div class="pc-grid" id="pc-grid"><p class="pc-msg">Loading episodes…</p></div>
+    <div id="dgm-eps"></div>
   </section>
 
   <!-- Footer (built by js/footer.js) -->
@@ -455,13 +455,6 @@
       }
       refresh();
       setInterval(refresh, 30000);
-
-      try {
-        var res = await supabaseClient.from("podcasts").select("id,title,cover_url,host,duration,published_at")
-          .order("published_at", { ascending: false }).limit(12);
-        var list = (res && res.data) || [];
-        $("pc-grid").innerHTML = list.length ? list.map(podItem).join("") : '<p class="pc-msg">No episodes yet. Check back soon.</p>';
-      } catch (e) { $("pc-grid").innerHTML = ""; }
     })();
   </script>
   <script src="mini-player.js"></script>
