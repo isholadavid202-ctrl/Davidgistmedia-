@@ -115,7 +115,77 @@
       #search-btn{order:2}
       #theme-toggle-btn{order:3}
     }
+    /* ---- Podcasts and Live Audio pages: a podcast-app layout ---- */
+    .pc-bar{background:#000;color:#fff;padding:11px 16px;font-weight:800;font-size:.98rem;letter-spacing:.02em;border-bottom:3px solid #c8102e}
+    .pc-bar span{display:block;max-width:1400px;margin:0 auto}
+    .pc-hero{position:relative;background:linear-gradient(180deg,#4a0b14,#2a0710)}
+    .pc-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:22px 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+    .pc-track::-webkit-scrollbar{display:none}
+    .pc-slide{position:relative;flex:0 0 min(86%,640px);height:270px;border-radius:6px;overflow:hidden;scroll-snap-align:center;background:#111;display:block;color:#fff;text-decoration:none}
+    .pc-slide .bg{position:absolute;inset:-24px;background-size:cover;background-position:center;filter:blur(22px) brightness(.55);transform:scale(1.1)}
+    .pc-slide .cv{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);height:74%;aspect-ratio:1;object-fit:cover;border-radius:6px;box-shadow:0 12px 34px rgba(0,0,0,.55);background:#222}
+    .pc-slide .cv.ph{display:grid;place-items:center;color:#999;font-size:3rem}
+    .pc-slide .cap{position:absolute;left:0;right:0;bottom:0;padding:36px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.85));display:block}
+    .pc-slide .cap b{display:block;font-size:1rem;line-height:1.25}
+    .pc-slide .cap small{display:block;margin-top:2px;opacity:.8;font-size:.8rem}
+    .pc-arrow{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:0;background:#fff;color:#111;box-shadow:0 2px 10px rgba(0,0,0,.35);cursor:pointer;display:grid;place-items:center;z-index:2;padding:0}
+    .pc-arrow.l{left:10px}.pc-arrow.r{right:10px}
+    .pc-sec{max-width:1400px;margin:0 auto;padding:30px 16px 6px}
+    .pc-sec h2{margin:0;font-size:1.5rem;font-weight:500}
+    .pc-sec .s{margin:4px 0 18px;color:var(--muted,#666);font-size:.85rem}
+    .pc-tiles{display:flex;gap:16px;flex-wrap:wrap}
+    .pc-tile{width:124px;color:inherit;text-decoration:none}
+    .pc-tile .sq{display:block;width:124px;height:124px;border-radius:4px;object-fit:cover}
+    .pc-tile .n{display:block;margin-top:6px;font-size:.74rem;color:var(--muted,#666);line-height:1.3}
+    .pc-div{max-width:1400px;margin:16px auto 0;border-top:1px solid var(--line,#e3e3e3)}
+    .pc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 14px;padding:0 0 34px}
+    .pc-item{display:block;color:inherit;text-decoration:none;min-width:0}
+    .pc-item .cvr{display:block;width:100%;aspect-ratio:1;border-radius:4px;object-fit:cover;background:var(--line,#e3e3e3)}
+    .pc-item .cvr.ph{display:grid;place-items:center;color:#888;font-size:2rem}
+    .pc-item h3{margin:10px 0 2px;font-size:1.02rem;font-weight:500;line-height:1.25}
+    .pc-item small{color:var(--muted,#666);font-size:.78rem}
+    .pc-item:hover h3{text-decoration:underline}
+    .pc-msg{grid-column:1/-1;color:var(--muted,#666);padding:10px 0}
+    @media (min-width:700px){.pc-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 18px}.pc-slide{height:340px}}
+    @media (min-width:1100px){.pc-grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
+    /* live audio player card */
+    .la-card{max-width:1100px;margin:0 auto;padding:22px 16px 26px;display:flex;gap:20px;align-items:center;flex-wrap:wrap;color:#fff}
+    .la-art{position:relative;flex:0 0 auto}
+    .la-art img{display:block;width:132px;height:132px;border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.45)}
+    .la-body{flex:1 1 280px;min-width:0}
+    .la-body h1{margin:0 0 6px;font-size:1.5rem;font-weight:800}
+    .la-status{margin:0 0 12px;opacity:.9;font-size:.95rem}
+    .live-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:3px;background:#c8102e;color:#fff;font-size:.72rem;font-weight:800;letter-spacing:.08em;margin:0 0 8px}
+    .live-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff;animation:lvpulse 1.4s ease-in-out infinite}
+    @keyframes lvpulse{50%{opacity:.25}}
+    .la-body audio{width:100%;max-width:560px}
+    .la-frame{width:100%;max-width:560px;border:0;border-radius:8px;background:#000}
+    .la-btn{display:inline-block;margin-top:4px;padding:9px 16px;border-radius:999px;background:#fff;color:#111;font-weight:800;text-decoration:none;font-size:.9rem}
+
+    /* ---- Episode page ---- */
+    .ep-stage{max-width:1400px;margin:0 auto;padding:26px 16px 32px;color:#fff;display:flex;flex-direction:column;gap:20px}
+    .ep-art img,.ep-art .ph{display:block;width:176px;height:176px;border-radius:10px;object-fit:cover;background:#222;box-shadow:0 14px 38px rgba(0,0,0,.55)}
+    .ep-art .ph{display:grid;place-items:center;font-size:3rem;color:#999}
+    .ep-info{min-width:0}
+    .ep-tag{display:inline-block;padding:3px 9px;border-radius:3px;background:#c8102e;color:#fff;font-size:.7rem;font-weight:800;letter-spacing:.09em}
+    .ep-info h1{margin:10px 0 6px;font-family:inherit;font-size:1.6rem;font-weight:800;line-height:1.2;color:#fff}
+    .ep-meta{margin:0;font-size:.95rem;opacity:.9}
+    .ep-listens{margin:6px 0 0;font-size:.85rem;opacity:.75}
+    .ep-listens i{margin-right:6px}
+    .ep-acts{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:18px}
+    .ep-hero .engage-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;font:700 .88rem system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;cursor:pointer}
+    .ep-hero .engage-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .ep-hero .engage-btn.liked{background:#fff;color:#c8102e;border-color:#fff}
+    .ep-na{font-size:.9rem;opacity:.8}
+    .ep-h{margin:6px 0 10px;font-size:1.2rem}
+    .ep-desc{white-space:pre-line}
+    @media (min-width:760px){
+      .ep-stage{flex-direction:row;align-items:flex-end;gap:32px;padding:40px 32px 44px}
+      .ep-art img,.ep-art .ph{width:240px;height:240px}
+      .ep-info h1{font-size:2.3rem}
+    }
   </style>
+  <link rel="stylesheet" href="watch.css?v=1">
 </head>
 <body>
 
@@ -169,9 +239,18 @@
     </div>
   </nav>
 
-  <main class="wrap article-page" id="ep-root">
-    <div class="empty-state">Loading episode…</div>
-  </main>
+  <div class="pc-bar"><span>Davidgistmedia Podcasts</span></div>
+  <section class="pc-hero ep-hero" id="ep-hero" aria-label="Episode">
+    <div class="ep-stage" id="ep-stage"><p style="margin:0;opacity:.8">Loading episode&hellip;</p></div>
+  </section>
+
+  <main class="wrap article-page" id="ep-root"></main>
+
+  <section class="pc-sec" id="ep-more" hidden>
+    <h2>More episodes</h2>
+    <p class="s">Keep listening</p>
+    <div class="pc-grid" id="ep-more-grid"></div>
+  </section>
 
   <div id="site-footer"></div>
   <script src="js/footer.js"></script>
@@ -220,6 +299,7 @@
   <script src="js/config.js"></script>
   <script src="js/supabase-client.js"></script>
   <script src="js/extras.js"></script>
+  <script src="mini-player.js"></script>
 
   <script>
     (function () {
@@ -317,7 +397,34 @@
       function list(key) { try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch (e) { return []; } }
       function save(key, arr) { try { localStorage.setItem(key, JSON.stringify(arr)); } catch (e) {} }
       function fail(msg) {
+        document.getElementById("ep-hero").hidden = true;
         root.innerHTML = '<a class="back-link" href="podcasts.html">← All podcasts</a><div class="empty-state">' + msg + '</div>';
+      }
+      var ICON_PLAY = '<svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+      var ICON_PAUSE = '<svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+      function subOf(p) { return (p.host || "Davidgistmedia") + (p.duration ? " \u00b7 " + p.duration : ""); }
+      function attrs(p) {
+        return ' data-dgplay data-id="' + esc(p.id) + '" data-src="' + esc(p.audio_url) + '" data-title="' + esc(p.title) + '" data-sub="' + esc(subOf(p)) + '" data-cover="' + esc(p.cover_url || "") + '"';
+      }
+      function cover(p, cls) {
+        return p.cover_url
+          ? '<img class="' + cls + '" src="' + esc(p.cover_url) + '" alt="" loading="lazy" decoding="async">'
+          : '<span class="' + cls + ' ph"><i class="fa-solid fa-microphone"></i></span>';
+      }
+      function moreItem(p) {
+        var link = 'podcast.html?id=' + encodeURIComponent(p.id);
+        return '<div class="pc-item"><div class="cw"><a href="' + link + '" tabindex="-1" aria-hidden="true">' + cover(p, "cvr") + '</a>' +
+          (p.audio_url ? '<button type="button" class="pc-play"' + attrs(p) + ' aria-label="Play ' + esc(p.title) + '">' + ICON_PLAY + ICON_PAUSE + '</button>' : '') + '</div>' +
+          '<h3><a href="' + link + '">' + esc(p.title) + '</a></h3><small>' + day(p.published_at) + (p.duration ? ' &middot; ' + esc(p.duration) : '') + '</small></div>';
+      }
+      async function loadMore() {
+        try {
+          var r = await supabaseClient.from("podcasts").select("*").neq("id", ep.id).order("published_at", { ascending: false }).limit(6);
+          var rows = (r && r.data) || [];
+          if (!rows.length) return;
+          document.getElementById("ep-more-grid").innerHTML = rows.map(moreItem).join("");
+          document.getElementById("ep-more").hidden = false;
+        } catch (e) {}
       }
 
       async function load() {
@@ -332,26 +439,29 @@
         document.getElementById("page-title").textContent = ep.title + " | Davidgistmedia Podcasts";
         var liked = list("dg_pod_liked").indexOf(ep.id) > -1;
 
+        var pos = 0;
+        try { pos = Number(localStorage.getItem("dg_pos_" + ep.id) || 0); } catch (e) {}
+        document.getElementById("ep-stage").innerHTML =
+          '<div class="ep-art">' + (ep.cover_url
+            ? '<img src="' + esc(ep.cover_url) + '" alt="">'
+            : '<div class="ph"><i class="fa-solid fa-microphone"></i></div>') + '</div>' +
+          '<div class="ep-info"><span class="ep-tag">PODCAST</span>' +
+            '<h1>' + esc(ep.title) + '</h1>' +
+            '<p class="ep-meta">' + esc(ep.host || "Davidgistmedia") + ' &middot; ' + day(ep.published_at) + (ep.duration ? ' &middot; ' + esc(ep.duration) : '') + '</p>' +
+            '<p class="ep-listens"><i class="fa-solid fa-headphones"></i><b id="ep-plays">' + (ep.plays || 0) + '</b> listens</p>' +
+            '<div class="ep-acts">' +
+              (ep.audio_url
+                ? '<button type="button" class="pc-latestbtn" id="ep-play"' + attrs(ep) + '>' + ICON_PLAY + ICON_PAUSE + '<span class="t-play">' + (pos > 5 ? "Resume" : "Play episode") + '</span><span class="t-pause">Pause</span></button>'
+                : '<span class="ep-na">The audio for this episode isn\'t available yet.</span>') +
+              '<button class="engage-btn ' + (liked ? "liked" : "") + '" id="like-btn" aria-pressed="' + liked + '">' +
+                '<svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>' +
+                '<span id="like-count">' + (ep.likes || 0) + '</span> Like</button>' +
+              '<button class="engage-btn" id="share-btn">' +
+                '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></svg>Share</button>' +
+            '</div></div>';
+
         root.innerHTML =
-          '<a class="back-link" href="podcasts.html">← All podcasts</a>' +
-          '<div class="cat">Podcast</div>' +
-          '<h1>' + esc(ep.title) + '</h1>' +
-          '<div class="meta byline"><div class="byline-author">' + esc(ep.host || "Davidgistmedia") + '</div>' +
-            '<div class="byline-info"><span>' + day(ep.published_at) + '</span>' +
-            (ep.duration ? '<span class="by-bar"></span><span>' + esc(ep.duration) + '</span>' : '') + '</div></div>' +
-          (ep.cover_url
-            ? '<img class="ep-cover" src="' + esc(ep.cover_url) + '" alt="">'
-            : '<div class="ep-cover ph"><i class="fa-solid fa-microphone"></i></div>') +
-          '<p class="ep-stats"><span title="Listens"><i class="fa-solid fa-headphones"></i><b id="ep-plays">' + (ep.plays || 0) + '</b> listens</span></p>' +
-          '<audio class="ep-player" id="ep-audio" controls preload="metadata" src="' + esc(ep.audio_url) + '"></audio>' +
-          '<div class="engage-row">' +
-            '<button class="engage-btn ' + (liked ? "liked" : "") + '" id="like-btn" aria-pressed="' + liked + '">' +
-              '<svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>' +
-              '<span id="like-count">' + (ep.likes || 0) + '</span> Like</button>' +
-            '<button class="engage-btn" id="share-btn">' +
-              '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5"/></svg>Share</button>' +
-          '</div>' +
-          (ep.description ? '<div class="article-body ep-desc">' + esc(ep.description) + '</div>' : '') +
+          (ep.description ? '<h2 class="ep-h">About this episode</h2><div class="article-body ep-desc">' + esc(ep.description) + '</div>' : '') +
           '<div class="comments-section">' +
             '<h3 id="comments-heading">Comments</h3>' +
             '<form id="comment-form" class="comment-form">' +
@@ -364,23 +474,22 @@
             '<div id="comments-list"></div>' +
           '</div>';
 
-        /* Count one listen per device */
-        document.getElementById("ep-audio").addEventListener("play", function () {
-          var played = list("dg_pod_played");
-          if (played.indexOf(ep.id) > -1) return;
-          played.push(ep.id); save("dg_pod_played", played);
-          supabaseClient.rpc("increment_podcast_plays", { p_id: ep.id }).then(function (r) {
-            if (!r.error) {
-              var el = document.getElementById("ep-plays");
-              el.textContent = (parseInt(el.textContent, 10) || 0) + 1;
-            }
+        /* The bottom player counts the listen; this only updates the number on screen */
+        var counted = list("dg_pod_played").indexOf(ep.id) > -1;
+        if (window.DGPlayer && window.DGPlayer.on) {
+          window.DGPlayer.on(function (s) {
+            if (counted || !s.playing || !s.item || String(s.item.id) !== String(ep.id)) return;
+            counted = true;
+            var el = document.getElementById("ep-plays");
+            if (el) el.textContent = (parseInt(el.textContent, 10) || 0) + 1;
           });
-        });
+        }
 
         document.getElementById("like-btn").addEventListener("click", handleLike);
         document.getElementById("share-btn").addEventListener("click", handleShare);
         document.getElementById("comment-form").addEventListener("submit", handleComment);
         loadComments();
+        loadMore();
       }
 
       async function handleLike() {
