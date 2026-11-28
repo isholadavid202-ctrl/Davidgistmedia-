@@ -250,6 +250,7 @@
   <section class="pc-sec">
     <h2>Podcasts</h2>
     <p class="s">Headlines, analysis and interviews created for your ears</p>
+    <div class="pc-latest" id="pc-latest" hidden></div>
     <div class="pc-grid" id="pc-grid" aria-busy="true"><span class="pc-skel"><i></i><b></b><b></b></span><span class="pc-skel"><i></i><b></b><b></b></span><span class="pc-skel"><i></i><b></b><b></b></span><span class="pc-skel"><i></i><b></b><b></b></span><span class="pc-skel"><i></i><b></b><b></b></span><span class="pc-skel"><i></i><b></b><b></b></span></div>
   </section>
 
@@ -402,15 +403,33 @@
           ? '<img class="' + cls + '" src="' + esc(p.cover_url) + '" alt="" loading="lazy" decoding="async">'
           : '<span class="' + cls + ' ph"><i class="fa-solid fa-microphone"></i></span>';
       }
+      /* finds the audio file of an episode, whatever the column is called */
+      function audioOf(p) {
+        var keys = ["audio_url", "audio", "audio_file", "file_url", "mp3_url", "mp3", "src", "media_url", "url"];
+        for (var i = 0; i < keys.length; i++) { var v = p[keys[i]]; if (typeof v === "string" && /^(https?:|data:audio)/i.test(v)) return v; }
+        for (var k in p) { var s = p[k]; if (typeof s === "string" && /^https?:\/\/\S+\.(mp3|m4a|aac|ogg|oga|wav|opus)(\?\S*)?$/i.test(s)) return s; }
+        return "";
+      }
+      var ICON_PLAY = '<svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+      var ICON_PAUSE = '<svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+      function subOf(p) { return (p.host || "Davidgistmedia") + (p.duration ? " \u00b7 " + p.duration : ""); }
+      function attrs(p, a) {
+        return ' data-dgplay data-id="' + esc(p.id) + '" data-src="' + esc(a) + '" data-title="' + esc(p.title) + '" data-sub="' + esc(subOf(p)) + '" data-cover="' + esc(p.cover_url || "") + '"';
+      }
+      function playBtn(p, cls) {
+        var a = audioOf(p);
+        return a ? '<button type="button" class="pc-play ' + cls + '"' + attrs(p, a) + ' aria-label="Play ' + esc(p.title) + '">' + ICON_PLAY + ICON_PAUSE + '</button>' : "";
+      }
       function podItem(p) {
-        return '<a class="pc-item" href="podcast.html?id=' + encodeURIComponent(p.id) + '">' + cover(p, "cvr") +
-          '<h3>' + esc(p.title) + '</h3><small>' + day(p.published_at) + (p.duration ? ' &middot; ' + esc(p.duration) : '') + '</small></a>';
+        var link = 'podcast.html?id=' + encodeURIComponent(p.id);
+        return '<div class="pc-item"><div class="cw"><a href="' + link + '" tabindex="-1" aria-hidden="true">' + cover(p, "cvr") + '</a>' + playBtn(p, "") + '</div>' +
+          '<h3><a href="' + link + '">' + esc(p.title) + '</a></h3><small>' + day(p.published_at) + (p.duration ? ' &middot; ' + esc(p.duration) : '') + '</small></div>';
       }
 
       var track = $("pc-track"), grid = $("pc-grid"), hero = $("pc-hero");
       var list = [];
       try {
-        var res = await supabaseClient.from("podcasts").select("id,title,cover_url,host,duration,published_at")
+        var res = await supabaseClient.from("podcasts").select("*")
           .order("published_at", { ascending: false }).limit(60);
         if (res.error) throw res.error;
         list = res.data || [];
@@ -421,14 +440,22 @@
       if (!list.length) { grid.removeAttribute('aria-busy'); grid.innerHTML = '<p class="pc-msg">No episodes yet. Check back soon.</p>'; return; }
 
       track.innerHTML = list.slice(0, 6).map(function (p) {
-        return '<a class="pc-slide" href="podcast.html?id=' + encodeURIComponent(p.id) + '">' +
+        return '<div class="pc-slide">' +
           (p.cover_url ? '<span class="bg" style="background-image:url(\'' + esc(p.cover_url) + '\')"></span>' : '') +
-          cover(p, "cv") +
-          '<span class="cap"><b>' + esc(p.title) + '</b><small>' + esc(p.host || "Davidgistmedia") + (p.duration ? ' &middot; ' + esc(p.duration) : '') + '</small></span></a>';
+          cover(p, "cv") + playBtn(p, "ctr") +
+          '<span class="cap"><a href="podcast.html?id=' + encodeURIComponent(p.id) + '"><b>' + esc(p.title) + '</b></a><small>' + esc(subOf(p)) + '</small></span></div>';
       }).join("");
       hero.hidden = false;
       grid.innerHTML = list.map(podItem).join("");
       grid.removeAttribute("aria-busy");
+
+      var first = list.filter(function (p) { return audioOf(p); })[0];
+      if (first) {
+        var lb = $("pc-latest");
+        lb.innerHTML = '<button type="button" class="pc-latestbtn"' + attrs(first, audioOf(first)) + '>' + ICON_PLAY + ICON_PAUSE + '<span class="t-play">Play latest episode</span><span class="t-pause">Pause</span></button>' +
+          '<span class="pc-count">' + list.length + (list.length === 1 ? ' episode' : ' episodes') + '</span>';
+        lb.hidden = false;
+      }
 
       /* dots under the carousel */
       var slides = [].slice.call(track.querySelectorAll(".pc-slide"));
